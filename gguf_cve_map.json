@@ -1,0 +1,126 @@
+{
+  "name": "gguf-cve-map",
+  "version": "0.1.0",
+  "license": "CC BY 4.0",
+  "made_with": "AI, by MV2 of Munim, Inc.",
+  "verified_at": "2026-10-14",
+  "description": "Maps the public GGUF parser memory-safety advisory cluster to the header field that overflows, the weakness class, and the gguf_scan rule that statically flags each precursor before loading.",
+  "advisories": {
+    "CVE-2024-21825": {
+      "ref": "TALOS-2024-1912",
+      "component": "llama.cpp GGUF (ggml) GGUF_TYPE_ARRAY/GGUF_TYPE_STRING parsing",
+      "cwe": ["CWE-787"],
+      "impact": "heap-based buffer overflow -> code execution on a crafted .gguf",
+      "fixed": "ggml >= 2024-01-09 (commit 18c2e17 vulnerable)"
+    },
+    "CVE-2024-23496": {
+      "ref": "TALOS-2024-1913 / GHSA-w4wv-vq5v-xp26",
+      "component": "llama.cpp GGUF gguf_fread_str",
+      "cwe": ["CWE-190", "CWE-787"],
+      "impact": "heap-based buffer overflow -> code execution on a crafted .gguf",
+      "fixed": "ggml >= 2024-01-09"
+    },
+    "CVE-2024-23605": {
+      "ref": "TALOS-2024-1916",
+      "component": "llama.cpp GGUF header.n_kv handling",
+      "cwe": ["CWE-190", "CWE-787"],
+      "impact": "count*element integer overflow -> undersized alloc -> heap overflow",
+      "fixed": "ggml >= 2024-01-09"
+    },
+    "CVE-2025-53630": {
+      "ref": "GHSA-vgg9-87g3-85w8",
+      "component": "llama.cpp gguf_init_from_file_impl (ggml/src/gguf.cpp)",
+      "cwe": ["CWE-680", "CWE-122"],
+      "impact": "integer overflow in size accumulation -> heap out-of-bounds read/write",
+      "fixed": "commit 26a48ad699d50b6268900062661bd22f3e792579"
+    },
+    "CVE-2026-27940": {
+      "ref": "GHSA-3p4r-fq3f-q74v",
+      "component": "llama.cpp mem_size calculation (bypass of the CVE-2025-53630 fix)",
+      "cwe": ["CWE-122"],
+      "impact": "integer overflow -> undersized heap allocation -> code execution",
+      "fixed": "build b8146"
+    },
+    "CVE-2026-33298": {
+      "ref": "llama.cpp ggml_nbytes advisory",
+      "component": "llama.cpp ggml_nbytes() tensor-size computation",
+      "cwe": ["CWE-190", "CWE-122"],
+      "impact": "tensor-size integer overflow -> heap out-of-bounds access",
+      "fixed": "build b7824"
+    },
+    "CVE-2026-108955": {
+      "ref": "VulDB VDB-416774 / Tiiny-AI/PowerInfer#283",
+      "component": "PowerInfer gguf_init_from_file (ggml.c) tensor data_offset",
+      "cwe": ["CWE-125"],
+      "impact": "out-of-bounds read via unchecked tensor data offset",
+      "fixed": "pending (rolling release) as of 2026-10-13"
+    }
+  },
+  "corpus": [
+    {
+      "file": "kv_count_overflow.gguf",
+      "header_field": "metadata_kv_count",
+      "precursor": "declared metadata KV count far exceeds the bytes present",
+      "cwe": ["CWE-190", "CWE-787"],
+      "gguf_scan_rule": "GG003",
+      "coverage": "full",
+      "cves": ["CVE-2024-23605"]
+    },
+    {
+      "file": "tensor_count_overflow.gguf",
+      "header_field": "tensor_count",
+      "precursor": "declared tensor count drives an oversized size accumulation",
+      "cwe": ["CWE-680", "CWE-122"],
+      "gguf_scan_rule": "GG003",
+      "coverage": "full",
+      "cves": ["CVE-2025-53630", "CVE-2026-27940"]
+    },
+    {
+      "file": "array_len_overflow.gguf",
+      "header_field": "metadata array length",
+      "precursor": "array element count times element size overflows the allocation",
+      "cwe": ["CWE-787"],
+      "gguf_scan_rule": "GG006",
+      "coverage": "full",
+      "cves": ["CVE-2024-21825"]
+    },
+    {
+      "file": "string_len_overrun.gguf",
+      "header_field": "metadata string length",
+      "precursor": "declared string length runs past the end of the file",
+      "cwe": ["CWE-190", "CWE-787"],
+      "gguf_scan_rule": "GG004",
+      "coverage": "full",
+      "cves": ["CVE-2024-23496"]
+    },
+    {
+      "file": "tensor_dims_overflow.gguf",
+      "header_field": "tensor dimensions",
+      "precursor": "product of tensor dimensions overflows the 64-bit element count",
+      "cwe": ["CWE-190", "CWE-122"],
+      "gguf_scan_rule": "GG009",
+      "coverage": "full",
+      "cves": ["CVE-2026-33298"]
+    },
+    {
+      "file": "bad_alignment.gguf",
+      "header_field": "general.alignment",
+      "precursor": "alignment is zero (not a nonzero power of two) -> GGML_PAD hazard",
+      "cwe": ["CWE-682"],
+      "gguf_scan_rule": "GG011",
+      "coverage": "full",
+      "cves": [],
+      "note": "defense-in-depth: no numbered CVE; mirrors public GGML_PAD/alignment hardening"
+    },
+    {
+      "file": "data_offset_oob.gguf",
+      "header_field": "tensor data offset",
+      "precursor": "tensor data offset points past the end of the file",
+      "cwe": ["CWE-125"],
+      "gguf_scan_rule": "GG011",
+      "coverage": "partial",
+      "cves": ["CVE-2026-108955"],
+      "note": "GG011 flags the unaligned offset; full data-region bounds checking is a documented gap"
+    }
+  ]
+}
