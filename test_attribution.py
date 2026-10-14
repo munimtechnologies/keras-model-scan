@@ -7,11 +7,13 @@
 # PKL001 (generic pickle RCE) is tagged CWE-502 instead of CVE-2025-1550, which
 # is a Keras Lambda-deserialization CVE. v0.6.0 added the fp8/C64/sub-byte
 # safetensors dtypes to DTYPE_SIZES/SUBBYTE_BITS. v0.7.0 added the sharded-index
-# path-safety scanner (safetensors_index_scan). Made with AI by MV2 of Munim, Inc.
+# path-safety scanner (safetensors_index_scan). v0.8.0 added gguf_scan, a static
+# integrity validator for GGUF files. Made with AI by MV2 of Munim, Inc.
 
 import os
 import unittest
 
+import gguf_scan
 import model_file_scan
 import pickle_model_scan
 import safetensors_index_scan
@@ -61,11 +63,13 @@ class Licence(unittest.TestCase):
             self.assertNotIn("MIT", mod.__doc__)
         self.assertIn("Apache-2.0", _read("safetensors_scan.py"))
         self.assertIn("Apache-2.0", _read("safetensors_index_scan.py"))
+        self.assertIn("Apache-2.0", _read("gguf_scan.py"))
 
     def test_versions(self):
-        self.assertEqual(model_file_scan.__version__, "0.7.0")
+        self.assertEqual(model_file_scan.__version__, "0.8.0")
         self.assertEqual(safetensors_scan.__version__, "0.3.0")
         self.assertEqual(safetensors_index_scan.__version__, "0.1.0")
+        self.assertEqual(gguf_scan.__version__, "0.1.0")
 
 
 class SafetensorsDtypes(unittest.TestCase):
@@ -81,7 +85,7 @@ class SafetensorsDtypes(unittest.TestCase):
             self.assertNotIn(dt, safetensors_scan.DTYPE_SIZES)
 
 
-class IndexScannerRouting(unittest.TestCase):
+class Routing(unittest.TestCase):
     def test_index_json_routes_to_sti(self):
         self.assertEqual(
             model_file_scan.route("model.safetensors.index.json"), "sti")
@@ -91,6 +95,13 @@ class IndexScannerRouting(unittest.TestCase):
     def test_plain_json_still_routes_to_keras(self):
         self.assertEqual(model_file_scan.route("config.json"), "keras")
         self.assertEqual(model_file_scan.route("arch.json"), "keras")
+
+    def test_gguf_routes_to_gguf(self):
+        self.assertEqual(model_file_scan.route("model.gguf"), "gguf")
+
+    def test_safetensors_routes_to_safetensors(self):
+        self.assertEqual(model_file_scan.route("model.safetensors"),
+                         "safetensors")
 
 
 if __name__ == "__main__":

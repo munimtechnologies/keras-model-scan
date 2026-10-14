@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "model-file-scan"
-version = "0.7.0"
+version = "0.8.0"
 description = "Static, no-execution security scanner for ML model files (.keras, .h5, pickle, .pt, .joblib, .npy, safetensors, GGUF) and sharded-model index files, with SARIF output."
 readme = "README.md"
 requires-python = ">=3.8"
@@ -15,6 +15,7 @@ keywords = [
     "machine-learning",
     "pickle",
     "safetensors",
+    "gguf",
     "model-scanning",
     "supply-chain",
     "sarif",
@@ -40,6 +41,7 @@ keras-model-scan = "keras_model_scan:main"
 pickle-model-scan = "pickle_model_scan:main"
 safetensors-scan = "safetensors_scan:main"
 safetensors-index-scan = "safetensors_index_scan:main"
+gguf-scan = "gguf_scan:main"
 
 [tool.setuptools]
-py-modules = ["model_file_scan", "keras_model_scan", "pickle_model_scan", "safetensors_scan", "safetensors_index_scan"]
+py-modules = ["model_file_scan", "keras_model_scan", "pickle_model_scan", "safetensors_scan", "safetensors_index_scan", "gguf_scan"]
