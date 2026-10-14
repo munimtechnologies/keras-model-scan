@@ -147,6 +147,50 @@ class OffsetValidation(unittest.TestCase):
             os.remove(path)
 
 
+class Coverage(unittest.TestCase):
+    def test_trailing_bytes_flagged(self):
+        blob = make_st({"w": {"dtype": "F32", "shape": [2, 2],
+                              "data_offsets": [0, 16]}}, data_len=16)
+        path = write_tmp(blob + b"extra bytes not in the header")
+        try:
+            findings = s.scan_file(path)
+            self.assertIn("SFT009", rules(findings))
+            self.assertNotIn("SFT000", rules(findings))
+            self.assertEqual(s.main([path]), 1)
+        finally:
+            os.remove(path)
+
+    def test_metadata_only_with_trailing_bytes_flagged(self):
+        blob = make_st({"__metadata__": {"framework": "pt"}}, data_len=4)
+        path = write_tmp(blob)
+        try:
+            self.assertIn("SFT009", rules(s.scan_file(path)))
+        finally:
+            os.remove(path)
+
+    def test_first_tensor_not_at_zero_flagged(self):
+        blob = make_st({"w": {"dtype": "F32", "shape": [2, 2],
+                              "data_offsets": [4, 20]}}, data_len=20)
+        path = write_tmp(blob)
+        try:
+            findings = s.scan_file(path)
+            self.assertIn("SFT004", rules(findings))
+            self.assertNotIn("SFT009", rules(findings))
+        finally:
+            os.remove(path)
+
+    def test_zero_length_tensor_is_clean(self):
+        blob = make_st({
+            "a": {"dtype": "F32", "shape": [0], "data_offsets": [0, 0]},
+            "b": {"dtype": "U8", "shape": [4], "data_offsets": [0, 4]},
+        }, data_len=4)
+        path = write_tmp(blob)
+        try:
+            self.assertEqual(rules(s.scan_file(path)), {"SFT000"})
+        finally:
+            os.remove(path)
+
+
 class MalformedHeader(unittest.TestCase):
     def test_deeply_nested_header(self):
         inner = b"[" * 150 + b"0" + b"]" * 150

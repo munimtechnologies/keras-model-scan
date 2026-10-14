@@ -27,22 +27,30 @@ without running them, and flags the opcodes behind those attacks.
 - PyTorch archives: `.pt`, `.pth`, `.bin` (the pickle inside the ZIP, e.g. `data.pkl`)
 - NumPy: `.npy` / `.npz` — flags **object-dtype** arrays whose data is a pickle
 - Recognises and reports the **safe** formats — `safetensors` and `GGUF` have no
-  code-execution surface — so you can confirm a file is the safe kind.
+  code-execution surface — so you can confirm a file is the safe kind. For a full
+  header/offset integrity check of `.safetensors`, use `safetensors_scan.py` (the
+  unified `model-file-scan` command routes `.safetensors` there automatically).
 
 ## Checks
 
 | Rule | Severity | What it catches |
 |------|----------|-----------------|
-| PKL001 | CRITICAL | Dangerous import (`os`, `subprocess`, `builtins.eval`, …) **and** a REDUCE/BUILD/NEWOBJ opcode — loading can run code (CVE-2025-1550 class) |
+| PKL001 | CRITICAL | Dangerous import (`os`, `subprocess`, `builtins.eval`, …) **and** a REDUCE/BUILD/NEWOBJ opcode — loading can run code (CWE-502, deserialization of untrusted data) |
 | PKL002 | HIGH | Dangerous import with no execution opcode yet seen |
 | PKL003 | MEDIUM | Import outside the known-safe model-reconstructor allowlist — review |
 | PKL004 | HIGH | Deferred-call gadget (`functools.partial`, `operator.attrgetter`, …) |
-| PKL007 | HIGH | **STACK_GLOBAL operands that cannot be resolved** from preceding string literals — a documented scanner-bypass (GHSA-9gvj-pp9x-gcfr / CVE-2025-71345) that this tool flags instead of silently passing |
+| PKL007 | HIGH | **STACK_GLOBAL operands that cannot be resolved** from preceding string literals — a documented scanner-bypass (GHSA-9gvj-pp9x-gcfr / CVE-2025-71325) that this tool flags instead of silently passing |
 | PKL010 | HIGH | NumPy object-dtype array (its data is a pickle) |
 | PKL020 | INFO | safetensors — no code-execution surface (the safe format) |
 | PKL022 | INFO | GGUF — data-only format, no code surface |
 | PKL021 / PKL006 / PKL000 | LOW | Malformed safetensors header / unscannable compression (lz4, zstd) / truncated pickle stream |
 | PKL030 | HIGH | Archive member escapes the extraction directory (Zip Slip) |
+
+**Correction (v0.5.0):** earlier versions cited the STACK_GLOBAL bypass under a
+mistyped CVE number and tagged PKL001 with CVE-2025-1550. The bypass advisory
+GHSA-9gvj-pp9x-gcfr is **CVE-2025-71325**, and CVE-2025-1550 is a Keras
+Lambda-deserialization CVE unrelated to pickle, so PKL001 now carries the class
+identifier **CWE-502**. `test_attribution.py` guards both.
 
 ## Usage
 

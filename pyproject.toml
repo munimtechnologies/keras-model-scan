@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "model-file-scan"
-version = "0.3.0"
+version = "0.5.0"
 description = "Static, no-execution security scanner for ML model files (.keras, .h5, pickle, .pt, .joblib, .npy, safetensors, GGUF) with SARIF output."
 readme = "README.md"
 requires-python = ">=3.8"
@@ -37,6 +37,7 @@ Issues = "https://github.com/munimtechnologies/keras-model-scan/issues"
 model-file-scan = "model_file_scan:main"
 keras-model-scan = "keras_model_scan:main"
 pickle-model-scan = "pickle_model_scan:main"
+safetensors-scan = "safetensors_scan:main"
 
 [tool.setuptools]
-py-modules = ["model_file_scan", "keras_model_scan", "pickle_model_scan"]
+py-modules = ["model_file_scan", "keras_model_scan", "pickle_model_scan", "safetensors_scan"]

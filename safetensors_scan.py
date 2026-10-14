@@ -20,6 +20,10 @@
 #     turboderp-org/exllamav2 issue #820.
 #   * A loader that json.loads() a deeply nested header without a depth guard can
 #     hit an uncaught RecursionError (CWE-674). Example: kornia issues #5218/#5248.
+#   * Bytes after the last tensor are not described by the header at all. The
+#     reference implementation rejects them (MetadataIncompleteBuffer; its own
+#     test suite uses a "polyglot file" case), because they let one file carry a
+#     second, hidden payload that other tools may read.
 #
 # This scanner reads ONLY the 8-byte length prefix and the JSON header. It never
 # memory-maps or reads the tensor data section, never allocates the declared
@@ -40,7 +44,7 @@ import sys
 from dataclasses import dataclass
 from typing import Any, Iterable, Optional
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 # Official safetensors header size cap (bytes). The reference implementation
 # rejects anything larger as HeaderTooLarge; a loader without this cap will try
@@ -276,8 +280,17 @@ def scan_file(path: str) -> list[Finding]:
 
         intervals.append((begin, end, name))
 
-    # Contiguity / overlap check across tensors.
+    # Contiguity / overlap check across tensors. The reference implementation
+    # requires the first tensor to start at 0 and each next one to start exactly
+    # where the previous one ended.
     intervals.sort()
+    if intervals and intervals[0][0] > 0:
+        first_begin, _first_end, first_name = intervals[0]
+        findings.append(Finding(
+            "SFT004", "LOW", "Data section does not start at offset 0",
+            f"The first tensor {first_name!r} starts at {first_begin}; the "
+            f"{first_begin} bytes before it are not described by the header.",
+            f"{loc} [tensor {first_name!r}]", "CWE-20"))
     prev_end = 0
     prev_name = None
     for begin, end, name in intervals:
@@ -296,11 +309,23 @@ def scan_file(path: str) -> list[Finding]:
         prev_end = max(prev_end, end)
         prev_name = name
 
+    # Full-coverage check: the last tensor must end exactly at end of file.
+    if prev_end < data_region:
+        trailing = data_region - prev_end
+        findings.append(Finding(
+            "SFT009", "MEDIUM", "Trailing bytes after the last tensor",
+            f"{trailing} bytes after the last tensor (data section is {data_region} "
+            f"bytes, tensors cover {prev_end}) are not described by the header. The "
+            "reference loader rejects this (MetadataIncompleteBuffer); such bytes "
+            "can hide a second payload in a polyglot file.",
+            loc, "CWE-20"))
+
     if not findings:
         findings.append(Finding(
             "SFT000", "INFO", "Well-formed safetensors header",
             "Header length, JSON, dtypes and data_offsets are internally "
-            "consistent. safetensors carries no code-execution surface.",
+            "consistent and cover the whole data section. safetensors carries no "
+            "code-execution surface.",
             loc, ""))
     return findings
 

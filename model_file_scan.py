@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 """model-file-scan: one static, no-execution security scan for ML model files.
 
-Unifies the two scanners in this repository behind a single command:
+Unifies the three scanners in this repository behind a single command:
 
   * ``.keras`` / ``.h5`` / ``.hdf5`` / ``config.json``  -> keras_model_scan
+  * ``.safetensors``                                     -> safetensors_scan
+    (header / offset integrity: the format has no code-execution surface, but
+     malformed headers break hand-written loaders)
   * everything else (pickle & container formats)         -> pickle_model_scan
     (``.pkl`` ``.pickle`` ``.joblib`` ``.pt`` ``.pth`` ``.bin`` ``.npy``
-     ``.npz`` ``.safetensors`` ``.gguf`` ``.ckpt`` ``.model``)
+     ``.npz`` ``.gguf`` ``.ckpt`` ``.model``)
 
 It never loads, imports, unpickles or executes a model -- it only reads bytes
 and disassembles opcode/JSON structure. Output is human text (default), JSON
@@ -21,7 +24,7 @@ import json
 import os
 import sys
 
-__version__ = "0.3.0"
+__version__ = "0.5.0"
 
 REPO_URL = "https://github.com/munimtechnologies/keras-model-scan"
 
@@ -37,13 +40,15 @@ _MODEL_EXTS = _KERAS_EXTS | {
 
 
 def route(path):
-    """Return 'keras' or 'pickle' -- which scanner handles ``path``."""
+    """Return 'keras', 'safetensors' or 'pickle' -- which scanner handles ``path``."""
     name = os.path.basename(path).lower()
     ext = os.path.splitext(name)[1]
     if ext in _KERAS_EXTS:
         return "keras"
     if name == "config.json" or ext == ".json":
         return "keras"
+    if ext == ".safetensors":
+        return "safetensors"
     return "pickle"
 
 
@@ -52,8 +57,11 @@ def scan_path(path):
 
     Imports are lazy so this module loads even where the scanner modules are
     not importable (the tests rely on that)."""
-    if route(path) == "keras":
+    kind = route(path)
+    if kind == "keras":
         import keras_model_scan as scanner
+    elif kind == "safetensors":
+        import safetensors_scan as scanner
     else:
         import pickle_model_scan as scanner
     return scanner.scan_file(path)

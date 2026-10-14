@@ -13,7 +13,7 @@ NEWOBJ execution opcodes).
 It also recognises the safe formats - safetensors and GGUF have no code-execution
 surface - and reports them as such, and it explicitly flags STACK_GLOBAL operands
 that cannot be resolved from preceding string literals, a documented way to bypass
-naive scanners (GHSA-9gvj-pp9x-gcfr / CVE-2025-71345) rather than silently passing.
+naive scanners (GHSA-9gvj-pp9x-gcfr / CVE-2025-71325) rather than silently passing.
 
 A flag means a pattern worth human review, not proof of malice. A clean result is
 not a guarantee of safety: this is a static heuristic, not a sandbox.
@@ -39,7 +39,7 @@ import zipfile
 import zlib
 from dataclasses import dataclass
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 # Modules whose presence in a pickle is a direct code-execution concern.
 DANGEROUS_MODULES = frozenset({
@@ -169,7 +169,7 @@ def scan_pickle_bytes(data, source):
                     "Dangerous import with a code-execution opcode",
                     f"Pickle imports {ref} and the stream contains REDUCE/BUILD/NEWOBJ "
                     "opcodes, so loading this file can run arbitrary code.",
-                    loc, "CVE-2025-1550"))
+                    loc, "CWE-502"))
             else:
                 findings.append(Finding(
                     "PKL002", "HIGH", "Dangerous import in pickle",

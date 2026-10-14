@@ -1,7 +1,7 @@
 # model-file-scan
 
 One command for a **static, no-execution** security scan of machine-learning
-model files. It unifies the two scanners in this repository and adds **SARIF
+model files. It unifies the three scanners in this repository and adds **SARIF
 output** and a **GitHub Action** so you can gate model files in CI.
 
 Made with AI by MV2 of Munim, Inc. Standard library only (Python 3.8+). Apache-2.0.
@@ -15,8 +15,9 @@ opcode/JSON structure.
 | File | Scanner | Looks for |
 |------|---------|-----------|
 | `.keras` `.h5` `.hdf5` `config.json` | `keras_model_scan` | non-allowlist Lambda/class deserialization, `enable_unsafe_deserialization`, `TFSMLayer`, Zip/Tar Slip, legacy `.h5` (CVE-2025-1550, 2025-9905/9906, 2026-1462, 2026-9257) |
-| `.pkl` `.pickle` `.joblib` `.pt` `.pth` `.bin` `.npy` `.npz` `.ckpt` `.model` | `pickle_model_scan` | dangerous import + REDUCE/BUILD, deferred-call gadgets, unresolvable `STACK_GLOBAL` (the GHSA-9gvj-pp9x-gcfr / CVE-2025-71345 scanner-bypass class), object-dtype NumPy, Zip Slip |
-| `.safetensors` `.gguf` | `pickle_model_scan` | confirmed as the **safe** formats (no code-execution surface) |
+| `.pkl` `.pickle` `.joblib` `.pt` `.pth` `.bin` `.npy` `.npz` `.ckpt` `.model` | `pickle_model_scan` | dangerous import + REDUCE/BUILD (CWE-502), deferred-call gadgets, unresolvable `STACK_GLOBAL` (the GHSA-9gvj-pp9x-gcfr / CVE-2025-71325 scanner-bypass class), object-dtype NumPy, Zip Slip |
+| `.safetensors` | `safetensors_scan` | header/offset integrity: oversized or over-cap header length, out-of-bounds or size-mismatched `data_offsets`, overlaps and gaps, deeply nested header JSON, trailing bytes after the last tensor (new in 0.5.0) |
+| `.gguf` | `pickle_model_scan` | confirmed as a data-only format (no code-execution surface) |
 
 A flag means "worth human review", not proof of malice; a clean result is not a
 guarantee of safety. When in doubt, prefer `safetensors`.
@@ -29,9 +30,9 @@ From source (no PyPI account needed):
 pip install "git+https://github.com/munimtechnologies/keras-model-scan"
 ```
 
-This installs three console commands — `model-file-scan` (the unified entry),
-`keras-model-scan` and `pickle-model-scan`. You can also just run the scripts
-directly with `python model_file_scan.py ...`.
+This installs four console commands — `model-file-scan` (the unified entry),
+`keras-model-scan`, `pickle-model-scan` and `safetensors-scan`. You can also just
+run the scripts directly with `python model_file_scan.py ...`.
 
 ## Usage
 
@@ -72,7 +73,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-      - uses: munimtechnologies/keras-model-scan@v0.3.0
+      - uses: munimtechnologies/keras-model-scan@v0.5.0
         with:
           paths: "."
           fail-on: "high"
@@ -83,6 +84,12 @@ is carried through (`security-severity`), and the job fails when something at or
 above `fail-on` is found. Set `upload-sarif: "false"` to skip the upload (for
 example on forks without `security-events` permission).
 
+## Validation
+
+The safetensors rules were checked against a crafted corpus of eight malformed
+files in a sealed, network-less container: 8/8 classes were flagged and the clean
+control file passed. See [VALIDATION.md](VALIDATION.md).
+
 ## Honest limitations
 
 - Static heuristics, not a sandbox. `STACK_GLOBAL` operand resolution uses the
@@ -92,4 +99,6 @@ example on forks without `security-events` permission).
   suspicious-but-unclassified.
 - `lz4`/`zstd`-compressed containers are reported as unscanned (no stdlib
   codec); decompress them first.
+- Newer safetensors dtypes (for example sub-byte float formats) are reported as
+  unknown (SFT008, LOW) rather than size-checked.
 - This tool and this document were made with AI.

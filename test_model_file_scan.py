@@ -7,8 +7,8 @@ modules is tested only for wiring (does it import them and get a list back),
 and those tests skip cleanly where the scanners are not importable.
 
 No model is ever loaded, unpickled or executed. The one pickle used below is a
-hand-built opcode stream written from byte constants and is never passed to
-pickle.loads -- only the static scanner reads it.
+benign hand-built opcode stream (a reference to collections.OrderedDict) and is
+never passed to pickle.loads -- only the static scanner reads it.
 """
 import os
 import struct
@@ -29,9 +29,14 @@ class RouteTests(unittest.TestCase):
                   os.path.join("sub", "config.json"), "arch.json"]:
             self.assertEqual(mfs.route(p), "keras", p)
 
+    def test_safetensors_ext(self):
+        for p in ["w.safetensors", "MODEL.SAFETENSORS",
+                  os.path.join("sub", "model-00001-of-00002.safetensors")]:
+            self.assertEqual(mfs.route(p), "safetensors", p)
+
     def test_pickle_exts(self):
         for p in ["m.pkl", "a.pickle", "sk.joblib", "t.pt", "t.pth",
-                  "pytorch_model.bin", "a.npy", "a.npz", "w.safetensors",
+                  "pytorch_model.bin", "a.npy", "a.npz",
                   "m.gguf", "state.ckpt", "x.model", "unknown.xyz"]:
             self.assertEqual(mfs.route(p), "pickle", p)
 
@@ -39,19 +44,20 @@ class RouteTests(unittest.TestCase):
 class SarifTests(unittest.TestCase):
     def test_structure(self):
         results = [("models/a.pkl",
-                    [finding("PKL001", "CRITICAL", cve="CVE-2025-1550")])]
+                    [finding("PKL001", "CRITICAL", cve="CWE-502")])]
         doc = mfs.to_sarif(results)
         self.assertEqual(doc["version"], "2.1.0")
         driver = doc["runs"][0]["tool"]["driver"]
         self.assertEqual(driver["name"], "model-file-scan")
         self.assertEqual(driver["version"], mfs.__version__)
+        self.assertIn("munimtechnologies", driver["informationUri"])
         self.assertIn("PKL001", [r["id"] for r in driver["rules"]])
         res = doc["runs"][0]["results"][0]
         self.assertEqual(res["ruleId"], "PKL001")
         self.assertEqual(res["level"], "error")
         loc = res["locations"][0]["physicalLocation"]["artifactLocation"]["uri"]
         self.assertEqual(loc, "models/a.pkl")
-        self.assertIn("CVE-2025-1550", res["message"]["text"])
+        self.assertIn("CWE-502", res["message"]["text"])
 
     def test_level_and_security_severity_mapping(self):
         pairs = {"CRITICAL": "error", "HIGH": "error", "MEDIUM": "warning",
@@ -118,10 +124,15 @@ class MainTests(unittest.TestCase):
             self.assertEqual(mfs.main([d]), 0)
 
 
-def _write_safetensors(path):
-    header = b'{"__metadata__":{}}'
+def _write_safetensors(path, trailing=b""):
+    header = b'{"w":{"dtype":"U8","shape":[4],"data_offsets":[0,4]}}'
     with open(path, "wb") as fh:
-        fh.write(struct.pack("<Q", len(header)) + header)
+        fh.write(struct.pack("<Q", len(header)) + header + b"\x00" * 4
+                 + trailing)
+
+
+def _rules(findings):
+    return {mfs._as_dict(f)["rule"] for f in findings}
 
 
 class IntegrationWiringTests(unittest.TestCase):
@@ -134,27 +145,28 @@ class IntegrationWiringTests(unittest.TestCase):
         except ImportError:
             self.skipTest("scanner modules not importable in this environment")
 
-    def test_safetensors_wiring(self):
+    def test_safetensors_routed_to_integrity_validator(self):
         with tempfile.TemporaryDirectory() as d:
             p = os.path.join(d, "model.safetensors")
             _write_safetensors(p)
-            self.assertIsInstance(self._scan(p), list)
+            self.assertEqual(_rules(self._scan(p)), {"SFT000"})
+
+    def test_safetensors_trailing_bytes_fail_ci(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = os.path.join(d, "model.safetensors")
+            _write_safetensors(p, trailing=b"hidden")
+            self.assertIn("SFT009", _rules(self._scan(p)))
+            try:
+                code = mfs.main([d, "--fail-on", "medium"])
+            except ImportError:
+                self.skipTest("scanner modules not importable in this environment")
+            self.assertEqual(code, 1)
 
     def test_pickle_wiring(self):
-        # Hand-built opcode stream equivalent to os.system('id') via
-        # STACK_GLOBAL + REDUCE. Built from byte constants; never unpickled.
-        payload = (
-            b"\x80\x04"            # PROTO 4
-            b"\x8c\x02os\x94"      # SHORT_BINUNICODE 'os'; MEMOIZE
-            b"\x8c\x06system\x94"  # SHORT_BINUNICODE 'system'; MEMOIZE
-            b"\x93"                # STACK_GLOBAL -> os.system
-            b"\x8c\x02id\x94"      # SHORT_BINUNICODE 'id'; MEMOIZE
-            b"\x85"                # TUPLE1
-            b"\x52"                # REDUCE
-            b"\x2e"                # STOP
-        )
+        # Benign opcode stream: PROTO 2, GLOBAL 'collections OrderedDict', STOP.
+        payload = b"\x80\x02ccollections\nOrderedDict\n."
         with tempfile.TemporaryDirectory() as d:
-            p = os.path.join(d, "evil.pkl")
+            p = os.path.join(d, "benign.pkl")
             with open(p, "wb") as fh:
                 fh.write(payload)
             self.assertIsInstance(self._scan(p), list)

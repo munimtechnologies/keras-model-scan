@@ -26,20 +26,27 @@ Documented real-world cases this scanner's rules are modelled on:
 | Declared header length read straight into an allocation | [AUTOMATIC1111/stable-diffusion-webui #17498](https://github.com/AUTOMATIC1111/stable-diffusion-webui/issues/17498) | SFT001, SFT002 |
 | `data_offsets` not validated against `shape × dtype` → heap overflow | [turboderp-org/exllamav2 #820](https://github.com/turboderp-org/exllamav2/issues/820) | SFT003, SFT005 |
 | Deeply nested header → uncaught `RecursionError` | [kornia #5218 / #5248](https://github.com/kornia/kornia/issues/5218) | SFT006 |
+| Bytes after the last tensor (polyglot file) | rejected by the reference loader as `MetadataIncompleteBuffer` | SFT009 |
 
 ## Rules
 
 | Rule | Severity | What it flags |
 |---|---|---|
-| SFT000 | INFO | Header length, JSON, dtypes and `data_offsets` are internally consistent. |
+| SFT000 | INFO | Header length, JSON, dtypes and `data_offsets` are internally consistent and cover the whole data section. |
 | SFT001 | HIGH | Declared header length + 8 exceeds the file size (oversized read / allocation DoS). |
 | SFT002 | HIGH | Header length is above the 100 MB safetensors cap (HeaderTooLarge / allocation DoS). |
 | SFT003 | HIGH/MEDIUM | `data_offsets` malformed, reversed, negative, or past the end of the data section (out-of-bounds read). |
-| SFT004 | MEDIUM/LOW | Tensor byte ranges overlap, or are non-contiguous. |
+| SFT004 | MEDIUM/LOW | Tensor byte ranges overlap, leave a gap, or the first tensor does not start at offset 0. |
 | SFT005 | HIGH | `data_offsets` span ≠ `numel(shape) × dtype_size` (the size-mismatch heap-overflow trigger). |
 | SFT006 | MEDIUM | JSON header nests past a safe depth; `json.loads` would risk `RecursionError`. Parsing is skipped. |
 | SFT007 | HIGH/LOW | Not a safetensors file, truncated, empty, or malformed JSON header. |
 | SFT008 | LOW | Unknown dtype string. |
+| SFT009 | MEDIUM | Trailing bytes after the last tensor: data the header does not describe. The reference implementation rejects these files; such bytes can carry a second, hidden payload. (New in 0.2.0 / repo v0.5.0.) |
+
+SFT004's start-at-zero check and SFT009 bring the validator in line with the
+reference implementation's full-coverage rule: tensors sorted by offset must start
+at 0, follow each other with no gap or overlap, and the last one must end exactly
+at the end of the file.
 
 A finding means the file would break or exhaust a naive loader and deserves
 review before use — it is **not** proof of malice, and a clean result is **not** a
@@ -54,6 +61,9 @@ python safetensors_scan.py ./models --json
 
 # CI gate: exit 1 if any finding is at least HIGH
 python safetensors_scan.py ./models --fail-on HIGH
+
+# or through the unified command, which routes .safetensors here
+model-file-scan ./models --sarif > model-file-scan.sarif
 ```
 
 Requires only Python 3.8+ (standard library). No third-party dependencies, so it
@@ -69,8 +79,15 @@ is safe to run in a hardened CI job and cannot be influenced by the file it scan
   scanners in this repo; `Finding` is a frozen dataclass
   (`rule, severity, title, detail, location, cve`) with `as_dict()`.
 
+## Validation
+
+See [VALIDATION.md](VALIDATION.md): eight crafted malformed files, one per class,
+were scanned in a sealed container with no network; all eight were flagged and the
+clean control passed.
+
 ## Scope and honesty
 
 This scanner is defensive. It performs static inspection of local files only. It
 never loads, maps, or executes a model, never contacts a network, and makes no
-claim about files it reports clean beyond header integrity.
+claim about files it reports clean beyond header integrity. Newer sub-byte dtypes
+are reported as unknown (SFT008) rather than size-checked.
