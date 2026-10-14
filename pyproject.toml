@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "model-file-scan"
+version = "0.3.0"
+description = "Static, no-execution security scanner for ML model files (.keras, .h5, pickle, .pt, .joblib, .npy, safetensors, GGUF) with SARIF output."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "MV2 of Munim, Inc.", email = "munimversion2@gmail.com" }]
+keywords = [
+    "security",
+    "machine-learning",
+    "pickle",
+    "safetensors",
+    "model-scanning",
+    "supply-chain",
+    "sarif",
+    "deserialization",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Security",
+    "Topic :: Software Development :: Quality Assurance",
+]
+
+[project.urls]
+Homepage = "https://github.com/munimv2/keras-model-scan"
+Issues = "https://github.com/munimv2/keras-model-scan/issues"
+
+[project.scripts]
+model-file-scan = "model_file_scan:main"
+keras-model-scan = "keras_model_scan:main"
+pickle-model-scan = "pickle_model_scan:main"
+
+[tool.setuptools]
+py-modules = ["model_file_scan", "keras_model_scan", "pickle_model_scan"]
