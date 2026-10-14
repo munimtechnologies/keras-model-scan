@@ -44,7 +44,7 @@ import sys
 from dataclasses import dataclass
 from typing import Any, Iterable, Optional
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 # Official safetensors header size cap (bytes). The reference implementation
 # rejects anything larger as HeaderTooLarge; a loader without this cap will try
@@ -56,13 +56,29 @@ HEADER_CAP = 100_000_000
 # exactly the uncontrolled-recursion DoS class.
 DEPTH_CAP = 100
 
-# safetensors dtype -> element size in bytes.
+# safetensors whole-byte dtype -> element size in bytes. Kept in sync with the
+# Dtype enum in huggingface/safetensors (safetensors/src/tensor.rs); fp8 variants
+# (one byte each) and C64/complex (eight bytes) are included because quantized
+# checkpoints that use them are now common and were previously flagged SFT008.
 DTYPE_SIZES = {
-    "BOOL": 1, "U8": 1, "I8": 1, "F8_E5M2": 1, "F8_E4M3": 1,
+    "BOOL": 1, "U8": 1, "I8": 1,
+    "F8_E5M2": 1, "F8_E4M3": 1, "F8_E8M0": 1,
+    "F8_E4M3FNUZ": 1, "F8_E5M2FNUZ": 1,
     "I16": 2, "U16": 2, "F16": 2, "BF16": 2,
     "I32": 4, "U32": 4, "F32": 4,
-    "I64": 8, "U64": 8, "F64": 8,
+    "C64": 8, "I64": 8, "U64": 8, "F64": 8,
 }
+
+# Sub-byte dtypes the format packs below one byte per element. They are valid
+# dtypes (so they must not raise SFT008), but the exact packed byte length is a
+# bit-width calculation the reference loader owns; to avoid a wrong size-mismatch
+# finding we recognise them and skip the SFT005 byte check for them.
+SUBBYTE_BITS = {"F4": 4, "F6_E2M3": 6, "F6_E3M2": 6}
+
+
+def _is_known_dtype(dtype: Any) -> bool:
+    return dtype in DTYPE_SIZES or dtype in SUBBYTE_BITS
+
 
 SEVERITY_ORDER = {"INFO": 0, "LOW": 1, "MEDIUM": 2, "HIGH": 3, "CRITICAL": 4}
 
@@ -226,7 +242,7 @@ def scan_file(path: str) -> list[Finding]:
         shape = spec.get("shape")
         offs = spec.get("data_offsets")
 
-        if dtype not in DTYPE_SIZES:
+        if not _is_known_dtype(dtype):
             findings.append(Finding(
                 "SFT008", "LOW", "Unknown dtype",
                 f"Tensor {name!r} declares dtype {dtype!r}, not a known safetensors "
@@ -255,6 +271,10 @@ def scan_file(path: str) -> list[Finding]:
                 f"{data_region} bytes. A loader trusting this reads out of bounds.",
                 tloc, "CWE-125"))
 
+        # Size check only for whole-byte dtypes: sub-byte dtypes (SUBBYTE_BITS)
+        # are packed below one byte per element, so their exact byte length is a
+        # bit-width calculation we do not reproduce here (we would rather skip the
+        # check than raise a wrong SFT005).
         if isinstance(shape, (list, tuple)) and dtype in DTYPE_SIZES:
             numel = _numel(shape)
             if numel is None:

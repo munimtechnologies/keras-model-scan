@@ -40,7 +40,7 @@ Documented real-world cases this scanner's rules are modelled on:
 | SFT005 | HIGH | `data_offsets` span ≠ `numel(shape) × dtype_size` (the size-mismatch heap-overflow trigger). |
 | SFT006 | MEDIUM | JSON header nests past a safe depth; `json.loads` would risk `RecursionError`. Parsing is skipped. |
 | SFT007 | HIGH/LOW | Not a safetensors file, truncated, empty, or malformed JSON header. |
-| SFT008 | LOW | Unknown dtype string. |
+| SFT008 | LOW | Unknown dtype string (not one of the dtypes in the reference `Dtype` enum). |
 | SFT009 | MEDIUM | Trailing bytes after the last tensor: data the header does not describe. The reference implementation rejects these files; such bytes can carry a second, hidden payload. (New in 0.2.0 / repo v0.5.0.) |
 
 SFT004's start-at-zero check and SFT009 bring the validator in line with the
@@ -51,6 +51,18 @@ at the end of the file.
 A finding means the file would break or exhaust a naive loader and deserves
 review before use — it is **not** proof of malice, and a clean result is **not** a
 guarantee of safety.
+
+## dtypes
+
+`DTYPE_SIZES` is kept in sync with the `Dtype` enum in
+[huggingface/safetensors](https://github.com/huggingface/safetensors) (`src/tensor.rs`).
+As of repo v0.6.0 it covers every whole-byte dtype, including the fp8 formats
+(`F8_E4M3`, `F8_E5M2`, `F8_E8M0`, `F8_E4M3FNUZ`, `F8_E5M2FNUZ`) and complex
+`C64`, so quantized checkpoints that use them are size-checked (SFT005) instead
+of being flagged as an unknown dtype (SFT008). Sub-byte dtypes (`F4`,
+`F6_E2M3`, `F6_E3M2`) are **recognised** as valid — so they do not raise
+SFT008 — but their packed byte length is a bit-width calculation this tool does
+not reproduce, so the SFT005 size check is skipped for them.
 
 ## Usage
 
@@ -89,5 +101,5 @@ clean control passed.
 
 This scanner is defensive. It performs static inspection of local files only. It
 never loads, maps, or executes a model, never contacts a network, and makes no
-claim about files it reports clean beyond header integrity. Newer sub-byte dtypes
-are reported as unknown (SFT008) rather than size-checked.
+claim about files it reports clean beyond header integrity. Sub-byte dtypes are
+recognised but not byte-size-checked (see **dtypes** above).

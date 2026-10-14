@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "model-file-scan"
-version = "0.5.0"
+version = "0.6.0"
 description = "Static, no-execution security scanner for ML model files (.keras, .h5, pickle, .pt, .joblib, .npy, safetensors, GGUF) with SARIF output."
 readme = "README.md"
 requires-python = ">=3.8"

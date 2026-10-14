@@ -147,6 +147,64 @@ class OffsetValidation(unittest.TestCase):
             os.remove(path)
 
 
+class KnownDtypes(unittest.TestCase):
+    def test_fp8_e4m3_is_recognised_and_size_checked(self):
+        # F8_E4M3 is one byte per element; [2,2] -> 4 bytes, clean.
+        blob = make_st({"w": {"dtype": "F8_E4M3", "shape": [2, 2],
+                              "data_offsets": [0, 4]}}, data_len=4)
+        path = write_tmp(blob)
+        try:
+            self.assertEqual(rules(s.scan_file(path)), {"SFT000"})
+        finally:
+            os.remove(path)
+
+    def test_fp8_e8m0_not_flagged_unknown(self):
+        blob = make_st({"w": {"dtype": "F8_E8M0", "shape": [3],
+                              "data_offsets": [0, 3]}}, data_len=3)
+        path = write_tmp(blob)
+        try:
+            self.assertNotIn("SFT008", rules(s.scan_file(path)))
+        finally:
+            os.remove(path)
+
+    def test_fp8_fnuz_variants_known(self):
+        for dt in ("F8_E4M3FNUZ", "F8_E5M2FNUZ"):
+            self.assertIn(dt, s.DTYPE_SIZES)
+            self.assertEqual(s.DTYPE_SIZES[dt], 1)
+
+    def test_complex64_is_eight_bytes(self):
+        blob = make_st({"w": {"dtype": "C64", "shape": [2],
+                              "data_offsets": [0, 16]}}, data_len=16)
+        path = write_tmp(blob)
+        try:
+            self.assertEqual(rules(s.scan_file(path)), {"SFT000"})
+        finally:
+            os.remove(path)
+
+    def test_fp8_size_mismatch_still_caught(self):
+        # F8_E4M3 [2,2] needs 4 bytes; offsets span 8.
+        blob = make_st({"w": {"dtype": "F8_E4M3", "shape": [2, 2],
+                              "data_offsets": [0, 8]}}, data_len=8)
+        path = write_tmp(blob)
+        try:
+            self.assertIn("SFT005", rules(s.scan_file(path)))
+        finally:
+            os.remove(path)
+
+    def test_subbyte_dtype_recognised_no_size_check(self):
+        # F4 is a valid sub-byte dtype: no SFT008, and no SFT005 is attempted
+        # (its packed byte length is not reproduced here).
+        blob = make_st({"w": {"dtype": "F4", "shape": [8],
+                              "data_offsets": [0, 4]}}, data_len=4)
+        path = write_tmp(blob)
+        try:
+            r = rules(s.scan_file(path))
+            self.assertNotIn("SFT008", r)
+            self.assertNotIn("SFT005", r)
+        finally:
+            os.remove(path)
+
+
 class Coverage(unittest.TestCase):
     def test_trailing_bytes_flagged(self):
         blob = make_st({"w": {"dtype": "F32", "shape": [2, 2],

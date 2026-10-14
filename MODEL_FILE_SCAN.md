@@ -73,7 +73,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-      - uses: munimtechnologies/keras-model-scan@v0.5.0
+      - uses: munimtechnologies/keras-model-scan@v0.6.0
         with:
           paths: "."
           fail-on: "high"
@@ -99,6 +99,10 @@ control file passed. See [VALIDATION.md](VALIDATION.md).
   suspicious-but-unclassified.
 - `lz4`/`zstd`-compressed containers are reported as unscanned (no stdlib
   codec); decompress them first.
-- Newer safetensors dtypes (for example sub-byte float formats) are reported as
-  unknown (SFT008, LOW) rather than size-checked.
+- safetensors sub-byte dtypes (`F4`, `F6_E2M3`, `F6_E3M2`) are recognised as
+  valid but not byte-size-checked (their packed length is a bit-width
+  calculation this tool does not reproduce); every whole-byte dtype, including
+  the fp8 formats (`F8_E4M3`, `F8_E5M2`, `F8_E8M0`, the FNUZ variants) and `C64`,
+  is size-checked (new in 0.6.0).
 - This tool and this document were made with AI.
+```

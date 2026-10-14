@@ -5,7 +5,8 @@
 # v0.5.0 corrected two mistakes: the picklescan STACK_GLOBAL bypass advisory
 # GHSA-9gvj-pp9x-gcfr is CVE-2025-71325 (it was cited as CVE-2025-71345), and
 # PKL001 (generic pickle RCE) is tagged CWE-502 instead of CVE-2025-1550, which
-# is a Keras Lambda-deserialization CVE. Made with AI by MV2 of Munim, Inc.
+# is a Keras Lambda-deserialization CVE. v0.6.0 added the fp8/C64/sub-byte
+# safetensors dtypes to DTYPE_SIZES/SUBBYTE_BITS. Made with AI by MV2 of Munim, Inc.
 
 import os
 import unittest
@@ -59,8 +60,21 @@ class Licence(unittest.TestCase):
         self.assertIn("Apache-2.0", _read("safetensors_scan.py"))
 
     def test_versions(self):
-        self.assertEqual(model_file_scan.__version__, "0.5.0")
-        self.assertEqual(safetensors_scan.__version__, "0.2.0")
+        self.assertEqual(model_file_scan.__version__, "0.6.0")
+        self.assertEqual(safetensors_scan.__version__, "0.3.0")
+
+
+class SafetensorsDtypes(unittest.TestCase):
+    def test_fp8_and_complex_are_whole_byte_known(self):
+        for dt, size in (("F8_E4M3", 1), ("F8_E5M2", 1), ("F8_E8M0", 1),
+                         ("F8_E4M3FNUZ", 1), ("F8_E5M2FNUZ", 1), ("C64", 8)):
+            self.assertIn(dt, safetensors_scan.DTYPE_SIZES)
+            self.assertEqual(safetensors_scan.DTYPE_SIZES[dt], size)
+
+    def test_subbyte_dtypes_recognised(self):
+        for dt in ("F4", "F6_E2M3", "F6_E3M2"):
+            self.assertTrue(safetensors_scan._is_known_dtype(dt))
+            self.assertNotIn(dt, safetensors_scan.DTYPE_SIZES)
 
 
 if __name__ == "__main__":
