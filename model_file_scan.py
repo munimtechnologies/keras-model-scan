@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 """model-file-scan: one static, no-execution security scan for ML model files.
 
-Unifies the three scanners in this repository behind a single command:
+Unifies the scanners in this repository behind a single command:
 
   * ``.keras`` / ``.h5`` / ``.hdf5`` / ``config.json``  -> keras_model_scan
+  * ``*.index.json`` (sharded-model index)              -> safetensors_index_scan
+    (path safety of the weight_map: a shard path that is absolute, uses ``..``,
+     or carries a URL scheme escapes the model directory -- CWE-22)
   * ``.safetensors``                                     -> safetensors_scan
     (header / offset integrity: the format has no code-execution surface, but
      malformed headers break hand-written loaders)
@@ -24,7 +27,7 @@ import json
 import os
 import sys
 
-__version__ = "0.6.0"
+__version__ = "0.7.0"
 
 REPO_URL = "https://github.com/munimtechnologies/keras-model-scan"
 
@@ -40,11 +43,15 @@ _MODEL_EXTS = _KERAS_EXTS | {
 
 
 def route(path):
-    """Return 'keras', 'safetensors' or 'pickle' -- which scanner handles ``path``."""
+    """Return 'keras', 'sti', 'safetensors' or 'pickle' -- which scanner handles
+    ``path``. A sharded-model index (``*.index.json``) is checked for weight_map
+    path safety and must win over the generic ``.json`` -> keras rule."""
     name = os.path.basename(path).lower()
     ext = os.path.splitext(name)[1]
     if ext in _KERAS_EXTS:
         return "keras"
+    if name.endswith(".index.json"):
+        return "sti"
     if name == "config.json" or ext == ".json":
         return "keras"
     if ext == ".safetensors":
@@ -60,6 +67,8 @@ def scan_path(path):
     kind = route(path)
     if kind == "keras":
         import keras_model_scan as scanner
+    elif kind == "sti":
+        import safetensors_index_scan as scanner
     elif kind == "safetensors":
         import safetensors_scan as scanner
     else:
@@ -78,8 +87,10 @@ def expand_paths(paths):
         if os.path.isdir(p):
             for root, _dirs, names in os.walk(p):
                 for name in names:
-                    ext = os.path.splitext(name)[1].lower()
-                    if ext in _MODEL_EXTS or name.lower() == "config.json":
+                    low = name.lower()
+                    ext = os.path.splitext(low)[1]
+                    if (ext in _MODEL_EXTS or low == "config.json"
+                            or low.endswith(".index.json")):
                         files.append(os.path.join(root, name))
         elif os.path.exists(p):
             files.append(p)
