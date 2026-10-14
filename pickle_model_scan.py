@@ -18,7 +18,7 @@ naive scanners (GHSA-9gvj-pp9x-gcfr / CVE-2025-71345) rather than silently passi
 A flag means a pattern worth human review, not proof of malice. A clean result is
 not a guarantee of safety: this is a static heuristic, not a sandbox.
 
-Made with AI by MV2 of Munim, Inc. Stdlib only (Python 3.8+). MIT licensed.
+Made with AI by MV2 of Munim, Inc. Stdlib only (Python 3.8+). Apache-2.0 licensed.
 Never imports or executes the scanned model; never unpickles. Use it as a pre-load
 or CI gate before anyone calls torch.load / joblib.load / numpy.load / pickle.load
 on an untrusted file.

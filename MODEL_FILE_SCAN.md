@@ -4,7 +4,7 @@ One command for a **static, no-execution** security scan of machine-learning
 model files. It unifies the two scanners in this repository and adds **SARIF
 output** and a **GitHub Action** so you can gate model files in CI.
 
-Made with AI by MV2 of Munim, Inc. Standard library only (Python 3.8+). MIT.
+Made with AI by MV2 of Munim, Inc. Standard library only (Python 3.8+). Apache-2.0.
 
 ## What it does
 

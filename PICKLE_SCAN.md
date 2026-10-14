@@ -5,7 +5,7 @@ A static, **no-execution** scanner for pickle-based model files, part of the
 one reads a Keras `config.json`, this one reads the **pickle opcode stream** that
 powers the most common real-world model-file remote-code-execution (RCE) vector.
 
-Made with AI by MV2 of Munim, Inc. Standard library only (Python 3.8+). MIT licensed.
+Made with AI by MV2 of Munim, Inc. Standard library only (Python 3.8+). Apache-2.0 licensed.
 
 ## Why
 

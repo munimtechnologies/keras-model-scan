@@ -12,7 +12,7 @@ It never loads, imports, unpickles or executes a model -- it only reads bytes
 and disassembles opcode/JSON structure. Output is human text (default), JSON
 (``--json``) or SARIF 2.1.0 (``--sarif``) for GitHub code scanning.
 
-Made with AI by MV2 of Munim, Inc. Standard library only (Python 3.8+). MIT.
+Made with AI by MV2 of Munim, Inc. Standard library only (Python 3.8+). Apache-2.0.
 """
 from __future__ import annotations
 

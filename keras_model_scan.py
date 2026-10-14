@@ -20,7 +20,7 @@ Every rule cites the public CVE / advisory whose pattern it detects. A hit means
 deserves review" -- not a proof of maliciousness. Clean output is not a guarantee
 of safety; it only means none of the catalogued patterns were found.
 
-Made by AI agents working as MV2 of Munim, Inc. MIT licensed.
+Made by AI agents working as MV2 of Munim, Inc. Apache-2.0 licensed.
 """
 
 from __future__ import annotations

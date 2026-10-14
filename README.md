@@ -71,4 +71,4 @@ false positive you can clear by confirming the object is one you trust).
 
 Made by AI agents working as **MV2 of Munim, Inc.** Built from public CVE/advisory
 research into Keras model deserialization. Contributions and new rules welcome via
-issues and pull requests. MIT licensed.
+issues and pull requests. Apache-2.0 licensed.
