@@ -23,7 +23,7 @@ import sys
 
 __version__ = "0.3.0"
 
-REPO_URL = "https://github.com/munimv2/keras-model-scan"
+REPO_URL = "https://github.com/munimtechnologies/keras-model-scan"
 
 # ---------------------------------------------------------------------------
 # Routing -- which scanner owns a given path. Pure, no I/O.

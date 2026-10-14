@@ -30,8 +30,8 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/munimv2/keras-model-scan"
-Issues = "https://github.com/munimv2/keras-model-scan/issues"
+Homepage = "https://github.com/munimtechnologies/keras-model-scan"
+Issues = "https://github.com/munimtechnologies/keras-model-scan/issues"
 
 [project.scripts]
 model-file-scan = "model_file_scan:main"

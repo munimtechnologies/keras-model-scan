@@ -26,7 +26,7 @@ guarantee of safety. When in doubt, prefer `safetensors`.
 From source (no PyPI account needed):
 
 ```bash
-pip install "git+https://github.com/munimv2/keras-model-scan"
+pip install "git+https://github.com/munimtechnologies/keras-model-scan"
 ```
 
 This installs three console commands — `model-file-scan` (the unified entry),
@@ -72,7 +72,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-      - uses: munimv2/keras-model-scan@v0.3.0
+      - uses: munimtechnologies/keras-model-scan@v0.3.0
         with:
           paths: "."
           fail-on: "high"
