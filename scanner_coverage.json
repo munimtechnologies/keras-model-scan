@@ -17,7 +17,7 @@
     {"id": "fk", "name": "fickling (Trail of Bits)", "scope": "pickle only; AST / allowlist with dataflow"},
     {"id": "ms", "name": "ModelScan (Protect AI)", "scope": "pickle, PyTorch, Keras H5, TensorFlow SavedModel; denylist of dangerous globals"},
     {"id": "ma", "name": "ModelAudit (Promptfoo)", "scope": "widest format set incl. config files, ONNX, SafeTensors, NumPy, PMML, archives"},
-    {"id": "kms", "name": "keras-model-scan (MV2 / Munim, Inc.)", "scope": "static, dependency-free, no-execution detectors for .keras, pickle, safetensors, GGUF, ONNX, HF config, chat templates, config-driven class instantiation keys and YAML object tags"}
+    {"id": "kms", "name": "keras-model-scan (MV2 / Munim, Inc.)", "scope": "static, dependency-free, no-execution detectors for .keras, pickle, safetensors, GGUF, ONNX, HF config, chat templates, config-driven class instantiation keys, YAML object tags and MONAI bundle expressions"}
   ],
   "vectors": [
     {"id": "pkl-rce", "title": "Pickle dangerous-import RCE (GLOBAL + REDUCE/BUILD)", "formats": ".pkl, .pt, .pth, .bin, .joblib, object .npy", "class": "CWE-502"},
@@ -41,7 +41,8 @@
     {"id": "cfg-st-modules", "title": "sentence-transformers modules.json module type outside the package namespace", "formats": "modules.json", "class": "CVE-2026-68770 / GHSA-jhr6-gm9c-rqjv (CWE-94)"},
     {"id": "cfg-jsonargparse", "title": "jsonargparse / LightningCLI class_path config instantiation", "formats": "YAML/JSON CLI configs", "class": "jsonargparse PR #959 import-path denylist"},
     {"id": "ckpt-lightning", "title": "Lightning checkpoint hparams _instantiator / _class_path", "formats": ".ckpt hyper-parameters, hparams.yaml", "class": "CVE-2026-58659 / GHSA-qqmf-gpg7-g8gw (CWE-470)"},
-    {"id": "yaml-pytag", "title": "Python object tags in YAML metadata (PyYAML !!python/..., HyperPyYAML !new:/!apply:)", "formats": "CKPT.yaml, hyperparams.yaml, model config .yaml / *.yml", "class": "CVE-2026-10036 (SpeechBrain < 1.1.1); CVE-2026-84202 (ModelScope) / CWE-502"}
+    {"id": "yaml-pytag", "title": "Python object tags in YAML metadata (PyYAML !!python/..., HyperPyYAML !new:/!apply:)", "formats": "CKPT.yaml, hyperparams.yaml, model config .yaml / *.yml", "class": "CVE-2026-10036 (SpeechBrain < 1.1.1); CVE-2026-84202 (ModelScope) / CWE-502"},
+    {"id": "cfg-monai", "title": "MONAI bundle $ Python-eval expressions and _target_ instantiation", "formats": "inference.json / train.json / metadata.json, bundle .yaml", "class": "CVE-2026-100840 / GHSA-873f-pvrv-4x83 / PYSEC-2026-4015 (CWE-95)"}
   ],
   "cells": [
     {"vector": "pkl-rce", "scanner": "ps", "status": "detects", "note": "hybrid denylist of dangerous globals", "sources": ["https://blog.huntr.com/hunting-vulnerabilities-in-machine-learning-model-file-formats"]},
@@ -174,6 +175,12 @@
     {"vector": "yaml-pytag", "scanner": "fk", "status": "out-of-scope", "note": "pickle only; does not read YAML files", "sources": []},
     {"vector": "yaml-pytag", "scanner": "ms", "status": "out-of-scope", "note": "scope is pickle/PyTorch/Keras-H5/TF-SavedModel; standalone YAML files are not a format it scans", "sources": []},
     {"vector": "yaml-pytag", "scanner": "ma", "status": "partial", "note": "Manifest scanner matches generic code-execution patterns in .yaml and the Jinja2 scanner checks YAML for SSTI; no documented rule for PyYAML !!python/ tags, HyperPyYAML !new:/!apply:, or CVE-2026-10036", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
-    {"vector": "yaml-pytag", "scanner": "kms", "status": "detects", "note": "YPT001-004 in yaml_python_tag_scan flag PyYAML !!python/object|apply|new|name|module tags (incl. verbatim form), HyperPyYAML !new:/!apply:/!name:/!module:, %TAG python aliases, and any code tag in CKPT.yaml (CVE-2026-10036)", "sources": ["https://vulncheck.com/advisories/speechbrain-arbitrary-code-execution-via-ckpt-yaml-parsing", "https://github.com/munimtechnologies/keras-model-scan/blob/main/YAML_PYTHON_TAG_SCAN.md"]}
+    {"vector": "yaml-pytag", "scanner": "kms", "status": "detects", "note": "YPT001-004 in yaml_python_tag_scan flag PyYAML !!python/object|apply|new|name|module tags (incl. verbatim form), HyperPyYAML !new:/!apply:/!name:/!module:, %TAG python aliases, and any code tag in CKPT.yaml (CVE-2026-10036)", "sources": ["https://vulncheck.com/advisories/speechbrain-arbitrary-code-execution-via-ckpt-yaml-parsing", "https://github.com/munimtechnologies/keras-model-scan/blob/main/YAML_PYTHON_TAG_SCAN.md"]},
+
+    {"vector": "cfg-monai", "scanner": "ps", "status": "out-of-scope", "note": "pickle only; does not read bundle config files", "sources": []},
+    {"vector": "cfg-monai", "scanner": "fk", "status": "out-of-scope", "note": "pickle only; does not read bundle config files", "sources": []},
+    {"vector": "cfg-monai", "scanner": "ms", "status": "no", "note": "configuration files not analysed", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
+    {"vector": "cfg-monai", "scanner": "ma", "status": "partial", "note": "Manifest scanner matches generic code-execution patterns in .json/.yaml configs; no rule documented for MONAI bundle $ eval expressions or _target_ instantiation", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
+    {"vector": "cfg-monai", "scanner": "kms", "status": "detects", "note": "HYD006 in hydra_target_scan flags MONAI $ eval expressions; HYD001/002 cover the bundle _target_ sink", "sources": ["https://github.com/advisories/GHSA-873f-pvrv-4x83", "https://github.com/munimtechnologies/keras-model-scan/blob/main/HYDRA_TARGET_SCAN.md"]}
   ]
 }

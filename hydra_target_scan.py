@@ -1,10 +1,11 @@
 # SPDX-License-Identifier: Apache-2.0
 # Part of munimtechnologies/keras-model-scan by MV2, Munim, Inc.
 # This file and the detector it implements were made with AI.
-"""Static detector for config-driven class instantiation in model metadata and
-configuration files: Hydra / OmegaConf ``_target_`` keys, pyannote-style
-``pipeline: name:`` class references, and sentence-transformers ``modules.json``
-``type`` class references.
+"""Static detector for config-driven class instantiation and expression evaluation
+in model metadata and configuration files: Hydra / OmegaConf ``_target_`` keys,
+pyannote-style ``pipeline: name:`` class references, sentence-transformers
+``modules.json`` ``type`` class references, and MONAI bundle ``$`` Python-eval
+expressions.
 
 Why this exists
 ---------------
@@ -50,15 +51,28 @@ not introduce a new exploit):
   class is confirmed to be a sentence-transformers module class); 5.6.0 only warns.
   HYD005 flags any ``modules.json`` ``type`` that leaves the
   ``sentence_transformers.`` namespace, matching the loader's own trust boundary.
+* CVE-2026-100840 / GHSA-873f-pvrv-4x83 / PYSEC-2026-4015 -- MONAI (<= 1.6.0). MONAI's
+  bundle configuration engine resolves ``_target_`` values to arbitrary importable
+  callables *without an allowlist* **and**, separately, evaluates any string that
+  begins with ``$`` as a Python expression via ``eval()`` (its ``ConfigExpression``
+  syntax: ``"$print(42)"``, ``"$from torchvision.models import resnet18"``). Loading an
+  untrusted bundle with ``monai.bundle.load()`` / ``monai.bundle.run()`` therefore runs
+  arbitrary code (CWE-95). The ``_target_`` sink is already covered by HYD001/HYD002;
+  HYD006 adds the distinct ``$``-expression eval sink, which no existing model scanner
+  documents a rule for. HYD006 flags a ``$``-leading string value anywhere in a bundle
+  config (escalating to HIGH when the expression contains a code-execution token, and
+  reporting MEDIUM for any other ``$`` expression in a file that shows MONAI bundle
+  markers). It deliberately ignores OmegaConf ``${...}`` interpolation, which is a
+  different mechanism.
 
 Scope and honesty
 -----------------
 This is a static, no-execution analyzer: it parses JSON (and text-scans YAML) and
-inspects key names and string values only. It never imports, resolves or calls a
-``_target_`` or class name. A clean scan does not prove a file is safe, and the real
-fix is to not feed untrusted metadata to ``instantiate()`` / ``get_class_by_name()`` /
-``import_module_class`` (and to upgrade affected libraries). Everything named above is
-already public.
+inspects key names and string values only. It never imports, resolves, calls or
+evaluates a ``_target_``, class name or ``$`` expression. A clean scan does not prove a
+file is safe, and the real fix is to not feed untrusted metadata to ``instantiate()`` /
+``get_class_by_name()`` / ``import_module_class`` / ``monai.bundle.load`` (and to
+upgrade affected libraries). Everything named above is already public.
 
 Usage
 -----
@@ -74,9 +88,9 @@ import os
 import re
 import sys
 from dataclasses import dataclass, asdict
-from typing import Iterable, List
+from typing import Iterable, List, Optional
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 # ---- severity ordering -----------------------------------------------------
 _SEVERITY_ORDER = {"INFO": 0, "LOW": 1, "MEDIUM": 2, "HIGH": 3, "ERROR": 4}
@@ -90,6 +104,10 @@ _YAML_SUFFIXES = (".yaml", ".yml")
 # Hydra/OmegaConf instantiation marker keys.
 _TARGET_KEYS = {"_target_"}
 _HELPER_KEYS = {"_args_", "_partial_", "_recursive_", "_convert_", "_target_wrapper_"}
+
+# MONAI bundle marker keys. Their presence in a config means the file is parsed by
+# MONAI's ConfigParser, which evaluates ``$`` expressions and instantiates ``_target_``.
+_MONAI_KEYS = {"_requires_", "_disabled_", "_desc_", "_mode_"}
 
 # Dotted paths that mean "arbitrary code" if instantiated. Matched on the dotted
 # prefix (module.callable) so e.g. "subprocess.Popen" and "subprocess.run" both hit.
@@ -106,6 +124,18 @@ _DANGEROUS_TARGETS = {
     "runpy.run_path", "runpy.run_module", "code.interact", "pdb.run",
     "functools.partial",  # commonly used to pre-bind a dangerous callable
 }
+
+# Tokens that make a MONAI ``$`` expression an obvious code-execution payload. Matched
+# as substrings against the text after the leading ``$`` (Python is case-sensitive).
+_HYD006_DANGEROUS = (
+    "__import__", "exec(", "eval(", "compile(",
+    "os.system", "os.popen", "os.exec", "os.spawn", "os.remove", "os.rmdir",
+    "subprocess", "popen", ".system(", "pty.spawn",
+    "ctypes", "socket.", "getattr(", "setattr(", "globals(", "locals(",
+    "breakpoint(", "marshal.", "pickle.", "base64", "shutil.",
+    "__class__", "__subclasses__", "__globals__", "__builtins__", "__bases__",
+    "__mro__", "__reduce__",
+)
 
 # A conservative allowlist of obviously-benign instantiation targets so that
 # legitimate configs (e.g. torch optimizers/schedulers) do not produce noise.
@@ -125,6 +155,9 @@ _ST_PREFIX = "sentence_transformers."
 
 _YAML_TARGET_RE = re.compile(r"""^\s*_target_\s*:\s*['"]?([A-Za-z_][\w\.]*)['"]?""")
 _YAML_KEY_RE = re.compile(r"""^(\s*)([A-Za-z_][\w\-]*)\s*:(?:\s+(.*))?$""")
+# A line that declares a MONAI bundle marker key (optionally as a list item mapping).
+_MONAI_YAML_RE = re.compile(
+    r"(?m)^\s*(?:-\s+)?(?:_target_|_requires_|_disabled_|_desc_|_mode_)\s*:")
 
 
 @dataclass
@@ -223,6 +256,45 @@ def _st_type_finding(value: str, file_label: str, path: str) -> Finding:
     return Finding("HYD005", sev, file_label, path, msg)
 
 
+def _short(value: str, limit: int = 72) -> str:
+    """Truncate a value for a finding message so output stays readable."""
+    value = value.replace("\n", " ")
+    return value if len(value) <= limit else value[: limit - 3] + "..."
+
+
+def _monai_expr_finding(value, has_monai: bool, file_label: str,
+                        path: str) -> Optional[Finding]:
+    """HYD006: a MONAI bundle ``$`` expression that MONAI evaluates with ``eval()``.
+
+    A string value whose first character is ``$`` is a MONAI ``ConfigExpression`` and
+    is passed to Python ``eval()`` (CVE-2026-100840). OmegaConf-style ``${...}``
+    interpolation is a different mechanism and is ignored. A ``$`` expression that
+    contains an obvious code-execution token is HIGH regardless of other markers; any
+    other ``$`` expression is MEDIUM only when the file also shows MONAI bundle markers
+    (a ``_target_`` or a MONAI underscore key), to avoid flagging stray ``$``-leading
+    strings in unrelated configs (e.g. a ``"$5.00"`` price field).
+    """
+    if not isinstance(value, str):
+        return None
+    v = value.strip()
+    if len(v) < 2 or not v.startswith("$") or v.startswith("${"):
+        return None
+    expr = v[1:]
+    if any(tok in expr for tok in _HYD006_DANGEROUS):
+        return Finding(
+            "HYD006", "HIGH", file_label, path,
+            f"MONAI bundle '$' expression '{_short(v)}' is passed to eval() and "
+            f"contains a code-execution token; monai.bundle.load/run would execute it "
+            f"(CVE-2026-100840 / GHSA-873f-pvrv-4x83, CWE-95).")
+    if has_monai:
+        return Finding(
+            "HYD006", "MEDIUM", file_label, path,
+            f"MONAI bundle '$' expression '{_short(v)}' is evaluated as Python via "
+            f"eval() by ConfigExpression; untrusted bundle config here is RCE-prone "
+            f"(CVE-2026-100840 / GHSA-873f-pvrv-4x83).")
+    return None
+
+
 def _walk(node, path: str) -> Iterable[tuple]:
     """Yield (key, value, path) for every mapping key in a nested JSON structure."""
     if isinstance(node, dict):
@@ -234,6 +306,29 @@ def _walk(node, path: str) -> Iterable[tuple]:
         for i, v in enumerate(node):
             kp = f"{path}[{i}]"
             yield from _walk(v, kp)
+
+
+def _iter_str_scalars(node, path: str) -> Iterable[tuple]:
+    """Yield (string, path) for every string value, incl. bare list elements.
+
+    ``_walk`` only yields strings that are mapping values; a MONAI ``$`` expression can
+    also be a bare list element (e.g. inside ``_requires_``), so this iterator yields
+    those too.
+    """
+    if isinstance(node, dict):
+        for k, v in node.items():
+            kp = f"{path}.{k}" if path else k
+            if isinstance(v, str):
+                yield (v, kp)
+            else:
+                yield from _iter_str_scalars(v, kp)
+    elif isinstance(node, list):
+        for i, v in enumerate(node):
+            kp = f"{path}[{i}]"
+            if isinstance(v, str):
+                yield (v, kp)
+            else:
+                yield from _iter_str_scalars(v, kp)
 
 
 def scan_json_obj(obj, file_label: str) -> List[Finding]:
@@ -263,6 +358,14 @@ def scan_json_obj(obj, file_label: str) -> List[Finding]:
         elif (is_modules_json and key == "type" and isinstance(value, str)
               and value.strip()):
             findings.append(_st_type_finding(value.strip(), file_label, path))
+
+    # HYD006: MONAI bundle ``$`` Python-eval expressions (CVE-2026-100840).
+    has_monai = any(k in _TARGET_KEYS or k in _MONAI_KEYS
+                    for k, _v, _p in _walk(obj, ""))
+    for sval, spath in _iter_str_scalars(obj, ""):
+        f = _monai_expr_finding(sval, has_monai, file_label, spath)
+        if f is not None:
+            findings.append(f)
     return findings
 
 
@@ -274,9 +377,26 @@ def _clean_scalar(raw: str) -> str:
     return value
 
 
+def _yaml_line_value(line: str) -> Optional[str]:
+    """Return the scalar value from a ``key: value`` or ``- value`` line, else None."""
+    s = line.strip()
+    if not s or s.startswith("#"):
+        return None
+    if s.startswith("- "):
+        return _clean_scalar(s[2:])
+    if s == "-":
+        return None
+    km = _YAML_KEY_RE.match(line)
+    if km:
+        return _clean_scalar(km.group(3) or "")
+    return None
+
+
 def scan_yaml_text(text: str, file_label: str) -> List[Finding]:
-    """Dependency-free YAML text scan for _target_ lines and class references."""
+    """Dependency-free YAML text scan for _target_ lines, class references and MONAI
+    ``$`` expressions."""
     findings: List[Finding] = []
+    has_monai = bool(_MONAI_YAML_RE.search(text))
     stack: List[tuple] = []  # (indent, key) of the enclosing block mappings
     for lineno, line in enumerate(text.splitlines(), 1):
         m = _YAML_TARGET_RE.match(line)
@@ -292,6 +412,13 @@ def scan_yaml_text(text: str, file_label: str) -> List[Finding]:
                     "HYD002", sev, file_label, f"line {lineno}",
                     f"_target_ '{val}' selects a callable for hydra instantiate(); "
                     f"untrusted config here is RCE-prone (GHSA-mwj6-rfh8-7qf4)."))
+
+        # HYD006: a MONAI ``$`` expression as the value of this line.
+        sval = _yaml_line_value(line)
+        if sval is not None:
+            f = _monai_expr_finding(sval, has_monai, file_label, f"line {lineno}")
+            if f is not None:
+                findings.append(f)
 
         stripped = line.strip()
         if not stripped or stripped.startswith(("#", "-")):
@@ -358,7 +485,8 @@ def _max_severity(findings: List[Finding]) -> str:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(
         description="Static config-driven class instantiation scanner: Hydra _target_, "
-                    "pyannote class references, sentence-transformers modules.json type")
+                    "pyannote class references, sentence-transformers modules.json type, "
+                    "MONAI bundle $ expressions")
     ap.add_argument("path", help="file or directory to scan")
     ap.add_argument("--fail-on", default="HIGH",
                     choices=list(_SEVERITY_ORDER.keys()),
