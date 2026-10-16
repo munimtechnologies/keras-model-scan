@@ -27,6 +27,9 @@ class TestHydraTargetScan(unittest.TestCase):
     def _scan(self, name):
         return scan.scan_file(os.path.join(self.tmp, name))
 
+    def _scan_modules(self, subdir):
+        return scan.scan_file(corpus.modules_fixture_path(self.tmp, subdir))
+
     def test_clean_has_no_findings(self):
         self.assertEqual(self._scan("clean_config.json"), [])
 
@@ -126,6 +129,34 @@ class TestHydraTargetScan(unittest.TestCase):
         self.assertEqual(ids(f), {"HYD004"})
         self.assertEqual(severities(f), {"HIGH"})
 
+    # ---- sentence-transformers modules.json type (HYD005, CVE-2026-68770) ----
+
+    def test_modules_clean_is_low_only(self):
+        f = self._scan_modules("st_clean")
+        self.assertEqual(ids(f), {"HYD005"})
+        self.assertEqual(severities(f), {"LOW"})
+        self.assertEqual(scan.main([corpus.modules_fixture_path(self.tmp, "st_clean")]), 0)
+
+    def test_modules_foreign_is_medium(self):
+        f = self._scan_modules("st_foreign")
+        self.assertEqual(ids(f), {"HYD005"})
+        self.assertIn("MEDIUM", severities(f))
+        self.assertNotIn("HIGH", severities(f))
+        self.assertTrue(any("CVE-2026-68770" in x.message for x in f))
+
+    def test_modules_exec_is_high(self):
+        f = self._scan_modules("st_exec")
+        self.assertEqual(ids(f), {"HYD005"})
+        self.assertEqual(severities(f), {"HIGH"})
+        self.assertIn("'subprocess.Popen'", f[0].message)
+        self.assertEqual(
+            scan.main([corpus.modules_fixture_path(self.tmp, "st_exec"), "--fail-on", "HIGH"]), 1)
+
+    def test_type_key_outside_modules_json_is_ignored(self):
+        # a 'type' key in a normal config file must not raise HYD005
+        f = self._scan("type_key_config.json")
+        self.assertEqual(f, [])
+
     def test_every_fixture_matches_its_expected_id(self):
         fixtures = dict(corpus.JSON_FIXTURES)
         fixtures.update(corpus.YAML_FIXTURES)
@@ -135,6 +166,9 @@ class TestHydraTargetScan(unittest.TestCase):
                 self.assertEqual(got, set(), name)
             else:
                 self.assertIn(expect, got, name)
+        for subdir, (_content, expect, _note) in corpus.MODULES_FIXTURES.items():
+            got = ids(self._scan_modules(subdir))
+            self.assertIn(expect, got, subdir)
 
 
 if __name__ == "__main__":

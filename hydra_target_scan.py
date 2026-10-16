@@ -2,8 +2,9 @@
 # Part of munimtechnologies/keras-model-scan by MV2, Munim, Inc.
 # This file and the detector it implements were made with AI.
 """Static detector for config-driven class instantiation in model metadata and
-configuration files: Hydra / OmegaConf ``_target_`` keys and pyannote-style
-``pipeline: name:`` class references.
+configuration files: Hydra / OmegaConf ``_target_`` keys, pyannote-style
+``pipeline: name:`` class references, and sentence-transformers ``modules.json``
+``type`` class references.
 
 Why this exists
 ---------------
@@ -35,14 +36,29 @@ not introduce a new exploit):
   the config's ``params``. Same class, different key. At the time of writing the
   issues are open with no linked fix, so HYD004 flags any such reference that
   leaves the ``pyannote.`` namespace.
+* CVE-2026-68770 / GHSA-jhr6-gm9c-rqjv / PYSEC-2026-4164 -- sentence-transformers.
+  ``SentenceTransformer`` reads a model directory's ``modules.json``, a list of
+  module entries each carrying a ``type`` (a dotted class path). The loader
+  (``import_module_class``) treats a ``type`` that starts with
+  ``sentence_transformers.`` as allowlisted and imports it directly; any other
+  ``type`` is custom repository code that should require ``trust_remote_code=True``.
+  Before the fix a local-path load could reach that custom code *even with*
+  ``trust_remote_code=False`` because of an ``or os.path.exists(...)`` short-circuit,
+  so a crafted ``modules.json`` on an attacker-influenced directory (a downloaded
+  Hub snapshot, an unpacked archive, a mounted share) ran arbitrary Python at load
+  time. Hardening landed in 6.0 (the short-circuit removed) and 6.1.0 (the resolved
+  class is confirmed to be a sentence-transformers module class); 5.6.0 only warns.
+  HYD005 flags any ``modules.json`` ``type`` that leaves the
+  ``sentence_transformers.`` namespace, matching the loader's own trust boundary.
 
 Scope and honesty
 -----------------
 This is a static, no-execution analyzer: it parses JSON (and text-scans YAML) and
 inspects key names and string values only. It never imports, resolves or calls a
 ``_target_`` or class name. A clean scan does not prove a file is safe, and the real
-fix is to not feed untrusted metadata to ``instantiate()`` / ``get_class_by_name()``
-(and to upgrade affected libraries). Everything named above is already public.
+fix is to not feed untrusted metadata to ``instantiate()`` / ``get_class_by_name()`` /
+``import_module_class`` (and to upgrade affected libraries). Everything named above is
+already public.
 
 Usage
 -----
@@ -60,14 +76,14 @@ import sys
 from dataclasses import dataclass, asdict
 from typing import Iterable, List
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 # ---- severity ordering -----------------------------------------------------
 _SEVERITY_ORDER = {"INFO": 0, "LOW": 1, "MEDIUM": 2, "HIGH": 3, "ERROR": 4}
 
 # Config files that may carry model metadata handed to instantiate().
 _JSON_NAMES = {"config.json", "generation_config.json", "model_config.json",
-               "preprocessor_config.json", "hparams.json"}
+               "preprocessor_config.json", "hparams.json", "modules.json"}
 _JSON_SUFFIXES = ("_config.json",)
 _YAML_SUFFIXES = (".yaml", ".yml")
 
@@ -102,6 +118,10 @@ _SAFE_TARGET_PREFIXES = (
 # pyannote resolves a bare (undotted) name inside its own default module, so only
 # a dotted name outside this namespace can reach an arbitrary callable.
 _PYANNOTE_PREFIX = "pyannote."
+
+# sentence-transformers' loader allowlists a modules.json "type" iff it starts with
+# this prefix; anything else is custom repository code (CVE-2026-68770 trust gate).
+_ST_PREFIX = "sentence_transformers."
 
 _YAML_TARGET_RE = re.compile(r"""^\s*_target_\s*:\s*['"]?([A-Za-z_][\w\.]*)['"]?""")
 _YAML_KEY_RE = re.compile(r"""^(\s*)([A-Za-z_][\w\-]*)\s*:(?:\s+(.*))?$""")
@@ -147,6 +167,23 @@ def _classify_class_ref(value: str) -> str:
     return "MEDIUM"
 
 
+def _classify_st_type(value: str) -> str:
+    """Return the severity for a sentence-transformers ``modules.json`` type.
+
+    Mirrors the loader's trust boundary: a ``type`` inside the
+    ``sentence_transformers.`` namespace is allowlisted (LOW); anything else is
+    custom repository code requiring ``trust_remote_code=True`` (MEDIUM), and a
+    known code-execution callable is HIGH. A bare (undotted) name cannot be
+    resolved by ``import_from_string`` (it needs a dot), so it is LOW.
+    """
+    dotted = value.strip()
+    if _classify_target(dotted) == "HIGH":
+        return "HIGH"
+    if "." not in dotted or dotted.startswith(_ST_PREFIX):
+        return "LOW"
+    return "MEDIUM"
+
+
 def _is_class_ref_path(keys: List[str]) -> bool:
     """True for ``pipeline.name`` and ``preprocessors.<key>.name``."""
     if keys == ["pipeline", "name"]:
@@ -170,6 +207,22 @@ def _class_ref_finding(value: str, file_label: str, path: str) -> Finding:
     return Finding("HYD004", sev, file_label, path, msg)
 
 
+def _st_type_finding(value: str, file_label: str, path: str) -> Finding:
+    sev = _classify_st_type(value)
+    if sev == "HIGH":
+        msg = (f"modules.json 'type' resolves to a code-execution callable '{value}'; "
+               f"SentenceTransformer load imports it via import_from_string (CWE-470/94).")
+    elif sev == "MEDIUM":
+        msg = (f"modules.json 'type' '{value}' leaves the sentence_transformers "
+               f"namespace; loading it is custom repository code that should require "
+               f"trust_remote_code=True, which CVE-2026-68770 could bypass on a local "
+               f"path before the fix (GHSA-jhr6-gm9c-rqjv, fixed 6.0/6.1.0).")
+    else:
+        msg = (f"modules.json 'type' '{value}' stays in the sentence_transformers "
+               f"namespace; corroborates config-driven module loading of this file.")
+    return Finding("HYD005", sev, file_label, path, msg)
+
+
 def _walk(node, path: str) -> Iterable[tuple]:
     """Yield (key, value, path) for every mapping key in a nested JSON structure."""
     if isinstance(node, dict):
@@ -185,6 +238,7 @@ def _walk(node, path: str) -> Iterable[tuple]:
 
 def scan_json_obj(obj, file_label: str) -> List[Finding]:
     findings: List[Finding] = []
+    is_modules_json = os.path.basename(file_label).lower() == "modules.json"
     for key, value, path in _walk(obj, ""):
         if key in _TARGET_KEYS:
             sev = _classify_target(value if isinstance(value, str) else "")
@@ -206,6 +260,9 @@ def scan_json_obj(obj, file_label: str) -> List[Finding]:
         elif (key == "name" and isinstance(value, str) and value.strip()
               and _is_class_ref_path(path.split("."))):
             findings.append(_class_ref_finding(value.strip(), file_label, path))
+        elif (is_modules_json and key == "type" and isinstance(value, str)
+              and value.strip()):
+            findings.append(_st_type_finding(value.strip(), file_label, path))
     return findings
 
 
@@ -300,7 +357,8 @@ def _max_severity(findings: List[Finding]) -> str:
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(
-        description="Static Hydra _target_ / pyannote class-reference config-injection scanner")
+        description="Static config-driven class instantiation scanner: Hydra _target_, "
+                    "pyannote class references, sentence-transformers modules.json type")
     ap.add_argument("path", help="file or directory to scan")
     ap.add_argument("--fail-on", default="HIGH",
                     choices=list(_SEVERITY_ORDER.keys()),

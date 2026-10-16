@@ -1,14 +1,16 @@
 # SPDX-License-Identifier: Apache-2.0
 # Part of munimtechnologies/keras-model-scan by MV2, Munim, Inc.
 # This file was made with AI.
-"""Generate a small corpus of config files exercising the Hydra ``_target_`` and
-pyannote ``pipeline: name:`` config-injection detector in ``hydra_target_scan.py``.
+"""Generate a small corpus of config files exercising the Hydra ``_target_``,
+pyannote ``pipeline: name:`` and sentence-transformers ``modules.json`` ``type``
+config-injection detectors in ``hydra_target_scan.py``.
 
 Every "malicious" fixture carries an INERT payload (echo / a benign class path): the
 files are only ever read as text/JSON by the static scanner and are never handed to
-``hydra.utils.instantiate()`` or ``Pipeline.from_pretrained()``. The corpus documents
-already-public vulnerability classes (CVE-2026-22584, CVE-2025-23304,
-GHSA-mwj6-rfh8-7qf4, pyannote-audio issues #2000 / #2019); it is for regression
+``hydra.utils.instantiate()``, ``Pipeline.from_pretrained()`` or
+``SentenceTransformer(...)``. The corpus documents already-public vulnerability
+classes (CVE-2026-22584, CVE-2025-23304, GHSA-mwj6-rfh8-7qf4, pyannote-audio
+issues #2000 / #2019, CVE-2026-68770 / GHSA-jhr6-gm9c-rqjv); it is for regression
 testing a defensive scanner, not for exploitation.
 """
 from __future__ import annotations
@@ -61,7 +63,51 @@ JSON_FIXTURES = {
         "HYD004",
         "pyannote-style pipeline.name in JSON -> HIGH",
     ),
+    # a non-modules.json file carrying a 'type' key must NOT raise HYD005
+    "type_key_config.json": (
+        {"model_type": "bert", "type": "my_pkg.custom.Module", "hidden_size": 8},
+        None,
+        "'type' outside modules.json is not a module class reference -> no finding",
+    ),
 }
+
+# sentence-transformers modules.json fixtures (HYD005, CVE-2026-68770). The detector
+# keys off the exact filename ``modules.json``, so each fixture is written as a
+# ``modules.json`` inside its own subdirectory.
+# subdir -> (content list, expected_top_finding_id or None, note)
+MODULES_FIXTURES = {
+    "st_clean": (
+        [
+            {"idx": 0, "name": "0", "path": "",
+             "type": "sentence_transformers.models.Transformer"},
+            {"idx": 1, "name": "1", "path": "1_Pooling",
+             "type": "sentence_transformers.models.Pooling"},
+        ],
+        "HYD005",
+        "all modules.json types inside the sentence_transformers namespace -> LOW only",
+    ),
+    "st_foreign": (
+        [
+            {"idx": 0, "name": "0", "path": "",
+             "type": "sentence_transformers.models.Transformer"},
+            {"idx": 1, "name": "1", "path": "custom", "type": "my_pkg.custom.Module"},
+        ],
+        "HYD005",
+        "a modules.json type outside the ST namespace -> MEDIUM (CVE-2026-68770 class)",
+    ),
+    "st_exec": (
+        [
+            {"idx": 0, "name": "0", "path": "", "type": "subprocess.Popen"},
+        ],
+        "HYD005",
+        "modules.json type resolving to a code-exec callable -> HIGH",
+    ),
+}
+
+
+def modules_fixture_path(out_dir: str, subdir: str) -> str:
+    """Absolute path of the modules.json written for a MODULES_FIXTURES entry."""
+    return os.path.join(out_dir, subdir, "modules.json")
 
 YAML_FIXTURES = {
     "train.yaml": (
@@ -137,6 +183,13 @@ def write_corpus(out_dir: str) -> Dict:
         with open(os.path.join(out_dir, name), "w", encoding="utf-8") as f:
             f.write(content)
         manifest["fixtures"].append({"file": name, "expect_top_id": expect, "note": note})
+    for subdir, (content, expect, note) in MODULES_FIXTURES.items():
+        path = modules_fixture_path(out_dir, subdir)
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(content, f, indent=1)
+        manifest["fixtures"].append({"file": f"{subdir}/modules.json",
+                                     "expect_top_id": expect, "note": note})
     with open(os.path.join(out_dir, "corpus_manifest.json"), "w", encoding="utf-8") as f:
         json.dump(manifest, f, indent=1)
     return manifest
