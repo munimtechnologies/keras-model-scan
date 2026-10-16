@@ -7,12 +7,13 @@ Data in this document is CC BY 4.0; the code in this repository is Apache-2.0.*
 
 Open-source machine-learning model files carry a surprisingly wide attack surface:
 arbitrary code execution on deserialization, path traversal, template injection that
-fires at inference time, decompression bombs, and more. Several free scanners exist,
-but each one targets a different slice of the problem, and the only public
-side-by-side comparisons are either **vendor-authored and narrow** (one tool vs. one
-other, on a handful of files) or **academic and pickle-evasion-focused**. There is no
-single vendor-neutral reference that maps the *whole* cross-format attack-vector
-taxonomy — including the newest 2026 vectors — against *all* the common scanners.
+fires at inference time, decompression bombs, configuration keys that choose which
+class a loader builds, and more. Several free scanners exist, but each one targets a
+different slice of the problem, and the only public side-by-side comparisons are
+either **vendor-authored and narrow** (one tool vs. one other, on a handful of files)
+or **academic and pickle-evasion-focused**. There is no single vendor-neutral
+reference that maps the *whole* cross-format attack-vector taxonomy — including the
+newest 2026 vectors — against *all* the common scanners.
 
 This document is that matrix. It is meant to help a practitioner choosing scanners,
 and to make the blind spots explicit.
@@ -27,7 +28,9 @@ results, see Promptfoo's ModelAudit-vs-ModelScan run (11 files) and the academic
 evasion papers cited below. The machine-readable form is
 [`scanner_coverage.json`](scanner_coverage.json); a structural validator
 ([`coverage_matrix_lint.py`](coverage_matrix_lint.py)) keeps that file internally
-consistent but asserts no security facts of its own.
+consistent but asserts no security facts of its own, and
+[`test_scanner_coverage_data.py`](test_scanner_coverage_data.py) checks that every
+row of the table below matches the JSON cell for cell.
 
 Legend: **✓** documented detection · **~** partial / related / historically affected ·
 **✗** in scope but not documented as covered · **–** out of scope (wrong format/layer) ·
@@ -51,18 +54,23 @@ Legend: **✓** documented detection · **~** partial / related / historically a
 | STACK_GLOBAL off-by-one scanner bypass — CVE-2025-71325 (pickle) | ~ | ~ | ~ | ? | ~ |
 | Stealthy/evasive pickle — ShadowPickle class (pickle) | ✗ | ~ | ✗ | ? | ✗ |
 | Keras Lambda-layer code execution — CWE-94 (.h5/.keras) | – | – | ✓ | ✓ | ✓ |
-| .keras v3 config.json safe_mode bypass — CVE-2025-1550 (.keras) | – | – | ✗ | ? | ~ |
+| .keras v3 config.json safe_mode bypass — CVE-2025-1550 (.keras) | – | – | ✗ | ~ | ~ |
 | .keras archive zip-slip — CWE-22 (.keras) | – | – | ✗ | ✓ | ✓ |
-| TensorFlow SavedModel risky/custom ops (SavedModel) | – | – | ✓ | ~ | ✗ |
-| ONNX external_data path traversal — CVE-2022-25882 (.onnx) | – | – | ✗ | ~ | ✓ |
+| TensorFlow SavedModel risky/custom ops (SavedModel) | – | – | ✓ | ✓ | ✗ |
+| ONNX external_data path traversal — CVE-2022-25882 (.onnx) | – | – | ✗ | ✓ | ✓ |
 | ONNX external_data unexpected-key injection — CVE-2026-34445 (.onnx) | – | – | ✗ | ? | ✓ |
-| GGUF parser memory-safety, malformed counts (.gguf) | – | – | – | ? | ~ |
-| GGUF chat_template SSTI, inference-time — CVE-2024-34359 class (.gguf) | – | – | ✗ | ? | ✓ |
-| HF config chat_template SSTI — CVE-2024-34359 class (JSON/.jinja) | – | – | ✗ | ~ | ✓ |
+| GGUF parser memory-safety, malformed counts (.gguf) | – | – | – | ~ | ~ |
+| GGUF chat_template SSTI, inference-time — CVE-2024-34359 class (.gguf) | – | – | ✗ | ✓ | ✓ |
+| HF config chat_template SSTI — CVE-2024-34359 class (JSON/.jinja) | – | – | ✗ | ✓ | ✓ |
 | HF config auto_map / trust_remote_code pointer (config.json) | – | – | ✗ | ~ | ✓ |
-| Archive decompression bomb — CWE-409 (zip/tar) | ✗ | – | ~ | ~ | ✓ |
-| SafeTensors header/metadata abuse, DoS not RCE (.safetensors) | – | – | – | ~ | ~ |
+| Archive decompression bomb — CWE-409 (zip/tar) | ✗ | – | ~ | ✓ | ✓ |
+| SafeTensors header/metadata abuse, DoS not RCE (.safetensors) | – | – | – | ✓ | ~ |
 | Embedded executable in model archive (archives) | – | – | ✗ | ✓ | ✗ |
+| Hydra/OmegaConf `_target_` instantiation — CVE-2025-23304, CVE-2026-22584, CVE-2026-68508 (YAML/JSON config, .nemo) | – | – | ✗ | ~ | ✓ |
+| pyannote `pipeline.name` class reference — issues #2000/#2019, unfixed (config.yaml) | – | – | ✗ | ~ | ✓ |
+| sentence-transformers module `type` outside the package — CVE-2026-68770 (modules.json) | – | – | ✗ | ~ | ✓ |
+| jsonargparse / LightningCLI `class_path` instantiation — PR #959 class (YAML/JSON config) | – | – | ✗ | ~ | ✓ |
+| Lightning checkpoint `_instantiator` / `_class_path` hparams — CVE-2026-58659 (.ckpt) | ✗ | ✗ | ✗ | ? | ~ |
 
 ## What the matrix shows
 
@@ -74,31 +82,41 @@ Legend: **✓** documented detection · **~** partial / related / historically a
    is more robust but, per DITTO, security-critical operations can still be buried.
    *Static file scanning is necessary but not sufficient against a motivated attacker.*
 
-2. **Breadth vs. depth splits the field.** ModelAudit is the broadest (config files,
-   ONNX, SafeTensors, embedded executables, path traversal); ModelScan is focused and
-   solid on the classic pickle/Keras/TF triad; picklescan and fickling are pickle
-   specialists. No single scanner dominates every row.
+2. **Breadth vs. depth splits the field.** ModelAudit is the broadest by a wide
+   margin: its scanner reference documents ONNX external-data traversal, GGUF and
+   config chat-template SSTI (CVE-2024-34359), archive bombs, SafeTensors header
+   checks and embedded executables. ModelScan is focused and solid on the classic
+   pickle/Keras/TF triad; picklescan and fickling are pickle specialists. No single
+   scanner dominates every row.
 
-3. **The newest vectors are the least covered.** The 2026 vectors — ONNX
-   external_data *key* injection (CVE-2026-34445) and chat-template SSTI that fires at
-   *inference* time, not load time (CVE-2024-34359 class) — are documented by almost
-   no general-purpose scanner. keras-model-scan is included here because it ships
-   standalone detectors for several of them; it is narrow (no TensorFlow, static-only,
-   and shares every static scanner's evasion limitation), and it is listed on the same
+3. **The newest file-format vectors are the least covered.** ONNX external_data
+   *key* injection (CVE-2026-34445) has no documented rule in any general-purpose
+   scanner reviewed here. keras-model-scan is included because it ships standalone
+   detectors for several of these; it is narrow (no TensorFlow, static-only, and
+   shares every static scanner's evasion limitation), and it is listed on the same
    documentation-based footing as the others, not as a recommendation.
 
-4. **Inference-time template injection is a category gap.** A GGUF or config
-   chat_template can pass every *file* scanner and still execute a payload against
-   every prompt in production. This is a layer most model-file scanners do not look at.
+4. **Config-driven class instantiation is a category gap.** Five rows above cover
+   configuration keys that name a Python class or callable for a loader to import and
+   build: Hydra `_target_`, pyannote `pipeline.name`, sentence-transformers
+   `modules.json` `type`, jsonargparse `class_path`, and Lightning's `_instantiator`
+   / `_class_path` checkpoint hyper-parameters. These run code **even when the
+   weights are SafeTensors**, and the Lightning case bypasses `weights_only=True`
+   because the payload is a plain string, not a pickle import. None of the pickle
+   scanners documents these keys; ModelAudit's generic config-pattern scanner is the
+   closest documented coverage. The real fix is in the loaders (allowlists, explicit
+   trust flags, upgrades), not in scanners.
 
 ## Honest limits
 
 - Documentation-based, not executed: a "✓" means *documented*, not *verified on your
   files*. Run the tools on your own corpus before relying on any cell.
 - Tools change fast; versions and dates are in `scanner_coverage.json`. A "✗"/"?" may
-  become "✓" in a later release.
+  become "✓" in a later release. The ModelAudit column was re-checked against its
+  scanner reference on 2026-10-16, which moved several of its cells up.
 - `kms` cells point at this repository's own detector docs; treat them with the same
-  "verify before relying" caution as every other column.
+  "verify before relying" caution as every other column. Its config-instantiation
+  detectors read config text on disk; they do not unpack `.nemo` or `.ckpt` files.
 - This is a coverage map, not a ranking. The right choice depends on your formats and
   threat model; many teams run more than one scanner plus a SafeTensors-only ingestion
   policy.
@@ -107,6 +125,7 @@ Legend: **✓** documented detection · **~** partial / related / historically a
 
 - Promptfoo, *Open-Sourcing ModelAudit* — https://www.promptfoo.dev/blog/open-sourcing-modelaudit/
 - Promptfoo, *ModelAudit vs ModelScan* — https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/
+- Promptfoo, *ModelAudit scanners reference* — https://www.promptfoo.dev/docs/model-audit/scanners/
 - Protect AI, *modelscan model serialization attacks* — https://github.com/protectai/modelscan/blob/main/docs/model_serialization_attacks.md
 - Huntr, *Hunting vulnerabilities in ML model file formats* — https://blog.huntr.com/hunting-vulnerabilities-in-machine-learning-model-file-formats
 - GHSA-9gvj-pp9x-gcfr / CVE-2025-71325 (picklescan STACK_GLOBAL bypass) — https://github.com/advisories/GHSA-9gvj-pp9x-gcfr
@@ -114,6 +133,12 @@ Legend: **✓** documented detection · **~** partial / related / historically a
 - GHSA-538c-55jv-c5g9 / CVE-2026-34445 (ONNX external_data key injection) — https://github.com/advisories/GHSA-538c-55jv-c5g9
 - GHSA-56xg-wfcc-g829 / CVE-2024-34359 (chat-template SSTI) — https://github.com/advisories/GHSA-56xg-wfcc-g829
 - CVE-2025-1550 (.keras safe_mode bypass) — https://nvd.nist.gov/vuln/detail/CVE-2025-1550
+- Unit 42, *Remote Code Execution With Modern AI/ML Formats and Libraries* (NeMo CVE-2025-23304, Uni2TS CVE-2026-22584, FlexTok) — https://unit42.paloaltonetworks.com/rce-vulnerabilities-in-ai-python-libraries/
+- GHSA-2cp2-2r3c-7p7r / CVE-2026-68508 (hydra-core `instantiate()` with untrusted config, fixed 1.3.4) — https://github.com/advisories/GHSA-2cp2-2r3c-7p7r
+- pyannote-audio issues #2000 and #2019 (`Pipeline.from_pretrained` class instantiation) — https://github.com/pyannote/pyannote-audio/issues/2000 , https://github.com/pyannote/pyannote-audio/issues/2019
+- GHSA-jhr6-gm9c-rqjv / CVE-2026-68770 (sentence-transformers `modules.json`) — https://github.com/advisories/GHSA-jhr6-gm9c-rqjv
+- jsonargparse PR #959 (import-path denylist for `class_path`) — https://github.com/mauvilsa/jsonargparse/pull/959
+- GHSA-qqmf-gpg7-g8gw / CVE-2026-58659 (Lightning checkpoint `_instantiator`, fixed 2.6.6) — https://github.com/advisories/GHSA-qqmf-gpg7-g8gw
 - *ShadowPickle: Evading ML Model Scanners* (arXiv 2607.17503) — https://arxiv.org/abs/2607.17503
 - *DITTO: Context-aware Pickle-based Pre-Trained Model Scanner* (arXiv 2610.10735) — https://arxiv.org/abs/2610.10735
 - *SafePickle* (arXiv 2602.19818) — https://arxiv.org/abs/2602.19818

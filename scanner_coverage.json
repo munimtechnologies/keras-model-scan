@@ -1,10 +1,10 @@
 {
   "schema": "mv2-scanner-coverage/1",
-  "generated": "2026-10-15",
+  "generated": "2026-10-16",
   "title": "Open-source model-file scanner coverage vs. attack-vector taxonomy",
   "author": "Made with AI by MV2 of Munim, Inc.",
   "license": "CC BY 4.0 (this data); code in this repository is Apache-2.0",
-  "methodology": "Documentation- and source-based coverage review, NOT an executed benchmark. Each cell reflects what a tool's own documentation, source, or linked advisory states it detects as of the generated date; the scanners were NOT run against a shared corpus here. Statuses: 'detects' = the tool documents detection of this vector; 'partial' = documents related/incomplete handling, or is historically affected; 'no' = in the tool's scope but not documented as covered; 'out-of-scope' = the tool does not target this format/layer at all; 'unknown' = not determinable from public docs. For executed head-to-head results see Promptfoo's ModelAudit-vs-ModelScan run and the cited academic evasion papers.",
+  "methodology": "Documentation- and source-based coverage review, NOT an executed benchmark. Each cell reflects what a tool's own documentation, source, or linked advisory states it detects as of the generated date; the scanners were NOT run against a shared corpus here. Statuses: 'detects' = the tool documents detection of this vector; 'partial' = documents related/incomplete handling, or is historically affected; 'no' = in the tool's scope but not documented as covered; 'out-of-scope' = the tool does not target this format/layer at all; 'unknown' = not determinable from public docs. For executed head-to-head results see Promptfoo's ModelAudit-vs-ModelScan run and the cited academic evasion papers. ModelAudit cells were re-checked against its scanner reference (promptfoo.dev/docs/model-audit/scanners/) on 2026-10-16.",
   "status_legend": {
     "detects": "documented detection of this vector",
     "partial": "related or incomplete handling, or historically affected",
@@ -17,7 +17,7 @@
     {"id": "fk", "name": "fickling (Trail of Bits)", "scope": "pickle only; AST / allowlist with dataflow"},
     {"id": "ms", "name": "ModelScan (Protect AI)", "scope": "pickle, PyTorch, Keras H5, TensorFlow SavedModel; denylist of dangerous globals"},
     {"id": "ma", "name": "ModelAudit (Promptfoo)", "scope": "widest format set incl. config files, ONNX, SafeTensors, NumPy, PMML, archives"},
-    {"id": "kms", "name": "keras-model-scan (MV2 / Munim, Inc.)", "scope": "static, dependency-free, no-execution detectors for .keras, pickle, safetensors, GGUF, ONNX, HF config and chat templates"}
+    {"id": "kms", "name": "keras-model-scan (MV2 / Munim, Inc.)", "scope": "static, dependency-free, no-execution detectors for .keras, pickle, safetensors, GGUF, ONNX, HF config, chat templates and config-driven class instantiation keys"}
   ],
   "vectors": [
     {"id": "pkl-rce", "title": "Pickle dangerous-import RCE (GLOBAL + REDUCE/BUILD)", "formats": ".pkl, .pt, .pth, .bin, .joblib, object .npy", "class": "CWE-502"},
@@ -35,7 +35,12 @@
     {"id": "hf-automap", "title": "HF config auto_map / trust_remote_code pointer injection", "formats": "config.json", "class": "supply-chain pointer"},
     {"id": "archive-bomb", "title": "Archive decompression bomb", "formats": "zip/tar containers", "class": "CWE-409"},
     {"id": "safetensors-hdr", "title": "SafeTensors header/metadata abuse (DoS, not RCE)", "formats": ".safetensors", "class": "CWE-400"},
-    {"id": "embedded-exe", "title": "Embedded executable in model archive", "formats": "archives", "class": "dropper"}
+    {"id": "embedded-exe", "title": "Embedded executable in model archive", "formats": "archives", "class": "dropper"},
+    {"id": "cfg-hydra", "title": "Hydra/OmegaConf _target_ config instantiation", "formats": "model_config.yaml (inside .nemo), config.json, YAML/JSON configs", "class": "CVE-2025-23304 (NeMo); CVE-2026-22584 (Uni2TS); CVE-2026-68508 / GHSA-2cp2-2r3c-7p7r (hydra-core)"},
+    {"id": "cfg-pyannote", "title": "pyannote config.yaml pipeline/preprocessor class reference", "formats": "config.yaml", "class": "pyannote-audio issues #2000 / #2019 (open, no CVE)"},
+    {"id": "cfg-st-modules", "title": "sentence-transformers modules.json module type outside the package namespace", "formats": "modules.json", "class": "CVE-2026-68770 / GHSA-jhr6-gm9c-rqjv (CWE-94)"},
+    {"id": "cfg-jsonargparse", "title": "jsonargparse / LightningCLI class_path config instantiation", "formats": "YAML/JSON CLI configs", "class": "jsonargparse PR #959 import-path denylist"},
+    {"id": "ckpt-lightning", "title": "Lightning checkpoint hparams _instantiator / _class_path", "formats": ".ckpt hyper-parameters, hparams.yaml", "class": "CVE-2026-58659 / GHSA-qqmf-gpg7-g8gw (CWE-470)"}
   ],
   "cells": [
     {"vector": "pkl-rce", "scanner": "ps", "status": "detects", "note": "hybrid denylist of dangerous globals", "sources": ["https://blog.huntr.com/hunting-vulnerabilities-in-machine-learning-model-file-formats"]},
@@ -47,7 +52,7 @@
     {"vector": "pkl-stackglobal", "scanner": "ps", "status": "partial", "note": "missed pre-0.0.27; fixed in 0.0.27", "sources": ["https://github.com/advisories/GHSA-9gvj-pp9x-gcfr"]},
     {"vector": "pkl-stackglobal", "scanner": "fk", "status": "partial", "note": "AST exposes structure but critical ops can be buried", "sources": ["https://arxiv.org/abs/2610.10735"]},
     {"vector": "pkl-stackglobal", "scanner": "ms", "status": "partial", "note": "same STACK_GLOBAL lookback gap per the advisory write-up", "sources": ["https://github.com/advisories/GHSA-9gvj-pp9x-gcfr"]},
-    {"vector": "pkl-stackglobal", "scanner": "ma", "status": "unknown", "note": "specific STACK_GLOBAL handling not documented publicly", "sources": []},
+    {"vector": "pkl-stackglobal", "scanner": "ma", "status": "unknown", "note": "pickle scanner lists STACK_GLOBAL among checked opcodes; handling of the off-by-one lookback bypass not documented", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
     {"vector": "pkl-stackglobal", "scanner": "kms", "status": "partial", "note": "static opcode scan references GHSA-9gvj-pp9x-gcfr; not independently executed here", "sources": ["https://github.com/munimtechnologies/keras-model-scan"]},
 
     {"vector": "pkl-evasive", "scanner": "ps", "status": "no", "note": "zero recall vs ShadowPickle", "sources": ["https://arxiv.org/abs/2607.17503"]},
@@ -65,7 +70,7 @@
     {"vector": "keras-safemode", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
     {"vector": "keras-safemode", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
     {"vector": "keras-safemode", "scanner": "ms", "status": "no", "note": "targets H5 Lambda; v3 config.json module-reference bypass is a distinct newer vector", "sources": ["https://nvd.nist.gov/vuln/detail/CVE-2025-1550"]},
-    {"vector": "keras-safemode", "scanner": "ma", "status": "unknown", "note": "config scanning present; CVE-2025-1550-specific rule not documented", "sources": []},
+    {"vector": "keras-safemode", "scanner": "ma", "status": "partial", "note": "Keras ZIP scanner checks suspicious custom objects and risky config-JSON patterns; a CVE-2025-1550-specific rule is not documented", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
     {"vector": "keras-safemode", "scanner": "kms", "status": "partial", "note": "inspects .keras config and archive; CVE-2025-1550 coverage not independently confirmed here", "sources": ["https://github.com/munimtechnologies/keras-model-scan"]},
 
     {"vector": "keras-zipslip", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
@@ -77,13 +82,13 @@
     {"vector": "tf-ops", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
     {"vector": "tf-ops", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
     {"vector": "tf-ops", "scanner": "ms", "status": "detects", "note": "flags io.write_file/io.read_file/io.MatchingFiles", "sources": ["https://github.com/protectai/modelscan/blob/main/docs/model_serialization_attacks.md"]},
-    {"vector": "tf-ops", "scanner": "ma", "status": "partial", "note": "supports TF formats; specific risky-op list not documented", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
+    {"vector": "tf-ops", "scanner": "ma", "status": "detects", "note": "TF SavedModel scanner documents graph ops that touch files or the system, PyFunc and command-running ops", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
     {"vector": "tf-ops", "scanner": "kms", "status": "no", "note": "TensorFlow SavedModel not in scope", "sources": ["https://github.com/munimtechnologies/keras-model-scan"]},
 
     {"vector": "onnx-path", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
     {"vector": "onnx-path", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
     {"vector": "onnx-path", "scanner": "ms", "status": "no", "note": "ONNX attributed to ModelAudit only", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
-    {"vector": "onnx-path", "scanner": "ma", "status": "partial", "note": "supports ONNX and path-traversal detection; external_data-specific depth not documented", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
+    {"vector": "onnx-path", "scanner": "ma", "status": "detects", "note": "ONNX scanner documents external data file references and path traversal attempts", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
     {"vector": "onnx-path", "scanner": "kms", "status": "detects", "note": "OED001-005 external_data location checks (CVE-2022-25882 class)", "sources": ["https://github.com/advisories/GHSA-ffxj-547x-5j7c", "https://github.com/munimtechnologies/keras-model-scan"]},
 
     {"vector": "onnx-key", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
@@ -95,19 +100,19 @@
     {"vector": "gguf-mem", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
     {"vector": "gguf-mem", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
     {"vector": "gguf-mem", "scanner": "ms", "status": "out-of-scope", "note": "GGUF not in scope", "sources": []},
-    {"vector": "gguf-mem", "scanner": "ma", "status": "unknown", "note": "GGUF handling not documented", "sources": []},
+    {"vector": "gguf-mem", "scanner": "ma", "status": "partial", "note": "GGUF scanner documents header integrity, tensor dimension/type/alignment validation and DoS resource limits; not a memory-safety fuzzer", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
     {"vector": "gguf-mem", "scanner": "kms", "status": "partial", "note": "GGUF integrity checks on header/metadata counts; not a memory-safety fuzzer", "sources": ["https://github.com/munimtechnologies/keras-model-scan", "https://blog.huntr.com/hunting-vulnerabilities-in-machine-learning-model-file-formats"]},
 
     {"vector": "gguf-ssti", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
     {"vector": "gguf-ssti", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
     {"vector": "gguf-ssti", "scanner": "ms", "status": "no", "note": "inference-time template layer out of scope", "sources": ["https://github.com/protectai/modelscan/blob/main/docs/model_serialization_attacks.md"]},
-    {"vector": "gguf-ssti", "scanner": "ma", "status": "unknown", "note": "GGUF chat_template rule not documented", "sources": []},
+    {"vector": "gguf-ssti", "scanner": "ma", "status": "detects", "note": "Jinja2 Template scanner documents CVE-2024-34359 exploitation in GGUF chat templates", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
     {"vector": "gguf-ssti", "scanner": "kms", "status": "detects", "note": "reads embedded tokenizer.chat_template and flags Jinja SSTI tokens (CVE-2024-34359 class)", "sources": ["https://github.com/advisories/GHSA-56xg-wfcc-g829", "https://github.com/munimtechnologies/keras-model-scan"]},
 
     {"vector": "cfg-ssti", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
     {"vector": "cfg-ssti", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
     {"vector": "cfg-ssti", "scanner": "ms", "status": "no", "note": "configuration files not analysed", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
-    {"vector": "cfg-ssti", "scanner": "ma", "status": "partial", "note": "analyses config files; chat_template-SSTI-specific rule not documented", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
+    {"vector": "cfg-ssti", "scanner": "ma", "status": "detects", "note": "Jinja2 Template scanner documents SSTI patterns in .json, .yaml, .jinja and .j2 files", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
     {"vector": "cfg-ssti", "scanner": "kms", "status": "detects", "note": "flags Jinja SSTI in tokenizer_config.json and .jinja sidecars (CVE-2024-34359 class)", "sources": ["https://github.com/advisories/GHSA-56xg-wfcc-g829", "https://github.com/munimtechnologies/keras-model-scan"]},
 
     {"vector": "hf-automap", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
@@ -119,19 +124,49 @@
     {"vector": "archive-bomb", "scanner": "ps", "status": "no", "note": "reads zip members; no bomb detection", "sources": ["https://blog.huntr.com/hunting-vulnerabilities-in-machine-learning-model-file-formats"]},
     {"vector": "archive-bomb", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
     {"vector": "archive-bomb", "scanner": "ms", "status": "partial", "note": "processes archive members; bomb-specific detection not documented", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
-    {"vector": "archive-bomb", "scanner": "ma", "status": "partial", "note": "processes archives; bomb-specific detection not documented", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
+    {"vector": "archive-bomb", "scanner": "ma", "status": "detects", "note": "ZIP scanner flags compression ratios over 100x; TAR scanner flags excessive file counts or decompression ratios", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
     {"vector": "archive-bomb", "scanner": "kms", "status": "detects", "note": "archive-bomb heuristics (compression ratio / member count)", "sources": ["https://github.com/munimtechnologies/keras-model-scan"]},
 
     {"vector": "safetensors-hdr", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
     {"vector": "safetensors-hdr", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
     {"vector": "safetensors-hdr", "scanner": "ms", "status": "out-of-scope", "note": "tensor-only format treated as non-executing", "sources": ["https://github.com/protectai/modelscan/blob/main/docs/model_serialization_attacks.md"]},
-    {"vector": "safetensors-hdr", "scanner": "ma", "status": "partial", "note": "supports SafeTensors; header-DoS-specific rule not documented", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
+    {"vector": "safetensors-hdr", "scanner": "ma", "status": "detects", "note": "SafeTensors scanner documents JSON header structure, unusually large metadata sections and in-bounds contiguous offsets", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
     {"vector": "safetensors-hdr", "scanner": "kms", "status": "partial", "note": "parses the SafeTensors header and index for structural anomalies", "sources": ["https://github.com/munimtechnologies/keras-model-scan"]},
 
     {"vector": "embedded-exe", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
     {"vector": "embedded-exe", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
     {"vector": "embedded-exe", "scanner": "ms", "status": "no", "note": "embedded-executable detection attributed to ModelAudit only", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
     {"vector": "embedded-exe", "scanner": "ma", "status": "detects", "note": "embedded executables detected by ModelAudit", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
-    {"vector": "embedded-exe", "scanner": "kms", "status": "no", "note": "not an embedded-binary detector", "sources": ["https://github.com/munimtechnologies/keras-model-scan"]}
+    {"vector": "embedded-exe", "scanner": "kms", "status": "no", "note": "not an embedded-binary detector", "sources": ["https://github.com/munimtechnologies/keras-model-scan"]},
+
+    {"vector": "cfg-hydra", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
+    {"vector": "cfg-hydra", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
+    {"vector": "cfg-hydra", "scanner": "ms", "status": "no", "note": "configuration files not analysed", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
+    {"vector": "cfg-hydra", "scanner": "ma", "status": "partial", "note": "Manifest scanner looks for code-execution patterns in .json/.yaml configs; no _target_ / instantiate rule documented", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
+    {"vector": "cfg-hydra", "scanner": "kms", "status": "detects", "note": "HYD001-003 in hydra_target_scan; scans config files on disk, does not unpack .nemo archives", "sources": ["https://unit42.paloaltonetworks.com/rce-vulnerabilities-in-ai-python-libraries/", "https://github.com/advisories/GHSA-2cp2-2r3c-7p7r", "https://github.com/munimtechnologies/keras-model-scan/blob/main/HYDRA_TARGET_SCAN.md"]},
+
+    {"vector": "cfg-pyannote", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
+    {"vector": "cfg-pyannote", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
+    {"vector": "cfg-pyannote", "scanner": "ms", "status": "no", "note": "configuration files not analysed", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
+    {"vector": "cfg-pyannote", "scanner": "ma", "status": "partial", "note": "Manifest scanner looks for code-execution patterns in .yaml configs; no pipeline.name rule documented", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
+    {"vector": "cfg-pyannote", "scanner": "kms", "status": "detects", "note": "HYD004 in hydra_target_scan (pipeline.name, preprocessors.<key>.name)", "sources": ["https://github.com/pyannote/pyannote-audio/issues/2000", "https://github.com/pyannote/pyannote-audio/issues/2019", "https://github.com/munimtechnologies/keras-model-scan/blob/main/HYDRA_TARGET_SCAN.md"]},
+
+    {"vector": "cfg-st-modules", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
+    {"vector": "cfg-st-modules", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
+    {"vector": "cfg-st-modules", "scanner": "ms", "status": "no", "note": "configuration files not analysed", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
+    {"vector": "cfg-st-modules", "scanner": "ma", "status": "partial", "note": "Manifest scanner looks for code-execution patterns in .json configs; no modules.json type rule documented", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
+    {"vector": "cfg-st-modules", "scanner": "kms", "status": "detects", "note": "HYD005 in hydra_target_scan (modules.json type outside sentence_transformers.)", "sources": ["https://github.com/advisories/GHSA-jhr6-gm9c-rqjv", "https://github.com/munimtechnologies/keras-model-scan/blob/main/HYDRA_TARGET_SCAN.md"]},
+
+    {"vector": "cfg-jsonargparse", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
+    {"vector": "cfg-jsonargparse", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
+    {"vector": "cfg-jsonargparse", "scanner": "ms", "status": "no", "note": "configuration files not analysed", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
+    {"vector": "cfg-jsonargparse", "scanner": "ma", "status": "partial", "note": "Manifest scanner looks for code-execution patterns in .json/.yaml configs; no class_path rule documented", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
+    {"vector": "cfg-jsonargparse", "scanner": "kms", "status": "detects", "note": "JAC001 in jsonargparse_config_scan, CRITICAL for dangerous top-level modules", "sources": ["https://github.com/mauvilsa/jsonargparse/pull/959", "https://github.com/munimtechnologies/keras-model-scan/blob/main/JSONARGPARSE_CONFIG_SCAN.md"]},
+
+    {"vector": "ckpt-lightning", "scanner": "ps", "status": "no", "note": "the hparam is a plain string inside the checkpoint pickle, not a GLOBAL import; the advisory says it bypasses weights_only=True", "sources": ["https://github.com/advisories/GHSA-qqmf-gpg7-g8gw"]},
+    {"vector": "ckpt-lightning", "scanner": "fk", "status": "no", "note": "the hparam is a plain string, not an import the allowlist sees; not documented as covered", "sources": ["https://github.com/advisories/GHSA-qqmf-gpg7-g8gw"]},
+    {"vector": "ckpt-lightning", "scanner": "ms", "status": "no", "note": "denylist of dangerous globals; a string hparam is not a global", "sources": ["https://github.com/advisories/GHSA-qqmf-gpg7-g8gw"]},
+    {"vector": "ckpt-lightning", "scanner": "ma", "status": "unknown", "note": "pickle scanner reads .ckpt and checks suspicious string patterns; handling of _instantiator / _class_path not documented", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
+    {"vector": "ckpt-lightning", "scanner": "kms", "status": "partial", "note": "JAC002-003 on hparams.yaml or extracted hparams text; does not open .ckpt containers", "sources": ["https://github.com/advisories/GHSA-qqmf-gpg7-g8gw", "https://github.com/munimtechnologies/keras-model-scan/blob/main/JSONARGPARSE_CONFIG_SCAN.md"]}
   ]
 }
