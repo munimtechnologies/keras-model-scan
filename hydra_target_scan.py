@@ -1,8 +1,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # Part of munimtechnologies/keras-model-scan by MV2, Munim, Inc.
 # This file and the detector it implements were made with AI.
-"""Static detector for Hydra / OmegaConf ``_target_`` config-instantiation injection
-in model metadata and configuration files.
+"""Static detector for config-driven class instantiation in model metadata and
+configuration files: Hydra / OmegaConf ``_target_`` keys and pyannote-style
+``pipeline: name:`` class references.
 
 Why this exists
 ---------------
@@ -27,14 +28,21 @@ not introduce a new exploit):
   blocklist is not a security boundary, this detector treats the *presence* of any
   ``_target_`` in untrusted metadata as the risk signal (MEDIUM) and escalates a
   known-dangerous target to HIGH.
+* pyannote-audio issues #2000 and #2019 (public, opened April and June 2026) --
+  ``Pipeline.from_pretrained`` reads ``pipeline.name`` and each
+  ``preprocessors.<key>.name`` from a hub repository's ``config.yaml``, resolves the
+  dotted name with ``get_class_by_name()`` without an allowlist, and calls it with
+  the config's ``params``. Same class, different key. At the time of writing the
+  issues are open with no linked fix, so HYD004 flags any such reference that
+  leaves the ``pyannote.`` namespace.
 
 Scope and honesty
 -----------------
 This is a static, no-execution analyzer: it parses JSON (and text-scans YAML) and
 inspects key names and string values only. It never imports, resolves or calls a
-``_target_``. A clean scan does not prove a file is safe, and the real fix is to not
-feed untrusted metadata to ``instantiate()`` (and to upgrade affected libraries).
-Everything named above is already public.
+``_target_`` or class name. A clean scan does not prove a file is safe, and the real
+fix is to not feed untrusted metadata to ``instantiate()`` / ``get_class_by_name()``
+(and to upgrade affected libraries). Everything named above is already public.
 
 Usage
 -----
@@ -52,7 +60,7 @@ import sys
 from dataclasses import dataclass, asdict
 from typing import Iterable, List
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 # ---- severity ordering -----------------------------------------------------
 _SEVERITY_ORDER = {"INFO": 0, "LOW": 1, "MEDIUM": 2, "HIGH": 3, "ERROR": 4}
@@ -91,7 +99,12 @@ _SAFE_TARGET_PREFIXES = (
     "transformers.",
 )
 
+# pyannote resolves a bare (undotted) name inside its own default module, so only
+# a dotted name outside this namespace can reach an arbitrary callable.
+_PYANNOTE_PREFIX = "pyannote."
+
 _YAML_TARGET_RE = re.compile(r"""^\s*_target_\s*:\s*['"]?([A-Za-z_][\w\.]*)['"]?""")
+_YAML_KEY_RE = re.compile(r"""^(\s*)([A-Za-z_][\w\-]*)\s*:(?:\s+(.*))?$""")
 
 
 @dataclass
@@ -122,6 +135,39 @@ def _classify_target(value: str) -> str:
     if any(dotted.startswith(p) for p in _SAFE_TARGET_PREFIXES):
         return "LOW"
     return "MEDIUM"
+
+
+def _classify_class_ref(value: str) -> str:
+    """Return the severity for a pyannote-style ``name:`` class reference."""
+    dotted = value.strip()
+    if _classify_target(dotted) == "HIGH":
+        return "HIGH"
+    if "." not in dotted or dotted.startswith(_PYANNOTE_PREFIX):
+        return "LOW"
+    return "MEDIUM"
+
+
+def _is_class_ref_path(keys: List[str]) -> bool:
+    """True for ``pipeline.name`` and ``preprocessors.<key>.name``."""
+    if keys == ["pipeline", "name"]:
+        return True
+    return len(keys) == 3 and keys[0] == "preprocessors" and keys[2] == "name"
+
+
+def _class_ref_finding(value: str, file_label: str, path: str) -> Finding:
+    sev = _classify_class_ref(value)
+    if sev == "HIGH":
+        msg = (f"class reference resolves to a code-execution callable '{value}'; "
+               f"pyannote Pipeline.from_pretrained would call it with the config's "
+               f"params (CWE-470/94).")
+    elif sev == "MEDIUM":
+        msg = (f"class reference '{value}' leaves the pyannote namespace; "
+               f"get_class_by_name() resolves it without an allowlist and calls it "
+               f"with the config's params (pyannote-audio issue #2000).")
+    else:
+        msg = (f"class reference '{value}' stays in the pyannote namespace; "
+               f"corroborates config-driven instantiation of this file.")
+    return Finding("HYD004", sev, file_label, path, msg)
 
 
 def _walk(node, path: str) -> Iterable[tuple]:
@@ -157,6 +203,56 @@ def scan_json_obj(obj, file_label: str) -> List[Finding]:
                 "HYD003", "INFO", file_label, path,
                 f"Hydra instantiation helper key '{key}' present; corroborates "
                 f"instantiate() usage on this config."))
+        elif (key == "name" and isinstance(value, str) and value.strip()
+              and _is_class_ref_path(path.split("."))):
+            findings.append(_class_ref_finding(value.strip(), file_label, path))
+    return findings
+
+
+def _clean_scalar(raw: str) -> str:
+    """Strip a trailing comment and surrounding quotes from a YAML scalar."""
+    value = raw.split(" #", 1)[0].strip()
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in "'\"":
+        value = value[1:-1].strip()
+    return value
+
+
+def scan_yaml_text(text: str, file_label: str) -> List[Finding]:
+    """Dependency-free YAML text scan for _target_ lines and class references."""
+    findings: List[Finding] = []
+    stack: List[tuple] = []  # (indent, key) of the enclosing block mappings
+    for lineno, line in enumerate(text.splitlines(), 1):
+        m = _YAML_TARGET_RE.match(line)
+        if m:
+            val = m.group(1)
+            sev = _classify_target(val)
+            if sev == "HIGH":
+                findings.append(Finding(
+                    "HYD001", "HIGH", file_label, f"line {lineno}",
+                    f"_target_ resolves to a code-execution callable '{val}' (CWE-94/502)."))
+            else:
+                findings.append(Finding(
+                    "HYD002", sev, file_label, f"line {lineno}",
+                    f"_target_ '{val}' selects a callable for hydra instantiate(); "
+                    f"untrusted config here is RCE-prone (GHSA-mwj6-rfh8-7qf4)."))
+
+        stripped = line.strip()
+        if not stripped or stripped.startswith(("#", "-")):
+            continue
+        km = _YAML_KEY_RE.match(line)
+        if not km:
+            continue
+        indent = len(km.group(1).expandtabs())
+        key = km.group(2)
+        value = _clean_scalar(km.group(3) or "")
+        while stack and stack[-1][0] >= indent:
+            stack.pop()
+        keys = [k for _, k in stack] + [key]
+        if value and _is_class_ref_path(keys):
+            findings.append(_class_ref_finding(
+                value, file_label, f"line {lineno} ({'.'.join(keys)})"))
+        if not value:
+            stack.append((indent, key))
     return findings
 
 
@@ -180,23 +276,7 @@ def scan_file(file_path: str) -> List[Finding]:
             return [Finding("HYD000", "ERROR", file_path, "", f"could not parse JSON: {e}")]
         return scan_json_obj(obj, file_path)
 
-    # YAML: dependency-free text scan for _target_ lines.
-    findings: List[Finding] = []
-    for lineno, line in enumerate(text.splitlines(), 1):
-        m = _YAML_TARGET_RE.match(line)
-        if m:
-            val = m.group(1)
-            sev = _classify_target(val)
-            if sev == "HIGH":
-                findings.append(Finding(
-                    "HYD001", "HIGH", file_path, f"line {lineno}",
-                    f"_target_ resolves to a code-execution callable '{val}' (CWE-94/502)."))
-            else:
-                findings.append(Finding(
-                    "HYD002", sev, file_path, f"line {lineno}",
-                    f"_target_ '{val}' selects a callable for hydra instantiate(); "
-                    f"untrusted config here is RCE-prone (GHSA-mwj6-rfh8-7qf4)."))
-    return findings
+    return scan_yaml_text(text, file_path)
 
 
 def scan_path(target: str) -> List[Finding]:
@@ -219,7 +299,8 @@ def _max_severity(findings: List[Finding]) -> str:
 
 
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(description="Static Hydra _target_ config-injection scanner")
+    ap = argparse.ArgumentParser(
+        description="Static Hydra _target_ / pyannote class-reference config-injection scanner")
     ap.add_argument("path", help="file or directory to scan")
     ap.add_argument("--fail-on", default="HIGH",
                     choices=list(_SEVERITY_ORDER.keys()),

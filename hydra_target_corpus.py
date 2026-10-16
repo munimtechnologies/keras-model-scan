@@ -1,13 +1,14 @@
 # SPDX-License-Identifier: Apache-2.0
 # Part of munimtechnologies/keras-model-scan by MV2, Munim, Inc.
 # This file was made with AI.
-"""Generate a small corpus of config files exercising the Hydra ``_target_``
-config-injection detector in ``hydra_target_scan.py``.
+"""Generate a small corpus of config files exercising the Hydra ``_target_`` and
+pyannote ``pipeline: name:`` config-injection detector in ``hydra_target_scan.py``.
 
 Every "malicious" fixture carries an INERT payload (echo / a benign class path): the
 files are only ever read as text/JSON by the static scanner and are never handed to
-``hydra.utils.instantiate()``. The corpus documents an already-public vulnerability
-class (CVE-2026-22584, CVE-2025-23304, GHSA-mwj6-rfh8-7qf4); it is for regression
+``hydra.utils.instantiate()`` or ``Pipeline.from_pretrained()``. The corpus documents
+already-public vulnerability classes (CVE-2026-22584, CVE-2025-23304,
+GHSA-mwj6-rfh8-7qf4, pyannote-audio issues #2000 / #2019); it is for regression
 testing a defensive scanner, not for exploitation.
 """
 from __future__ import annotations
@@ -55,6 +56,11 @@ JSON_FIXTURES = {
         "HYD003",
         "Hydra helper keys without _target_ -> INFO corroboration",
     ),
+    "pipeline_json_config.json": (
+        {"pipeline": {"name": "subprocess.Popen", "params": {"args": ["echo", "inert"]}}},
+        "HYD004",
+        "pyannote-style pipeline.name in JSON -> HIGH",
+    ),
 }
 
 YAML_FIXTURES = {
@@ -67,6 +73,55 @@ YAML_FIXTURES = {
         "model:\n  _target_: my_project.models.Encoder\n  dim: 512\n",
         "HYD002",
         "YAML generic _target_ -> MEDIUM",
+    ),
+    "pyannote_clean.yaml": (
+        "version: 3.1.0\n"
+        "pipeline:\n"
+        "  name: pyannote.audio.pipelines.SpeakerDiarization\n"
+        "  params:\n"
+        "    clustering: AgglomerativeClustering\n"
+        "    segmentation_batch_size: 32\n"
+        "params:\n"
+        "  segmentation:\n"
+        "    min_duration_off: 0.0\n",
+        "HYD004",
+        "pyannote pipeline class inside the pyannote namespace -> LOW only",
+    ),
+    "pyannote_popen.yaml": (
+        "version: 3.1.0\n"
+        "pipeline:\n"
+        "  name: 'subprocess.Popen'  # inert fixture, never loaded\n"
+        "  params:\n"
+        "    args: [echo, inert]\n",
+        "HYD004",
+        "pipeline.name resolves to subprocess.Popen -> HIGH (issue #2000 class)",
+    ),
+    "pyannote_foreign.yaml": (
+        "pipeline:\n"
+        "  params:\n"
+        "    threshold: 0.5\n"
+        "  name: my_pkg.pipelines.Custom\n",
+        "HYD004",
+        "pipeline.name outside the pyannote namespace -> MEDIUM",
+    ),
+    "pyannote_preprocessor.yaml": (
+        "pipeline:\n"
+        "  name: SpeakerDiarization\n"
+        "preprocessors:\n"
+        "  audio:\n"
+        "    name: os.system\n"
+        "    params:\n"
+        "      command: echo inert\n",
+        "HYD004",
+        "preprocessors.<key>.name -> HIGH; bare pipeline name -> LOW",
+    ),
+    "dataset.yaml": (
+        "dataset:\n"
+        "  name: subprocess.Popen\n"
+        "pipeline_name: os.system\n"
+        "name: os.system\n",
+        None,
+        "'name' keys outside pipeline/preprocessors are not class references",
     ),
 }
 

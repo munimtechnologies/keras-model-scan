@@ -90,6 +90,52 @@ class TestHydraTargetScan(unittest.TestCase):
         self.assertIn("HYD000", ids(f))
         self.assertEqual(scan.main([p]), 1)  # ERROR trips non-zero exit
 
+    # ---- pyannote-style pipeline/preprocessor class references (HYD004) ----
+
+    def test_pyannote_clean_is_low_only(self):
+        f = self._scan("pyannote_clean.yaml")
+        self.assertEqual(ids(f), {"HYD004"})
+        self.assertEqual(severities(f), {"LOW"})
+        path = os.path.join(self.tmp, "pyannote_clean.yaml")
+        self.assertEqual(scan.main([path]), 0)
+
+    def test_pyannote_popen_is_high(self):
+        f = self._scan("pyannote_popen.yaml")
+        self.assertEqual(ids(f), {"HYD004"})
+        self.assertEqual(severities(f), {"HIGH"})
+        self.assertIn("'subprocess.Popen'", f[0].message)  # quotes and comment stripped
+        self.assertNotIn("#", f[0].message)
+
+    def test_pyannote_foreign_is_medium(self):
+        # name follows a deeper params block, so the indent stack must pop back
+        f = self._scan("pyannote_foreign.yaml")
+        self.assertEqual(ids(f), {"HYD004"})
+        self.assertEqual(severities(f), {"MEDIUM"})
+
+    def test_pyannote_preprocessor_is_high(self):
+        f = self._scan("pyannote_preprocessor.yaml")
+        self.assertEqual(ids(f), {"HYD004"})
+        self.assertEqual(severities(f), {"LOW", "HIGH"})
+        self.assertTrue(any("preprocessors.audio.name" in x.path for x in f))
+
+    def test_unrelated_name_keys_are_ignored(self):
+        self.assertEqual(self._scan("dataset.yaml"), [])
+
+    def test_pipeline_name_in_json_is_high(self):
+        f = self._scan("pipeline_json_config.json")
+        self.assertEqual(ids(f), {"HYD004"})
+        self.assertEqual(severities(f), {"HIGH"})
+
+    def test_every_fixture_matches_its_expected_id(self):
+        fixtures = dict(corpus.JSON_FIXTURES)
+        fixtures.update(corpus.YAML_FIXTURES)
+        for name, (_content, expect, _note) in fixtures.items():
+            got = ids(self._scan(name))
+            if expect is None:
+                self.assertEqual(got, set(), name)
+            else:
+                self.assertIn(expect, got, name)
+
 
 if __name__ == "__main__":
     unittest.main()
