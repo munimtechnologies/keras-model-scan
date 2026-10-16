@@ -73,6 +73,7 @@ Legend: **✓** documented detection · **~** partial / related / historically a
 | Lightning checkpoint `_instantiator` / `_class_path` hparams — CVE-2026-58659 (.ckpt) | ✗ | ✗ | ✗ | ? | ~ |
 | Python object tags in YAML metadata — CVE-2026-10036 (CKPT.yaml/hyperparams.yaml) | – | – | – | ~ | ✓ |
 | MONAI bundle `$` Python-eval expressions & `_target_` — CVE-2026-100840 (bundle JSON/YAML) | – | – | ✗ | ~ | ✓ |
+| Diffusers `model_index.json` component import & custom-pipeline `_class_name` — no CVE, by-design remote-code adjacency (model_index.json) | – | – | ✗ | ~ | ✓ |
 
 ## What the matrix shows
 
@@ -98,21 +99,27 @@ Legend: **✓** documented detection · **~** partial / related / historically a
    shares every static scanner's evasion limitation), and it is listed on the same
    documentation-based footing as the others, not as a recommendation.
 
-4. **Config-driven class instantiation is a category gap.** Six rows above cover
+4. **Config-driven class instantiation is a category gap.** Seven rows above cover
    configuration keys and expressions that name a Python callable for a loader to
    import, build, or evaluate: Hydra `_target_`, pyannote `pipeline.name`,
    sentence-transformers `modules.json` `type`, jsonargparse `class_path`, Lightning's
-   `_instantiator` / `_class_path` checkpoint hyper-parameters, and MONAI bundle
-   configs. MONAI (CVE-2026-100840, ≤ 1.6.0) is a double case: its bundle engine both
-   resolves `_target_` to any importable callable *without* an allowlist **and**
-   evaluates any string beginning with `$` as a Python expression through `eval()`
-   (CWE-95), so `monai.bundle.load` / `run` on an untrusted bundle runs arbitrary
-   code — the `$`-expression sink is a mechanism distinct from every class-naming key.
-   These run code **even when the weights are SafeTensors**, and the Lightning case
-   bypasses `weights_only=True` because the payload is a plain string, not a pickle
-   import. None of the pickle scanners documents these keys; ModelAudit's generic
-   config-pattern scanner is the closest documented coverage. The real fix is in the
-   loaders (allowlists, explicit trust flags, upgrades), not in scanners.
+   `_instantiator` / `_class_path` checkpoint hyper-parameters, MONAI bundle configs,
+   and the Diffusers `model_index.json` component list. MONAI (CVE-2026-100840,
+   ≤ 1.6.0) is a double case: its bundle engine both resolves `_target_` to any
+   importable callable *without* an allowlist **and** evaluates any string beginning
+   with `$` as a Python expression through `eval()` (CWE-95), so `monai.bundle.load` /
+   `run` on an untrusted bundle runs arbitrary code — the `$`-expression sink is a
+   mechanism distinct from every class-naming key. The Diffusers case is a by-design
+   adjacency rather than a CVE: `DiffusionPipeline.from_pretrained` resolves each
+   component's `[library, class]` through `importlib.import_module(library)` with no
+   allowlist (only `diffusers`, `transformers` and `onnxruntime.training` are known
+   load targets), and a list-form `_class_name` loads a local custom-pipeline `.py` —
+   the same trust boundary as `trust_remote_code`. These run code **even when the
+   weights are SafeTensors**, and the Lightning case bypasses `weights_only=True`
+   because the payload is a plain string, not a pickle import. None of the pickle
+   scanners documents these keys; ModelAudit's generic config-pattern scanner is the
+   closest documented coverage. The real fix is in the loaders (allowlists, explicit
+   trust flags, upgrades) and in only loading from sources you trust, not in scanners.
 
 5. **YAML's own type system is a second config-layer gap.** The YAML-tags row covers a
    different mechanism from the class-naming keys above: YAML *tags*. Under PyYAML's
@@ -138,9 +145,10 @@ Legend: **✓** documented detection · **~** partial / related / historically a
   scanner reference on 2026-10-16, which moved several of its cells up.
 - `kms` cells point at this repository's own detector docs; treat them with the same
   "verify before relying" caution as every other column. Its config-instantiation,
-  YAML-tag and MONAI-bundle detectors read config text on disk; they do not unpack
-  `.nemo` or `.ckpt` files, and the MONAI `$`-expression rule flags the eval sink
-  statically — it never evaluates the expression.
+  YAML-tag, MONAI-bundle and Diffusers-manifest detectors read config text on disk;
+  they do not unpack `.nemo` or `.ckpt` files or follow a custom-pipeline `.py`, and
+  the MONAI `$`-expression rule flags the eval sink statically — it never evaluates
+  the expression.
 - This is a coverage map, not a ranking. The right choice depends on your formats and
   threat model; many teams run more than one scanner plus a SafeTensors-only ingestion
   policy.
@@ -166,6 +174,7 @@ Legend: **✓** documented detection · **~** partial / related / historically a
 - CVE-2026-10036 (SpeechBrain arbitrary code execution via `CKPT.yaml` parsing, fixed 1.1.1) — https://vulncheck.com/advisories/speechbrain-arbitrary-code-execution-via-ckpt-yaml-parsing
 - CVE-2026-84202 (ModelScope unsafe `yaml.Loader` on model config files, CWE-502) — https://nvd.nist.gov/vuln/detail/CVE-2026-84202
 - GHSA-873f-pvrv-4x83 / CVE-2026-100840 (MONAI bundle RCE via `_target_` without allowlist and `$` → `eval()`, ≤ 1.6.0, CWE-95) — https://github.com/advisories/GHSA-873f-pvrv-4x83
+- Diffusers `get_class_obj_and_candidates` component import (`importlib.import_module` on a `[library, class]` with no allowlist; `LOADABLE_CLASSES` = diffusers / transformers / onnxruntime.training) — https://github.com/huggingface/diffusers/blob/main/src/diffusers/pipelines/pipeline_loading_utils.py
 - HyperPyYAML README, security note (`!new:` / `!apply:` allow arbitrary code) — https://github.com/speechbrain/HyperPyYAML
 - *ShadowPickle: Evading ML Model Scanners* (arXiv 2607.17503) — https://arxiv.org/abs/2607.17503
 - *DITTO: Context-aware Pickle-based Pre-Trained Model Scanner* (arXiv 2610.10735) — https://arxiv.org/abs/2610.10735
