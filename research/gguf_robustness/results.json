@@ -1,0 +1,112 @@
+{
+  "contract": "gguf-robustness-probe-v2",
+  "made_with": "AI, by MV2 of Munim, Inc.",
+  "target": "Python gguf-py GGUFReader (pip package 'gguf')",
+  "class_tested": "CWE-400 denial of service / CWE-125 out-of-bounds read",
+  "per_file_timeout_s": 30,
+  "mem_cap_bytes": 1610612736,
+  "gguf_available": true,
+  "control_loaded": true,
+  "n_fixtures": 8,
+  "dos_signals": [],
+  "verdict": "CLEAN_NEGATIVE: control loaded; every malformed fixture rejected fast, no hang/OOM",
+  "run_host": "sealed container (MV2-Compete), network off during run",
+  "run_finished_at": "2026-10-16T10:15:41Z",
+  "records": [
+    {
+      "path": "/out/corpus/control_valid.gguf",
+      "mem_capped": true,
+      "outcome": "loaded",
+      "n_tensors": 1,
+      "n_kv": 3,
+      "shapes": [
+        [
+          4
+        ]
+      ],
+      "elapsed_s": 0.554,
+      "returncode": 0,
+      "fixture": "control_valid",
+      "file_bytes": 80
+    },
+    {
+      "path": "/out/corpus/tensor_dims_overflow.gguf",
+      "mem_capped": true,
+      "outcome": "rejected",
+      "exc_type": "ValueError",
+      "exc_msg": "cannot reshape array of size 4 into shape (1099511627776,)",
+      "elapsed_s": 0.465,
+      "returncode": 0,
+      "fixture": "tensor_dims_overflow",
+      "file_bytes": 80
+    },
+    {
+      "path": "/out/corpus/tensor_count_overflow.gguf",
+      "mem_capped": true,
+      "outcome": "rejected",
+      "exc_type": "IndexError",
+      "exc_msg": "index 0 is out of bounds for axis 0 with size 0",
+      "elapsed_s": 0.484,
+      "returncode": 0,
+      "fixture": "tensor_count_overflow",
+      "file_bytes": 32
+    },
+    {
+      "path": "/out/corpus/kv_count_overflow.gguf",
+      "mem_capped": true,
+      "outcome": "rejected",
+      "exc_type": "IndexError",
+      "exc_msg": "index 0 is out of bounds for axis 0 with size 0",
+      "elapsed_s": 0.523,
+      "returncode": 0,
+      "fixture": "kv_count_overflow",
+      "file_bytes": 32
+    },
+    {
+      "path": "/out/corpus/string_len_overrun.gguf",
+      "mem_capped": true,
+      "outcome": "loaded",
+      "n_tensors": 0,
+      "n_kv": 4,
+      "shapes": [],
+      "elapsed_s": 0.524,
+      "returncode": 0,
+      "fixture": "string_len_overrun",
+      "file_bytes": 64
+    },
+    {
+      "path": "/out/corpus/array_len_overflow.gguf",
+      "mem_capped": true,
+      "outcome": "rejected",
+      "exc_type": "ValueError",
+      "exc_msg": "When changing to a larger dtype, its size must be a divisor of the total size in bytes of the last axis of the array.",
+      "elapsed_s": 0.533,
+      "returncode": 0,
+      "fixture": "array_len_overflow",
+      "file_bytes": 64
+    },
+    {
+      "path": "/out/corpus/data_offset_oob.gguf",
+      "mem_capped": true,
+      "outcome": "rejected",
+      "exc_type": "ValueError",
+      "exc_msg": "cannot reshape array of size 0 into shape (4,)",
+      "elapsed_s": 0.593,
+      "returncode": 0,
+      "fixture": "data_offset_oob",
+      "file_bytes": 80
+    },
+    {
+      "path": "/out/corpus/bad_alignment.gguf",
+      "mem_capped": true,
+      "outcome": "rejected",
+      "exc_type": "ValueError",
+      "exc_msg": "Invalid alignment: must be a non-zero power of two",
+      "elapsed_s": 0.551,
+      "returncode": 0,
+      "fixture": "bad_alignment",
+      "file_bytes": 106
+    }
+  ],
+  "gguf_version": "unknown"
+}
