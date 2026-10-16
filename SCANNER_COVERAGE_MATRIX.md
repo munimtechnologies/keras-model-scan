@@ -71,6 +71,7 @@ Legend: **✓** documented detection · **~** partial / related / historically a
 | sentence-transformers module `type` outside the package — CVE-2026-68770 (modules.json) | – | – | ✗ | ~ | ✓ |
 | jsonargparse / LightningCLI `class_path` instantiation — PR #959 class (YAML/JSON config) | – | – | ✗ | ~ | ✓ |
 | Lightning checkpoint `_instantiator` / `_class_path` hparams — CVE-2026-58659 (.ckpt) | ✗ | ✗ | ✗ | ? | ~ |
+| Python object tags in YAML metadata — CVE-2026-10036 (CKPT.yaml/hyperparams.yaml) | – | – | – | ~ | ✓ |
 
 ## What the matrix shows
 
@@ -107,6 +108,21 @@ Legend: **✓** documented detection · **~** partial / related / historically a
    closest documented coverage. The real fix is in the loaders (allowlists, explicit
    trust flags, upgrades), not in scanners.
 
+5. **YAML's own type system is a second config-layer gap.** The last row covers a
+   different mechanism from the class-naming keys above: YAML *tags*. Under PyYAML's
+   unsafe loader, `!!python/object/apply:os.system` runs code the instant the file is
+   parsed, and HyperPyYAML's `!new:` / `!apply:` shorthand (SpeechBrain
+   `hyperparams.yaml`) constructs or calls any importable target by design.
+   SpeechBrain's `CKPT.yaml` parsing was a live instance of this —
+   **CVE-2026-10036** (fixed 1.1.1), where a python tag in any checkpoint's
+   `CKPT.yaml` ran code during candidate enumeration even if that checkpoint was
+   never selected. It is not a one-off: **CVE-2026-84202** is the same mechanism in
+   ModelScope, which parsed model configuration files with PyYAML's unsafe
+   `yaml.Loader` (CWE-502). No reviewed general-purpose scanner documents a rule for
+   these tags; ModelAudit's YAML pattern matching is the nearest. The real fix is
+   `yaml.safe_load`, an upgrade, and loading `hyperparams.yaml` only from trusted
+   sources.
+
 ## Honest limits
 
 - Documentation-based, not executed: a "✓" means *documented*, not *verified on your
@@ -115,8 +131,9 @@ Legend: **✓** documented detection · **~** partial / related / historically a
   become "✓" in a later release. The ModelAudit column was re-checked against its
   scanner reference on 2026-10-16, which moved several of its cells up.
 - `kms` cells point at this repository's own detector docs; treat them with the same
-  "verify before relying" caution as every other column. Its config-instantiation
-  detectors read config text on disk; they do not unpack `.nemo` or `.ckpt` files.
+  "verify before relying" caution as every other column. Its config-instantiation and
+  YAML-tag detectors read config text on disk; they do not unpack `.nemo` or `.ckpt`
+  files.
 - This is a coverage map, not a ranking. The right choice depends on your formats and
   threat model; many teams run more than one scanner plus a SafeTensors-only ingestion
   policy.
@@ -139,6 +156,9 @@ Legend: **✓** documented detection · **~** partial / related / historically a
 - GHSA-jhr6-gm9c-rqjv / CVE-2026-68770 (sentence-transformers `modules.json`) — https://github.com/advisories/GHSA-jhr6-gm9c-rqjv
 - jsonargparse PR #959 (import-path denylist for `class_path`) — https://github.com/mauvilsa/jsonargparse/pull/959
 - GHSA-qqmf-gpg7-g8gw / CVE-2026-58659 (Lightning checkpoint `_instantiator`, fixed 2.6.6) — https://github.com/advisories/GHSA-qqmf-gpg7-g8gw
+- CVE-2026-10036 (SpeechBrain arbitrary code execution via `CKPT.yaml` parsing, fixed 1.1.1) — https://vulncheck.com/advisories/speechbrain-arbitrary-code-execution-via-ckpt-yaml-parsing
+- CVE-2026-84202 (ModelScope unsafe `yaml.Loader` on model config files, CWE-502) — https://nvd.nist.gov/vuln/detail/CVE-2026-84202
+- HyperPyYAML README, security note (`!new:` / `!apply:` allow arbitrary code) — https://github.com/speechbrain/HyperPyYAML
 - *ShadowPickle: Evading ML Model Scanners* (arXiv 2607.17503) — https://arxiv.org/abs/2607.17503
 - *DITTO: Context-aware Pickle-based Pre-Trained Model Scanner* (arXiv 2610.10735) — https://arxiv.org/abs/2610.10735
 - *SafePickle* (arXiv 2602.19818) — https://arxiv.org/abs/2602.19818
