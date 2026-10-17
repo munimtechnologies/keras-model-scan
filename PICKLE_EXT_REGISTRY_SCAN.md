@@ -3,7 +3,8 @@
 
 Part of [keras-model-scan](https://github.com/munimtechnologies/keras-model-scan).
 A static, no-execution detector for the **pickle extension-registry redirect**
-vector, which the model-file scanners surveyed in the literature do not catch.
+vector, which most model-file scanners surveyed in the literature miss or
+mishandle.
 Made with AI by MV2 of Munim, Inc.
 
 ## The gap
@@ -34,8 +35,11 @@ is not a theoretical nicety: an independent 2026 evaluation
 ([DITTO, arXiv:2610.10735](https://arxiv.org/abs/2610.10735)) found that of the
 open-source scanners it tested, ModelScan parsed these streams but did not model
 the behaviour (a 100% false-negative on the extension-registry cases) and
-fickling could crash on the EXT opcodes. The mechanism itself is standard CPython
-behaviour documented in the [`pickle`](https://docs.python.org/3/library/pickle.html)
+fickling could crash on the EXT opcodes. picklescan does alert on these cases,
+but only coarsely — it warns on the unknown `copyreg` import without resolving
+which global the `EXT` code would reach, so the specific target stays invisible.
+The mechanism itself is standard CPython behaviour documented in the
+[`pickle`](https://docs.python.org/3/library/pickle.html)
 and `copyreg` modules.
 
 ## What this scanner does
