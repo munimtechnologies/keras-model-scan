@@ -76,6 +76,7 @@ Legend: **✓** documented detection · **~** partial / related / historically a
 | Diffusers `model_index.json` component import & custom-pipeline `_class_name` — no CVE, by-design remote-code adjacency (model_index.json) | – | – | ✗ | ~ | ✓ |
 | Diffusers repository auto-loaded Python — `None.py` default path & local `custom_pipeline`, FaceHugger — CVE-2026-44827/44513 (pipeline repo files) | – | – | – | ? | ✓ |
 | skops `.skops` `schema.json` requested-type audit — operator/method code reuse & joblib fallback — CVE-2025-54412/54413/54886 (.skops) | – | – | – | ? | ✓ |
+| Pickle `copyreg` extension-registry redirect — EXT1/EXT2/EXT4 hidden-global import, no CVE (pickle/.pt) | ✓ | ~ | ✗ | ? | ✓ |
 
 ## What the matrix shows
 
@@ -85,6 +86,14 @@ Legend: **✓** documented detection · **~** partial / related / historically a
    drop to **zero recall** against the ShadowPickle stealthy-pickle technique, and
    SOTA scanners sit at 7–63% F1 on the SafePickle benchmark. Fickling's AST approach
    is more robust but, per DITTO, security-critical operations can still be buried.
+   A related pickle blind spot is the **extension-registry redirect** (last row):
+   the `EXT1`/`EXT2`/`EXT4` opcodes resolve a global through the mutable `copyreg`
+   extension registry, so an import such as `os.system` carries **no name in the
+   stream**. Per DITTO (arXiv:2610.10735), ModelScan parses these streams but misses
+   them (100% false-negative) and fickling crashes on the EXT opcodes; picklescan
+   catches them only incidentally, by flagging the unknown `copyreg` import rather
+   than resolving the redirect; keras-model-scan adds dedicated `PXR001`/`PXR002`
+   findings for the registry mutator import and the EXT opcode itself.
    *Static file scanning is necessary but not sufficient against a motivated attacker.*
 
 2. **Breadth vs. depth splits the field.** ModelAudit is the broadest by a wide
@@ -139,7 +148,7 @@ Legend: **✓** documented detection · **~** partial / related / historically a
    sources.
 
 6. **Two 2026 additions push past config files — into the repository and into the
-   "safe" format.** The two newest rows are not configuration keys at all. The
+   "safe" format.** The two newest config-era rows are not configuration keys at all. The
    Diffusers *repository* row is a filesystem vector (FaceHugger, Zafran Security,
    disclosed July 2026; fixed diffusers 0.38.0): `DiffusionPipeline.from_pretrained`
    builds the literal module name `None.py` when no `custom_pipeline` is given and
@@ -165,11 +174,12 @@ Legend: **✓** documented detection · **~** partial / related / historically a
   scanner reference on 2026-10-16, which moved several of its cells up.
 - `kms` cells point at this repository's own detector docs; treat them with the same
   "verify before relying" caution as every other column. Its config-instantiation,
-  YAML-tag, MONAI-bundle, Diffusers-manifest, Diffusers-repository and skops detectors
-  read config text, file names or `schema.json` on disk; they do not unpack `.nemo` or
-  `.ckpt` files, follow a custom-pipeline `.py`, or reconstruct a skops node, and the
-  MONAI `$`-expression rule flags the eval sink statically — it never evaluates the
-  expression.
+  YAML-tag, MONAI-bundle, Diffusers-manifest, Diffusers-repository, skops and
+  pickle-extension-registry detectors read config text, file names, `schema.json` or
+  decoded pickle opcodes on disk; they do not unpack `.nemo` or `.ckpt` files, follow
+  a custom-pipeline `.py`, reconstruct a skops node, or resolve an `EXT` opcode's
+  target, and the MONAI `$`-expression rule flags the eval sink statically — it never
+  evaluates the expression.
 - This is a coverage map, not a ranking. The right choice depends on your formats and
   threat model; many teams run more than one scanner plus a SafeTensors-only ingestion
   policy.
