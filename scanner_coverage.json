@@ -1,6 +1,6 @@
 {
   "schema": "mv2-scanner-coverage/1",
-  "generated": "2026-10-16",
+  "generated": "2026-10-17",
   "title": "Open-source model-file scanner coverage vs. attack-vector taxonomy",
   "author": "Made with AI by MV2 of Munim, Inc.",
   "license": "CC BY 4.0 (this data); code in this repository is Apache-2.0",
@@ -17,7 +17,7 @@
     {"id": "fk", "name": "fickling (Trail of Bits)", "scope": "pickle only; AST / allowlist with dataflow"},
     {"id": "ms", "name": "ModelScan (Protect AI)", "scope": "pickle, PyTorch, Keras H5, TensorFlow SavedModel; denylist of dangerous globals"},
     {"id": "ma", "name": "ModelAudit (Promptfoo)", "scope": "widest format set incl. config files, ONNX, SafeTensors, NumPy, PMML, archives"},
-    {"id": "kms", "name": "keras-model-scan (MV2 / Munim, Inc.)", "scope": "static, dependency-free, no-execution detectors for .keras, pickle, safetensors, GGUF, ONNX, HF config, chat templates, config-driven class instantiation keys, YAML object tags, MONAI bundle expressions and Diffusers manifests"}
+    {"id": "kms", "name": "keras-model-scan (MV2 / Munim, Inc.)", "scope": "static, dependency-free, no-execution detectors for .keras, pickle, safetensors, GGUF, ONNX, HF config, chat templates, config-driven class instantiation keys, YAML object tags, MONAI bundle expressions, Diffusers manifests, the Diffusers pipeline-repository remote-code surface and skops schema types"}
   ],
   "vectors": [
     {"id": "pkl-rce", "title": "Pickle dangerous-import RCE (GLOBAL + REDUCE/BUILD)", "formats": ".pkl, .pt, .pth, .bin, .joblib, object .npy", "class": "CWE-502"},
@@ -43,7 +43,9 @@
     {"id": "ckpt-lightning", "title": "Lightning checkpoint hparams _instantiator / _class_path", "formats": ".ckpt hyper-parameters, hparams.yaml", "class": "CVE-2026-58659 / GHSA-qqmf-gpg7-g8gw (CWE-470)"},
     {"id": "yaml-pytag", "title": "Python object tags in YAML metadata (PyYAML !!python/..., HyperPyYAML !new:/!apply:)", "formats": "CKPT.yaml, hyperparams.yaml, model config .yaml / *.yml", "class": "CVE-2026-10036 (SpeechBrain < 1.1.1); CVE-2026-84202 (ModelScope) / CWE-502"},
     {"id": "cfg-monai", "title": "MONAI bundle $ Python-eval expressions and _target_ instantiation", "formats": "inference.json / train.json / metadata.json, bundle .yaml", "class": "CVE-2026-100840 / GHSA-873f-pvrv-4x83 / PYSEC-2026-4015 (CWE-95)"},
-    {"id": "cfg-diffusers-manifest", "title": "Diffusers model_index.json component import and custom-pipeline instantiation", "formats": "model_index.json", "class": "config-driven importlib.import_module with no allowlist (no CVE; by-design remote-code adjacency)"}
+    {"id": "cfg-diffusers-manifest", "title": "Diffusers model_index.json component import and custom-pipeline instantiation", "formats": "model_index.json", "class": "config-driven importlib.import_module with no allowlist (no CVE; by-design remote-code adjacency)"},
+    {"id": "repo-diffusers-pyfile", "title": "Diffusers pipeline-repository auto-loaded Python (None.py default path and local custom_pipeline module) - FaceHugger", "formats": "pipeline repository files (None.py anywhere; *.py beside model_index.json)", "class": "CVE-2026-44827 / CVE-2026-44513 (CWE-94); fixed diffusers 0.38.0"},
+    {"id": "skops-schema-types", "title": "skops (.skops) schema.json requested-type audit (operator/method code reuse and joblib fallback)", "formats": ".skops (ZIP + schema.json)", "class": "CVE-2025-54412 / CVE-2025-54413 (CWE-351); CVE-2025-54886 (CWE-502); fixed skops 0.12.0 / 0.13.0"}
   ],
   "cells": [
     {"vector": "pkl-rce", "scanner": "ps", "status": "detects", "note": "hybrid denylist of dangerous globals", "sources": ["https://blog.huntr.com/hunting-vulnerabilities-in-machine-learning-model-file-formats"]},
@@ -188,6 +190,18 @@
     {"vector": "cfg-diffusers-manifest", "scanner": "fk", "status": "out-of-scope", "note": "pickle only; does not read model_index.json", "sources": []},
     {"vector": "cfg-diffusers-manifest", "scanner": "ms", "status": "no", "note": "configuration files not analysed", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
     {"vector": "cfg-diffusers-manifest", "scanner": "ma", "status": "partial", "note": "Manifest scanner looks for code-execution patterns in .json configs; no model_index.json component-import ([library, class]) rule documented", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
-    {"vector": "cfg-diffusers-manifest", "scanner": "kms", "status": "detects", "note": "DMS001 flags a component [library, class] whose library is outside {diffusers, transformers, onnxruntime}; DMS002 flags a list-form _class_name custom pipeline; static JSON read only", "sources": ["https://github.com/huggingface/diffusers/blob/main/src/diffusers/pipelines/pipeline_loading_utils.py", "https://github.com/munimtechnologies/keras-model-scan/blob/main/DIFFUSERS_MANIFEST_SCAN.md"]}
+    {"vector": "cfg-diffusers-manifest", "scanner": "kms", "status": "detects", "note": "DMS001 flags a component [library, class] whose library is outside {diffusers, transformers, onnxruntime}; DMS002 flags a list-form _class_name custom pipeline; static JSON read only", "sources": ["https://github.com/huggingface/diffusers/blob/main/src/diffusers/pipelines/pipeline_loading_utils.py", "https://github.com/munimtechnologies/keras-model-scan/blob/main/DIFFUSERS_MANIFEST_SCAN.md"]},
+
+    {"vector": "repo-diffusers-pyfile", "scanner": "ps", "status": "out-of-scope", "note": "pickle only; does not inspect repository Python files", "sources": []},
+    {"vector": "repo-diffusers-pyfile", "scanner": "fk", "status": "out-of-scope", "note": "pickle only; does not inspect repository Python files", "sources": []},
+    {"vector": "repo-diffusers-pyfile", "scanner": "ms", "status": "out-of-scope", "note": "scans serialized model files (pickle/PyTorch/Keras-H5/TF-SavedModel); a loose .py module in a repo is not a format it scans", "sources": []},
+    {"vector": "repo-diffusers-pyfile", "scanner": "ma", "status": "unknown", "note": "ModelAudit walks directories and many file types, but its scanner reference documents no rule treating a repo-local None.py or custom_pipeline .py as a Diffusers auto-execution signal", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
+    {"vector": "repo-diffusers-pyfile", "scanner": "kms", "status": "detects", "note": "DRC001 flags a file named exactly None.py (CVE-2026-44827 fingerprint) anywhere; DRC002 flags any other *.py beside model_index.json (local custom_pipeline surface); reads file names only, no execution", "sources": ["https://nvd.nist.gov/vuln/detail/CVE-2026-44827", "https://github.com/munimtechnologies/keras-model-scan/blob/main/DIFFUSERS_REMOTE_CODE_SCAN.md"]},
+
+    {"vector": "skops-schema-types", "scanner": "ps", "status": "out-of-scope", "note": "pickle only; does not open a .skops ZIP or read schema.json", "sources": []},
+    {"vector": "skops-schema-types", "scanner": "fk", "status": "out-of-scope", "note": "pickle only; does not open a .skops ZIP or read schema.json", "sources": []},
+    {"vector": "skops-schema-types", "scanner": "ms", "status": "out-of-scope", "note": "scope is pickle/PyTorch/Keras-H5/TF-SavedModel; the skops ZIP+schema.json format is not a format it scans", "sources": []},
+    {"vector": "skops-schema-types", "scanner": "ma", "status": "unknown", "note": "no .skops scanner is listed in ModelAudit's scanner reference as of 2026-10-16; whether it audits schema.json requested types is not determinable from public docs", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
+    {"vector": "skops-schema-types", "scanner": "kms", "status": "detects", "note": "SKP001 (CRITICAL) OS/process/eval-sink __module__ or dangerous builtins callable; SKP002 (HIGH) OperatorFuncNode/MethodNode/operator node (CVE-2025-54412/54413 code reuse); SKP003 (MEDIUM) type outside an ML allow-list; SKP010 (HIGH) a .skops that is not a valid ZIP (Card.get_model joblib fallback, CVE-2025-54886); reads schema.json only, no execution", "sources": ["https://nvd.nist.gov/vuln/detail/CVE-2025-54412", "https://github.com/munimtechnologies/keras-model-scan/blob/main/SKOPS_SCAN.md"]}
   ]
 }

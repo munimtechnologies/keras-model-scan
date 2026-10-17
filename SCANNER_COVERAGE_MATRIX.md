@@ -74,6 +74,8 @@ Legend: **✓** documented detection · **~** partial / related / historically a
 | Python object tags in YAML metadata — CVE-2026-10036 (CKPT.yaml/hyperparams.yaml) | – | – | – | ~ | ✓ |
 | MONAI bundle `$` Python-eval expressions & `_target_` — CVE-2026-100840 (bundle JSON/YAML) | – | – | ✗ | ~ | ✓ |
 | Diffusers `model_index.json` component import & custom-pipeline `_class_name` — no CVE, by-design remote-code adjacency (model_index.json) | – | – | ✗ | ~ | ✓ |
+| Diffusers repository auto-loaded Python — `None.py` default path & local `custom_pipeline`, FaceHugger — CVE-2026-44827/44513 (pipeline repo files) | – | – | – | ? | ✓ |
+| skops `.skops` `schema.json` requested-type audit — operator/method code reuse & joblib fallback — CVE-2025-54412/54413/54886 (.skops) | – | – | – | ? | ✓ |
 
 ## What the matrix shows
 
@@ -136,6 +138,24 @@ Legend: **✓** documented detection · **~** partial / related / historically a
    `yaml.safe_load`, an upgrade, and loading `hyperparams.yaml` only from trusted
    sources.
 
+6. **Two 2026 additions push past config files — into the repository and into the
+   "safe" format.** The two newest rows are not configuration keys at all. The
+   Diffusers *repository* row is a filesystem vector (FaceHugger, Zafran Security,
+   disclosed July 2026; fixed diffusers 0.38.0): `DiffusionPipeline.from_pretrained`
+   builds the literal module name `None.py` when no `custom_pipeline` is given and
+   loads it from the repo without treating it as untrusted (**CVE-2026-44827**,
+   CWE-94), and the local `custom_pipeline` path imported a repo-local `.py` before
+   the trust gate (**CVE-2026-44513**) — so code runs *even with*
+   `trust_remote_code=False`. The skops row turns the taxonomy on the format marketed
+   as the *safe* pickle alternative: a `.skops` file is a ZIP whose `schema.json`
+   lists typed nodes skops reconstructs only if trusted, and that trust boundary broke
+   three times in 2025 — `OperatorFuncNode`/`MethodNode` code reuse
+   (**CVE-2025-54412 / 54413**, CWE-351) and a joblib/pickle fallback when the file is
+   not a valid ZIP (**CVE-2025-54886**, CWE-502). No reviewed general-purpose scanner
+   documents a rule for either surface; keras-model-scan ships the only standalone
+   static detectors (`DRC001/002` for the repository Python, `SKP001-003`/`SKP010` for
+   the skops schema), both no-execution and reading only file names or `schema.json`.
+
 ## Honest limits
 
 - Documentation-based, not executed: a "✓" means *documented*, not *verified on your
@@ -145,10 +165,11 @@ Legend: **✓** documented detection · **~** partial / related / historically a
   scanner reference on 2026-10-16, which moved several of its cells up.
 - `kms` cells point at this repository's own detector docs; treat them with the same
   "verify before relying" caution as every other column. Its config-instantiation,
-  YAML-tag, MONAI-bundle and Diffusers-manifest detectors read config text on disk;
-  they do not unpack `.nemo` or `.ckpt` files or follow a custom-pipeline `.py`, and
-  the MONAI `$`-expression rule flags the eval sink statically — it never evaluates
-  the expression.
+  YAML-tag, MONAI-bundle, Diffusers-manifest, Diffusers-repository and skops detectors
+  read config text, file names or `schema.json` on disk; they do not unpack `.nemo` or
+  `.ckpt` files, follow a custom-pipeline `.py`, or reconstruct a skops node, and the
+  MONAI `$`-expression rule flags the eval sink statically — it never evaluates the
+  expression.
 - This is a coverage map, not a ranking. The right choice depends on your formats and
   threat model; many teams run more than one scanner plus a SafeTensors-only ingestion
   policy.
@@ -175,6 +196,12 @@ Legend: **✓** documented detection · **~** partial / related / historically a
 - CVE-2026-84202 (ModelScope unsafe `yaml.Loader` on model config files, CWE-502) — https://nvd.nist.gov/vuln/detail/CVE-2026-84202
 - GHSA-873f-pvrv-4x83 / CVE-2026-100840 (MONAI bundle RCE via `_target_` without allowlist and `$` → `eval()`, ≤ 1.6.0, CWE-95) — https://github.com/advisories/GHSA-873f-pvrv-4x83
 - Diffusers `get_class_obj_and_candidates` component import (`importlib.import_module` on a `[library, class]` with no allowlist; `LOADABLE_CLASSES` = diffusers / transformers / onnxruntime.training) — https://github.com/huggingface/diffusers/blob/main/src/diffusers/pipelines/pipeline_loading_utils.py
+- Zafran Security, *FaceHugger: vulnerabilities in Hugging Face Diffusers* (CVE-2026-44827 / CVE-2026-44513 / CVE-2026-45804, fixed 0.38.0) — https://www.zafran.io/resources/facehugger-vulnerabilities-in-hugging-face-diffusers-open-door-to-supply-chain-attacks-on-enterprise-ai
+- CVE-2026-44827 (Diffusers `None.py` default-path auto-load) — https://nvd.nist.gov/vuln/detail/CVE-2026-44827
+- CVE-2026-44513 (Diffusers `custom_pipeline` / local custom-component TOCTOU) — https://nvd.nist.gov/vuln/detail/CVE-2026-44513
+- CVE-2025-54412 (skops `OperatorFuncNode` type confusion, CWE-351, fixed 0.12.0) — https://nvd.nist.gov/vuln/detail/CVE-2025-54412
+- CVE-2025-54413 (skops `MethodNode` type confusion, CWE-351, fixed 0.12.0) — https://nvd.nist.gov/vuln/detail/CVE-2025-54413
+- CVE-2025-54886 (skops `Card.get_model` joblib/pickle fallback on a non-ZIP, CWE-502, fixed 0.13.0) — https://nvd.nist.gov/vuln/detail/CVE-2025-54886
 - HyperPyYAML README, security note (`!new:` / `!apply:` allow arbitrary code) — https://github.com/speechbrain/HyperPyYAML
 - *ShadowPickle: Evading ML Model Scanners* (arXiv 2607.17503) — https://arxiv.org/abs/2607.17503
 - *DITTO: Context-aware Pickle-based Pre-Trained Model Scanner* (arXiv 2610.10735) — https://arxiv.org/abs/2610.10735
