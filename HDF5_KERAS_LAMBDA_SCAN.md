@@ -13,11 +13,20 @@ still-exploited sink — so it gets its own detector.
 
 ## The vulnerability
 
-- **CVE-2025-9905 / CVE-2025-9906** (Keras, fixed in **3.11.3**, CWE-913):
-  `Model.load_model` **silently ignores `safe_mode=True`** for legacy HDF5
-  models. A `Lambda` layer whose function is stored as serialized (marshalled)
-  Python code therefore executes on load **even when the caller asked for safe
-  mode**. The attack needs no inference — loading the file is enough.
+- **CVE-2025-9905** (Keras, affected 3.0.0–3.11.2, fixed in **3.11.3**,
+  CWE-913): `Model.load_model` **silently ignores `safe_mode=True`** for legacy
+  HDF5 models. A `Lambda` layer whose function is stored as serialized
+  (marshalled) Python code therefore executes on load **even when the caller
+  asked for safe mode**. The attack needs no inference — loading the file is
+  enough. This is the sink this detector targets.
+- **Not to be confused with CVE-2025-9906** (Keras, fixed in **3.11.0**,
+  CWE-502): a *distinct* bypass in the newer `.keras` **v3 ZIP archive**, where a
+  crafted `config.json` first calls `enable_unsafe_deserialization()` and then
+  runs a `Lambda` payload. That format is handled by this toolkit's
+  `keras_model_scan`, not here. The two CVEs share a root cause (Lambda
+  code-exec) but are different file formats with different fixed versions
+  (3.11.0 vs 3.11.3) and different CWEs (CWE-502 vs CWE-913); verified at
+  osv.dev.
 - Reported by Gabriele Digregorio (Io_no) as a follow-up to earlier Keras
   `safe_mode` bypasses. `safe_mode` was only ever wired to `.keras` v3, so there
   is no built-in way to restrict Lambda code in an `.h5` model.
@@ -30,7 +39,7 @@ model, and never executes any payload. It confirms the HDF5 superblock signature
 
 | Rule | Severity | Meaning |
 |------|----------|---------|
-| HKL001 | high | HDF5 Keras config contains a `Lambda` layer (with a serialized `function`) → code exec on load under Keras <3.11.3 (CVE-2025-9905/9906). |
+| HKL001 | high | HDF5 Keras config contains a `Lambda` layer (with a serialized `function`) → code exec on load under Keras <3.11.3 (CVE-2025-9905). |
 | HKL002 | medium | Config references a non-core / custom registered object (`registered_name`, non-`keras` `module`) → attacker-controllable deserialization (CWE-502). |
 | HKL003 | info | Legacy Keras HDF5 model with no code marker found — still note that `safe_mode` does not protect `.h5`; prefer `.keras` v3 and Keras ≥3.11.3. |
 
