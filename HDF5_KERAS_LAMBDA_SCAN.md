@@ -13,23 +13,23 @@ still-exploited sink — so it gets its own detector.
 
 ## The vulnerability
 
-- **CVE-2025-9905** (Keras, affected 3.0.0–3.11.2, fixed in **3.11.3**,
-  CWE-913): `Model.load_model` **silently ignores `safe_mode=True`** for legacy
-  HDF5 models. A `Lambda` layer whose function is stored as serialized
-  (marshalled) Python code therefore executes on load **even when the caller
-  asked for safe mode**. The attack needs no inference — loading the file is
-  enough. This is the sink this detector targets.
-- **Not to be confused with CVE-2025-9906** (Keras, fixed in **3.11.0**,
-  CWE-502): a *distinct* bypass in the newer `.keras` **v3 ZIP archive**, where a
-  crafted `config.json` first calls `enable_unsafe_deserialization()` and then
-  runs a `Lambda` payload. That format is handled by this toolkit's
-  `keras_model_scan`, not here. The two CVEs share a root cause (Lambda
-  code-exec) but are different file formats with different fixed versions
-  (3.11.0 vs 3.11.3) and different CWEs (CWE-502 vs CWE-913); verified at
-  osv.dev.
-- Reported by Gabriele Digregorio (Io_no) as a follow-up to earlier Keras
-  `safe_mode` bypasses. `safe_mode` was only ever wired to `.keras` v3, so there
-  is no built-in way to restrict Lambda code in an `.h5` model.
+- **CVE-2025-9905** (GHSA-36rr-ww3j-vrjv; Keras, affected 3.0.0–3.11.2, fixed
+  in **3.11.3**, CWE-913): `Model.load_model` **silently ignores
+  `safe_mode=True`** for legacy HDF5 models. A `Lambda` layer whose function is
+  stored as serialized (marshalled) Python code therefore executes on load
+  **even when the caller asked for safe mode**. The attack needs no inference —
+  loading the file is enough. This is the sink this detector targets.
+- **Not to be confused with CVE-2025-9906** (GHSA-36fq-jgmw-4r9c; Keras, fixed in
+  **3.11.0**, CWE-502): a *distinct* bypass in the newer `.keras` **v3 ZIP
+  archive**, where a crafted `config.json` first calls
+  `enable_unsafe_deserialization()` and then runs a `Lambda` payload. That format
+  is handled by this toolkit's `keras_model_scan`, not here. The two CVEs share a
+  root cause (Lambda code-exec) but are different file formats with different
+  fixed versions (3.11.0 vs 3.11.3) and different CWEs (CWE-502 vs CWE-913);
+  verified at osv.dev.
+- The Keras advisory credits GitHub user `io-no` as reporter. `safe_mode` was
+  only ever wired to `.keras` v3, so there is no built-in way to restrict Lambda
+  code in an `.h5` model.
 
 ## What it does
 
@@ -40,8 +40,18 @@ model, and never executes any payload. It confirms the HDF5 superblock signature
 | Rule | Severity | Meaning |
 |------|----------|---------|
 | HKL001 | high | HDF5 Keras config contains a `Lambda` layer (with a serialized `function`) → code exec on load under Keras <3.11.3 (CVE-2025-9905). |
-| HKL002 | medium | Config references a non-core / custom registered object (`registered_name`, non-`keras` `module`) → attacker-controllable deserialization (CWE-502). |
+| HKL002 | medium | Config references a custom registered object (a `package>Name` key in `registered_name` or, for tf.keras legacy files, in `class_name`) or a non-`keras` `module` → attacker-controllable deserialization (CWE-502). |
 | HKL003 | info | Legacy Keras HDF5 model with no code marker found — still note that `safe_mode` does not protect `.h5`; prefer `.keras` v3 and Keras ≥3.11.3. |
+
+### How HKL002 tells custom objects from built-ins
+
+`keras.saving.register_keras_serializable(package="Custom", name=None)` names
+every registered object `package>Name`. Keras 3 writes that string under
+`registered_name`; tf.keras / Keras 2 legacy saving writes it as the
+`class_name` itself. Built-in classes that Keras does not export publicly (for
+example a nested `Functional` model) are serialized with their **bare** class
+name as `registered_name`, so they are not flagged. An unregistered custom class
+is still caught by its non-`keras` `module` (for example `__main__`).
 
 ## Usage
 
@@ -51,6 +61,16 @@ python hdf5_keras_lambda_scan.py model.h5 other.hdf5
 
 Exit code `1` if any **high** finding, else `0` (`2` on bad usage / I/O error),
 so it drops into CI next to the other scanners in this repo.
+
+## Changes
+
+- **0.1.1**: findings and docstring now cite CVE-2025-9905 only (0.1.0 also
+  named CVE-2025-9906, which is the `.keras` v3 archive bypass). HKL002 no longer
+  flags built-in classes whose `registered_name` is their bare class name (a
+  false positive on Keras 3 models with a nested `Functional`), and now catches
+  tf.keras legacy files that store a registered `Custom>Name` in `class_name`
+  (previously missed).
+- **0.1.0**: first release.
 
 ## Honest limits
 

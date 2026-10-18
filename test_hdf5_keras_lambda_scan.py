@@ -49,6 +49,26 @@ CUSTOM_CFG = {
     "config": {},
 }
 
+# Keras 3 writes the bare class name as registered_name for built-in classes it
+# does not export publicly, such as a nested Functional model.
+NESTED_FUNCTIONAL_CFG = {
+    "module": "keras.src.models.functional",
+    "class_name": "Functional",
+    "registered_name": "Functional",
+    "config": {
+        "layers": [
+            {"module": "keras.layers", "class_name": "Dense",
+             "registered_name": None, "config": {"units": 4}},
+        ]
+    },
+}
+
+# tf.keras / Keras 2 legacy saving puts the "package>Name" key in class_name.
+LEGACY_REGISTERED_CFG = {
+    "class_name": "Sequential",
+    "config": {"layers": [{"class_name": "Custom>MyLayer", "config": {}}]},
+}
+
 
 def rules(findings):
     return {f["rule"] for f in findings}
@@ -116,6 +136,32 @@ class ScanTests(unittest.TestCase):
                "config": {"layers": [{"class_name": "Dense", "config": {}}]}}
         findings = h5s.scan_bytes(h5_blob(cfg))
         self.assertNotIn("HKL002", rules(findings))
+
+    def test_builtin_bare_registered_name_not_flagged(self):
+        findings = h5s.scan_bytes(h5_blob(NESTED_FUNCTIONAL_CFG))
+        self.assertNotIn("HKL002", rules(findings))
+        self.assertIn("HKL003", rules(findings))
+
+    def test_legacy_registered_class_name_is_medium(self):
+        findings = h5s.scan_bytes(h5_blob(LEGACY_REGISTERED_CFG))
+        self.assertIn("HKL002", rules(findings))
+        hkl002 = [f for f in findings if f["rule"] == "HKL002"][0]
+        self.assertIn("Custom>MyLayer", hkl002["evidence"])
+
+    def test_unregistered_custom_module_still_flagged(self):
+        cfg = {"module": "__main__", "class_name": "MyLayer",
+               "registered_name": "MyLayer", "config": {}}
+        findings = h5s.scan_bytes(h5_blob(cfg))
+        self.assertIn("HKL002", rules(findings))
+
+    def test_findings_cite_only_the_hdf5_cve(self):
+        # CVE-2025-9906 is the .keras v3 archive bypass, not this HDF5 sink.
+        no_function = {"class_name": "Sequential",
+                       "config": {"layers": [{"class_name": "Lambda", "config": {}}]}}
+        for cfg in (LAMBDA_CFG, no_function, DENSE_CFG):
+            for f in h5s.scan_bytes(h5_blob(cfg)):
+                self.assertNotIn("CVE-2025-9906", f["message"])
+                self.assertIn(f["cve"], ("", "CVE-2025-9905"))
 
 
 class FormatTests(unittest.TestCase):

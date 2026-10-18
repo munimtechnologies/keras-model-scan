@@ -1,11 +1,17 @@
 """hdf5_keras_lambda_scan.py -- static, no-execution detector for code-execution
 risk in legacy Keras HDF5 (.h5 / .hdf5) model files.
 
-Covers CVE-2025-9905 and CVE-2025-9906: Keras ``Model.load_model`` silently
+Covers CVE-2025-9905 (GHSA-36rr-ww3j-vrjv): Keras ``Model.load_model`` silently
 ignores ``safe_mode=True`` when reading a legacy HDF5 model, so a ``Lambda``
 layer whose function is stored as serialized (marshalled) Python code executes
-on load even when the caller asked for safe mode. Fixed in Keras 3.11.3.
-CWE-913 (Improper Control of Dynamically-Managed Code Resources).
+on load even when the caller asked for safe mode. Affected 3.0.0-3.11.2, fixed
+in Keras 3.11.3. CWE-913 (Improper Control of Dynamically-Managed Code
+Resources).
+
+Not CVE-2025-9906 (GHSA-36fq-jgmw-4r9c): that is a distinct bypass in the
+``.keras`` v3 ZIP archive (a crafted ``config.json`` calls
+``enable_unsafe_deserialization()`` before a Lambda), fixed in Keras 3.11.0,
+CWE-502, and covered by ``keras_model_scan``. Both verified at osv.dev.
 
 Why a separate scanner: the existing ``keras_model_scan`` in this toolkit reads
 the ``.keras`` v3 format, which is a ZIP archive carrying ``config.json``. The
@@ -20,6 +26,13 @@ confirms the HDF5 superblock signature, then locates the Keras configuration
 text that legacy files embed as readable UTF-8 inside the container and reports
 the markers that make ``load_model`` unsafe.
 
+Custom objects (HKL002): Keras names a registered object ``package>Name``
+(``register_keras_serializable``, default package ``Custom``). Keras 3 writes
+that under ``registered_name``; tf.keras / Keras 2 legacy saving writes it as
+the ``class_name`` itself. Built-in classes that Keras does not export publicly
+(e.g. a nested ``Functional`` model) carry their bare class name as
+``registered_name`` and are not flagged.
+
 Honest limits: detection is marker-based over the raw bytes (the configuration
 JSON is stored contiguously as text in the HDF5 file). It will not parse an
 HDF5 file whose Keras config has been externally compressed/chunked such that
@@ -32,7 +45,7 @@ import os
 import re
 import sys
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 # HDF5 superblock signature (8 bytes), per the HDF5 File Format Specification.
 HDF5_SIGNATURE = b"\x89HDF\r\n\x1a\n"
@@ -110,7 +123,10 @@ def scan_bytes(data, name="<bytes>"):
 
     lambda_match = re.search(r'"class_name"\s*:\s*"Lambda"', text)
     function_match = re.search(r'"function(?:_type)?"\s*:', text)
-    registered_match = re.search(r'"registered_name"\s*:\s*"[^"]+"', text)
+    # Registered custom objects are named "package>Name": Keras 3 puts that in
+    # registered_name, tf.keras legacy saving puts it in class_name.
+    registered_match = re.search(r'"registered_name"\s*:\s*"[^"]*>[^"]*"', text)
+    legacy_registered_match = re.search(r'"class_name"\s*:\s*"[^"]*>[^"]*"', text)
     custom_module_match = re.search(
         r'"module"\s*:\s*"(?!keras)(?!builtins)[^"]+"', text
     )
@@ -120,7 +136,7 @@ def scan_bytes(data, name="<bytes>"):
             msg = (
                 "Legacy HDF5 Keras model embeds a Lambda layer whose function is "
                 "stored as serialized code. Keras <3.11.3 load_model executes it "
-                "on load even with safe_mode=True (CVE-2025-9905 / CVE-2025-9906). "
+                "on load even with safe_mode=True (CVE-2025-9905). "
                 "Do not load this file from an untrusted source."
             )
         else:
@@ -136,9 +152,8 @@ def scan_bytes(data, name="<bytes>"):
             )
         )
 
-    custom = registered_match or custom_module_match
+    custom = registered_match or legacy_registered_match or custom_module_match
     if custom:
-        m = registered_match or custom_module_match
         findings.append(
             _finding(
                 "HKL002", "medium", "", "CWE-502",
@@ -146,7 +161,7 @@ def scan_bytes(data, name="<bytes>"):
                 "registered object. Loading deserializes attacker-controllable "
                 "classes and may require custom_objects; treat as unsafe from an "
                 "untrusted source.",
-                _snippet(text, m),
+                _snippet(text, custom),
             )
         )
 
