@@ -53,7 +53,7 @@ the config alone is enough to trigger the RCE lineage.
 | KMS002 | HIGH | A `__lambda__` node carrying a serialized Python code object | CVE-2025-1550, CVE-2026-12481 |
 | KMS003 | CRITICAL | The config references `enable_unsafe_deserialization` — a model that turns off safe mode from inside its own load | CVE-2025-9906 |
 | KMS004 | MEDIUM | A `TFSMLayer` that loads an external TensorFlow SavedModel during deserialization (ran even under `safe_mode=True`) | CVE-2026-1462 |
-| KMS005 | HIGH | An archive member with an absolute path or `..` that escapes the extraction directory (Zip/TarSlip) | CVE-2026-9257 |
+| KMS005 | HIGH | An archive member with an absolute path or `..` that escapes the extraction directory (Zip/TarSlip) | CVE-2026-11816 |
 | KMS007 | INFO | Legacy `.h5`/`.hdf5` format, which has had load paths that did not honour `safe_mode` | CVE-2025-9905 |
 
 The allowlist mirrors the one Keras itself uses in `_retrieve_class_or_fn`, so a
