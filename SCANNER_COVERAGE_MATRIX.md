@@ -80,6 +80,7 @@ Legend: **✓** documented detection · **~** partial / related / historically a
 | PyTorch weights_only checkpoint storage bypass — CVE-2026-24747 (.pt/.pth/.bin) | ✗ | ✗ | ✗ | ? | ✓ |
 | HDF5 virtual-dataset external-file mapping — CVE-2026-12480 (.h5/.hdf5) | – | – | ✗ | ? | ✓ |
 | MLflow pyfunc MLmodel loader dispatch & `code` sys.path injection — CVE-2026-79721 (MLmodel YAML) | – | – | – | ? | ✓ |
+| Flax/JAX MessagePack weights - suspicious MessagePack structures / embedded code objects, object reconstruction is a runtime checkpointer path (.msgpack/.flax/.orbax) | – | – | – | ✓ | ✗ |
 
 ## What the matrix shows
 

@@ -219,6 +219,12 @@
       "title": "MLflow pyfunc MLmodel loader dispatch and 'code' sys.path injection",
       "formats": "MLmodel YAML, model manifests",
       "class": "CVE-2026-79721 (CWE-829 / untrusted code added to sys.path at load; NVD CVSS 8.6)"
+    },
+    {
+      "id": "flax-msgpack",
+      "title": "Flax/JAX MessagePack weights - suspicious MessagePack structures / embedded code objects",
+      "formats": ".msgpack, .flax, .orbax, .jax",
+      "class": "weights-only serialization; object reconstruction via a custom MessagePack ext_hook is a deserialization sink (CWE-502) typically reached through a runtime checkpointer rather than the model file at rest"
     }
   ],
   "cells": [
@@ -1471,6 +1477,45 @@
       "sources": [
         "https://nvd.nist.gov/vuln/detail/CVE-2026-79721",
         "https://github.com/munimtechnologies/keras-model-scan/blob/main/mlflow_manifest_scan.py"
+      ]
+    },
+    {
+      "vector": "flax-msgpack",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read MessagePack",
+      "sources": []
+    },
+    {
+      "vector": "flax-msgpack",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read MessagePack",
+      "sources": []
+    },
+    {
+      "vector": "flax-msgpack",
+      "scanner": "ms",
+      "status": "out-of-scope",
+      "note": "scope is pickle/PyTorch/Keras-H5/TF-SavedModel; Flax/JAX MessagePack is not a format it scans",
+      "sources": []
+    },
+    {
+      "vector": "flax-msgpack",
+      "scanner": "ma",
+      "status": "detects",
+      "note": "ModelAudit ships a dedicated Flax/JAX scanner for .msgpack/.flax/.orbax/.jax that 'analyzes Flax/JAX model files serialized in MessagePack format and other JAX-specific formats', flagging suspicious MessagePack structures that could exploit deserializers and embedded code objects / executable content",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/"
+      ]
+    },
+    {
+      "vector": "flax-msgpack",
+      "scanner": "kms",
+      "status": "no",
+      "note": "no Flax/MessagePack detector in keras-model-scan; a documented coverage gap. The weights-only .msgpack container carries no file-at-rest code-execution signal a static scanner would flag - the object-reconstruction risk (custom ext_hook) is a runtime checkpointer path - so this is a roadmap note, not a shipped rule",
+      "sources": [
+        "https://github.com/munimtechnologies/keras-model-scan"
       ]
     }
   ]
