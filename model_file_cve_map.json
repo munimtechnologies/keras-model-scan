@@ -150,7 +150,7 @@
       "format": "pickle",
       "project": "mmaitre314/picklescan",
       "ecosystem": "PyPI",
-      "mechanism": "The numpy.f2py.crackfortran._eval_length reduce gadget is not in the scanner's dangerous set, so a pickle using it executes arbitrary code while passing validation.",
+      "mechanism": "numpy.f2py.crackfortran._eval_length reaches eval() on caller-supplied input, so a pickle that imports it (or any numpy.f2py helper) and triggers a REDUCE/BUILD opcode runs arbitrary code; picklescan before 0.0.33 treated numpy.f2py as a benign numpy import and cleared it.",
       "trigger_field": "pickle REDUCE import (numpy.f2py.crackfortran._eval_length)",
       "cwe": [
         "CWE-502"
@@ -160,10 +160,10 @@
       "fixed": "0.0.33",
       "detector": {
         "module": "pickle_model_scan.py",
-        "rule": "PKL001/PKL003 (dangerous import + REDUCE / allowlist miss)",
-        "coverage": "partial"
+        "rule": "PKL005 (numpy.f2py reduce-gadget; CRITICAL with a REDUCE/BUILD opcode, else HIGH)",
+        "coverage": "full"
       },
-      "verified": "2026-10-14 at osv.dev/CVE-2025-71339 (this run)"
+      "verified": "2026-10-22: confirmed at osv.dev/CVE-2025-71339 (CVSS 3.1 8.1 / CVSS 4.0 7.6, CWE-502, fixed in picklescan 0.0.33). pickle_model_scan 0.2.0 now detects it via PKL005: the whole numpy.f2py subpackage is classified as an RCE gadget, CRITICAL when paired with a REDUCE/BUILD opcode."
     },
     {
       "id": "pickle-reduce-rce",
