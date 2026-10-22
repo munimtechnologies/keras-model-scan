@@ -58,6 +58,12 @@ does not introduce a new exploit):
   tensorflow, lightgbm, xgboost, pmdarima, and other pickle-backed flavors)
   deserializes attacker-controlled pickle/weight artifacts referenced by the
   ``MLmodel`` manifest.
+* ``CVE-2026-79721`` -- NVD CVSS 4.0 **8.6 HIGH**, **CWE-829**. The
+  ``python_function`` flavor also carries a ``code`` key naming a directory
+  bundled inside the (untrusted) artifact. ``mlflow.pyfunc.load_model`` prepends
+  that directory to ``sys.path`` **before** ``importlib.import_module(loader_module)``
+  runs, so top-level code in a bundled module executes at load time -- before
+  ``_load_pyfunc`` is ever called.
 
 What it flags
 -------------
@@ -79,6 +85,14 @@ executes anything it finds.
   deserializes that artifact (CVE-2024-37052 family). Review the model's source.
 * ``MLF004`` (INFO) -- the ``python_function`` flavor is present; corroborates
   that this model is loaded through the ``loader_module`` dispatch path.
+* ``MLF005`` (HIGH / MEDIUM) -- the ``python_function`` flavor declares a
+  ``code`` path. ``mlflow.pyfunc.load_model`` prepends that artifact-bundled
+  directory to ``sys.path`` **before** it imports ``loader_module``, so
+  module-level code in the bundled directory runs at load time, before
+  ``_load_pyfunc`` is called (CVE-2026-79721, CWE-829). HIGH when
+  ``loader_module`` is non-first-party (the exact CVE-2026-79721 shape); MEDIUM
+  otherwise, since a ``code`` directory from an untrusted artifact is still
+  prepended to ``sys.path`` and can shadow a legitimately imported name.
 
 Honest limits
 -------------
@@ -112,7 +126,7 @@ import sys
 from dataclasses import dataclass, field
 from typing import Any, Iterable, Optional
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 SEVERITY_ORDER = {"NONE": 0, "INFO": 1, "LOW": 2, "MEDIUM": 3, "HIGH": 4, "CRITICAL": 5}
 
@@ -325,12 +339,43 @@ def scan_text(text: str, file: str = "<text>", *, require_marker: bool = True
             "(CVE-2024-37052 family, CWE-502). Review the model's source."))
 
     # MLF004: the python_function dispatch flavor is present (context).
-    if has_flavors and isinstance(flavors.get("python_function"), dict):
+    pyfunc = flavors.get("python_function") if has_flavors else None
+    if isinstance(pyfunc, dict):
         out.append(Finding(
             "MLF004", "INFO", "flavors.python_function", "", file,
             "/flavors/python_function",
             "MLmodel declares the python_function flavor; mlflow.pyfunc.load_model "
             "dispatches through its loader_module to load this model."))
+
+        # MLF005: the python_function flavor declares a 'code' path. MLflow
+        # prepends that artifact-bundled directory to sys.path *before* it calls
+        # importlib.import_module(loader_module), so module-level code in the
+        # bundled directory runs at load time -- before _load_pyfunc is called
+        # (CVE-2026-79721, CWE-829). An empty 'code:' value parses to a child
+        # mapping, not a string, so isinstance(str) keeps it from firing.
+        code = pyfunc.get("code")
+        if isinstance(code, str) and code.strip():
+            loader = pyfunc.get("loader_module")
+            first_party = (isinstance(loader, str)
+                           and loader.strip().startswith(MLFLOW_PREFIX))
+            non_first_party = (isinstance(loader, str) and loader.strip()
+                               and not first_party)
+            severity = "HIGH" if non_first_party else "MEDIUM"
+            tail = (
+                " The loader_module leaves the mlflow namespace, the exact "
+                "CVE-2026-79721 shape; a bundled module shadows the import target."
+                if non_first_party else
+                " Even with a first-party or absent loader_module, the bundled "
+                "'code' directory is prepended to sys.path and can shadow a "
+                "legitimately imported name.")
+            out.append(Finding(
+                "MLF005", severity, "flavors.python_function.code",
+                code.strip(), file, "/flavors/python_function/code",
+                "MLmodel python_function declares a 'code' path; "
+                "mlflow.pyfunc.load_model prepends it to sys.path before importing "
+                "loader_module with importlib.import_module, so code bundled in the "
+                "untrusted artifact runs at load time (CVE-2026-79721, CWE-829)."
+                + tail))
 
     return out
 

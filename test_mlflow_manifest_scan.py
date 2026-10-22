@@ -85,6 +85,52 @@ version: 1.0
 description: not an mlflow model manifest
 """
 
+# python_function with a 'code' dir and a non-first-party loader -- the exact
+# CVE-2026-79721 shape (sys.path prepend before importlib.import_module).
+CODE_INJECTION_HIGH = """\
+artifact_path: model
+flavors:
+  python_function:
+    loader_module: payload
+    code: "."
+    model_path: anything
+mlflow_version: 2.9.2
+"""
+
+# 'code' dir with a first-party loader -- still a sys.path-prepend risk (MEDIUM).
+CODE_FIRST_PARTY = """\
+flavors:
+  python_function:
+    loader_module: mlflow.sklearn
+    code: "src"
+    python_version: 3.10.12
+"""
+
+# First-party loader, no 'code' key -- MLF005 must stay quiet.
+NO_CODE_FIRST_PARTY = """\
+flavors:
+  python_function:
+    loader_module: mlflow.sklearn
+    python_version: 3.10.12
+"""
+
+# No python_function flavor at all -- MLF005 (and MLF004) must stay quiet.
+NO_PYFUNC = """\
+flavors:
+  onnx:
+    data: model.onnx
+    onnx_version: 1.14.0
+"""
+
+# Empty 'code' value parses to a child mapping, not a string -- MLF005 quiet.
+EMPTY_CODE = """\
+flavors:
+  python_function:
+    loader_module: mlflow.sklearn
+    code: ""
+    python_version: 3.10.12
+"""
+
 
 def _rules(findings):
     return {f.rule for f in findings}
@@ -220,6 +266,43 @@ class TestScanPathsAndCli(unittest.TestCase):
             self.assertEqual(mms.main([path, "--fail-on", "MEDIUM"]), 0)
             self.assertEqual(mms.main([path, "--fail-on", "INFO"]), 1)
             self.assertEqual(mms.main([path]), 0)  # NONE
+
+
+class TestCodePathSysPathInjection(unittest.TestCase):
+    def test_mlf005_high_with_nonfirstparty_loader(self):
+        findings = mms.scan_text(CODE_INJECTION_HIGH, "MLmodel")
+        self.assertEqual(_rules(findings), {"MLF001", "MLF004", "MLF005"})
+        f = _by_rule(findings, "MLF005")
+        self.assertEqual(f.severity, "HIGH")
+        self.assertEqual(f.value, ".")
+        self.assertTrue(f.location.endswith("code"))
+        self.assertIn("CVE-2026-79721", f.message)
+        self.assertIn("CWE-829", f.message)
+        # MLF001 still fires on the non-first-party loader_module.
+        self.assertIsNotNone(_by_rule(findings, "MLF001"))
+
+    def test_mlf005_medium_with_first_party_loader(self):
+        findings = mms.scan_text(CODE_FIRST_PARTY, "MLmodel")
+        self.assertEqual(_rules(findings), {"MLF004", "MLF005"})
+        f = _by_rule(findings, "MLF005")
+        self.assertEqual(f.severity, "MEDIUM")
+        self.assertEqual(f.value, "src")
+        self.assertIsNone(_by_rule(findings, "MLF001"))
+
+    def test_no_code_key_no_mlf005(self):
+        findings = mms.scan_text(NO_CODE_FIRST_PARTY, "MLmodel")
+        self.assertEqual(_rules(findings), {"MLF004"})
+        self.assertIsNone(_by_rule(findings, "MLF005"))
+
+    def test_no_pyfunc_flavor_no_mlf005(self):
+        findings = mms.scan_text(NO_PYFUNC, "MLmodel")
+        self.assertIsNone(_by_rule(findings, "MLF005"))
+        self.assertIsNone(_by_rule(findings, "MLF004"))
+
+    def test_empty_code_value_no_mlf005(self):
+        findings = mms.scan_text(EMPTY_CODE, "MLmodel")
+        self.assertEqual(_rules(findings), {"MLF004"})
+        self.assertIsNone(_by_rule(findings, "MLF005"))
 
 
 if __name__ == "__main__":

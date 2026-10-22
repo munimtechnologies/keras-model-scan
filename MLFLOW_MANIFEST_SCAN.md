@@ -46,6 +46,11 @@ gets deserialized. This detector surfaces both before anything is loaded.
   deserialization family: loading an untrusted model (sklearn, pytorch, tensorflow,
   lightgbm, xgboost, pmdarima and other pickle-backed flavors) deserializes
   attacker-controlled artifacts referenced by the `MLmodel` manifest.
+- **`CVE-2026-79721`** — NVD CVSS **8.6** HIGH, **CWE-829**. The `python_function`
+  flavor also carries a `code` key naming a directory bundled inside the (untrusted)
+  artifact. `mlflow.pyfunc.load_model` prepends that directory to `sys.path`
+  **before** `importlib.import_module(loader_module)` runs, so top-level code in a
+  bundled module executes at load time — before `_load_pyfunc` is ever called.
 
 ## Rules
 
@@ -55,6 +60,7 @@ gets deserialized. This detector surfaces both before anything is loaded.
 | `MLF002` | HIGH | `loader_module: mlflow.statsmodels` — the flavor that bypasses `MLFLOW_ALLOW_PICKLE_DESERIALIZATION` (GHSA-gqvg-gmmx-x4hm). |
 | `MLF003` | MEDIUM | The manifest references a pickle artifact — a `.pkl` / `.pickle` / `.cloudpickle` path, a `pickled_model` key, or `serialization_format: pickle` / `cloudpickle`. Loading it deserializes that artifact (CVE-2024-37052 family). |
 | `MLF004` | INFO | The `python_function` flavor is present; corroborates that the model is loaded through the `loader_module` dispatch path. |
+| `MLF005` | HIGH / MEDIUM | The `python_function` flavor declares a `code` path. `mlflow.pyfunc.load_model` prepends that artifact-bundled directory to `sys.path` **before** importing `loader_module`, so module-level code in the bundled directory runs at load time, before `_load_pyfunc` is called (`CVE-2026-79721`, CWE-829). HIGH when `loader_module` is non-first-party (the exact CVE-2026-79721 shape); MEDIUM otherwise. |
 
 ## Usage
 
