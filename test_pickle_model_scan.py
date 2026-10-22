@@ -169,5 +169,35 @@ class CliTests(unittest.TestCase):
         self.assertEqual(pms.main([os.path.join(self.dir, "nope.pkl")]), 2)
 
 
+class F2pyGadgetTests(unittest.TestCase):
+    def test_f2py_eval_length_with_reduce_is_critical(self):
+        data = (stack_global("numpy.f2py.crackfortran", "_eval_length")
+                + pickle.EMPTY_TUPLE + pickle.REDUCE + pickle.STOP)
+        findings = pms.scan_pickle_bytes(data, "x")
+        self.assertIn("PKL005", rules(findings))
+        hit = by_rule(findings, "PKL005")[0]
+        self.assertEqual(hit.severity, "CRITICAL")
+        self.assertEqual(hit.cve, "CVE-2025-71339")
+
+    def test_f2py_getlincoef_without_reduce_is_high(self):
+        data = stack_global("numpy.f2py.crackfortran", "getlincoef") + pickle.STOP
+        findings = pms.scan_pickle_bytes(data, "x")
+        self.assertIn("PKL005", rules(findings))
+        self.assertEqual(by_rule(findings, "PKL005")[0].severity, "HIGH")
+
+    def test_plain_numpy_reconstruct_stays_clean(self):
+        # A normal numpy reconstructor must NOT become a false positive.
+        data = stack_global("numpy.core.multiarray", "_reconstruct") + pickle.STOP
+        findings = pms.scan_pickle_bytes(data, "x")
+        self.assertNotIn("PKL005", rules(findings))
+        self.assertEqual(findings, [])
+
+    def test_f2py_gadget_inside_object_npy_payload(self):
+        payload = (stack_global("numpy.f2py.crackfortran", "_eval_length")
+                   + pickle.EMPTY_TUPLE + pickle.REDUCE + pickle.STOP)
+        findings = pms.scan_npy(make_npy("|O", payload), "a.npy")
+        self.assertIn("PKL005", rules(findings))
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -39,7 +39,7 @@ import zipfile
 import zlib
 from dataclasses import dataclass
 
-__version__ = "0.1.1"
+__version__ = "0.2.0"
 
 # Modules whose presence in a pickle is a direct code-execution concern.
 DANGEROUS_MODULES = frozenset({
@@ -59,6 +59,16 @@ BENIGN_TOP = frozenset({
     "_codecs", "copyreg", "copy_reg", "array", "decimal", "datetime",
     "torchvision", "transformers", "keras", "tensorflow", "xgboost", "lightgbm",
 })
+# Fully-qualified gadget submodules that execute code even though their top-level
+# package is an ordinary model reconstructor. numpy.f2py.crackfortran exposes many
+# helpers (e.g. _eval_length, getlincoef) that call eval() on their argument;
+# NumPy's own security documentation states the whole numpy.f2py must be treated
+# as unsafe when reached from an untrusted pickle, so a benign-looking 'numpy'
+# import is NOT enough to clear a global whose module is under numpy.f2py.
+# Refs: CVE-2025-71339 / GHSA-6556-fwc2-fg2p; GHSA-r8g5-cgf2-4m4m.
+GADGET_MODULE_PREFIXES = (
+    "numpy.f2py",
+)
 
 STRING_OPCODES = frozenset({
     "SHORT_BINUNICODE", "BINUNICODE", "BINUNICODE8", "UNICODE",
@@ -96,10 +106,17 @@ class Finding:
 
 
 def _classify(module, name):
-    """Return one of 'dangerous', 'gadget', 'benign', 'unknown' for a global ref."""
+    """Return one of 'dangerous', 'rce_gadget', 'gadget', 'benign', 'unknown'.
+
+    'rce_gadget' is a callable under a known code-execution submodule (numpy.f2py)
+    whose top-level package is otherwise benign; it must not be cleared by the
+    benign-package allowlist.
+    """
     module = module or ""
     name = name or ""
     top = module.split(".", 1)[0]
+    if any(module == p or module.startswith(p + ".") for p in GADGET_MODULE_PREFIXES):
+        return "rce_gadget"
     if top in ("builtins", "__builtin__", "__builtins__"):
         return "dangerous" if name in DANGEROUS_BUILTINS else "benign"
     if top in DANGEROUS_MODULES:
@@ -175,6 +192,16 @@ def scan_pickle_bytes(data, source):
                     "PKL002", "HIGH", "Dangerous import in pickle",
                     f"Pickle imports {ref}, a module/callable commonly used for code "
                     "execution. Review why a model file references it.", loc))
+        elif cls == "rce_gadget":
+            findings.append(Finding(
+                "PKL005", "CRITICAL" if exec_ops else "HIGH",
+                "Known code-execution gadget in a trusted package",
+                f"Pickle imports {ref}, a helper under numpy.f2py that calls eval() "
+                "on its argument; NumPy's security documentation treats the whole "
+                "numpy.f2py as unsafe to reach from an untrusted pickle. Paired with "
+                "a REDUCE/BUILD opcode this yields arbitrary code execution - a "
+                "'numpy' import alone does not make it safe. Do not load this file.",
+                loc, "CVE-2025-71339"))
         elif cls == "gadget":
             findings.append(Finding(
                 "PKL004", "HIGH", "Deferred-call gadget in pickle",
