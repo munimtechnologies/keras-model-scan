@@ -14,95 +14,155 @@
   },
   "formats": {
     "pickle": {
-      "containers": [".pkl", ".pt/.pth (torch.load)", ".bin", ".joblib", ".npy/.npz object arrays"],
+      "containers": [
+        ".pkl",
+        ".pt/.pth (torch.load)",
+        ".bin",
+        ".joblib",
+        ".npy/.npz object arrays"
+      ],
       "code_execution_surface": true,
       "detector_module": "pickle_model_scan.py",
       "note": "Pickle executes opcodes on load; REDUCE/BUILD/NEWOBJ paired with a dangerous import is arbitrary code execution. ~95% of confirmed malicious public ML models target this format."
     },
     "keras": {
-      "containers": [".keras (zip archive with config.json)", ".h5 legacy"],
+      "containers": [
+        ".keras (zip archive with config.json)",
+        ".h5 legacy"
+      ],
       "code_execution_surface": true,
       "detector_module": "keras_model_scan.py",
       "note": "A Lambda layer or a crafted config.json can name arbitrary Python callables that run during model loading, even with safe_mode=True on affected versions."
     },
     "safetensors": {
-      "containers": [".safetensors", "*.safetensors.index.json"],
+      "containers": [
+        ".safetensors",
+        "*.safetensors.index.json"
+      ],
       "code_execution_surface": false,
       "detector_module": "safetensors_scan.py + safetensors_index_scan.py",
       "note": "The tensor body is safe by design (no code execution). Residual risks are header-integrity/polyglot files (CWE-20, no CVE) and path traversal via a sharded-index weight_map that points a shard path outside the model directory (CWE-22)."
     },
     "onnx": {
-      "containers": [".onnx (protobuf) + external .data/.bin tensors"],
+      "containers": [
+        ".onnx (protobuf) + external .data/.bin tensors"
+      ],
       "code_execution_surface": false,
       "detector_module": "(gap: no dedicated ONNX rule yet)",
       "note": "The graph is data, but a TensorProto external_data 'location' is an attacker-controlled relative path joined onto the model directory, and the download helper extracts tar archives without path checks (CWE-22)."
     },
     "gguf": {
-      "containers": [".gguf (llama.cpp / ggml / Ollama / LM Studio / PowerInfer)"],
+      "containers": [
+        ".gguf (llama.cpp / ggml / Ollama / LM Studio / PowerInfer)"
+      ],
       "code_execution_surface": false,
       "detector_module": "gguf_scan.py",
       "note": "No code-execution surface in the container, but hand-written C/C++ readers have turned malformed header integers into heap out-of-bounds read/write. All triggering values live in the header, so a static pre-load check can flag them. Embedded Jinja chat templates are a separate inference-time class (see out-of-scope entry)."
+    },
+    "mlflow": {
+      "containers": [
+        "MLmodel (the YAML manifest inside an MLflow model directory)"
+      ],
+      "code_execution_surface": true,
+      "detector_module": "mlflow_manifest_scan.py",
+      "note": "MLflow's python_function (pyfunc) flavor names a loader_module that MLflow imports and calls at mlflow.pyfunc.load_model time, and an optional 'code' directory that MLflow prepends to sys.path before that import. A crafted MLmodel manifest can therefore load attacker-controlled modules (CWE-829). This is a manifest/metadata surface: the static detector reads the MLmodel YAML only and never imports or runs the referenced code."
     }
   },
   "entries": [
     {
       "id": "CVE-2024-3660",
-      "aliases": ["GHSA-x4wf-678h-2pmq", "PYSEC-2026-369"],
+      "aliases": [
+        "GHSA-x4wf-678h-2pmq",
+        "PYSEC-2026-369"
+      ],
       "format": "keras",
       "project": "keras-team/keras (TensorFlow Keras)",
       "ecosystem": "PyPI",
       "mechanism": "A model with a Lambda layer deserialized by an affected Keras version runs arbitrary Python at load time.",
       "trigger_field": "Lambda layer in the model config",
-      "cwe": ["CWE-94"],
+      "cwe": [
+        "CWE-94"
+      ],
       "cvss": 9.8,
       "affected": "< 2.13.1",
       "fixed": "2.13.1",
-      "detector": {"module": "keras_model_scan.py", "rule": "Lambda-layer detection", "coverage": "full"},
+      "detector": {
+        "module": "keras_model_scan.py",
+        "rule": "Lambda-layer detection",
+        "coverage": "full"
+      },
       "verified": "2026-10-14 at osv.dev/CVE-2024-3660 (this run)"
     },
     {
       "id": "CVE-2025-1550",
-      "aliases": ["GHSA-48g7-3x6r-xfhp", "PYSEC-2025-122"],
+      "aliases": [
+        "GHSA-48g7-3x6r-xfhp",
+        "PYSEC-2025-122"
+      ],
       "format": "keras",
       "project": "keras-team/keras (Keras 3)",
       "ecosystem": "PyPI",
       "mechanism": "A crafted config.json inside a .keras archive names an arbitrary module and function to call during model loading, bypassing safe_mode=True.",
       "trigger_field": "config.json 'module'/'class_name'/'registered_name' in the .keras archive",
-      "cwe": ["CWE-94"],
+      "cwe": [
+        "CWE-94"
+      ],
       "cvss": 7.3,
       "affected": "3.0.0 - 3.7.0",
       "fixed": "3.8.0",
-      "detector": {"module": "keras_model_scan.py", "rule": "config.json arbitrary-callable detection", "coverage": "full"},
+      "detector": {
+        "module": "keras_model_scan.py",
+        "rule": "config.json arbitrary-callable detection",
+        "coverage": "full"
+      },
       "verified": "2026-10-14 at osv.dev/CVE-2025-1550 (this run)"
     },
     {
       "id": "CVE-2025-71325",
-      "aliases": ["GHSA-9gvj-pp9x-gcfr", "PYSEC-2026-1788"],
+      "aliases": [
+        "GHSA-9gvj-pp9x-gcfr",
+        "PYSEC-2026-1788"
+      ],
       "format": "pickle",
       "project": "mmaitre314/picklescan",
       "ecosystem": "PyPI",
       "mechanism": "A STACK_GLOBAL opcode whose module/name come from preceding opcodes rather than string literals is not resolved by the scanner, so a malicious global evades detection (scanner bypass enabling RCE on load).",
       "trigger_field": "pickle STACK_GLOBAL opcode operands",
-      "cwe": ["CWE-391"],
+      "cwe": [
+        "CWE-391"
+      ],
       "cvss": 9.3,
       "affected": "< 0.0.27",
       "fixed": "0.0.27",
-      "detector": {"module": "pickle_model_scan.py", "rule": "PKL007", "coverage": "full"},
+      "detector": {
+        "module": "pickle_model_scan.py",
+        "rule": "PKL007",
+        "coverage": "full"
+      },
       "verified": "2026-10-14 at osv.dev/CVE-2025-71325 (this run)"
     },
     {
       "id": "CVE-2025-71339",
-      "aliases": ["GHSA-6556-fwc2-fg2p", "PYSEC-2026-1783"],
+      "aliases": [
+        "GHSA-6556-fwc2-fg2p",
+        "PYSEC-2026-1783"
+      ],
       "format": "pickle",
       "project": "mmaitre314/picklescan",
       "ecosystem": "PyPI",
       "mechanism": "The numpy.f2py.crackfortran._eval_length reduce gadget is not in the scanner's dangerous set, so a pickle using it executes arbitrary code while passing validation.",
       "trigger_field": "pickle REDUCE import (numpy.f2py.crackfortran._eval_length)",
-      "cwe": ["CWE-502"],
+      "cwe": [
+        "CWE-502"
+      ],
       "cvss": 7.6,
       "affected": "< 0.0.33",
       "fixed": "0.0.33",
-      "detector": {"module": "pickle_model_scan.py", "rule": "PKL001/PKL003 (dangerous import + REDUCE / allowlist miss)", "coverage": "partial"},
+      "detector": {
+        "module": "pickle_model_scan.py",
+        "rule": "PKL001/PKL003 (dangerous import + REDUCE / allowlist miss)",
+        "coverage": "partial"
+      },
       "verified": "2026-10-14 at osv.dev/CVE-2025-71339 (this run)"
     },
     {
@@ -113,11 +173,17 @@
       "ecosystem": "PyPI",
       "mechanism": "A REDUCE/BUILD/NEWOBJ opcode paired with a dangerous import (os.system, subprocess, builtins.eval, ...) executes code the moment the file is loaded.",
       "trigger_field": "pickle opcode stream",
-      "cwe": ["CWE-502"],
+      "cwe": [
+        "CWE-502"
+      ],
       "cvss": null,
       "affected": "any loader that unpickles untrusted input",
       "fixed": null,
-      "detector": {"module": "pickle_model_scan.py", "rule": "PKL001", "coverage": "class"},
+      "detector": {
+        "module": "pickle_model_scan.py",
+        "rule": "PKL001",
+        "coverage": "class"
+      },
       "verified": "class, not a single CVE; representative of the pickle RCE weakness"
     },
     {
@@ -128,11 +194,17 @@
       "ecosystem": "any",
       "mechanism": "An archive member whose name contains '..' or an absolute path is written outside the extraction directory.",
       "trigger_field": "zip/tar member name",
-      "cwe": ["CWE-22"],
+      "cwe": [
+        "CWE-22"
+      ],
       "cvss": null,
       "affected": "any loader that extracts an untrusted archive without path checks",
       "fixed": null,
-      "detector": {"module": "pickle_model_scan.py", "rule": "PKL030", "coverage": "class"},
+      "detector": {
+        "module": "pickle_model_scan.py",
+        "rule": "PKL030",
+        "coverage": "class"
+      },
       "verified": "class, not a single CVE; representative of the Zip Slip weakness"
     },
     {
@@ -143,11 +215,17 @@
       "ecosystem": "PyPI",
       "mechanism": "A sharded-model index (model.safetensors.index.json) weight_map value is joined onto the model directory and opened; an absolute or '..' path reads an arbitrary local file at load time.",
       "trigger_field": "weight_map shard path in *.safetensors.index.json",
-      "cwe": ["CWE-22"],
+      "cwe": [
+        "CWE-22"
+      ],
       "cvss": null,
       "affected": "see advisory",
       "fixed": "see advisory",
-      "detector": {"module": "safetensors_index_scan.py", "rule": "STI001-STI006", "coverage": "full"},
+      "detector": {
+        "module": "safetensors_index_scan.py",
+        "rule": "STI001-STI006",
+        "coverage": "full"
+      },
       "verified": "carried from shipped weight_map_traversal.json (verified runs 9-10, 2026-10-14)"
     },
     {
@@ -158,11 +236,17 @@
       "ecosystem": "PyPI",
       "mechanism": "weight_map / sharded-index shard path traversal escapes the model directory into an arbitrary file read.",
       "trigger_field": "weight_map shard path in the sharded index",
-      "cwe": ["CWE-22"],
+      "cwe": [
+        "CWE-22"
+      ],
       "cvss": null,
       "affected": "see advisory",
       "fixed": "see advisory",
-      "detector": {"module": "safetensors_index_scan.py", "rule": "STI001-STI006", "coverage": "full"},
+      "detector": {
+        "module": "safetensors_index_scan.py",
+        "rule": "STI001-STI006",
+        "coverage": "full"
+      },
       "verified": "carried from shipped weight_map_traversal.json (verified runs 9-10, 2026-10-14)"
     },
     {
@@ -173,131 +257,206 @@
       "ecosystem": "PyPI",
       "mechanism": "weight_map shard path traversal in the sharded index escapes the model directory.",
       "trigger_field": "weight_map shard path in *.index.json",
-      "cwe": ["CWE-22"],
+      "cwe": [
+        "CWE-22"
+      ],
       "cvss": null,
       "affected": "see advisory",
       "fixed": "see advisory",
-      "detector": {"module": "safetensors_index_scan.py", "rule": "STI001-STI006", "coverage": "full"},
+      "detector": {
+        "module": "safetensors_index_scan.py",
+        "rule": "STI001-STI006",
+        "coverage": "full"
+      },
       "verified": "carried from shipped weight_map_traversal.json (verified runs 9-10, 2026-10-14)"
     },
     {
       "id": "CVE-2022-25882",
-      "aliases": ["GHSA-ffxj-547x-5j7c", "PYSEC-2023-38"],
+      "aliases": [
+        "GHSA-ffxj-547x-5j7c",
+        "PYSEC-2023-38"
+      ],
       "format": "onnx",
       "project": "onnx/onnx",
       "ecosystem": "PyPI",
       "mechanism": "A TensorProto external_data 'location' value such as '../../../etc/passwd' is joined onto the model directory, reading a file outside it when external tensors are loaded.",
       "trigger_field": "TensorProto external_data 'location' path",
-      "cwe": ["CWE-22"],
+      "cwe": [
+        "CWE-22"
+      ],
       "cvss": 7.5,
       "affected": "< 1.13.0",
       "fixed": "1.13.0",
-      "detector": {"module": "(planned: onnx_external_data_scan)", "rule": null, "coverage": "gap"},
+      "detector": {
+        "module": "(planned: onnx_external_data_scan)",
+        "rule": null,
+        "coverage": "gap"
+      },
       "verified": "2026-10-14 at osv.dev/CVE-2022-25882 (this run)"
     },
     {
       "id": "CVE-2024-5187",
-      "aliases": ["GHSA-6rq9-53c3-f7vj", "CVE-2025-51480", "PYSEC-2025-148"],
+      "aliases": [
+        "GHSA-6rq9-53c3-f7vj",
+        "CVE-2025-51480",
+        "PYSEC-2025-148"
+      ],
       "format": "onnx",
       "project": "onnx/onnx",
       "ecosystem": "PyPI",
       "mechanism": "download_model_with_test_data extracts a tar archive without checking member paths, so a malicious tar overwrites arbitrary files (tar slip).",
       "trigger_field": "tar member paths in a downloaded model archive",
-      "cwe": ["CWE-22"],
+      "cwe": [
+        "CWE-22"
+      ],
       "cvss": 8.8,
       "affected": "1.16.0",
       "fixed": "see advisory",
-      "detector": {"module": "pickle_model_scan.py", "rule": "PKL030 (archive-slip, tar analogue)", "coverage": "partial"},
+      "detector": {
+        "module": "pickle_model_scan.py",
+        "rule": "PKL030 (archive-slip, tar analogue)",
+        "coverage": "partial"
+      },
       "verified": "2026-10-14 at osv.dev/CVE-2024-5187 (this run)"
     },
     {
       "id": "CVE-2026-55832",
-      "aliases": ["GHSA-h668-6x6g-f8r5"],
+      "aliases": [
+        "GHSA-h668-6x6g-f8r5"
+      ],
       "format": "onnx",
       "project": "sonos/tract",
       "ecosystem": "crates.io",
       "mechanism": "An ONNX external-data 'location' path traversal in the tract runtime reads a file outside the model directory.",
       "trigger_field": "ONNX external_data 'location' path",
-      "cwe": ["CWE-22"],
+      "cwe": [
+        "CWE-22"
+      ],
       "cvss": null,
       "affected": "see advisory",
       "fixed": "see advisory",
-      "detector": {"module": "(planned: onnx_external_data_scan)", "rule": null, "coverage": "gap"},
+      "detector": {
+        "module": "(planned: onnx_external_data_scan)",
+        "rule": null,
+        "coverage": "gap"
+      },
       "verified": "carried from shipped weight_map_traversal.json (verified runs 9-10, 2026-10-14)"
     },
     {
       "id": "CVE-2024-23605",
-      "aliases": ["TALOS-2024-1916"],
+      "aliases": [
+        "TALOS-2024-1916"
+      ],
       "format": "gguf",
       "project": "llama.cpp / ggml",
       "ecosystem": "C/C++",
       "mechanism": "An oversized metadata_kv_count header value overflows an allocation, leading to a heap out-of-bounds write.",
       "trigger_field": "metadata_kv_count (GGUF header)",
-      "cwe": ["CWE-190"],
+      "cwe": [
+        "CWE-190"
+      ],
       "cvss": null,
       "affected": "see advisory",
       "fixed": "see advisory",
-      "detector": {"module": "gguf_scan.py", "rule": "GG003", "coverage": "full"},
+      "detector": {
+        "module": "gguf_scan.py",
+        "rule": "GG003",
+        "coverage": "full"
+      },
       "verified": "carried from shipped gguf_cve_map.json (verified run 13, 2026-10-14)"
     },
     {
       "id": "CVE-2025-53630",
-      "aliases": ["GHSA-vgg9-87g3-85w8"],
+      "aliases": [
+        "GHSA-vgg9-87g3-85w8"
+      ],
       "format": "gguf",
       "project": "llama.cpp / ggml",
       "ecosystem": "C/C++",
       "mechanism": "An oversized tensor_count header value overflows, leading to a heap out-of-bounds access.",
       "trigger_field": "tensor_count (GGUF header)",
-      "cwe": ["CWE-190"],
+      "cwe": [
+        "CWE-190"
+      ],
       "cvss": null,
       "affected": "see advisory",
       "fixed": "fix commit 26a48ad",
-      "detector": {"module": "gguf_scan.py", "rule": "GG003", "coverage": "full"},
+      "detector": {
+        "module": "gguf_scan.py",
+        "rule": "GG003",
+        "coverage": "full"
+      },
       "verified": "carried from shipped gguf_cve_map.json (verified run 13, 2026-10-14)"
     },
     {
       "id": "CVE-2026-27940",
-      "aliases": ["GHSA-3p4r-fq3f-q74v"],
+      "aliases": [
+        "GHSA-3p4r-fq3f-q74v"
+      ],
       "format": "gguf",
       "project": "llama.cpp / ggml",
       "ecosystem": "C/C++",
       "mechanism": "A bypass of the CVE-2025-53630 fix via the tensor_count header (build b8146).",
       "trigger_field": "tensor_count (GGUF header)",
-      "cwe": ["CWE-190"],
+      "cwe": [
+        "CWE-190"
+      ],
       "cvss": null,
       "affected": "see advisory",
       "fixed": "build b8146",
-      "detector": {"module": "gguf_scan.py", "rule": "GG003", "coverage": "full"},
+      "detector": {
+        "module": "gguf_scan.py",
+        "rule": "GG003",
+        "coverage": "full"
+      },
       "verified": "carried from shipped gguf_cve_map.json (verified run 13, 2026-10-14)"
     },
     {
       "id": "CVE-2024-21825",
-      "aliases": ["TALOS-2024-1912"],
+      "aliases": [
+        "TALOS-2024-1912"
+      ],
       "format": "gguf",
       "project": "llama.cpp / ggml",
       "ecosystem": "C/C++",
       "mechanism": "An oversized metadata array length overflows an allocation, leading to a heap out-of-bounds write.",
       "trigger_field": "metadata array length (GGUF header)",
-      "cwe": ["CWE-787"],
+      "cwe": [
+        "CWE-787"
+      ],
       "cvss": null,
       "affected": "see advisory",
       "fixed": "see advisory",
-      "detector": {"module": "gguf_scan.py", "rule": "GG006", "coverage": "full"},
+      "detector": {
+        "module": "gguf_scan.py",
+        "rule": "GG006",
+        "coverage": "full"
+      },
       "verified": "carried from shipped gguf_cve_map.json (verified run 13, 2026-10-14)"
     },
     {
       "id": "CVE-2024-23496",
-      "aliases": ["TALOS-2024-1913", "GHSA-w4wv-vq5v-xp26"],
+      "aliases": [
+        "TALOS-2024-1913",
+        "GHSA-w4wv-vq5v-xp26"
+      ],
       "format": "gguf",
       "project": "llama.cpp / ggml",
       "ecosystem": "C/C++",
       "mechanism": "An oversized metadata string length overruns a buffer (out-of-bounds read/write).",
       "trigger_field": "metadata string length (GGUF header)",
-      "cwe": ["CWE-125", "CWE-787"],
+      "cwe": [
+        "CWE-125",
+        "CWE-787"
+      ],
       "cvss": null,
       "affected": "see advisory",
       "fixed": "see advisory",
-      "detector": {"module": "gguf_scan.py", "rule": "GG004", "coverage": "full"},
+      "detector": {
+        "module": "gguf_scan.py",
+        "rule": "GG004",
+        "coverage": "full"
+      },
       "verified": "carried from shipped gguf_cve_map.json (verified run 13, 2026-10-14)"
     },
     {
@@ -308,26 +467,40 @@
       "ecosystem": "C/C++",
       "mechanism": "A tensor dimensions product overflows in ggml_nbytes (build b7824), leading to an undersized allocation and out-of-bounds access.",
       "trigger_field": "tensor dims product (GGUF header)",
-      "cwe": ["CWE-190"],
+      "cwe": [
+        "CWE-190"
+      ],
       "cvss": null,
       "affected": "see advisory",
       "fixed": "build b7824",
-      "detector": {"module": "gguf_scan.py", "rule": "GG009", "coverage": "full"},
+      "detector": {
+        "module": "gguf_scan.py",
+        "rule": "GG009",
+        "coverage": "full"
+      },
       "verified": "carried from shipped gguf_cve_map.json (verified run 13, 2026-10-14)"
     },
     {
       "id": "CVE-2026-108955",
-      "aliases": ["VDB-416774"],
+      "aliases": [
+        "VDB-416774"
+      ],
       "format": "gguf",
       "project": "PowerInfer",
       "ecosystem": "C/C++",
       "mechanism": "A tensor data offset points past the end of the file, leading to an out-of-bounds read.",
       "trigger_field": "tensor data offset (GGUF header)",
-      "cwe": ["CWE-125"],
+      "cwe": [
+        "CWE-125"
+      ],
       "cvss": null,
       "affected": "see advisory",
       "fixed": "see advisory",
-      "detector": {"module": "gguf_scan.py", "rule": "GG011", "coverage": "partial"},
+      "detector": {
+        "module": "gguf_scan.py",
+        "rule": "GG011",
+        "coverage": "partial"
+      },
       "verified": "carried from shipped gguf_cve_map.json (verified run 13, 2026-10-14)"
     },
     {
@@ -338,12 +511,40 @@
       "ecosystem": "any",
       "mechanism": "A malicious Jinja chat template embedded in GGUF metadata executes at inference time (template rendering), not at file load, so byte-level static file scanning cannot catch it.",
       "trigger_field": "chat_template metadata (rendered at inference)",
-      "cwe": ["CWE-1336", "CWE-94"],
+      "cwe": [
+        "CWE-1336",
+        "CWE-94"
+      ],
       "cvss": null,
       "affected": "runtimes that render untrusted chat templates",
       "fixed": "runtime sandboxing of templates",
-      "detector": {"module": null, "rule": null, "coverage": "out-of-scope"},
+      "detector": {
+        "module": null,
+        "rule": null,
+        "coverage": "out-of-scope"
+      },
       "verified": "named honestly so readers know static file scanning does not cover inference-time template injection"
+    },
+    {
+      "id": "CVE-2026-79721",
+      "aliases": [],
+      "format": "mlflow",
+      "project": "mlflow",
+      "ecosystem": "PyPI",
+      "mechanism": "pyfunc MLmodel loader_module dispatch, and the 'code' directory prepended to sys.path at load, let a crafted MLmodel manifest import attacker-chosen code",
+      "trigger_field": "flavors.python_function.loader_module and flavors.python_function.code (MLmodel YAML)",
+      "cwe": [
+        "CWE-829"
+      ],
+      "cvss": 8.6,
+      "affected": "see advisory (NVD CVSS 8.6); no fixed-version range published for this identifier",
+      "fixed": null,
+      "detector": {
+        "module": "mlflow_manifest_scan.py",
+        "rule": "MLF005",
+        "coverage": "full"
+      },
+      "verified": "2026-10-22: CVE-2026-79721 is NVD CVSS 8.6 HIGH, CWE-829; detector MLF005 ships in keras-model-scan v0.45.0 and reads the MLmodel YAML manifest only (loader_module dispatch plus the 'code' directory prepended to sys.path at load), never importing or running the referenced code"
     }
   ]
 }
