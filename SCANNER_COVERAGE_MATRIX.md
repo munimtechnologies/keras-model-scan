@@ -52,7 +52,7 @@ Legend: **✓** documented detection · **~** partial / related / historically a
 |---|:--:|:--:|:--:|:--:|:--:|
 | Pickle dangerous-import RCE — CWE-502 (pickle/.pt/.joblib) | ✓ | ✓ | ✓ | ✓ | ✓ |
 | STACK_GLOBAL off-by-one scanner bypass — CVE-2025-71325 (pickle) | ~ | ~ | ~ | ? | ~ |
-| Stealthy/evasive pickle — ShadowPickle class (pickle) | ✗ | ~ | ✗ | ? | ✗ |
+| Stealthy/evasive pickle — ShadowPickle class (pickle) | ✗ | ~ | ✗ | ? | ~ |
 | Keras Lambda-layer code execution — CWE-94 (.h5/.keras) | – | – | ✓ | ✓ | ✓ |
 | .keras v3 config.json safe_mode bypass — CVE-2025-1550 (.keras) | – | – | ✗ | ~ | ~ |
 | .keras archive zip-slip — CWE-22 (.keras) | – | – | ✗ | ✓ | ✓ |
@@ -77,6 +77,9 @@ Legend: **✓** documented detection · **~** partial / related / historically a
 | Diffusers repository auto-loaded Python — `None.py` default path & local `custom_pipeline`, FaceHugger — CVE-2026-44827/44513 (pipeline repo files) | – | – | – | ? | ✓ |
 | skops `.skops` `schema.json` requested-type audit — operator/method code reuse & joblib fallback — CVE-2025-54412/54413/54886 (.skops) | – | – | – | ? | ✓ |
 | Pickle `copyreg` extension-registry redirect — EXT1/EXT2/EXT4 hidden-global import, no CVE (pickle/.pt) | ✓ | ~ | ✗ | ? | ✓ |
+| PyTorch weights_only checkpoint storage bypass — CVE-2026-24747 (.pt/.pth/.bin) | ✗ | ✗ | ✗ | ? | ✓ |
+| HDF5 virtual-dataset external-file mapping — CVE-2026-12480 (.h5/.hdf5) | – | – | ✗ | ? | ✓ |
+| MLflow pyfunc MLmodel loader dispatch & `code` sys.path injection — CVE-2026-79721 (MLmodel YAML) | – | – | – | ? | ✓ |
 
 ## What the matrix shows
 

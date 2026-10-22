@@ -1,6 +1,6 @@
 {
   "schema": "mv2-scanner-coverage/1",
-  "generated": "2026-10-17",
+  "generated": "2026-10-22",
   "title": "Open-source model-file scanner coverage vs. attack-vector taxonomy",
   "author": "Made with AI by MV2 of Munim, Inc.",
   "license": "CC BY 4.0 (this data); code in this repository is Apache-2.0",
@@ -13,202 +13,1465 @@
     "unknown": "not determinable from public documentation"
   },
   "scanners": [
-    {"id": "ps", "name": "picklescan (Hugging Face)", "scope": "pickle family; hybrid denylist; used by Hugging Face"},
-    {"id": "fk", "name": "fickling (Trail of Bits)", "scope": "pickle only; AST / allowlist with dataflow"},
-    {"id": "ms", "name": "ModelScan (Protect AI)", "scope": "pickle, PyTorch, Keras H5, TensorFlow SavedModel; denylist of dangerous globals"},
-    {"id": "ma", "name": "ModelAudit (Promptfoo)", "scope": "widest format set incl. config files, ONNX, SafeTensors, NumPy, PMML, archives"},
-    {"id": "kms", "name": "keras-model-scan (MV2 / Munim, Inc.)", "scope": "static, dependency-free, no-execution detectors for .keras, pickle, safetensors, GGUF, ONNX, HF config, chat templates, config-driven class instantiation keys, YAML object tags, MONAI bundle expressions, Diffusers manifests, the Diffusers pipeline-repository remote-code surface and skops schema types"}
+    {
+      "id": "ps",
+      "name": "picklescan (Hugging Face)",
+      "scope": "pickle family; hybrid denylist; used by Hugging Face"
+    },
+    {
+      "id": "fk",
+      "name": "fickling (Trail of Bits)",
+      "scope": "pickle only; AST / allowlist with dataflow"
+    },
+    {
+      "id": "ms",
+      "name": "ModelScan (Protect AI)",
+      "scope": "pickle, PyTorch, Keras H5, TensorFlow SavedModel; denylist of dangerous globals"
+    },
+    {
+      "id": "ma",
+      "name": "ModelAudit (Promptfoo)",
+      "scope": "widest format set incl. config files, ONNX, SafeTensors, NumPy, PMML, archives"
+    },
+    {
+      "id": "kms",
+      "name": "keras-model-scan (MV2 / Munim, Inc.)",
+      "scope": "static, dependency-free, no-execution detectors for .keras, pickle, safetensors, GGUF, ONNX, HF config, chat templates, config-driven class instantiation keys, YAML object tags, MONAI bundle expressions, Diffusers manifests, the Diffusers pipeline-repository remote-code surface and skops schema types"
+    }
   ],
   "vectors": [
-    {"id": "pkl-rce", "title": "Pickle dangerous-import RCE (GLOBAL + REDUCE/BUILD)", "formats": ".pkl, .pt, .pth, .bin, .joblib, object .npy", "class": "CWE-502"},
-    {"id": "pkl-stackglobal", "title": "STACK_GLOBAL off-by-one scanner bypass", "formats": "pickle", "class": "CVE-2025-71325 / GHSA-9gvj-pp9x-gcfr"},
-    {"id": "pkl-evasive", "title": "Stealthy/evasive pickle (scanner evasion)", "formats": "pickle", "class": "ShadowPickle-class"},
-    {"id": "keras-lambda", "title": "Keras Lambda-layer code execution", "formats": ".h5, .keras", "class": "CWE-94"},
-    {"id": "keras-safemode", "title": ".keras v3 config.json safe_mode bypass", "formats": ".keras", "class": "CVE-2025-1550"},
-    {"id": "keras-zipslip", "title": ".keras archive zip-slip / path traversal", "formats": ".keras", "class": "CWE-22"},
-    {"id": "tf-ops", "title": "TensorFlow SavedModel risky/custom ops", "formats": "SavedModel", "class": "I/O op abuse"},
-    {"id": "onnx-path", "title": "ONNX external_data path traversal", "formats": ".onnx", "class": "CVE-2022-25882; tract CVE-2026-55832 (CWE-22)"},
-    {"id": "onnx-key", "title": "ONNX external_data unexpected-key attribute injection", "formats": ".onnx", "class": "CVE-2026-34445 / GHSA-538c-55jv-c5g9 (CWE-20/915)"},
-    {"id": "gguf-mem", "title": "GGUF parser memory-safety (malformed counts)", "formats": ".gguf", "class": "heap overflow class"},
-    {"id": "gguf-ssti", "title": "GGUF chat_template SSTI (inference-time)", "formats": ".gguf metadata", "class": "CVE-2024-34359 class"},
-    {"id": "cfg-ssti", "title": "tokenizer_config.json / HF config chat_template SSTI", "formats": "JSON config, .jinja", "class": "CVE-2024-34359 class"},
-    {"id": "hf-automap", "title": "HF config auto_map / trust_remote_code pointer injection", "formats": "config.json", "class": "supply-chain pointer"},
-    {"id": "archive-bomb", "title": "Archive decompression bomb", "formats": "zip/tar containers", "class": "CWE-409"},
-    {"id": "safetensors-hdr", "title": "SafeTensors header/metadata abuse (DoS, not RCE)", "formats": ".safetensors", "class": "CWE-400"},
-    {"id": "embedded-exe", "title": "Embedded executable in model archive", "formats": "archives", "class": "dropper"},
-    {"id": "cfg-hydra", "title": "Hydra/OmegaConf _target_ config instantiation", "formats": "model_config.yaml (inside .nemo), config.json, YAML/JSON configs", "class": "CVE-2025-23304 (NeMo); CVE-2026-22584 (Uni2TS); CVE-2026-68508 / GHSA-2cp2-2r3c-7p7r (hydra-core)"},
-    {"id": "cfg-pyannote", "title": "pyannote config.yaml pipeline/preprocessor class reference", "formats": "config.yaml", "class": "pyannote-audio issues #2000 / #2019 (open, no CVE)"},
-    {"id": "cfg-st-modules", "title": "sentence-transformers modules.json module type outside the package namespace", "formats": "modules.json", "class": "CVE-2026-68770 / GHSA-jhr6-gm9c-rqjv (CWE-94)"},
-    {"id": "cfg-jsonargparse", "title": "jsonargparse / LightningCLI class_path config instantiation", "formats": "YAML/JSON CLI configs", "class": "jsonargparse PR #959 import-path denylist"},
-    {"id": "ckpt-lightning", "title": "Lightning checkpoint hparams _instantiator / _class_path", "formats": ".ckpt hyper-parameters, hparams.yaml", "class": "CVE-2026-58659 / GHSA-qqmf-gpg7-g8gw (CWE-470)"},
-    {"id": "yaml-pytag", "title": "Python object tags in YAML metadata (PyYAML !!python/..., HyperPyYAML !new:/!apply:)", "formats": "CKPT.yaml, hyperparams.yaml, model config .yaml / *.yml", "class": "CVE-2026-10036 (SpeechBrain < 1.1.1); CVE-2026-84202 (ModelScope) / CWE-502"},
-    {"id": "cfg-monai", "title": "MONAI bundle $ Python-eval expressions and _target_ instantiation", "formats": "inference.json / train.json / metadata.json, bundle .yaml", "class": "CVE-2026-100840 / GHSA-873f-pvrv-4x83 / PYSEC-2026-4015 (CWE-95)"},
-    {"id": "cfg-diffusers-manifest", "title": "Diffusers model_index.json component import and custom-pipeline instantiation", "formats": "model_index.json", "class": "config-driven importlib.import_module with no allowlist (no CVE; by-design remote-code adjacency)"},
-    {"id": "repo-diffusers-pyfile", "title": "Diffusers pipeline-repository auto-loaded Python (None.py default path and local custom_pipeline module) - FaceHugger", "formats": "pipeline repository files (None.py anywhere; *.py beside model_index.json)", "class": "CVE-2026-44827 / CVE-2026-44513 (CWE-94); fixed diffusers 0.38.0"},
-    {"id": "skops-schema-types", "title": "skops (.skops) schema.json requested-type audit (operator/method code reuse and joblib fallback)", "formats": ".skops (ZIP + schema.json)", "class": "CVE-2025-54412 / CVE-2025-54413 (CWE-351); CVE-2025-54886 (CWE-502); fixed skops 0.12.0 / 0.13.0"},
-    {"id": "pkl-ext-registry", "title": "Pickle copyreg extension-registry redirect (EXT1/EXT2/EXT4 hidden-global import)", "formats": "pickle, .pt, .pth, .bin, .joblib (incl. .nemo tar members)", "class": "CWE-502 code execution via copyreg extension-registry redirect; vector characterised by DITTO (arXiv:2610.10735), no CVE"}
+    {
+      "id": "pkl-rce",
+      "title": "Pickle dangerous-import RCE (GLOBAL + REDUCE/BUILD)",
+      "formats": ".pkl, .pt, .pth, .bin, .joblib, object .npy",
+      "class": "CWE-502"
+    },
+    {
+      "id": "pkl-stackglobal",
+      "title": "STACK_GLOBAL off-by-one scanner bypass",
+      "formats": "pickle",
+      "class": "CVE-2025-71325 / GHSA-9gvj-pp9x-gcfr"
+    },
+    {
+      "id": "pkl-evasive",
+      "title": "Stealthy/evasive pickle (scanner evasion)",
+      "formats": "pickle",
+      "class": "ShadowPickle-class"
+    },
+    {
+      "id": "keras-lambda",
+      "title": "Keras Lambda-layer code execution",
+      "formats": ".h5, .keras",
+      "class": "CWE-94"
+    },
+    {
+      "id": "keras-safemode",
+      "title": ".keras v3 config.json safe_mode bypass",
+      "formats": ".keras",
+      "class": "CVE-2025-1550"
+    },
+    {
+      "id": "keras-zipslip",
+      "title": ".keras archive zip-slip / path traversal",
+      "formats": ".keras",
+      "class": "CWE-22"
+    },
+    {
+      "id": "tf-ops",
+      "title": "TensorFlow SavedModel risky/custom ops",
+      "formats": "SavedModel",
+      "class": "I/O op abuse"
+    },
+    {
+      "id": "onnx-path",
+      "title": "ONNX external_data path traversal",
+      "formats": ".onnx",
+      "class": "CVE-2022-25882; tract CVE-2026-55832 (CWE-22)"
+    },
+    {
+      "id": "onnx-key",
+      "title": "ONNX external_data unexpected-key attribute injection",
+      "formats": ".onnx",
+      "class": "CVE-2026-34445 / GHSA-538c-55jv-c5g9 (CWE-20/915)"
+    },
+    {
+      "id": "gguf-mem",
+      "title": "GGUF parser memory-safety (malformed counts)",
+      "formats": ".gguf",
+      "class": "heap overflow class"
+    },
+    {
+      "id": "gguf-ssti",
+      "title": "GGUF chat_template SSTI (inference-time)",
+      "formats": ".gguf metadata",
+      "class": "CVE-2024-34359 class"
+    },
+    {
+      "id": "cfg-ssti",
+      "title": "tokenizer_config.json / HF config chat_template SSTI",
+      "formats": "JSON config, .jinja",
+      "class": "CVE-2024-34359 class"
+    },
+    {
+      "id": "hf-automap",
+      "title": "HF config auto_map / trust_remote_code pointer injection",
+      "formats": "config.json",
+      "class": "supply-chain pointer"
+    },
+    {
+      "id": "archive-bomb",
+      "title": "Archive decompression bomb",
+      "formats": "zip/tar containers",
+      "class": "CWE-409"
+    },
+    {
+      "id": "safetensors-hdr",
+      "title": "SafeTensors header/metadata abuse (DoS, not RCE)",
+      "formats": ".safetensors",
+      "class": "CWE-400"
+    },
+    {
+      "id": "embedded-exe",
+      "title": "Embedded executable in model archive",
+      "formats": "archives",
+      "class": "dropper"
+    },
+    {
+      "id": "cfg-hydra",
+      "title": "Hydra/OmegaConf _target_ config instantiation",
+      "formats": "model_config.yaml (inside .nemo), config.json, YAML/JSON configs",
+      "class": "CVE-2025-23304 (NeMo); CVE-2026-22584 (Uni2TS); CVE-2026-68508 / GHSA-2cp2-2r3c-7p7r (hydra-core)"
+    },
+    {
+      "id": "cfg-pyannote",
+      "title": "pyannote config.yaml pipeline/preprocessor class reference",
+      "formats": "config.yaml",
+      "class": "pyannote-audio issues #2000 / #2019 (open, no CVE)"
+    },
+    {
+      "id": "cfg-st-modules",
+      "title": "sentence-transformers modules.json module type outside the package namespace",
+      "formats": "modules.json",
+      "class": "CVE-2026-68770 / GHSA-jhr6-gm9c-rqjv (CWE-94)"
+    },
+    {
+      "id": "cfg-jsonargparse",
+      "title": "jsonargparse / LightningCLI class_path config instantiation",
+      "formats": "YAML/JSON CLI configs",
+      "class": "jsonargparse PR #959 import-path denylist"
+    },
+    {
+      "id": "ckpt-lightning",
+      "title": "Lightning checkpoint hparams _instantiator / _class_path",
+      "formats": ".ckpt hyper-parameters, hparams.yaml",
+      "class": "CVE-2026-58659 / GHSA-qqmf-gpg7-g8gw (CWE-470)"
+    },
+    {
+      "id": "yaml-pytag",
+      "title": "Python object tags in YAML metadata (PyYAML !!python/..., HyperPyYAML !new:/!apply:)",
+      "formats": "CKPT.yaml, hyperparams.yaml, model config .yaml / *.yml",
+      "class": "CVE-2026-10036 (SpeechBrain < 1.1.1); CVE-2026-84202 (ModelScope) / CWE-502"
+    },
+    {
+      "id": "cfg-monai",
+      "title": "MONAI bundle $ Python-eval expressions and _target_ instantiation",
+      "formats": "inference.json / train.json / metadata.json, bundle .yaml",
+      "class": "CVE-2026-100840 / GHSA-873f-pvrv-4x83 / PYSEC-2026-4015 (CWE-95)"
+    },
+    {
+      "id": "cfg-diffusers-manifest",
+      "title": "Diffusers model_index.json component import and custom-pipeline instantiation",
+      "formats": "model_index.json",
+      "class": "config-driven importlib.import_module with no allowlist (no CVE; by-design remote-code adjacency)"
+    },
+    {
+      "id": "repo-diffusers-pyfile",
+      "title": "Diffusers pipeline-repository auto-loaded Python (None.py default path and local custom_pipeline module) - FaceHugger",
+      "formats": "pipeline repository files (None.py anywhere; *.py beside model_index.json)",
+      "class": "CVE-2026-44827 / CVE-2026-44513 (CWE-94); fixed diffusers 0.38.0"
+    },
+    {
+      "id": "skops-schema-types",
+      "title": "skops (.skops) schema.json requested-type audit (operator/method code reuse and joblib fallback)",
+      "formats": ".skops (ZIP + schema.json)",
+      "class": "CVE-2025-54412 / CVE-2025-54413 (CWE-351); CVE-2025-54886 (CWE-502); fixed skops 0.12.0 / 0.13.0"
+    },
+    {
+      "id": "pkl-ext-registry",
+      "title": "Pickle copyreg extension-registry redirect (EXT1/EXT2/EXT4 hidden-global import)",
+      "formats": "pickle, .pt, .pth, .bin, .joblib (incl. .nemo tar members)",
+      "class": "CWE-502 code execution via copyreg extension-registry redirect; vector characterised by DITTO (arXiv:2610.10735), no CVE"
+    },
+    {
+      "id": "torch-weights-bypass",
+      "title": "PyTorch weights_only checkpoint storage bypass (non-dict SETITEM / storage numel past backing size)",
+      "formats": ".pt, .pth, .bin checkpoint pickle + storage archive members",
+      "class": "CVE-2026-24747 (CWE-502 / out-of-bounds read; bypasses weights_only=True)"
+    },
+    {
+      "id": "hdf5-vds",
+      "title": "HDF5 virtual dataset external-file mapping (VDS reads host paths outside the model)",
+      "formats": ".h5, .hdf5 (Keras / HDF5 virtual dataset)",
+      "class": "CVE-2026-12480 (file read via an HDF5 virtual-dataset external source mapping)"
+    },
+    {
+      "id": "mlflow-pyfunc",
+      "title": "MLflow pyfunc MLmodel loader dispatch and 'code' sys.path injection",
+      "formats": "MLmodel YAML, model manifests",
+      "class": "CVE-2026-79721 (CWE-829 / untrusted code added to sys.path at load; NVD CVSS 8.6)"
+    }
   ],
   "cells": [
-    {"vector": "pkl-rce", "scanner": "ps", "status": "detects", "note": "hybrid denylist of dangerous globals", "sources": ["https://blog.huntr.com/hunting-vulnerabilities-in-machine-learning-model-file-formats"]},
-    {"vector": "pkl-rce", "scanner": "fk", "status": "detects", "note": "AST + allowlist dataflow", "sources": ["https://arxiv.org/abs/2610.10735"]},
-    {"vector": "pkl-rce", "scanner": "ms", "status": "detects", "note": "catches code-injection via dangerous globals", "sources": ["https://github.com/protectai/modelscan/blob/main/docs/model_serialization_attacks.md"]},
-    {"vector": "pkl-rce", "scanner": "ma", "status": "detects", "note": "native pickle engine (modelaudit-picklescan)", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
-    {"vector": "pkl-rce", "scanner": "kms", "status": "detects", "note": "PKL001: dangerous import paired with REDUCE/BUILD", "sources": ["https://github.com/munimtechnologies/keras-model-scan"]},
-
-    {"vector": "pkl-stackglobal", "scanner": "ps", "status": "partial", "note": "missed pre-0.0.27; fixed in 0.0.27", "sources": ["https://github.com/advisories/GHSA-9gvj-pp9x-gcfr"]},
-    {"vector": "pkl-stackglobal", "scanner": "fk", "status": "partial", "note": "AST exposes structure but critical ops can be buried", "sources": ["https://arxiv.org/abs/2610.10735"]},
-    {"vector": "pkl-stackglobal", "scanner": "ms", "status": "partial", "note": "same STACK_GLOBAL lookback gap per the advisory write-up", "sources": ["https://github.com/advisories/GHSA-9gvj-pp9x-gcfr"]},
-    {"vector": "pkl-stackglobal", "scanner": "ma", "status": "unknown", "note": "pickle scanner lists STACK_GLOBAL among checked opcodes; handling of the off-by-one lookback bypass not documented", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
-    {"vector": "pkl-stackglobal", "scanner": "kms", "status": "partial", "note": "static opcode scan references GHSA-9gvj-pp9x-gcfr; not independently executed here", "sources": ["https://github.com/munimtechnologies/keras-model-scan"]},
-
-    {"vector": "pkl-evasive", "scanner": "ps", "status": "no", "note": "zero recall vs ShadowPickle", "sources": ["https://arxiv.org/abs/2607.17503"]},
-    {"vector": "pkl-evasive", "scanner": "fk", "status": "partial", "note": "more structural info but security-critical ops can be buried", "sources": ["https://arxiv.org/abs/2610.10735"]},
-    {"vector": "pkl-evasive", "scanner": "ms", "status": "no", "note": "zero recall vs ShadowPickle", "sources": ["https://arxiv.org/abs/2607.17503"]},
-    {"vector": "pkl-evasive", "scanner": "ma", "status": "unknown", "note": "not evaluated in the cited evasion papers", "sources": ["https://arxiv.org/abs/2602.19818"]},
-    {"vector": "pkl-evasive", "scanner": "kms", "status": "no", "note": "static scanner; shares the static-analysis evasion limitation", "sources": ["https://arxiv.org/abs/2607.17503"]},
-
-    {"vector": "keras-lambda", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "keras-lambda", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "keras-lambda", "scanner": "ms", "status": "detects", "note": "flags Lambda layers in H5", "sources": ["https://github.com/protectai/modelscan/blob/main/docs/model_serialization_attacks.md"]},
-    {"vector": "keras-lambda", "scanner": "ma", "status": "detects", "note": "Keras format support", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
-    {"vector": "keras-lambda", "scanner": "kms", "status": "detects", "note": "flags Lambda layers in .keras", "sources": ["https://github.com/munimtechnologies/keras-model-scan"]},
-
-    {"vector": "keras-safemode", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "keras-safemode", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "keras-safemode", "scanner": "ms", "status": "no", "note": "targets H5 Lambda; v3 config.json module-reference bypass is a distinct newer vector", "sources": ["https://nvd.nist.gov/vuln/detail/CVE-2025-1550"]},
-    {"vector": "keras-safemode", "scanner": "ma", "status": "partial", "note": "Keras ZIP scanner checks suspicious custom objects and risky config-JSON patterns; a CVE-2025-1550-specific rule is not documented", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
-    {"vector": "keras-safemode", "scanner": "kms", "status": "partial", "note": "inspects .keras config and archive; CVE-2025-1550 coverage not independently confirmed here", "sources": ["https://github.com/munimtechnologies/keras-model-scan"]},
-
-    {"vector": "keras-zipslip", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "keras-zipslip", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "keras-zipslip", "scanner": "ms", "status": "no", "note": "path traversal detection attributed to ModelAudit only", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
-    {"vector": "keras-zipslip", "scanner": "ma", "status": "detects", "note": "path traversal detected by ModelAudit", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
-    {"vector": "keras-zipslip", "scanner": "kms", "status": "detects", "note": "KMS005 zip-slip in .keras archive", "sources": ["https://github.com/munimtechnologies/keras-model-scan"]},
-
-    {"vector": "tf-ops", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "tf-ops", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "tf-ops", "scanner": "ms", "status": "detects", "note": "flags io.write_file/io.read_file/io.MatchingFiles", "sources": ["https://github.com/protectai/modelscan/blob/main/docs/model_serialization_attacks.md"]},
-    {"vector": "tf-ops", "scanner": "ma", "status": "detects", "note": "TF SavedModel scanner documents graph ops that touch files or the system, PyFunc and command-running ops", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
-    {"vector": "tf-ops", "scanner": "kms", "status": "no", "note": "TensorFlow SavedModel not in scope", "sources": ["https://github.com/munimtechnologies/keras-model-scan"]},
-
-    {"vector": "onnx-path", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "onnx-path", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "onnx-path", "scanner": "ms", "status": "no", "note": "ONNX attributed to ModelAudit only", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
-    {"vector": "onnx-path", "scanner": "ma", "status": "detects", "note": "ONNX scanner documents external data file references and path traversal attempts", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
-    {"vector": "onnx-path", "scanner": "kms", "status": "detects", "note": "OED001-005 external_data location checks (CVE-2022-25882 class)", "sources": ["https://github.com/advisories/GHSA-ffxj-547x-5j7c", "https://github.com/munimtechnologies/keras-model-scan"]},
-
-    {"vector": "onnx-key", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "onnx-key", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "onnx-key", "scanner": "ms", "status": "no", "note": "ONNX out of ModelScan scope", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
-    {"vector": "onnx-key", "scanner": "ma", "status": "unknown", "note": "CVE-2026-34445 is very recent; no documented rule", "sources": []},
-    {"vector": "onnx-key", "scanner": "kms", "status": "detects", "note": "OEK001 flags external_data keys outside the recognised set (CVE-2026-34445)", "sources": ["https://github.com/advisories/GHSA-538c-55jv-c5g9", "https://github.com/munimtechnologies/keras-model-scan"]},
-
-    {"vector": "gguf-mem", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "gguf-mem", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "gguf-mem", "scanner": "ms", "status": "out-of-scope", "note": "GGUF not in scope", "sources": []},
-    {"vector": "gguf-mem", "scanner": "ma", "status": "partial", "note": "GGUF scanner documents header integrity, tensor dimension/type/alignment validation and DoS resource limits; not a memory-safety fuzzer", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
-    {"vector": "gguf-mem", "scanner": "kms", "status": "partial", "note": "GGUF integrity checks on header/metadata counts; not a memory-safety fuzzer", "sources": ["https://github.com/munimtechnologies/keras-model-scan", "https://blog.huntr.com/hunting-vulnerabilities-in-machine-learning-model-file-formats"]},
-
-    {"vector": "gguf-ssti", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "gguf-ssti", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "gguf-ssti", "scanner": "ms", "status": "no", "note": "inference-time template layer out of scope", "sources": ["https://github.com/protectai/modelscan/blob/main/docs/model_serialization_attacks.md"]},
-    {"vector": "gguf-ssti", "scanner": "ma", "status": "detects", "note": "Jinja2 Template scanner documents CVE-2024-34359 exploitation in GGUF chat templates", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
-    {"vector": "gguf-ssti", "scanner": "kms", "status": "detects", "note": "reads embedded tokenizer.chat_template and flags Jinja SSTI tokens (CVE-2024-34359 class)", "sources": ["https://github.com/advisories/GHSA-56xg-wfcc-g829", "https://github.com/munimtechnologies/keras-model-scan"]},
-
-    {"vector": "cfg-ssti", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "cfg-ssti", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "cfg-ssti", "scanner": "ms", "status": "no", "note": "configuration files not analysed", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
-    {"vector": "cfg-ssti", "scanner": "ma", "status": "detects", "note": "Jinja2 Template scanner documents SSTI patterns in .json, .yaml, .jinja and .j2 files", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
-    {"vector": "cfg-ssti", "scanner": "kms", "status": "detects", "note": "flags Jinja SSTI in tokenizer_config.json and .jinja sidecars (CVE-2024-34359 class)", "sources": ["https://github.com/advisories/GHSA-56xg-wfcc-g829", "https://github.com/munimtechnologies/keras-model-scan"]},
-
-    {"vector": "hf-automap", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "hf-automap", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "hf-automap", "scanner": "ms", "status": "no", "note": "configuration files not analysed", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
-    {"vector": "hf-automap", "scanner": "ma", "status": "partial", "note": "analyses config files; auto_map-specific rule not documented", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
-    {"vector": "hf-automap", "scanner": "kms", "status": "detects", "note": "HF config-injection scanner flags suspicious module pointers", "sources": ["https://github.com/munimtechnologies/keras-model-scan"]},
-
-    {"vector": "archive-bomb", "scanner": "ps", "status": "no", "note": "reads zip members; no bomb detection", "sources": ["https://blog.huntr.com/hunting-vulnerabilities-in-machine-learning-model-file-formats"]},
-    {"vector": "archive-bomb", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "archive-bomb", "scanner": "ms", "status": "partial", "note": "processes archive members; bomb-specific detection not documented", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
-    {"vector": "archive-bomb", "scanner": "ma", "status": "detects", "note": "ZIP scanner flags compression ratios over 100x; TAR scanner flags excessive file counts or decompression ratios", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
-    {"vector": "archive-bomb", "scanner": "kms", "status": "detects", "note": "archive-bomb heuristics (compression ratio / member count)", "sources": ["https://github.com/munimtechnologies/keras-model-scan"]},
-
-    {"vector": "safetensors-hdr", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "safetensors-hdr", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "safetensors-hdr", "scanner": "ms", "status": "out-of-scope", "note": "tensor-only format treated as non-executing", "sources": ["https://github.com/protectai/modelscan/blob/main/docs/model_serialization_attacks.md"]},
-    {"vector": "safetensors-hdr", "scanner": "ma", "status": "detects", "note": "SafeTensors scanner documents JSON header structure, unusually large metadata sections and in-bounds contiguous offsets", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
-    {"vector": "safetensors-hdr", "scanner": "kms", "status": "partial", "note": "parses the SafeTensors header and index for structural anomalies", "sources": ["https://github.com/munimtechnologies/keras-model-scan"]},
-
-    {"vector": "embedded-exe", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "embedded-exe", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "embedded-exe", "scanner": "ms", "status": "no", "note": "embedded-executable detection attributed to ModelAudit only", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
-    {"vector": "embedded-exe", "scanner": "ma", "status": "detects", "note": "embedded executables detected by ModelAudit", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
-    {"vector": "embedded-exe", "scanner": "kms", "status": "no", "note": "not an embedded-binary detector", "sources": ["https://github.com/munimtechnologies/keras-model-scan"]},
-
-    {"vector": "cfg-hydra", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "cfg-hydra", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "cfg-hydra", "scanner": "ms", "status": "no", "note": "configuration files not analysed", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
-    {"vector": "cfg-hydra", "scanner": "ma", "status": "partial", "note": "Manifest scanner looks for code-execution patterns in .json/.yaml configs; no _target_ / instantiate rule documented", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
-    {"vector": "cfg-hydra", "scanner": "kms", "status": "detects", "note": "HYD001-003 in hydra_target_scan; scans config files on disk, does not unpack .nemo archives", "sources": ["https://unit42.paloaltonetworks.com/rce-vulnerabilities-in-ai-python-libraries/", "https://github.com/advisories/GHSA-2cp2-2r3c-7p7r", "https://github.com/munimtechnologies/keras-model-scan/blob/main/HYDRA_TARGET_SCAN.md"]},
-
-    {"vector": "cfg-pyannote", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "cfg-pyannote", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "cfg-pyannote", "scanner": "ms", "status": "no", "note": "configuration files not analysed", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
-    {"vector": "cfg-pyannote", "scanner": "ma", "status": "partial", "note": "Manifest scanner looks for code-execution patterns in .yaml configs; no pipeline.name rule documented", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
-    {"vector": "cfg-pyannote", "scanner": "kms", "status": "detects", "note": "HYD004 in hydra_target_scan (pipeline.name, preprocessors.<key>.name)", "sources": ["https://github.com/pyannote/pyannote-audio/issues/2000", "https://github.com/pyannote/pyannote-audio/issues/2019", "https://github.com/munimtechnologies/keras-model-scan/blob/main/HYDRA_TARGET_SCAN.md"]},
-
-    {"vector": "cfg-st-modules", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "cfg-st-modules", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "cfg-st-modules", "scanner": "ms", "status": "no", "note": "configuration files not analysed", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
-    {"vector": "cfg-st-modules", "scanner": "ma", "status": "partial", "note": "Manifest scanner looks for code-execution patterns in .json configs; no modules.json type rule documented", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
-    {"vector": "cfg-st-modules", "scanner": "kms", "status": "detects", "note": "HYD005 in hydra_target_scan (modules.json type outside sentence_transformers.)", "sources": ["https://github.com/advisories/GHSA-jhr6-gm9c-rqjv", "https://github.com/munimtechnologies/keras-model-scan/blob/main/HYDRA_TARGET_SCAN.md"]},
-
-    {"vector": "cfg-jsonargparse", "scanner": "ps", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "cfg-jsonargparse", "scanner": "fk", "status": "out-of-scope", "note": "pickle only", "sources": []},
-    {"vector": "cfg-jsonargparse", "scanner": "ms", "status": "no", "note": "configuration files not analysed", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
-    {"vector": "cfg-jsonargparse", "scanner": "ma", "status": "partial", "note": "Manifest scanner looks for code-execution patterns in .json/.yaml configs; no class_path rule documented", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
-    {"vector": "cfg-jsonargparse", "scanner": "kms", "status": "detects", "note": "JAC001 in jsonargparse_config_scan, CRITICAL for dangerous top-level modules", "sources": ["https://github.com/mauvilsa/jsonargparse/pull/959", "https://github.com/munimtechnologies/keras-model-scan/blob/main/JSONARGPARSE_CONFIG_SCAN.md"]},
-
-    {"vector": "ckpt-lightning", "scanner": "ps", "status": "no", "note": "the hparam is a plain string inside the checkpoint pickle, not a GLOBAL import; the advisory says it bypasses weights_only=True", "sources": ["https://github.com/advisories/GHSA-qqmf-gpg7-g8gw"]},
-    {"vector": "ckpt-lightning", "scanner": "fk", "status": "no", "note": "the hparam is a plain string, not an import the allowlist sees; not documented as covered", "sources": ["https://github.com/advisories/GHSA-qqmf-gpg7-g8gw"]},
-    {"vector": "ckpt-lightning", "scanner": "ms", "status": "no", "note": "denylist of dangerous globals; a string hparam is not a global", "sources": ["https://github.com/advisories/GHSA-qqmf-gpg7-g8gw"]},
-    {"vector": "ckpt-lightning", "scanner": "ma", "status": "unknown", "note": "pickle scanner reads .ckpt and checks suspicious string patterns; handling of _instantiator / _class_path not documented", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
-    {"vector": "ckpt-lightning", "scanner": "kms", "status": "partial", "note": "JAC002-003 on hparams.yaml or extracted hparams text; does not open .ckpt containers", "sources": ["https://github.com/advisories/GHSA-qqmf-gpg7-g8gw", "https://github.com/munimtechnologies/keras-model-scan/blob/main/JSONARGPARSE_CONFIG_SCAN.md"]},
-
-    {"vector": "yaml-pytag", "scanner": "ps", "status": "out-of-scope", "note": "pickle only; does not read YAML files", "sources": []},
-    {"vector": "yaml-pytag", "scanner": "fk", "status": "out-of-scope", "note": "pickle only; does not read YAML files", "sources": []},
-    {"vector": "yaml-pytag", "scanner": "ms", "status": "out-of-scope", "note": "scope is pickle/PyTorch/Keras-H5/TF-SavedModel; standalone YAML files are not a format it scans", "sources": []},
-    {"vector": "yaml-pytag", "scanner": "ma", "status": "partial", "note": "Manifest scanner matches generic code-execution patterns in .yaml and the Jinja2 scanner checks YAML for SSTI; no documented rule for PyYAML !!python/ tags, HyperPyYAML !new:/!apply:, or CVE-2026-10036", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
-    {"vector": "yaml-pytag", "scanner": "kms", "status": "detects", "note": "YPT001-004 in yaml_python_tag_scan flag PyYAML !!python/object|apply|new|name|module tags (incl. verbatim form), HyperPyYAML !new:/!apply:/!name:/!module:, %TAG python aliases, and any code tag in CKPT.yaml (CVE-2026-10036)", "sources": ["https://vulncheck.com/advisories/speechbrain-arbitrary-code-execution-via-ckpt-yaml-parsing", "https://github.com/munimtechnologies/keras-model-scan/blob/main/YAML_PYTHON_TAG_SCAN.md"]},
-
-    {"vector": "cfg-monai", "scanner": "ps", "status": "out-of-scope", "note": "pickle only; does not read bundle config files", "sources": []},
-    {"vector": "cfg-monai", "scanner": "fk", "status": "out-of-scope", "note": "pickle only; does not read bundle config files", "sources": []},
-    {"vector": "cfg-monai", "scanner": "ms", "status": "no", "note": "configuration files not analysed", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
-    {"vector": "cfg-monai", "scanner": "ma", "status": "partial", "note": "Manifest scanner matches generic code-execution patterns in .json/.yaml configs; no rule documented for MONAI bundle $ eval expressions or _target_ instantiation", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
-    {"vector": "cfg-monai", "scanner": "kms", "status": "detects", "note": "HYD006 in hydra_target_scan flags MONAI $ eval expressions; HYD001/002 cover the bundle _target_ sink", "sources": ["https://github.com/advisories/GHSA-873f-pvrv-4x83", "https://github.com/munimtechnologies/keras-model-scan/blob/main/HYDRA_TARGET_SCAN.md"]},
-
-    {"vector": "cfg-diffusers-manifest", "scanner": "ps", "status": "out-of-scope", "note": "pickle only; does not read model_index.json", "sources": []},
-    {"vector": "cfg-diffusers-manifest", "scanner": "fk", "status": "out-of-scope", "note": "pickle only; does not read model_index.json", "sources": []},
-    {"vector": "cfg-diffusers-manifest", "scanner": "ms", "status": "no", "note": "configuration files not analysed", "sources": ["https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"]},
-    {"vector": "cfg-diffusers-manifest", "scanner": "ma", "status": "partial", "note": "Manifest scanner looks for code-execution patterns in .json configs; no model_index.json component-import ([library, class]) rule documented", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
-    {"vector": "cfg-diffusers-manifest", "scanner": "kms", "status": "detects", "note": "DMS001 flags a component [library, class] whose library is outside {diffusers, transformers, onnxruntime}; DMS002 flags a list-form _class_name custom pipeline; static JSON read only", "sources": ["https://github.com/huggingface/diffusers/blob/main/src/diffusers/pipelines/pipeline_loading_utils.py", "https://github.com/munimtechnologies/keras-model-scan/blob/main/DIFFUSERS_MANIFEST_SCAN.md"]},
-
-    {"vector": "repo-diffusers-pyfile", "scanner": "ps", "status": "out-of-scope", "note": "pickle only; does not inspect repository Python files", "sources": []},
-    {"vector": "repo-diffusers-pyfile", "scanner": "fk", "status": "out-of-scope", "note": "pickle only; does not inspect repository Python files", "sources": []},
-    {"vector": "repo-diffusers-pyfile", "scanner": "ms", "status": "out-of-scope", "note": "scans serialized model files (pickle/PyTorch/Keras-H5/TF-SavedModel); a loose .py module in a repo is not a format it scans", "sources": []},
-    {"vector": "repo-diffusers-pyfile", "scanner": "ma", "status": "unknown", "note": "ModelAudit walks directories and many file types, but its scanner reference documents no rule treating a repo-local None.py or custom_pipeline .py as a Diffusers auto-execution signal", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
-    {"vector": "repo-diffusers-pyfile", "scanner": "kms", "status": "detects", "note": "DRC001 flags a file named exactly None.py (CVE-2026-44827 fingerprint) anywhere; DRC002 flags any other *.py beside model_index.json (local custom_pipeline surface); reads file names only, no execution", "sources": ["https://nvd.nist.gov/vuln/detail/CVE-2026-44827", "https://github.com/munimtechnologies/keras-model-scan/blob/main/DIFFUSERS_REMOTE_CODE_SCAN.md"]},
-
-    {"vector": "skops-schema-types", "scanner": "ps", "status": "out-of-scope", "note": "pickle only; does not open a .skops ZIP or read schema.json", "sources": []},
-    {"vector": "skops-schema-types", "scanner": "fk", "status": "out-of-scope", "note": "pickle only; does not open a .skops ZIP or read schema.json", "sources": []},
-    {"vector": "skops-schema-types", "scanner": "ms", "status": "out-of-scope", "note": "scope is pickle/PyTorch/Keras-H5/TF-SavedModel; the skops ZIP+schema.json format is not a format it scans", "sources": []},
-    {"vector": "skops-schema-types", "scanner": "ma", "status": "unknown", "note": "no .skops scanner is listed in ModelAudit's scanner reference as of 2026-10-16; whether it audits schema.json requested types is not determinable from public docs", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
-    {"vector": "skops-schema-types", "scanner": "kms", "status": "detects", "note": "SKP001 (CRITICAL) OS/process/eval-sink __module__ or dangerous builtins callable; SKP002 (HIGH) OperatorFuncNode/MethodNode/operator node (CVE-2025-54412/54413 code reuse); SKP003 (MEDIUM) type outside an ML allow-list; SKP010 (HIGH) a .skops that is not a valid ZIP (Card.get_model joblib fallback, CVE-2025-54886); reads schema.json only, no execution", "sources": ["https://nvd.nist.gov/vuln/detail/CVE-2025-54412", "https://github.com/munimtechnologies/keras-model-scan/blob/main/SKOPS_SCAN.md"]},
-
-    {"vector": "pkl-ext-registry", "scanner": "ps", "status": "detects", "note": "per DITTO (Table III) picklescan has 0% false-negative on the extension-registry cases, but it alerts by flagging the unknown copyreg import rather than resolving the redirected global", "sources": ["https://arxiv.org/abs/2610.10735"]},
-    {"vector": "pkl-ext-registry", "scanner": "fk", "status": "partial", "note": "per DITTO fickling crashes on both extension-registry samples (a bug in its binary opcode parsing), so it attempts the stream but returns no verdict", "sources": ["https://arxiv.org/abs/2610.10735"]},
-    {"vector": "pkl-ext-registry", "scanner": "ms", "status": "no", "note": "per DITTO ModelScan parses the stream but has a 100% false-negative rate on the extension-registry cases - a successful scan that does not catch the behaviour", "sources": ["https://arxiv.org/abs/2610.10735"]},
-    {"vector": "pkl-ext-registry", "scanner": "ma", "status": "unknown", "note": "not evaluated by DITTO; ModelAudit's pickle engine (modelaudit-picklescan) lists checked opcodes but documents no copyreg extension-registry / EXT-opcode redirect rule", "sources": ["https://www.promptfoo.dev/docs/model-audit/scanners/"]},
-    {"vector": "pkl-ext-registry", "scanner": "kms", "status": "detects", "note": "PXR001 flags a copyreg extension-registry mutator import (add_extension / _inverted_registry); PXR002 flags any EXT1/EXT2/EXT4 opcode; decode-only via pickletools.genops, so like every static scanner it reports the mechanism, not the hidden resolved target", "sources": ["https://github.com/munimtechnologies/keras-model-scan/blob/main/PICKLE_EXT_REGISTRY_SCAN.md"]}
+    {
+      "vector": "pkl-rce",
+      "scanner": "ps",
+      "status": "detects",
+      "note": "hybrid denylist of dangerous globals",
+      "sources": [
+        "https://blog.huntr.com/hunting-vulnerabilities-in-machine-learning-model-file-formats"
+      ]
+    },
+    {
+      "vector": "pkl-rce",
+      "scanner": "fk",
+      "status": "detects",
+      "note": "AST + allowlist dataflow",
+      "sources": [
+        "https://arxiv.org/abs/2610.10735"
+      ]
+    },
+    {
+      "vector": "pkl-rce",
+      "scanner": "ms",
+      "status": "detects",
+      "note": "catches code-injection via dangerous globals",
+      "sources": [
+        "https://github.com/protectai/modelscan/blob/main/docs/model_serialization_attacks.md"
+      ]
+    },
+    {
+      "vector": "pkl-rce",
+      "scanner": "ma",
+      "status": "detects",
+      "note": "native pickle engine (modelaudit-picklescan)",
+      "sources": [
+        "https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"
+      ]
+    },
+    {
+      "vector": "pkl-rce",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "PKL001: dangerous import paired with REDUCE/BUILD",
+      "sources": [
+        "https://github.com/munimtechnologies/keras-model-scan"
+      ]
+    },
+    {
+      "vector": "pkl-stackglobal",
+      "scanner": "ps",
+      "status": "partial",
+      "note": "missed pre-0.0.27; fixed in 0.0.27",
+      "sources": [
+        "https://github.com/advisories/GHSA-9gvj-pp9x-gcfr"
+      ]
+    },
+    {
+      "vector": "pkl-stackglobal",
+      "scanner": "fk",
+      "status": "partial",
+      "note": "AST exposes structure but critical ops can be buried",
+      "sources": [
+        "https://arxiv.org/abs/2610.10735"
+      ]
+    },
+    {
+      "vector": "pkl-stackglobal",
+      "scanner": "ms",
+      "status": "partial",
+      "note": "same STACK_GLOBAL lookback gap per the advisory write-up",
+      "sources": [
+        "https://github.com/advisories/GHSA-9gvj-pp9x-gcfr"
+      ]
+    },
+    {
+      "vector": "pkl-stackglobal",
+      "scanner": "ma",
+      "status": "unknown",
+      "note": "pickle scanner lists STACK_GLOBAL among checked opcodes; handling of the off-by-one lookback bypass not documented",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/"
+      ]
+    },
+    {
+      "vector": "pkl-stackglobal",
+      "scanner": "kms",
+      "status": "partial",
+      "note": "static opcode scan references GHSA-9gvj-pp9x-gcfr; not independently executed here",
+      "sources": [
+        "https://github.com/munimtechnologies/keras-model-scan"
+      ]
+    },
+    {
+      "vector": "pkl-evasive",
+      "scanner": "ps",
+      "status": "no",
+      "note": "zero recall vs ShadowPickle",
+      "sources": [
+        "https://arxiv.org/abs/2607.17503"
+      ]
+    },
+    {
+      "vector": "pkl-evasive",
+      "scanner": "fk",
+      "status": "partial",
+      "note": "more structural info but security-critical ops can be buried",
+      "sources": [
+        "https://arxiv.org/abs/2610.10735"
+      ]
+    },
+    {
+      "vector": "pkl-evasive",
+      "scanner": "ms",
+      "status": "no",
+      "note": "zero recall vs ShadowPickle",
+      "sources": [
+        "https://arxiv.org/abs/2607.17503"
+      ]
+    },
+    {
+      "vector": "pkl-evasive",
+      "scanner": "ma",
+      "status": "unknown",
+      "note": "not evaluated in the cited evasion papers",
+      "sources": [
+        "https://arxiv.org/abs/2602.19818"
+      ]
+    },
+    {
+      "vector": "pkl-evasive",
+      "scanner": "kms",
+      "status": "partial",
+      "note": "catches 2 of the 3 published ShadowPickle variants: its allowlist flags the PyPI-Injected (raft.run) and External-Modules (external.dangerous_func) imports as PKL003 (unrecognised reconstructor), which blacklist scanners miss; misses the Overwritten (collections.OrderedDict) variant by design, as its opcode stream is byte-identical to a legitimate OrderedDict reduce - a fundamental static limit mitigated by dependency integrity, not an opcode rule. Source-derived and confirmed in a sealed no-network sandbox (2026-10-22).",
+      "sources": [
+        "https://arxiv.org/abs/2607.17503",
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/SHADOWPICKLE_COVERAGE.md"
+      ]
+    },
+    {
+      "vector": "keras-lambda",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "keras-lambda",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "keras-lambda",
+      "scanner": "ms",
+      "status": "detects",
+      "note": "flags Lambda layers in H5",
+      "sources": [
+        "https://github.com/protectai/modelscan/blob/main/docs/model_serialization_attacks.md"
+      ]
+    },
+    {
+      "vector": "keras-lambda",
+      "scanner": "ma",
+      "status": "detects",
+      "note": "Keras format support",
+      "sources": [
+        "https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"
+      ]
+    },
+    {
+      "vector": "keras-lambda",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "flags Lambda layers in .keras",
+      "sources": [
+        "https://github.com/munimtechnologies/keras-model-scan"
+      ]
+    },
+    {
+      "vector": "keras-safemode",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "keras-safemode",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "keras-safemode",
+      "scanner": "ms",
+      "status": "no",
+      "note": "targets H5 Lambda; v3 config.json module-reference bypass is a distinct newer vector",
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2025-1550"
+      ]
+    },
+    {
+      "vector": "keras-safemode",
+      "scanner": "ma",
+      "status": "partial",
+      "note": "Keras ZIP scanner checks suspicious custom objects and risky config-JSON patterns; a CVE-2025-1550-specific rule is not documented",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/"
+      ]
+    },
+    {
+      "vector": "keras-safemode",
+      "scanner": "kms",
+      "status": "partial",
+      "note": "inspects .keras config and archive; CVE-2025-1550 coverage not independently confirmed here",
+      "sources": [
+        "https://github.com/munimtechnologies/keras-model-scan"
+      ]
+    },
+    {
+      "vector": "keras-zipslip",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "keras-zipslip",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "keras-zipslip",
+      "scanner": "ms",
+      "status": "no",
+      "note": "path traversal detection attributed to ModelAudit only",
+      "sources": [
+        "https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"
+      ]
+    },
+    {
+      "vector": "keras-zipslip",
+      "scanner": "ma",
+      "status": "detects",
+      "note": "path traversal detected by ModelAudit",
+      "sources": [
+        "https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"
+      ]
+    },
+    {
+      "vector": "keras-zipslip",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "KMS005 zip-slip in .keras archive",
+      "sources": [
+        "https://github.com/munimtechnologies/keras-model-scan"
+      ]
+    },
+    {
+      "vector": "tf-ops",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "tf-ops",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "tf-ops",
+      "scanner": "ms",
+      "status": "detects",
+      "note": "flags io.write_file/io.read_file/io.MatchingFiles",
+      "sources": [
+        "https://github.com/protectai/modelscan/blob/main/docs/model_serialization_attacks.md"
+      ]
+    },
+    {
+      "vector": "tf-ops",
+      "scanner": "ma",
+      "status": "detects",
+      "note": "TF SavedModel scanner documents graph ops that touch files or the system, PyFunc and command-running ops",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/"
+      ]
+    },
+    {
+      "vector": "tf-ops",
+      "scanner": "kms",
+      "status": "no",
+      "note": "TensorFlow SavedModel not in scope",
+      "sources": [
+        "https://github.com/munimtechnologies/keras-model-scan"
+      ]
+    },
+    {
+      "vector": "onnx-path",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "onnx-path",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "onnx-path",
+      "scanner": "ms",
+      "status": "no",
+      "note": "ONNX attributed to ModelAudit only",
+      "sources": [
+        "https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"
+      ]
+    },
+    {
+      "vector": "onnx-path",
+      "scanner": "ma",
+      "status": "detects",
+      "note": "ONNX scanner documents external data file references and path traversal attempts",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/"
+      ]
+    },
+    {
+      "vector": "onnx-path",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "OED001-005 external_data location checks (CVE-2022-25882 class)",
+      "sources": [
+        "https://github.com/advisories/GHSA-ffxj-547x-5j7c",
+        "https://github.com/munimtechnologies/keras-model-scan"
+      ]
+    },
+    {
+      "vector": "onnx-key",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "onnx-key",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "onnx-key",
+      "scanner": "ms",
+      "status": "no",
+      "note": "ONNX out of ModelScan scope",
+      "sources": [
+        "https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"
+      ]
+    },
+    {
+      "vector": "onnx-key",
+      "scanner": "ma",
+      "status": "unknown",
+      "note": "CVE-2026-34445 is very recent; no documented rule",
+      "sources": []
+    },
+    {
+      "vector": "onnx-key",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "OEK001 flags external_data keys outside the recognised set (CVE-2026-34445)",
+      "sources": [
+        "https://github.com/advisories/GHSA-538c-55jv-c5g9",
+        "https://github.com/munimtechnologies/keras-model-scan"
+      ]
+    },
+    {
+      "vector": "gguf-mem",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "gguf-mem",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "gguf-mem",
+      "scanner": "ms",
+      "status": "out-of-scope",
+      "note": "GGUF not in scope",
+      "sources": []
+    },
+    {
+      "vector": "gguf-mem",
+      "scanner": "ma",
+      "status": "partial",
+      "note": "GGUF scanner documents header integrity, tensor dimension/type/alignment validation and DoS resource limits; not a memory-safety fuzzer",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/"
+      ]
+    },
+    {
+      "vector": "gguf-mem",
+      "scanner": "kms",
+      "status": "partial",
+      "note": "GGUF integrity checks on header/metadata counts; not a memory-safety fuzzer",
+      "sources": [
+        "https://github.com/munimtechnologies/keras-model-scan",
+        "https://blog.huntr.com/hunting-vulnerabilities-in-machine-learning-model-file-formats"
+      ]
+    },
+    {
+      "vector": "gguf-ssti",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "gguf-ssti",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "gguf-ssti",
+      "scanner": "ms",
+      "status": "no",
+      "note": "inference-time template layer out of scope",
+      "sources": [
+        "https://github.com/protectai/modelscan/blob/main/docs/model_serialization_attacks.md"
+      ]
+    },
+    {
+      "vector": "gguf-ssti",
+      "scanner": "ma",
+      "status": "detects",
+      "note": "Jinja2 Template scanner documents CVE-2024-34359 exploitation in GGUF chat templates",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/"
+      ]
+    },
+    {
+      "vector": "gguf-ssti",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "reads embedded tokenizer.chat_template and flags Jinja SSTI tokens (CVE-2024-34359 class)",
+      "sources": [
+        "https://github.com/advisories/GHSA-56xg-wfcc-g829",
+        "https://github.com/munimtechnologies/keras-model-scan"
+      ]
+    },
+    {
+      "vector": "cfg-ssti",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "cfg-ssti",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "cfg-ssti",
+      "scanner": "ms",
+      "status": "no",
+      "note": "configuration files not analysed",
+      "sources": [
+        "https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"
+      ]
+    },
+    {
+      "vector": "cfg-ssti",
+      "scanner": "ma",
+      "status": "detects",
+      "note": "Jinja2 Template scanner documents SSTI patterns in .json, .yaml, .jinja and .j2 files",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/"
+      ]
+    },
+    {
+      "vector": "cfg-ssti",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "flags Jinja SSTI in tokenizer_config.json and .jinja sidecars (CVE-2024-34359 class)",
+      "sources": [
+        "https://github.com/advisories/GHSA-56xg-wfcc-g829",
+        "https://github.com/munimtechnologies/keras-model-scan"
+      ]
+    },
+    {
+      "vector": "hf-automap",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "hf-automap",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "hf-automap",
+      "scanner": "ms",
+      "status": "no",
+      "note": "configuration files not analysed",
+      "sources": [
+        "https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"
+      ]
+    },
+    {
+      "vector": "hf-automap",
+      "scanner": "ma",
+      "status": "partial",
+      "note": "analyses config files; auto_map-specific rule not documented",
+      "sources": [
+        "https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"
+      ]
+    },
+    {
+      "vector": "hf-automap",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "HF config-injection scanner flags suspicious module pointers",
+      "sources": [
+        "https://github.com/munimtechnologies/keras-model-scan"
+      ]
+    },
+    {
+      "vector": "archive-bomb",
+      "scanner": "ps",
+      "status": "no",
+      "note": "reads zip members; no bomb detection",
+      "sources": [
+        "https://blog.huntr.com/hunting-vulnerabilities-in-machine-learning-model-file-formats"
+      ]
+    },
+    {
+      "vector": "archive-bomb",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "archive-bomb",
+      "scanner": "ms",
+      "status": "partial",
+      "note": "processes archive members; bomb-specific detection not documented",
+      "sources": [
+        "https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"
+      ]
+    },
+    {
+      "vector": "archive-bomb",
+      "scanner": "ma",
+      "status": "detects",
+      "note": "ZIP scanner flags compression ratios over 100x; TAR scanner flags excessive file counts or decompression ratios",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/"
+      ]
+    },
+    {
+      "vector": "archive-bomb",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "archive-bomb heuristics (compression ratio / member count)",
+      "sources": [
+        "https://github.com/munimtechnologies/keras-model-scan"
+      ]
+    },
+    {
+      "vector": "safetensors-hdr",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "safetensors-hdr",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "safetensors-hdr",
+      "scanner": "ms",
+      "status": "out-of-scope",
+      "note": "tensor-only format treated as non-executing",
+      "sources": [
+        "https://github.com/protectai/modelscan/blob/main/docs/model_serialization_attacks.md"
+      ]
+    },
+    {
+      "vector": "safetensors-hdr",
+      "scanner": "ma",
+      "status": "detects",
+      "note": "SafeTensors scanner documents JSON header structure, unusually large metadata sections and in-bounds contiguous offsets",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/"
+      ]
+    },
+    {
+      "vector": "safetensors-hdr",
+      "scanner": "kms",
+      "status": "partial",
+      "note": "parses the SafeTensors header and index for structural anomalies",
+      "sources": [
+        "https://github.com/munimtechnologies/keras-model-scan"
+      ]
+    },
+    {
+      "vector": "embedded-exe",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "embedded-exe",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "embedded-exe",
+      "scanner": "ms",
+      "status": "no",
+      "note": "embedded-executable detection attributed to ModelAudit only",
+      "sources": [
+        "https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"
+      ]
+    },
+    {
+      "vector": "embedded-exe",
+      "scanner": "ma",
+      "status": "detects",
+      "note": "embedded executables detected by ModelAudit",
+      "sources": [
+        "https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"
+      ]
+    },
+    {
+      "vector": "embedded-exe",
+      "scanner": "kms",
+      "status": "no",
+      "note": "not an embedded-binary detector",
+      "sources": [
+        "https://github.com/munimtechnologies/keras-model-scan"
+      ]
+    },
+    {
+      "vector": "cfg-hydra",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "cfg-hydra",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "cfg-hydra",
+      "scanner": "ms",
+      "status": "no",
+      "note": "configuration files not analysed",
+      "sources": [
+        "https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"
+      ]
+    },
+    {
+      "vector": "cfg-hydra",
+      "scanner": "ma",
+      "status": "partial",
+      "note": "Manifest scanner looks for code-execution patterns in .json/.yaml configs; no _target_ / instantiate rule documented",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/"
+      ]
+    },
+    {
+      "vector": "cfg-hydra",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "HYD001-003 in hydra_target_scan; scans config files on disk, does not unpack .nemo archives",
+      "sources": [
+        "https://unit42.paloaltonetworks.com/rce-vulnerabilities-in-ai-python-libraries/",
+        "https://github.com/advisories/GHSA-2cp2-2r3c-7p7r",
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/HYDRA_TARGET_SCAN.md"
+      ]
+    },
+    {
+      "vector": "cfg-pyannote",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "cfg-pyannote",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "cfg-pyannote",
+      "scanner": "ms",
+      "status": "no",
+      "note": "configuration files not analysed",
+      "sources": [
+        "https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"
+      ]
+    },
+    {
+      "vector": "cfg-pyannote",
+      "scanner": "ma",
+      "status": "partial",
+      "note": "Manifest scanner looks for code-execution patterns in .yaml configs; no pipeline.name rule documented",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/"
+      ]
+    },
+    {
+      "vector": "cfg-pyannote",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "HYD004 in hydra_target_scan (pipeline.name, preprocessors.<key>.name)",
+      "sources": [
+        "https://github.com/pyannote/pyannote-audio/issues/2000",
+        "https://github.com/pyannote/pyannote-audio/issues/2019",
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/HYDRA_TARGET_SCAN.md"
+      ]
+    },
+    {
+      "vector": "cfg-st-modules",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "cfg-st-modules",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "cfg-st-modules",
+      "scanner": "ms",
+      "status": "no",
+      "note": "configuration files not analysed",
+      "sources": [
+        "https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"
+      ]
+    },
+    {
+      "vector": "cfg-st-modules",
+      "scanner": "ma",
+      "status": "partial",
+      "note": "Manifest scanner looks for code-execution patterns in .json configs; no modules.json type rule documented",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/"
+      ]
+    },
+    {
+      "vector": "cfg-st-modules",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "HYD005 in hydra_target_scan (modules.json type outside sentence_transformers.)",
+      "sources": [
+        "https://github.com/advisories/GHSA-jhr6-gm9c-rqjv",
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/HYDRA_TARGET_SCAN.md"
+      ]
+    },
+    {
+      "vector": "cfg-jsonargparse",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "cfg-jsonargparse",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only",
+      "sources": []
+    },
+    {
+      "vector": "cfg-jsonargparse",
+      "scanner": "ms",
+      "status": "no",
+      "note": "configuration files not analysed",
+      "sources": [
+        "https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"
+      ]
+    },
+    {
+      "vector": "cfg-jsonargparse",
+      "scanner": "ma",
+      "status": "partial",
+      "note": "Manifest scanner looks for code-execution patterns in .json/.yaml configs; no class_path rule documented",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/"
+      ]
+    },
+    {
+      "vector": "cfg-jsonargparse",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "JAC001 in jsonargparse_config_scan, CRITICAL for dangerous top-level modules",
+      "sources": [
+        "https://github.com/mauvilsa/jsonargparse/pull/959",
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/JSONARGPARSE_CONFIG_SCAN.md"
+      ]
+    },
+    {
+      "vector": "ckpt-lightning",
+      "scanner": "ps",
+      "status": "no",
+      "note": "the hparam is a plain string inside the checkpoint pickle, not a GLOBAL import; the advisory says it bypasses weights_only=True",
+      "sources": [
+        "https://github.com/advisories/GHSA-qqmf-gpg7-g8gw"
+      ]
+    },
+    {
+      "vector": "ckpt-lightning",
+      "scanner": "fk",
+      "status": "no",
+      "note": "the hparam is a plain string, not an import the allowlist sees; not documented as covered",
+      "sources": [
+        "https://github.com/advisories/GHSA-qqmf-gpg7-g8gw"
+      ]
+    },
+    {
+      "vector": "ckpt-lightning",
+      "scanner": "ms",
+      "status": "no",
+      "note": "denylist of dangerous globals; a string hparam is not a global",
+      "sources": [
+        "https://github.com/advisories/GHSA-qqmf-gpg7-g8gw"
+      ]
+    },
+    {
+      "vector": "ckpt-lightning",
+      "scanner": "ma",
+      "status": "unknown",
+      "note": "pickle scanner reads .ckpt and checks suspicious string patterns; handling of _instantiator / _class_path not documented",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/"
+      ]
+    },
+    {
+      "vector": "ckpt-lightning",
+      "scanner": "kms",
+      "status": "partial",
+      "note": "JAC002-003 on hparams.yaml or extracted hparams text; does not open .ckpt containers",
+      "sources": [
+        "https://github.com/advisories/GHSA-qqmf-gpg7-g8gw",
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/JSONARGPARSE_CONFIG_SCAN.md"
+      ]
+    },
+    {
+      "vector": "yaml-pytag",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read YAML files",
+      "sources": []
+    },
+    {
+      "vector": "yaml-pytag",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read YAML files",
+      "sources": []
+    },
+    {
+      "vector": "yaml-pytag",
+      "scanner": "ms",
+      "status": "out-of-scope",
+      "note": "scope is pickle/PyTorch/Keras-H5/TF-SavedModel; standalone YAML files are not a format it scans",
+      "sources": []
+    },
+    {
+      "vector": "yaml-pytag",
+      "scanner": "ma",
+      "status": "partial",
+      "note": "Manifest scanner matches generic code-execution patterns in .yaml and the Jinja2 scanner checks YAML for SSTI; no documented rule for PyYAML !!python/ tags, HyperPyYAML !new:/!apply:, or CVE-2026-10036",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/"
+      ]
+    },
+    {
+      "vector": "yaml-pytag",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "YPT001-004 in yaml_python_tag_scan flag PyYAML !!python/object|apply|new|name|module tags (incl. verbatim form), HyperPyYAML !new:/!apply:/!name:/!module:, %TAG python aliases, and any code tag in CKPT.yaml (CVE-2026-10036)",
+      "sources": [
+        "https://vulncheck.com/advisories/speechbrain-arbitrary-code-execution-via-ckpt-yaml-parsing",
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/YAML_PYTHON_TAG_SCAN.md"
+      ]
+    },
+    {
+      "vector": "cfg-monai",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read bundle config files",
+      "sources": []
+    },
+    {
+      "vector": "cfg-monai",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read bundle config files",
+      "sources": []
+    },
+    {
+      "vector": "cfg-monai",
+      "scanner": "ms",
+      "status": "no",
+      "note": "configuration files not analysed",
+      "sources": [
+        "https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"
+      ]
+    },
+    {
+      "vector": "cfg-monai",
+      "scanner": "ma",
+      "status": "partial",
+      "note": "Manifest scanner matches generic code-execution patterns in .json/.yaml configs; no rule documented for MONAI bundle $ eval expressions or _target_ instantiation",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/"
+      ]
+    },
+    {
+      "vector": "cfg-monai",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "HYD006 in hydra_target_scan flags MONAI $ eval expressions; HYD001/002 cover the bundle _target_ sink",
+      "sources": [
+        "https://github.com/advisories/GHSA-873f-pvrv-4x83",
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/HYDRA_TARGET_SCAN.md"
+      ]
+    },
+    {
+      "vector": "cfg-diffusers-manifest",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read model_index.json",
+      "sources": []
+    },
+    {
+      "vector": "cfg-diffusers-manifest",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read model_index.json",
+      "sources": []
+    },
+    {
+      "vector": "cfg-diffusers-manifest",
+      "scanner": "ms",
+      "status": "no",
+      "note": "configuration files not analysed",
+      "sources": [
+        "https://www.promptfoo.dev/blog/modelaudit-vs-modelscan/"
+      ]
+    },
+    {
+      "vector": "cfg-diffusers-manifest",
+      "scanner": "ma",
+      "status": "partial",
+      "note": "Manifest scanner looks for code-execution patterns in .json configs; no model_index.json component-import ([library, class]) rule documented",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/"
+      ]
+    },
+    {
+      "vector": "cfg-diffusers-manifest",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "DMS001 flags a component [library, class] whose library is outside {diffusers, transformers, onnxruntime}; DMS002 flags a list-form _class_name custom pipeline; static JSON read only",
+      "sources": [
+        "https://github.com/huggingface/diffusers/blob/main/src/diffusers/pipelines/pipeline_loading_utils.py",
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/DIFFUSERS_MANIFEST_SCAN.md"
+      ]
+    },
+    {
+      "vector": "repo-diffusers-pyfile",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only; does not inspect repository Python files",
+      "sources": []
+    },
+    {
+      "vector": "repo-diffusers-pyfile",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only; does not inspect repository Python files",
+      "sources": []
+    },
+    {
+      "vector": "repo-diffusers-pyfile",
+      "scanner": "ms",
+      "status": "out-of-scope",
+      "note": "scans serialized model files (pickle/PyTorch/Keras-H5/TF-SavedModel); a loose .py module in a repo is not a format it scans",
+      "sources": []
+    },
+    {
+      "vector": "repo-diffusers-pyfile",
+      "scanner": "ma",
+      "status": "unknown",
+      "note": "ModelAudit walks directories and many file types, but its scanner reference documents no rule treating a repo-local None.py or custom_pipeline .py as a Diffusers auto-execution signal",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/"
+      ]
+    },
+    {
+      "vector": "repo-diffusers-pyfile",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "DRC001 flags a file named exactly None.py (CVE-2026-44827 fingerprint) anywhere; DRC002 flags any other *.py beside model_index.json (local custom_pipeline surface); reads file names only, no execution",
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-44827",
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/DIFFUSERS_REMOTE_CODE_SCAN.md"
+      ]
+    },
+    {
+      "vector": "skops-schema-types",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only; does not open a .skops ZIP or read schema.json",
+      "sources": []
+    },
+    {
+      "vector": "skops-schema-types",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only; does not open a .skops ZIP or read schema.json",
+      "sources": []
+    },
+    {
+      "vector": "skops-schema-types",
+      "scanner": "ms",
+      "status": "out-of-scope",
+      "note": "scope is pickle/PyTorch/Keras-H5/TF-SavedModel; the skops ZIP+schema.json format is not a format it scans",
+      "sources": []
+    },
+    {
+      "vector": "skops-schema-types",
+      "scanner": "ma",
+      "status": "unknown",
+      "note": "no .skops scanner is listed in ModelAudit's scanner reference as of 2026-10-16; whether it audits schema.json requested types is not determinable from public docs",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/"
+      ]
+    },
+    {
+      "vector": "skops-schema-types",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "SKP001 (CRITICAL) OS/process/eval-sink __module__ or dangerous builtins callable; SKP002 (HIGH) OperatorFuncNode/MethodNode/operator node (CVE-2025-54412/54413 code reuse); SKP003 (MEDIUM) type outside an ML allow-list; SKP010 (HIGH) a .skops that is not a valid ZIP (Card.get_model joblib fallback, CVE-2025-54886); reads schema.json only, no execution",
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2025-54412",
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/SKOPS_SCAN.md"
+      ]
+    },
+    {
+      "vector": "pkl-ext-registry",
+      "scanner": "ps",
+      "status": "detects",
+      "note": "per DITTO (Table III) picklescan has 0% false-negative on the extension-registry cases, but it alerts by flagging the unknown copyreg import rather than resolving the redirected global",
+      "sources": [
+        "https://arxiv.org/abs/2610.10735"
+      ]
+    },
+    {
+      "vector": "pkl-ext-registry",
+      "scanner": "fk",
+      "status": "partial",
+      "note": "per DITTO fickling crashes on both extension-registry samples (a bug in its binary opcode parsing), so it attempts the stream but returns no verdict",
+      "sources": [
+        "https://arxiv.org/abs/2610.10735"
+      ]
+    },
+    {
+      "vector": "pkl-ext-registry",
+      "scanner": "ms",
+      "status": "no",
+      "note": "per DITTO ModelScan parses the stream but has a 100% false-negative rate on the extension-registry cases - a successful scan that does not catch the behaviour",
+      "sources": [
+        "https://arxiv.org/abs/2610.10735"
+      ]
+    },
+    {
+      "vector": "pkl-ext-registry",
+      "scanner": "ma",
+      "status": "unknown",
+      "note": "not evaluated by DITTO; ModelAudit's pickle engine (modelaudit-picklescan) lists checked opcodes but documents no copyreg extension-registry / EXT-opcode redirect rule",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/"
+      ]
+    },
+    {
+      "vector": "pkl-ext-registry",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "PXR001 flags a copyreg extension-registry mutator import (add_extension / _inverted_registry); PXR002 flags any EXT1/EXT2/EXT4 opcode; decode-only via pickletools.genops, so like every static scanner it reports the mechanism, not the hidden resolved target",
+      "sources": [
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/PICKLE_EXT_REGISTRY_SCAN.md"
+      ]
+    },
+    {
+      "vector": "torch-weights-bypass",
+      "scanner": "ps",
+      "status": "no",
+      "note": "reads the checkpoint pickle but the denylist targets dangerous GLOBAL imports; a SETITEM on a non-dict and an oversized storage numel are not dangerous globals, and weights_only=True (which this CVE bypasses) is the assumed mitigation",
+      "sources": []
+    },
+    {
+      "vector": "torch-weights-bypass",
+      "scanner": "fk",
+      "status": "no",
+      "note": "allowlist/dataflow models import and callable reductions; a storage element-count-vs-backing-size mismatch is a structural property it does not track",
+      "sources": []
+    },
+    {
+      "vector": "torch-weights-bypass",
+      "scanner": "ms",
+      "status": "no",
+      "note": "PyTorch support is a denylist of dangerous globals; this bypass uses no dangerous global",
+      "sources": []
+    },
+    {
+      "vector": "torch-weights-bypass",
+      "scanner": "ma",
+      "status": "unknown",
+      "note": "pickle engine lists checked opcodes; handling of a non-dict SETITEM/SETITEMS or a storage overread is not documented",
+      "sources": []
+    },
+    {
+      "vector": "torch-weights-bypass",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "torch_storage_scan (CVE-2026-24747): a non-executing pickle stack simulation flags SETITEM/SETITEMS applied to a non-dict object and a storage persistent_id declaring more elements than its backing archive member holds; reports the malformed structure, not the C-level corruption",
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-24747",
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/torch_storage_scan.py"
+      ]
+    },
+    {
+      "vector": "hdf5-vds",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read HDF5",
+      "sources": []
+    },
+    {
+      "vector": "hdf5-vds",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read HDF5",
+      "sources": []
+    },
+    {
+      "vector": "hdf5-vds",
+      "scanner": "ms",
+      "status": "no",
+      "note": "reads Keras H5 for Lambda/dangerous ops; an HDF5 virtual-dataset external-file mapping is a distinct structural feature not documented as covered",
+      "sources": []
+    },
+    {
+      "vector": "hdf5-vds",
+      "scanner": "ma",
+      "status": "unknown",
+      "note": "has Keras/HDF5 support but documents no virtual-dataset external-source rule",
+      "sources": []
+    },
+    {
+      "vector": "hdf5-vds",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "hdf5_virtual_dataset_scan (CVE-2026-12480): structural HDF5 read flags virtual dataset (VDS) mappings whose source points outside the file - absolute paths, parent-dir traversal or non-relative references; no execution",
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-12480",
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/hdf5_virtual_dataset_scan.py"
+      ]
+    },
+    {
+      "vector": "mlflow-pyfunc",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read MLmodel YAML",
+      "sources": []
+    },
+    {
+      "vector": "mlflow-pyfunc",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read MLmodel YAML",
+      "sources": []
+    },
+    {
+      "vector": "mlflow-pyfunc",
+      "scanner": "ms",
+      "status": "out-of-scope",
+      "note": "scope is pickle/PyTorch/Keras-H5/TF-SavedModel; an MLflow MLmodel manifest is not a format it scans",
+      "sources": []
+    },
+    {
+      "vector": "mlflow-pyfunc",
+      "scanner": "ma",
+      "status": "unknown",
+      "note": "Manifest scanner matches generic code-execution patterns in YAML/JSON; no MLflow pyfunc loader_module / 'code' sys.path rule is documented",
+      "sources": []
+    },
+    {
+      "vector": "mlflow-pyfunc",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "mlflow_manifest_scan (MLF001-005): static YAML read flags a pyfunc loader_module dispatched to a non-allowlisted module and (MLF005) a 'code' path injected onto sys.path (CVE-2026-79721); no execution",
+      "sources": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-79721",
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/mlflow_manifest_scan.py"
+      ]
+    }
   ]
 }
