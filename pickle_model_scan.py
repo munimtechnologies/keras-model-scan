@@ -39,10 +39,11 @@ import zipfile
 import zlib
 from dataclasses import dataclass
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 # Modules whose presence in a pickle is a direct code-execution concern.
 DANGEROUS_MODULES = frozenset({
+    "idlelib",  # CVE-2025-71340/71342/71357/71358 (picklescan idlelib RCE gadget cluster, CWE-502)
     "os", "posix", "nt", "subprocess", "sys", "socket", "shutil", "pty",
     "platform", "ctypes", "multiprocessing", "runpy", "importlib", "code",
     "codeop", "webbrowser", "pdb", "bdb", "commands", "popen2", "timeit",

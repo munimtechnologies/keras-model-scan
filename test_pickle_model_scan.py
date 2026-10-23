@@ -199,5 +199,31 @@ class F2pyGadgetTests(unittest.TestCase):
         self.assertIn("PKL005", rules(findings))
 
 
+
+class IdlelibGadgetTests(unittest.TestCase):
+    """CVE-2025-71340/71342/71357/71358: idlelib is a stdlib RCE-gadget
+    subpackage that picklescan missed. The DANGEROUS_MODULES entry escalates any
+    idlelib.* import to PKL001/PKL002. Made with AI by MV2 of Munim, Inc."""
+
+    def _stream(self, module, name, reduce):
+        data = pickle.PROTO + b"\x04" + stack_global(module, name)
+        if reduce:
+            data += pickle.EMPTY_TUPLE + pickle.REDUCE
+        return data + pickle.STOP
+
+    def test_idlelib_pyshell_runcode_with_reduce_is_critical(self):
+        data = self._stream("idlelib.pyshell", "ModifiedInterpreter.runcode", True)
+        hit = by_rule(pms.scan_pickle_bytes(data, "x"), "PKL001")[0]
+        self.assertEqual(hit.severity, "CRITICAL")
+
+    def test_idlelib_run_executive_without_reduce_is_high(self):
+        data = self._stream("idlelib.run", "Executive.runcode", False)
+        hit = by_rule(pms.scan_pickle_bytes(data, "x"), "PKL002")[0]
+        self.assertEqual(hit.severity, "HIGH")
+
+    def test_benign_collections_reconstruct_has_no_dangerous_hit(self):
+        data = self._stream("collections", "OrderedDict", True)
+        self.assertEqual(by_rule(pms.scan_pickle_bytes(data, "x"), "PKL001"), [])
+
 if __name__ == "__main__":
     unittest.main()
