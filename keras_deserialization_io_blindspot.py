@@ -26,6 +26,15 @@ default `safe_mode=True`:
               or URL that is read during `__init__`, giving arbitrary file read / SSRF.
   * master  - `NON_MODELING_APIS` (31 names) supersedes `LOADING_APIS`.
 
+The CVE-2025-12058 fix family (an `in_safe_mode()` guard before a string argument is
+treated as a file path) was applied not only to keras core `IndexLookup` but, in the
+separate `keras_hub` package, to every tokenizer that loads a vocabulary/proto/merges
+file at construction time: `WordPieceTokenizer` (`vocabulary`), `SentencePieceTokenizer`
+(`proto`) and `BytePairTokenizer` (`vocabulary`, `merges`). Each was verified on
+keras-team/keras-hub master on 2026-10-24 to read the string argument with `open()` only
+after passing `serialization_lib.in_safe_mode()`. So these too are closed under safe mode
+on current `keras_hub`, yet live under `safe_mode=False` and on versions before the guard.
+
 keras-model-scan's `KMS001` implements only the first step - the top-package allowlist.
 It therefore passes CLEAN:
 
@@ -33,16 +42,21 @@ It therefore passes CLEAN:
      (top package `keras` is allowlisted); and
   2. any preprocessing-layer node (class names like `StringLookup`) - `KMS001` only
      looks at `class_name in ("function", "class")`, so a layer node is never examined,
-     and no other rule inspects its `vocabulary` config.
+     and no other rule inspects its `vocabulary` config; and
+  3. any `keras_hub` tokenizer node (top package `keras_hub` is allowlisted) carrying a
+     string `vocabulary`/`proto`/`merges` path - the same file-read-at-init class as (2).
 
-Both are live for users on Keras 3.9-3.11.x (the large installed base) and for *anyone*
-who loads with `safe_mode=False` - routine for Lambda-bearing or legacy models - even on
-v3.12.4. A legitimately *saved* model never carries a string `vocabulary` (Keras
-`IndexLookup.get_config` stores a resolved list, or `None` when a path was used), so a
-string `vocabulary` in a config node is a high-signal, low-false-positive attack marker.
+All three are live for users on Keras / keras_hub versions before the relevant guard, and
+for *anyone* who loads with `safe_mode=False` - routine for Lambda-bearing or legacy
+models - even on the latest release. A legitimately *saved* model never carries a string
+path in these fields: Keras `IndexLookup.get_config` stores a resolved list (or `None`
+when a path was used), and every `keras_hub` tokenizer `get_config` stores `None` and
+carries the real vocabulary as an archive asset. So a string value in one of these fields
+is a high-signal, low-false-positive attack marker.
 
 This module models the current rule (allowlist-only) and the proposed rule (adds the two
-upstream denylists plus the vocabulary-path marker) so a test can pin the difference.
+upstream denylists plus the vocabulary/proto/merges path markers) so a test can pin the
+difference.
 """
 
 from __future__ import annotations
@@ -114,6 +128,22 @@ KERAS_NONMODELING_DENYLIST = LOADING_APIS | NON_MODELING_APIS
 # base; StringLookup and IntegerLookup are its public subclasses.
 VOCAB_IO_LAYERS = frozenset({"StringLookup", "IntegerLookup", "IndexLookup"})
 
+# keras_hub tokenizers whose constructor reads an attacker-controlled file path at
+# deserialization time when the argument is a string (verified live 2026-10-24 on
+# keras-team/keras-hub master). Each is a registered Keras serializable, so it appears in
+# a .keras config as a class node whose top package `keras_hub` is in
+# KERAS_IMPORT_ALLOWLIST -> KMS001 treats it as benign. Upstream guards every one of these
+# reads with serialization_lib.in_safe_mode() (the same fix family as CVE-2025-12058), so
+# they raise under safe_mode=True on current keras_hub but remain live under
+# safe_mode=False and on versions before the guard was added. A legitimately saved model
+# stores these fields as None (the vocabulary/proto/merges travel as an archive asset), so
+# a *string* value is the crafted-config marker. Maps class name -> config keys to inspect.
+HUB_IO_TOKENIZER_FILE_KEYS = {
+    "WordPieceTokenizer": ("vocabulary",),
+    "SentencePieceTokenizer": ("proto",),
+    "BytePairTokenizer": ("vocabulary", "merges"),
+}
+
 
 @dataclass(frozen=True)
 class Verdict:
@@ -146,6 +176,16 @@ def _api_name(node: dict) -> str:
     return name if isinstance(name, str) else ""
 
 
+def _string_field(node: dict, key: str) -> str | None:
+    """Return a non-empty string value for `key` from a node's config (or the node)."""
+    cfg = node.get("config")
+    src = cfg if isinstance(cfg, dict) else node
+    val = src.get(key)
+    if isinstance(val, str) and val.strip():
+        return val
+    return None
+
+
 def classify_current(node: dict) -> Verdict:
     """Model of keras-model-scan KMS001 as shipped (v0.47.0): top-package allowlist only.
 
@@ -164,13 +204,17 @@ def classify_current(node: dict) -> Verdict:
 def classify_proposed(node: dict) -> Verdict:
     """Proposed version-aware rule set: KMS001 plus KMS006 (this module's contribution).
 
-    KMS006 flags two in-namespace gadget shapes that the top-package allowlist misses but
-    that Keras itself refuses (under safe_mode) in current versions:
+    KMS006 flags in-namespace gadget shapes that the top-package allowlist misses but that
+    Keras / keras_hub themselves refuse (under safe_mode) in current versions:
 
       a. a `function`/`class` node resolving to a name in Keras's own
          LOADING_APIS / NON_MODELING_APIS denylist (e.g. `keras.utils.get_file`);
       b. a StringLookup/IntegerLookup/IndexLookup layer node whose `vocabulary` config is
-         a string (a file path or URL), the CVE-2025-12058 arbitrary-file-read/SSRF marker.
+         a string (a file path or URL), the CVE-2025-12058 arbitrary-file-read/SSRF marker;
+      c. a keras_hub tokenizer node (WordPieceTokenizer / SentencePieceTokenizer /
+         BytePairTokenizer) whose `vocabulary`/`proto`/`merges` config is a string - the
+         same file-read-at-deserialization class as (b), in the allowlisted `keras_hub`
+         namespace.
 
     A scanner can be stricter than the loader: it flags these regardless of the target's
     Keras version or safe_mode setting, protecting the older installed base and anyone who
@@ -196,15 +240,28 @@ def classify_proposed(node: dict) -> Verdict:
 
     # KMS006 (b): vocabulary-path preprocessing layer (CVE-2025-12058).
     if class_name in VOCAB_IO_LAYERS:
-        cfg = node.get("config")
-        vocab = cfg.get("vocabulary") if isinstance(cfg, dict) else node.get("vocabulary")
-        if isinstance(vocab, str) and vocab.strip():
+        vocab = _string_field(node, "vocabulary")
+        if vocab is not None:
             return Verdict(
                 True,
                 "KMS006",
                 f"{class_name} vocabulary is a path/URL {vocab!r} "
                 f"(CVE-2025-12058 file-read/SSRF; legit saves store a list, never a string)",
             )
+
+    # KMS006 (c): keras_hub tokenizer loading a file at deserialization (same class).
+    file_keys = HUB_IO_TOKENIZER_FILE_KEYS.get(class_name)
+    if file_keys:
+        for key in file_keys:
+            val = _string_field(node, key)
+            if val is not None:
+                return Verdict(
+                    True,
+                    "KMS006",
+                    f"{class_name} {key} is a path/URL {val!r} "
+                    f"(keras_hub file-read at deserialization, CVE-2025-12058 class; "
+                    f"legit saves store None and carry the file as an archive asset)",
+                )
 
     return Verdict(False, "", "")
 
@@ -233,6 +290,30 @@ _DEMO_NODES = [
                  "config": {"vocabulary": "/etc/passwd"}},
     },
     {
+        "name": "WordPieceTokenizer vocabulary path (keras_hub, same class)",
+        "node": {"class_name": "WordPieceTokenizer",
+                 "module": "keras_hub.src.tokenizers.word_piece_tokenizer",
+                 "config": {"vocabulary": "/etc/passwd"}},
+    },
+    {
+        "name": "SentencePieceTokenizer proto path (keras_hub)",
+        "node": {"class_name": "SentencePieceTokenizer",
+                 "module": "keras_hub.src.tokenizers.sentence_piece_tokenizer",
+                 "config": {"proto": "/home/user/.ssh/id_rsa"}},
+    },
+    {
+        "name": "BytePairTokenizer merges path (keras_hub)",
+        "node": {"class_name": "BytePairTokenizer",
+                 "module": "keras_hub.src.tokenizers.byte_pair_tokenizer",
+                 "config": {"vocabulary": None, "merges": "/etc/shadow"}},
+    },
+    {
+        "name": "benign WordPieceTokenizer (saved: vocabulary None, asset on disk)",
+        "node": {"class_name": "WordPieceTokenizer",
+                 "module": "keras_hub.src.tokenizers.word_piece_tokenizer",
+                 "config": {"vocabulary": None}},
+    },
+    {
         "name": "non-Keras function node (caught by KMS001 already)",
         "node": {"class_name": "function", "module": "os",
                  "config": "os.system"},
@@ -241,7 +322,7 @@ _DEMO_NODES = [
 
 
 def main() -> None:
-    header = f"{'node':<48}{'current (KMS001)':<22}{'proposed (KMS006)'}"
+    header = f"{'node':<52}{'current (KMS001)':<22}{'proposed (KMS006)'}"
     print(header)
     print("-" * len(header))
     for item in _DEMO_NODES:
@@ -249,7 +330,7 @@ def main() -> None:
         pro = classify_proposed(item["node"])
         cur_s = cur.rule if cur.flagged else "clean"
         pro_s = pro.rule if pro.flagged else "clean"
-        print(f"{item['name']:<48}{cur_s:<22}{pro_s}")
+        print(f"{item['name']:<52}{cur_s:<22}{pro_s}")
 
 
 if __name__ == "__main__":

@@ -5,9 +5,11 @@
 
 These pin the difference between the current allowlist-only rule (KMS001) and the
 proposed version-aware rule (KMS006): KMS006 must flag the in-namespace get_file-class
-gadget and the CVE-2025-12058 vocabulary-path layer, while leaving genuinely benign
-`keras.*` nodes - including a StringLookup with an inline vocabulary list - untouched.
-The test imports only the standalone module, so it runs with no repository dependencies.
+gadget, the CVE-2025-12058 vocabulary-path layer, and the keras_hub tokenizers that read
+a vocabulary/proto/merges file at deserialization, while leaving genuinely benign
+`keras.*`/`keras_hub.*` nodes - including inline-vocabulary and saved (None) configs -
+untouched. The test imports only the standalone module, so it runs with no repository
+dependencies.
 """
 
 import unittest
@@ -23,6 +25,12 @@ class TestCurrentRuleHasTheBlindSpot(unittest.TestCase):
 
     def test_vocabulary_path_layer_scans_clean_today(self):
         node = {"class_name": "StringLookup", "module": "keras.layers",
+                "config": {"vocabulary": "/etc/passwd"}}
+        self.assertFalse(m.classify_current(node).flagged)
+
+    def test_keras_hub_tokenizer_path_scans_clean_today(self):
+        node = {"class_name": "WordPieceTokenizer",
+                "module": "keras_hub.src.tokenizers.word_piece_tokenizer",
                 "config": {"vocabulary": "/etc/passwd"}}
         self.assertFalse(m.classify_current(node).flagged)
 
@@ -54,6 +62,43 @@ class TestProposedRuleClosesIt(unittest.TestCase):
             self.assertTrue(m.classify_proposed(node).flagged, api)
 
 
+class TestKerasHubTokenizerFamily(unittest.TestCase):
+    def test_wordpiece_vocabulary_path_flagged_as_kms006(self):
+        node = {"class_name": "WordPieceTokenizer",
+                "module": "keras_hub.src.tokenizers.word_piece_tokenizer",
+                "config": {"vocabulary": "/etc/passwd"}}
+        v = m.classify_proposed(node)
+        self.assertTrue(v.flagged)
+        self.assertEqual(v.rule, "KMS006")
+
+    def test_sentencepiece_proto_path_flagged(self):
+        node = {"class_name": "SentencePieceTokenizer",
+                "module": "keras_hub.src.tokenizers.sentence_piece_tokenizer",
+                "config": {"proto": "http://169.254.169.254/latest/meta-data/"}}
+        self.assertTrue(m.classify_proposed(node).flagged)
+
+    def test_bytepair_merges_path_flagged_even_when_vocab_none(self):
+        node = {"class_name": "BytePairTokenizer",
+                "module": "keras_hub.src.tokenizers.byte_pair_tokenizer",
+                "config": {"vocabulary": None, "merges": "/etc/shadow"}}
+        v = m.classify_proposed(node)
+        self.assertTrue(v.flagged)
+        self.assertEqual(v.rule, "KMS006")
+
+    def test_bytepair_vocabulary_path_flagged(self):
+        node = {"class_name": "BytePairTokenizer",
+                "module": "keras_hub.src.tokenizers.byte_pair_tokenizer",
+                "config": {"vocabulary": "/etc/passwd", "merges": None}}
+        self.assertTrue(m.classify_proposed(node).flagged)
+
+    def test_every_hub_tokenizer_with_a_string_file_arg_is_flagged(self):
+        for cls, keys in m.HUB_IO_TOKENIZER_FILE_KEYS.items():
+            for key in keys:
+                node = {"class_name": cls, "module": "keras_hub.tokenizers",
+                        "config": {key: "/tmp/evil"}}
+                self.assertTrue(m.classify_proposed(node).flagged, f"{cls}.{key}")
+
+
 class TestNoFalsePositives(unittest.TestCase):
     def test_benign_dense_layer(self):
         node = {"class_name": "Dense", "module": "keras.layers",
@@ -73,6 +118,19 @@ class TestNoFalsePositives(unittest.TestCase):
     def test_empty_string_vocabulary_not_flagged(self):
         node = {"class_name": "StringLookup", "module": "keras.layers",
                 "config": {"vocabulary": "   "}}
+        self.assertFalse(m.classify_proposed(node).flagged)
+
+    def test_saved_hub_tokenizer_with_none_fields_not_flagged(self):
+        # A legitimately saved keras_hub tokenizer stores None (asset on disk).
+        node = {"class_name": "WordPieceTokenizer",
+                "module": "keras_hub.src.tokenizers.word_piece_tokenizer",
+                "config": {"vocabulary": None}}
+        self.assertFalse(m.classify_proposed(node).flagged)
+
+    def test_bytepair_with_both_fields_none_not_flagged(self):
+        node = {"class_name": "BytePairTokenizer",
+                "module": "keras_hub.src.tokenizers.byte_pair_tokenizer",
+                "config": {"vocabulary": None, "merges": None}}
         self.assertFalse(m.classify_proposed(node).flagged)
 
 
@@ -107,6 +165,16 @@ class TestDenylistProvenance(unittest.TestCase):
             "keras.utils.save_img",
         ):
             self.assertIn(critical, m.NON_MODELING_APIS, critical)
+
+    def test_hub_tokenizer_map_matches_source_review(self):
+        # Verified live on keras-team/keras-hub master, 2026-10-24: these are the file
+        # arguments each tokenizer reads from a string path at construction time.
+        self.assertEqual(
+            m.HUB_IO_TOKENIZER_FILE_KEYS["WordPieceTokenizer"], ("vocabulary",))
+        self.assertEqual(
+            m.HUB_IO_TOKENIZER_FILE_KEYS["SentencePieceTokenizer"], ("proto",))
+        self.assertEqual(
+            m.HUB_IO_TOKENIZER_FILE_KEYS["BytePairTokenizer"], ("vocabulary", "merges"))
 
 
 if __name__ == "__main__":
