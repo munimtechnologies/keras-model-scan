@@ -92,6 +92,14 @@ causes `open("/etc/passwd")` at load time — the same LFI/SSRF class as residua
 `open()` rather than `tf.io.gfile`. This family is, to our knowledge, not previously mapped
 onto model-file scanner coverage; it is the new result of this note.
 
+This three-member list is **exhaustive for keras_hub as of master, 2026-10-24**: the other
+implementation tokenizers in `keras_hub/src/tokenizers/` — `ByteTokenizer` and
+`UnicodeCodepointTokenizer` — are vocabulary-free (each takes no `vocabulary`/`proto`/`merges`
+argument and opens no file at construction; verified live), and the two `*_tokenizer_trainer.py`
+helpers are invoked explicitly, never reached through `from_config` at model load. So residual
+(2) is a complete enumeration of the keras_hub deserialization-time file-read surface, not a
+sample.
+
 ## The live residual (3): `keras.layers.TextVectorization` — the same string-path, by delegation
 
 `keras.layers.TextVectorization` is the standard text-preprocessing layer and, for most
@@ -169,6 +177,28 @@ the guarded string branch nor accepts an attacker-chosen path — it is the norm
 asset-loading channel, a different trust context from a user-supplied path, and does not
 weaken the string-path signature above.
 
+## Scope checked clean (2026-10-24): where the string-path class does *not* extend
+
+To keep the claim honest and bounded, the adjacent `keras_hub` deserialization surfaces were
+read on master the same day and found to carry **no** attacker-controlled file path at
+`from_config` / `__init__` time:
+
+- **`keras_hub.layers.ImageConverter` and `AudioConverter`.** Neither stores a file path, URL
+  or filename in `get_config` (ImageConverter stores only `image_size`, `scale`, `offset`,
+  `interpolation`, `antialias`, `crop_to_aspect_ratio`, `pad_to_aspect_ratio`,
+  `bounding_box_format`; AudioConverter defines no `get_config`), and neither `__init__` opens a
+  file or fetches a URL. Their only file access is through `from_preset` / `save_to_preset` —
+  explicit preset calls, **not** the `from_config` path a `.keras` load takes.
+- **The remaining `keras_hub/src/layers/preprocessing/` layers** — `MultiSegmentPacker`,
+  `StartEndPacker`, `MaskedLMMaskGenerator`, `RandomDeletion`, `RandomSwap`, `VideoConverter` —
+  are pure tensor transforms with no file-path config and no construction-time I/O.
+- **The vocabulary-free tokenizers** `ByteTokenizer` and `UnicodeCodepointTokenizer`, as noted
+  in residual (2).
+
+These negatives matter for a scanner: they bound KMS006's by-class cases (2) and (3) to the
+exact layers and tokenizers that actually read a path, so the rule stays low-false-positive and
+need not inspect the many preprocessing layers that never touch the filesystem.
+
 ## The fix: a version-aware KMS006
 
 A scanner can — and for these audiences should — be **stricter than the loader**: flag the
@@ -221,6 +251,10 @@ open-source files with no execution.
   currently models `StringLookup`/`IntegerLookup`/`IndexLookup`, and the production rule and
   the demonstrator's `VOCAB_IO_LAYERS` should add `TextVectorization` in the serialized
   scanner merge.
+- The clean-scope section's negatives (ImageConverter, AudioConverter, the other preprocessing
+  layers, and the two vocabulary-free tokenizers) were established by reading each file's
+  `__init__` / `get_config` on master, 2026-10-24. They are negatives — no attacker-controlled
+  file-path surface found — reported so the coverage claim is bounded rather than open-ended.
 - The contribution is defensive scanner coverage plus the version-aware coverage mapping; it
   does not, by itself, earn a bounty.
 
