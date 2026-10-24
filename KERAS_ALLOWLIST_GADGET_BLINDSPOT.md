@@ -11,6 +11,15 @@ Made with AI agents working in the name of MV2 of Munim, Inc.
 no model was loaded and no code was executed against any live or hosted system.
 Sources read 2026-10-24.*
 
+> **Update 2026-10-24 — read [`KERAS_DESERIALIZATION_IO_BLINDSPOT.md`](KERAS_DESERIALIZATION_IO_BLINDSPOT.md) first.**
+> The `keras.utils.get_file` example used below has since been **closed by Keras**: it is
+> denied by name during deserialization via `LOADING_APIS` (Keras ≤ 3.11.0) and
+> `NON_MODELING_APIS` (master). The structural finding — a top-package allowlist cannot
+> catch a dangerous callable *inside* the trusted namespace — is unchanged, but the
+> *current, live* example is now CVE-2025-12058 (`StringLookup`/`IntegerLookup` vocabulary
+> paths). The sentences below that say the `get_file` primitive "remains" are accurate only
+> for the Keras 3.9–3.10 window; the follow-up note gives the version-aware picture.
+
 This is the **fourth axis** of the keras-model-scan coverage study, and the first on
 the native `.keras` side rather than the pickle/[picklescan](https://github.com/mmaitre314/picklescan)
 side. The first three axes compared the pickle scanner against picklescan:
@@ -45,24 +54,17 @@ tar/zip archives to the local filesystem — reachable by name from a crafted co
 any marshalled bytecode (so it also evades the `__lambda__` bytecode guard). The attack
 primitive is: *trust a namespace, but the namespace is not gadget-free.*
 
-`get_file`'s signature, verified live in `keras/src/utils/file_utils.py` (master, 2026-10-24):
-
-```python
-def get_file(fname=None, origin=None, untar=False, md5_hash=None, file_hash=None,
-             cache_subdir="datasets", hash_algorithm="auto", extract=False,
-             archive_format="auto", cache_dir=None, force_download=False):
-```
-
-Keras has since added archive-member path-escape filtering (`filter_safe_zipinfos`,
-`filter_safe_tarinfos`, `is_link_in_dir`, the tar `data` filter). Those narrow the
-*post-download* escape, but the load-time **download of an attacker URL and write into the
-cache dir (SSRF + controlled file drop)** remains an intended behaviour of an allowlisted
-callable.
+> **Correction (2026-10-24):** Keras has since denied `get_file` (and six other
+> loader/utility callables) by name via the `LOADING_APIS` frozenset in
+> `serialization_lib.py` (present in v3.11.0), raising *"loading functions are not allowed
+> during deserialization"*; master broadens this to `NON_MODELING_APIS` (~30 names). So the
+> `get_file` load-time download primitive is **no longer reachable by name on Keras ≥ 3.11
+> under safe mode**. It was live only on the 3.9–3.10 window. See the follow-up note.
 
 ## The finding: keras-model-scan copies the same allowlist, so it has the same blind spot
 
 keras-model-scan's `KMS001` (the CVE-2025-1550 detector) uses the identical model. Verified
-live in `keras_model_scan.py` (v0.47.0, 2026-10-24):
+live in `keras_model_scan.py` (2026-10-24):
 
 ```python
 KERAS_IMPORT_ALLOWLIST = frozenset({"keras", "keras_hub", "keras_cv", "keras_nlp"})
@@ -71,64 +73,62 @@ KERAS_IMPORT_ALLOWLIST = frozenset({"keras", "keras_hub", "keras_cv", "keras_nlp
 For a `config.json` node with `class_name in ("function", "class")`, KMS001 computes the
 module's top package and **flags it only when that package is outside the allowlist**. A node
 referencing `keras.utils.get_file` therefore has top package `keras`, which *is* allowlisted,
-so **KMS001 does not fire**. KMS002 (`__lambda__`) does not fire either, because the JFrog
-class deliberately uses a by-name function reference rather than marshalled bytecode. The
-result: a `.keras` file weaponised with the JFrog in-namespace gadget class scans **clean**.
+so **KMS001 does not fire** — even though Keras itself now refuses that name. KMS002
+(`__lambda__`) does not fire either, because the JFrog class deliberately uses a by-name
+function reference rather than marshalled bytecode. The scanner being *more permissive than
+the loader* is the durable issue: it still passes files that Keras refuses (relevant to the
+pre-3.11 installed base and to `safe_mode=False` loads).
 
 This is the exact dual of the `torch.*` pickle finding: a whole-group allowlist is immune to
 submodule-renaming bypasses (good) but structurally cannot catch a dangerous callable that
 genuinely lives inside the trusted group.
 
-## Candidate in-allowlist gadgets (source-reviewed, for the fix denylist)
+## Candidate in-allowlist gadgets (source-reviewed)
 
-Callables exported under the allowlisted namespaces that have load-time side effects. The
-first is JFrog's; the rest are enumerated here by source review of `keras.utils` /
-`keras.config` / `keras.layers` on master (2026-10-24) and are candidates for a
-defense-in-depth denylist, not confirmed end-to-end exploit chains:
+The table below is kept for the record; the live-status column reflects the 2026-10-24
+re-review. The concrete, false-positive-aware detector now lives in the follow-up note.
 
-| dotted name | effect at load time | already caught? |
+| dotted name | effect at load time | live on current release? |
 |---|---|---|
-| `keras.utils.get_file` | download attacker `origin` URL + extract archive (SSRF / file drop) | **no** (KMS001 allowlists `keras`) |
-| `keras.utils.load_img` | read an arbitrary filesystem path | no |
-| `keras.utils.save_img` | write an arbitrary filesystem path | no |
-| `keras.config.enable_unsafe_deserialization` | flip the global unsafe-deserialization flag | partly — `KMS003` matches the *string* in raw text, not a `function` node |
-| `keras.layers.TFSMLayer` | load an external SavedModel | yes — `KMS004` by `class_name` |
-| `keras.saving.load_model` / `keras.models.load_model` | recursively load another model file | no |
+| `keras.utils.get_file` | download attacker `origin` URL + extract archive (SSRF / file drop) | **no** — denied by `LOADING_APIS`/`NON_MODELING_APIS` (≥ 3.11) |
+| `keras.utils.load_img` | read an arbitrary filesystem path | no — in both denylists |
+| `keras.utils.save_img` | write an arbitrary filesystem path | no — in `NON_MODELING_APIS` |
+| `keras.config.enable_unsafe_deserialization` | flip the global unsafe-deserialization flag | no — in both denylists (also `KMS003` string match) |
+| `keras.layers.StringLookup` / `IntegerLookup` | read attacker `vocabulary` path/URL (CVE-2025-12058) | **mitigated on v3.12.4 under safe mode; live on ≤ 3.11.x and on `safe_mode=False`** |
+| `keras.layers.TFSMLayer` | load an external SavedModel | caught by `KMS004` |
 
 ## The fix (defense in depth the real loader does not do)
 
-A scanner can be **stricter than the Keras loader**: keep the allowlist, but add an
-in-namespace *gadget denylist* so KMS001 flags a specific dotted callable (e.g.
-`keras.utils.get_file`) even though its package is allowlisted. This closes the JFrog class
-at scan time without reintroducing the submodule-bypass risk that the broad allowlist exists
-to prevent. The standalone [`keras_allowlist_gadget_blindspot.py`](keras_allowlist_gadget_blindspot.py)
-models both the current rule and the proposed rule; [`test_keras_allowlist_gadget_blindspot.py`](test_keras_allowlist_gadget_blindspot.py)
-pins the invariant: the current rule marks `keras.utils.get_file` benign; the proposed rule
-flags it while leaving genuinely benign `keras.*` nodes (e.g. `keras.layers.Dense`) benign.
+A scanner can be **stricter than the Keras loader**: keep the allowlist, but add Keras's own
+by-name denylist (`LOADING_APIS ∪ NON_MODELING_APIS`) plus a marker for the vocabulary-path
+class, so a crafted node is flagged even when the running Keras would refuse it anyway — which
+protects users on older Keras and `safe_mode=False` loads. The standalone
+[`keras_allowlist_gadget_blindspot.py`](keras_allowlist_gadget_blindspot.py) modelled the
+original observation; the version-aware successor is
+[`keras_deserialization_io_blindspot.py`](keras_deserialization_io_blindspot.py).
 
 ## Why this is new
 
-JFrog disclosed the *Keras* residual gadget. No prior work maps that known residual class onto
-a model-file *scanner's* detection coverage — i.e. shows that a scanner which copies Keras's
-own namespace allowlist copies the gap, so a clean result is not evidence against the JFrog
-class. That mapping, plus the enumerated in-namespace gadget candidates and a scan-time fix
-that is strictly safer than the loader, is the contribution. It is reproducible by reading
-three open-source files (`keras_model_scan.py`, Keras `file_utils.py`, and the JFrog writeup)
-with no execution.
+JFrog disclosed the *Keras* residual gadget. No prior work maps that residual class, and its
+subsequent mitigation, onto a model-file *scanner's* detection coverage across Keras versions
+— i.e. shows that a scanner which copies only Keras's 3.9 namespace allowlist lags the loader
+by later mitigations, so a clean result is not evidence of safety for the large pre-3.11
+installed base or for `safe_mode=False` loads. That mapping, plus a scan-time fix sourced from
+Keras's own denylists, is the contribution.
 
 ## Honest limits
 
 - Source review only; this is **not** a vulnerability report against Keras. `get_file` was
-  disclosed by JFrog and Keras has hardened archive extraction since.
-- The candidate list beyond `get_file` is enumerated from the API surface; each would need a
-  verified local proof of concept before any claim of an exploit chain, and none is made here.
-- The demonstrator is a faithful *model* of KMS001's rule pinned to the source read on
-  2026-10-24; it will drift if either project changes. The actual scanner fix is queued
+  disclosed by JFrog and has since been denied by name; CVE-2025-12058 was disclosed via
+  Huntr and is guarded under safe mode on v3.12.4.
+- No novel vulnerability is claimed, and nothing here, by itself, earns a bounty.
+- The demonstrators are faithful *models* of KMS001's rule pinned to source read on
+  2026-10-24; they will drift if either project changes. The actual scanner fix is queued
   behind the in-flight v0.48.0 release so scanner edits stay serialized.
 
 ## Reproduce
 
 ```
-python keras_allowlist_gadget_blindspot.py            # prints the classification matrix
-python -m unittest test_keras_allowlist_gadget_blindspot -v
+python keras_deserialization_io_blindspot.py          # current-vs-proposed matrix (version-aware)
+python -m unittest test_keras_deserialization_io_blindspot -v
 ```
