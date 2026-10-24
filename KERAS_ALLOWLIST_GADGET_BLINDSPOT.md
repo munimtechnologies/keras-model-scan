@@ -17,8 +17,8 @@ Sources read 2026-10-24.*
 > `NON_MODELING_APIS` (master). The structural finding — a top-package allowlist cannot
 > catch a dangerous callable *inside* the trusted namespace — is unchanged, but the
 > *current, live* example is now CVE-2025-12058 (`StringLookup`/`IntegerLookup` vocabulary
-> paths). The sentences below that say the `get_file` primitive "remains" are accurate only
-> for the Keras 3.9–3.10 window; the follow-up note gives the version-aware picture.
+> paths), its parallel in the keras_hub tokenizer file-read family, and a third surface in
+> `keras.layers.TextVectorization`. The follow-up note gives the version-aware picture.
 
 This is the **fourth axis** of the keras-model-scan coverage study, and the first on
 the native `.keras` side rather than the pickle/[picklescan](https://github.com/mmaitre314/picklescan)
@@ -95,14 +95,17 @@ re-review. The concrete, false-positive-aware detector now lives in the follow-u
 | `keras.utils.save_img` | write an arbitrary filesystem path | no — in `NON_MODELING_APIS` |
 | `keras.config.enable_unsafe_deserialization` | flip the global unsafe-deserialization flag | no — in both denylists (also `KMS003` string match) |
 | `keras.layers.StringLookup` / `IntegerLookup` | read attacker `vocabulary` path/URL (CVE-2025-12058) | **mitigated on v3.12.4 under safe mode; live on ≤ 3.11.x and on `safe_mode=False`** |
+| `keras.layers.TextVectorization` | read attacker `vocabulary` path via the inner `StringLookup` (CVE-2025-12058 class), carried under its own class name | **mitigated on current release under safe mode (delegates to the guarded path); live on ≤ 3.11.x and `safe_mode=False`** |
+| `keras_hub` `WordPieceTokenizer` / `SentencePieceTokenizer` / `BytePairTokenizer` | read attacker `vocabulary`/`proto`/`merges` path (CVE-2025-12058 class) | **guarded on current keras_hub under safe mode; live on `safe_mode=False` and older versions** |
 | `keras.layers.TFSMLayer` | load an external SavedModel | caught by `KMS004` |
 
 ## The fix (defense in depth the real loader does not do)
 
 A scanner can be **stricter than the Keras loader**: keep the allowlist, but add Keras's own
 by-name denylist (`LOADING_APIS ∪ NON_MODELING_APIS`) plus a marker for the vocabulary-path
-class, so a crafted node is flagged even when the running Keras would refuse it anyway — which
-protects users on older Keras and `safe_mode=False` loads. The standalone
+class (core layers, `TextVectorization`, and keras_hub tokenizers), so a crafted node is
+flagged even when the running Keras would refuse it anyway — which protects users on older
+Keras and `safe_mode=False` loads. The standalone
 [`keras_allowlist_gadget_blindspot.py`](keras_allowlist_gadget_blindspot.py) modelled the
 original observation; the version-aware successor is
 [`keras_deserialization_io_blindspot.py`](keras_deserialization_io_blindspot.py).

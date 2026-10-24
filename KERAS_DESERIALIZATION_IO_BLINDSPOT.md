@@ -36,6 +36,9 @@ Verification pointers (all `raw.githubusercontent.com`, read 2026-10-24):
 - The same file @ `master` defines `NON_MODELING_APIS` and raises *"it is not a modeling function."*
 - `keras/src/layers/preprocessing/index_lookup.py` @ `v3.12.4` and `master` both guard the
   string-path branch of `set_vocabulary` with `serialization_lib.in_safe_mode()`.
+- `keras/src/layers/preprocessing/text_vectorization.py` @ `master`: `__init__` constructs
+  `StringLookup(vocabulary=vocabulary, ...)` and reads no file itself; `get_config` returns a
+  top-level `"vocabulary"` key (see residual 3).
 - `keras-hub` @ `master`: `word_piece_tokenizer.py`, `sentence_piece_tokenizer.py` and
   `byte_pair_tokenizer.py` each guard their string-path branch with the same
   `serialization_lib.in_safe_mode()` check before calling `open()` (see next section).
@@ -89,32 +92,82 @@ causes `open("/etc/passwd")` at load time — the same LFI/SSRF class as residua
 `open()` rather than `tf.io.gfile`. This family is, to our knowledge, not previously mapped
 onto model-file scanner coverage; it is the new result of this note.
 
+## The live residual (3): `keras.layers.TextVectorization` — the same string-path, by delegation
+
+`keras.layers.TextVectorization` is the standard text-preprocessing layer and, for most
+`.keras` NLP pipelines, the layer that actually carries the vocabulary. Verified live on
+keras-team/keras `master`, 2026-10-24:
+
+- It is registered as `@keras_export("keras.layers.TextVectorization")`, so a crafted node's
+  `module` top package is `keras` — **allowlisted, so `KMS001` passes it as benign.**
+- Its `__init__` does **not** read a file itself; it constructs an inner `StringLookup`
+  (`self._lookup_layer = StringLookup(vocabulary=vocabulary, ...)`) and hands the
+  `vocabulary` argument straight through. The read therefore happens inside
+  `IndexLookup.set_vocabulary` — **behind the `in_safe_mode()` guard** of residual (1). So on
+  the current release under default safe mode it is closed, and under `safe_mode=False` or on
+  Keras ≤ 3.11.x it performs the same arbitrary file read (LFI/SSRF) as residual (1).
+- Its **own** `get_config` returns a **top-level `"vocabulary"` key**
+  (`"vocabulary": listify_tensors(self._lookup_layer.input_vocabulary)`). Because
+  `IndexLookup` nulls `input_vocabulary` whenever the argument is a string, a legitimately
+  saved `TextVectorization` stores `"vocabulary": null` and carries the real vocabulary as an
+  archive asset. A **raw string path in that field is produced only by a hand-crafted
+  config** — the same clean, low-false-positive attack signature as residual (1).
+
+A crafted node such as
+
+```json
+{"class_name": "TextVectorization",
+ "module": "keras.src.layers.preprocessing.text_vectorization",
+ "config": {"vocabulary": "/etc/passwd"}}
+```
+
+reaches `StringLookup(vocabulary="/etc/passwd")` at `from_config → cls(**config)` time.
+
+**This is a coverage gap in KMS006 itself.** The rule modelled in the next section keys its
+case (b) on the class names `StringLookup` / `IntegerLookup` / `IndexLookup`; a
+`TextVectorization` node carries the dangerous string under its *own* class name, so the rule
+as written **misses it**. `TextVectorization` is a third, verified member of the string-path
+class and must be added to case (b)'s class set. This note records that member; the
+demonstrator's `VOCAB_IO_LAYERS` set and the production rule should be extended to include it
+(queued behind the serialized scanner merge, like the other scanner edits).
+
 ## The scanner gap, measured
 
 keras-model-scan's `KMS001` implements only the Keras 3.9 step — the top-package allowlist.
 Verified live in `keras_model_scan.py` on `main` (2026-10-24): it contains
 `KERAS_IMPORT_ALLOWLIST = frozenset({"keras", "keras_hub", "keras_cv", "keras_nlp"})` and
-**none** of the strings `StringLookup`, `IntegerLookup`, `IndexLookup`, `WordPieceTokenizer`,
-`SentencePieceTokenizer`, `BytePairTokenizer`, `vocabulary`, `proto`, `merges`,
-`CVE-2025-12058`, or any by-name non-modeling denylist. Consequently it scans **clean**:
+**none** of the strings `StringLookup`, `IntegerLookup`, `IndexLookup`, `TextVectorization`,
+`WordPieceTokenizer`, `SentencePieceTokenizer`, `BytePairTokenizer`, `vocabulary`, `proto`,
+`merges`, `CVE-2025-12058`, or any by-name non-modeling denylist. Consequently it scans
+**clean**:
 
 - a `function` node naming `keras.utils.get_file` — top package `keras` is allowlisted;
 - a `StringLookup` node with `"vocabulary": "/etc/passwd"` — an ordinary layer node is never
-  inspected; and
+  inspected;
+- a `TextVectorization` node with a string `"vocabulary"` — top package `keras` is
+  allowlisted, and the layer node is never inspected; and
 - a `WordPieceTokenizer`/`SentencePieceTokenizer`/`BytePairTokenizer` node with a string
   `vocabulary`/`proto`/`merges` — top package `keras_hub` is allowlisted.
 
-All of these are dangerous files for the audiences in (1) and (2) above.
+All of these are dangerous files for the audiences in (1), (2) and (3) above.
 
 ## Why a string path field is a clean attack signature (low false positives)
 
 A *legitimately saved* model never carries a string path in these fields. Keras
 `IndexLookup.get_config` stores the **resolved vocabulary as a list** (or `None`, with the
-vocabulary carried separately as an archive asset). Every keras_hub tokenizer `get_config`
-likewise stores `None` for `vocabulary`/`proto` (BytePairTokenizer omits them entirely) and
-carries the real file as an archive asset. Only a **hand-crafted** `config.json` puts a raw
-path/URL into one of these fields. So flagging a *string* value targets exactly the attack
-shape with essentially no cost to honest models.
+vocabulary carried separately as an archive asset). `TextVectorization.get_config` likewise
+stores the resolved list or `None` under its own `"vocabulary"` key. Every keras_hub
+tokenizer `get_config` stores `None` for `vocabulary`/`proto` (BytePairTokenizer omits them
+entirely) and carries the real file as an archive asset. Only a **hand-crafted**
+`config.json` puts a raw path/URL into one of these fields. So flagging a *string* value
+targets exactly the attack shape with essentially no cost to honest models.
+
+The one file read in `IndexLookup` that is *not* behind `in_safe_mode()` is `load_assets`,
+which opens a **fixed** `vocabulary.txt` inside the already-extracted model archive and passes
+the parsed **list** (never a string path) to `set_vocabulary`. It therefore neither reaches
+the guarded string branch nor accepts an attacker-chosen path — it is the normal
+asset-loading channel, a different trust context from a user-supplied path, and does not
+weaken the string-path signature above.
 
 ## The fix: a version-aware KMS006
 
@@ -123,19 +176,20 @@ danger regardless of the target's Keras / keras_hub version or `safe_mode` setti
 proposed KMS006 (modelled and tested in
 [`keras_deserialization_io_blindspot.py`](keras_deserialization_io_blindspot.py)
 / [`test_keras_deserialization_io_blindspot.py`](test_keras_deserialization_io_blindspot.py))
-flags three shapes KMS001 misses:
+flags these shapes KMS001 misses:
 
 1. a `function`/`class` node resolving to a name in Keras's own `LOADING_APIS ∪
    NON_MODELING_APIS` denylist (the `get_file` class — authoritative, copied from upstream);
-2. a `StringLookup`/`IntegerLookup`/`IndexLookup` node whose `vocabulary` config is a string
-   (CVE-2025-12058); and
+2. a `StringLookup`/`IntegerLookup`/`IndexLookup`/`TextVectorization` node whose `vocabulary`
+   config is a string (CVE-2025-12058 — `TextVectorization` carries the field under its own
+   class name and delegates to the same guarded `StringLookup` path); and
 3. a `WordPieceTokenizer`/`SentencePieceTokenizer`/`BytePairTokenizer` node whose
    `vocabulary`/`proto`/`merges` config is a string (the keras_hub file-read family).
 
-It leaves a benign `Dense` layer, a `StringLookup` with an inline vocabulary list or null
-vocabulary, and a saved tokenizer with `None` fields, untouched. The denylists are Keras's
-own, and the tokenizer map was source-reviewed against upstream, so the rule tracks upstream
-rather than a hand-enumerated guess.
+It leaves a benign `Dense` layer, a `StringLookup`/`TextVectorization` with an inline
+vocabulary list or null vocabulary, and a saved tokenizer with `None` fields, untouched. The
+denylists are Keras's own, and the tokenizer map was source-reviewed against upstream, so the
+rule tracks upstream rather than a hand-enumerated guess.
 
 ## Why this is new
 
@@ -144,9 +198,11 @@ here is (a) the **mapping of Keras's evolving deserialization-security model ont
 model-file scanner's coverage, over version boundaries** — an allowlist-only `.keras`
 scanner lags Keras itself by three mitigations and therefore under-protects the pre-3.12
 installed base and every `safe_mode=False` load — and (b) the identification of the
-**keras_hub tokenizer file-read family as a second, parallel instance of the CVE-2025-12058
-class** that the same allowlist misses, with a concrete, upstream-sourced,
-false-positive-aware rule to close both. It is reproducible by reading a handful of
+**keras_hub tokenizer file-read family as a second, and `keras.layers.TextVectorization` as a
+third, parallel instance of the CVE-2025-12058 class** that the same allowlist misses — with
+`TextVectorization` further evading a naive class-name rule because it carries the string
+under its own class name and delegates the read — plus a concrete, upstream-sourced,
+false-positive-aware rule to close all three. It is reproducible by reading a handful of
 open-source files with no execution.
 
 ## Honest limits
@@ -159,6 +215,12 @@ open-source files with no execution.
   asserts key membership and a lower bound rather than a brittle exact count. The production
   merge should copy the frozenset, and the keras_hub tokenizer map, from the pinned upstream
   source directly.
+- `TextVectorization` was verified live on master (its `keras_export` path, the top-level
+  `vocabulary` key in its `get_config`, and its delegation to the guarded `StringLookup`
+  path). It is documented here as a third member of case (b); the shipped demonstrator
+  currently models `StringLookup`/`IntegerLookup`/`IndexLookup`, and the production rule and
+  the demonstrator's `VOCAB_IO_LAYERS` should add `TextVectorization` in the serialized
+  scanner merge.
 - The contribution is defensive scanner coverage plus the version-aware coverage mapping; it
   does not, by itself, earn a bounty.
 
