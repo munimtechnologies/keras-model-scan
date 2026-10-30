@@ -31,7 +31,7 @@ def _rules(findings):
 class OpenVinoIrScanTests(unittest.TestCase):
 
     def test_version(self):
-        self.assertEqual(ov.__version__, "0.1.0")
+        self.assertEqual(ov.__version__, "0.1.1")
 
     def test_clean_const_no_findings(self):
         xml = _const({"element_type": "f32", "shape": "2,3",
@@ -51,14 +51,20 @@ class OpenVinoIrScanTests(unittest.TestCase):
                       "offset": str(1 << 63), "size": "10"})
         self.assertIn("OVI003", _rules(ov.scan_bytes(xml, bin_size=100)))
 
-    def test_string_const_out_of_range_notes_runtime_gap(self):
+    def test_string_const_out_of_range_is_ovi003(self):
         xml = _const({"element_type": "string", "shape": "2",
                       "offset": "0", "size": "100"})
         findings = ov.scan_bytes(xml, bin_size=50)
         self.assertIn("OVI003", _rules(findings))
         evidence = [f["evidence"] for f in findings
                     if f["rule"] == "OVI003"][0]
-        self.assertIn("does not bounds-check", evidence)
+        self.assertIn("string Const range", evidence)
+        self.assertNotIn("does not bounds-check", evidence)
+
+    def test_string_const_in_range_is_clean(self):
+        xml = _const({"element_type": "string", "shape": "2",
+                      "offset": "0", "size": "40"})
+        self.assertEqual(ov.scan_bytes(xml, bin_size=50), [])
 
     def test_exact_boundary_range_is_valid(self):
         xml = _const({"element_type": "f32", "shape": "3",

@@ -10,15 +10,16 @@ An OpenVINO Intermediate Representation model is a pair: an ``.xml`` graph and
 a ``.bin`` weights file. A ``Const`` layer carries a ``<data>`` child whose
 ``offset`` and ``size`` attributes name a byte range inside the ``.bin``; the
 runtime maps that range as the constant's tensor. The runtime reads the IR
-with ``XmlDeserializer`` (``src/core/xml_util/src/xml_deserialize_util.cpp``):
-``set_constant_num_buffer`` bounds-checks the range with
-``is_valid_weights_range(weights_size, offset, size)`` and rejects a declared
-``size`` smaller than ``element_type`` times ``shape``. Two gaps in that path
-are worth a static gate:
+with ``XmlDeserializer`` (``src/core/xml_util/src/xml_deserialize_util.cpp``).
+In OpenVINO 2026.4 every range is bounds-checked overflow-safely: by
+``is_valid_weights_range(weights_size, offset, size)`` in
+``set_constant_num_buffer``, and by the weights provider's ``make_region``,
+which also covers the string-tensor (``element::string``) path. A declared
+``size`` smaller than ``element_type`` times ``shape`` is rejected for
+non-string constants. Two properties are still worth a static gate:
 
-- the string-tensor branch (``element::string``) calls ``make_region(offset,
-  size)`` **without** ``is_valid_weights_range``, so a string ``Const`` with a
-  range past the end of the ``.bin`` is read unchecked; and
+- a ``Const`` range past the end of the ``.bin`` marks a malformed or hostile
+  file; a CI gate can refuse it before any runtime version sees it; and
 - the consistency check multiplies ``shape_size(shape) * bitwidth`` in 64-bit
   arithmetic, so a shape whose element count times bitwidth overflows can let a
   far-too-small ``size`` pass (the overflow class addressed in openvino
@@ -36,8 +37,7 @@ This module parses the ``.xml`` with the Python standard library (no
                          ``implementation`` attribute that names a native
                          library (.so/.dll/.dylib/.lib) or a filesystem path.
 - OVI003 high   CWE-125  A Const's weights range (offset, size) falls outside
-                         the .bin, or a string Const whose range the runtime's
-                         string path does not bounds-check.
+                         the .bin (string Consts included).
 - OVI004 high   CWE-190  A Const whose element count times element bitwidth
                          overflows 64-bit size arithmetic, or a shape with a
                          negative dimension.
@@ -56,7 +56,7 @@ import re
 import sys
 import xml.etree.ElementTree as ET
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 MAX_FINDINGS = 1000
 MAX_EXAMPLES = 3
@@ -228,14 +228,9 @@ def _scan_const(layer, where, bin_size, out):
                  % (where, _ascii(shape_attr, 80)))
 
     if bin_size is not None and not _valid_range(bin_size, offset, size):
-        if is_string:
-            out.note("OVI003", "%s: string Const range offset %d size %d is "
-                     "outside the %d-byte .bin, and the runtime's string path "
-                     "does not bounds-check it"
-                     % (where, offset, size, bin_size))
-        else:
-            out.note("OVI003", "%s: Const range offset %d size %d is outside "
-                     "the %d-byte .bin" % (where, offset, size, bin_size))
+        kind = "string Const" if is_string else "Const"
+        out.note("OVI003", "%s: %s range offset %d size %d is outside the "
+                 "%d-byte .bin" % (where, kind, offset, size, bin_size))
 
     if dims is not None and all(d >= 0 for d in dims) and et in _BITWIDTH:
         count = 1
