@@ -15,6 +15,16 @@ Unifies the scanners in this repository behind a single command:
      ggml/llama.cpp reader has turned malformed counts, lengths and dimensions
      into heap overflows via integer overflow -- CVE-2024-21825, CVE-2025-53630,
      CVE-2026-27940, CVE-2026-33298)
+  * ``.tflite``                                          -> tflite_model_scan
+  * ``.pte`` (ExecuTorch)                                -> executorch_pte_scan
+  * ``.mlmodel`` / ``.mlpackage`` (Core ML)              -> coreml_model_scan
+  * ``.pdmodel`` (PaddlePaddle)                          -> paddle_program_scan
+  * ``.rds`` / ``.rda`` / ``.RData`` (R)                 -> r_serialized_scan
+  * ``.msgpack`` (Flax / msgpack-numpy weights)          -> msgpack_weights_scan
+  * ``.nemo`` (NVIDIA NeMo archive)                      -> nemo_container_scan
+  * ``.onnx`` (external-data references)                 -> onnx_external_data_scan
+  * ``.xml`` (OpenVINO IR; in a directory walk only when
+    a ``.bin`` of the same name sits next to it)         -> openvino_ir_scan
   * everything else (pickle & container formats)         -> pickle_model_scan
     (``.pkl`` ``.pickle`` ``.joblib`` ``.pt`` ``.pth`` ``.bin`` ``.npy``
      ``.npz`` ``.ckpt`` ``.model``)
@@ -23,16 +33,18 @@ It never loads, imports, unpickles or executes a model -- it only reads bytes
 and disassembles opcode/JSON structure. Output is human text (default), JSON
 (``--json``) or SARIF 2.1.0 (``--sarif``) for GitHub code scanning.
 
-Made with AI by MV2 of Munim, Inc. Standard library only (Python 3.8+). Apache-2.0.
+Made with AI agents working in the name of MV2 of Munim, Inc. Standard library
+only (Python 3.8+). Apache-2.0.
 """
 from __future__ import annotations
 
 import argparse
+import importlib
 import json
 import os
 import sys
 
-__version__ = "0.8.0"
+__version__ = "0.9.0"
 
 REPO_URL = "https://github.com/munimtechnologies/keras-model-scan"
 
@@ -41,30 +53,76 @@ REPO_URL = "https://github.com/munimtechnologies/keras-model-scan"
 # ---------------------------------------------------------------------------
 _KERAS_EXTS = {".keras", ".h5", ".hdf5"}
 
+# Formats with a dedicated standalone scanner, keyed by extension.
+_EXT_ROUTES = {
+    ".tflite": "tflite",
+    ".pte": "executorch",
+    ".mlmodel": "coreml",
+    ".mlpackage": "coreml",
+    ".pdmodel": "paddle",
+    ".rds": "r",
+    ".rda": "r",
+    ".rdata": "r",
+    ".msgpack": "msgpack",
+    ".nemo": "nemo",
+    ".onnx": "onnx",
+    ".xml": "openvino",
+}
+
+_SCANNERS = {
+    "keras": "keras_model_scan",
+    "sti": "safetensors_index_scan",
+    "safetensors": "safetensors_scan",
+    "gguf": "gguf_scan",
+    "pickle": "pickle_model_scan",
+    "tflite": "tflite_model_scan",
+    "executorch": "executorch_pte_scan",
+    "coreml": "coreml_model_scan",
+    "paddle": "paddle_program_scan",
+    "r": "r_serialized_scan",
+    "msgpack": "msgpack_weights_scan",
+    "nemo": "nemo_container_scan",
+    "onnx": "onnx_external_data_scan",
+    "openvino": "openvino_ir_scan",
+}
+
+# Extensions picked up when a directory is walked. ``.xml`` is left out (it
+# is added only beside a same-named ``.bin``) and ``.mlpackage`` is a
+# directory, handled in expand_paths.
 _MODEL_EXTS = _KERAS_EXTS | {
     ".pkl", ".pickle", ".joblib", ".pt", ".pth", ".bin",
     ".npy", ".npz", ".safetensors", ".gguf", ".ckpt", ".model",
-}
+} | (set(_EXT_ROUTES) - {".xml", ".mlpackage"})
+
+
+def _is_mlpackage(path):
+    return os.path.basename(path.rstrip("/\\")).lower().endswith(".mlpackage")
 
 
 def route(path):
-    """Return 'keras', 'sti', 'safetensors', 'gguf' or 'pickle' -- which scanner
-    handles ``path``. A sharded-model index (``*.index.json``) is checked for
-    weight_map path safety and must win over the generic ``.json`` -> keras
-    rule."""
-    name = os.path.basename(path).lower()
+    """Return which scanner handles ``path``: 'keras', 'sti', 'safetensors',
+    'gguf', 'pickle', or a standalone format ('tflite', 'executorch',
+    'coreml', 'paddle', 'r', 'msgpack', 'nemo', 'onnx', 'openvino').
+
+    A sharded-model index (``*.index.json``) is checked for weight_map path
+    safety and must win over the generic ``.json`` -> keras rule; so must the
+    ``Manifest.json`` of a Core ML ``.mlpackage``."""
+    trimmed = path.rstrip("/\\")
+    name = os.path.basename(trimmed).lower()
     ext = os.path.splitext(name)[1]
     if ext in _KERAS_EXTS:
         return "keras"
     if name.endswith(".index.json"):
         return "sti"
+    if name == "manifest.json" and _is_mlpackage(os.path.dirname(trimmed)):
+        return "coreml"
     if name == "config.json" or ext == ".json":
         return "keras"
     if ext == ".safetensors":
         return "safetensors"
     if ext == ".gguf":
         return "gguf"
-    return "pickle"
+    return _EXT_ROUTES.get(ext, "pickle")
 
 
 def scan_path(path):
@@ -72,17 +130,7 @@ def scan_path(path):
 
     Imports are lazy so this module loads even where the scanner modules are
     not importable (the tests rely on that)."""
-    kind = route(path)
-    if kind == "keras":
-        import keras_model_scan as scanner
-    elif kind == "sti":
-        import safetensors_index_scan as scanner
-    elif kind == "safetensors":
-        import safetensors_scan as scanner
-    elif kind == "gguf":
-        import gguf_scan as scanner
-    else:
-        import pickle_model_scan as scanner
+    scanner = importlib.import_module(_SCANNERS[route(path)])
     return scanner.scan_file(path)
 
 
@@ -90,17 +138,29 @@ def expand_paths(paths):
     """Expand files and directories into a (files, missing) pair.
 
     Directories are walked for files whose extension looks like a model file;
-    files are kept as given; anything that does not exist is reported missing."""
+    an ``.mlpackage`` directory is kept whole (its scanner reads the package);
+    an OpenVINO ``.xml`` is kept only when a same-named ``.bin`` sits next to
+    it; files are kept as given; anything that does not exist is reported
+    missing."""
     files = []
     missing = []
     for p in paths:
-        if os.path.isdir(p):
-            for root, _dirs, names in os.walk(p):
+        if os.path.isdir(p) and _is_mlpackage(p):
+            files.append(p)
+        elif os.path.isdir(p):
+            for root, dirs, names in os.walk(p):
+                for d in sorted(dirs):
+                    if _is_mlpackage(d):
+                        files.append(os.path.join(root, d))
+                dirs[:] = [d for d in dirs if not _is_mlpackage(d)]
                 for name in names:
                     low = name.lower()
-                    ext = os.path.splitext(low)[1]
+                    stem, ext = os.path.splitext(low)
                     if (ext in _MODEL_EXTS or low == "config.json"
                             or low.endswith(".index.json")):
+                        files.append(os.path.join(root, name))
+                    elif ext == ".xml" and os.path.isfile(
+                            os.path.join(root, os.path.splitext(name)[0] + ".bin")):
                         files.append(os.path.join(root, name))
         elif os.path.exists(p):
             files.append(p)
@@ -117,10 +177,21 @@ _FAIL_ON_RANK = {"info": 0, "low": 1, "medium": 2, "high": 3, "critical": 4}
 
 
 def _as_dict(finding):
-    """Accept either a scanner Finding (with ``as_dict``) or a plain dict."""
+    """Accept either a scanner Finding (with ``as_dict``) or a plain dict.
+
+    The standalone scanners report ``message`` / ``evidence`` with lowercase
+    severities; they are mapped onto ``title`` / ``location`` and an uppercase
+    severity so every report, JSON and SARIF row reads the same way."""
     if hasattr(finding, "as_dict"):
-        return finding.as_dict()
-    return dict(finding)
+        d = dict(finding.as_dict())
+    else:
+        d = dict(finding)
+    d["severity"] = str(d.get("severity", "")).upper()
+    if not d.get("title") and d.get("message"):
+        d["title"] = d["message"]
+    if not d.get("location") and d.get("evidence"):
+        d["location"] = d["evidence"]
+    return d
 
 
 def _rank(severity):

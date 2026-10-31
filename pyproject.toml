@@ -4,18 +4,21 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "model-file-scan"
-version = "0.8.0"
-description = "Static, no-execution security scanner for ML model files (.keras, .h5, pickle, .pt, .joblib, .npy, safetensors, GGUF) and sharded-model index files, with SARIF output."
+version = "0.9.0"
+description = "Static, no-execution security scanner for ML model files (.keras, .h5, pickle, .pt, .joblib, .npy, safetensors, GGUF, TFLite, ExecuTorch, Core ML, PaddlePaddle, R .rds/.RData, MessagePack weights, NeMo, ONNX external data, OpenVINO IR) and sharded-model index files, with SARIF output."
 readme = "README.md"
 requires-python = ">=3.8"
 license = { text = "Apache-2.0" }
-authors = [{ name = "MV2 of Munim, Inc.", email = "munimversion2@gmail.com" }]
+authors = [{ name = "MV2 of Munim, Inc.", email = "mv2@munimtech.com" }]
 keywords = [
     "security",
     "machine-learning",
     "pickle",
     "safetensors",
     "gguf",
+    "tflite",
+    "coreml",
+    "onnx",
     "model-scanning",
     "supply-chain",
     "sarif",
@@ -44,4 +47,20 @@ safetensors-index-scan = "safetensors_index_scan:main"
 gguf-scan = "gguf_scan:main"
 
 [tool.setuptools]
-py-modules = ["model_file_scan", "keras_model_scan", "pickle_model_scan", "safetensors_scan", "safetensors_index_scan", "gguf_scan"]
+py-modules = [
+    "model_file_scan",
+    "keras_model_scan",
+    "pickle_model_scan",
+    "safetensors_scan",
+    "safetensors_index_scan",
+    "gguf_scan",
+    "tflite_model_scan",
+    "executorch_pte_scan",
+    "coreml_model_scan",
+    "paddle_program_scan",
+    "r_serialized_scan",
+    "msgpack_weights_scan",
+    "nemo_container_scan",
+    "onnx_external_data_scan",
+    "openvino_ir_scan",
+]

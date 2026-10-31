@@ -12,6 +12,41 @@ of remote-code-execution and path-traversal CVEs.
 
 > Does this file contain any of the patterns behind the known Keras load-time CVEs?
 
+## One command for many model formats: `model-file-scan`
+
+The repository also ships `model-file-scan`, which sends each file to the right
+static scanner and reports everything in one place (text, `--json`, or `--sarif`
+for GitHub code scanning). Version 0.9.0 routes:
+
+| Files | Scanner | What it checks |
+|-------|---------|----------------|
+| `.keras` `.h5` `.hdf5` `config.json` | `keras_model_scan` | the Keras load-time CVE patterns below |
+| `*.index.json` | `safetensors_index_scan` | shard paths that leave the model directory |
+| `.safetensors` | `safetensors_scan` | header and offset integrity |
+| `.gguf` | `gguf_scan` | header and tensor-info integrity |
+| `.tflite` | `tflite_model_scan` | Flex ops that touch files or call Python, custom ops, index and buffer bounds |
+| `.pte` | `executorch_pte_scan` | every tensor, segment and index against its region |
+| `.mlmodel` `.mlpackage` | `coreml_model_scan` | custom classes, linked-model and weight paths, manifest paths |
+| `.pdmodel` | `paddle_program_scan` | ops that read or write files by a stored path, `py_func` |
+| `.rds` `.rda` `.RData` | `r_serialized_scan` | promises, active bindings, risky calls in stored code, non-base namespaces |
+| `.msgpack` | `msgpack_weights_scan` | pickled object arrays and size mismatches |
+| `.nemo` | `nemo_container_scan` | pickled callables in the archive, member paths and links that leave the folder |
+| `.onnx` | `onnx_external_data_scan` | external-data locations that leave the model directory |
+| `.xml` beside a `.bin` | `openvino_ir_scan` | DOCTYPE/entities, weight ranges against the `.bin`, external-code layers |
+| everything else (`.pkl` `.pt` `.pth` `.bin` `.joblib` `.npy` `.npz` `.ckpt` ...) | `pickle_model_scan` | dangerous imports and opcodes |
+
+```bash
+pip install git+https://github.com/munimtechnologies/keras-model-scan
+model-file-scan path/to/models --fail-on high
+model-file-scan model.tflite fit.rds Model.mlpackage --sarif > results.sarif
+```
+
+Each standalone scanner also runs on its own (`python r_serialized_scan.py fit.rds`)
+and has its own notes file in this repository. The TFLite, ExecuTorch, Core ML,
+PaddlePaddle, R, MessagePack and archive scanners have each been checked against
+files written by the real libraries, with the predictions written down before the
+check ran (`REALFILE_CHECK_*.md`).
+
 ## It never runs the model
 
 This tool is deliberately defensive and conservative:
