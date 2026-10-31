@@ -11,6 +11,11 @@ MV2 of Munim, Inc.
 Run with no --mode: it runs "pir" and "legacy" in two child processes (the
 FLAGS_enable_pir_api switch must be set before paddle is imported) and merges
 their rows into OUT/realfile_summary.json.
+
+v3 (31 October 2026): P5's save_combine op now gets the RAW output "Y" that
+Paddle 3.3.1 requires when the op is appended (v2 raised "Output Y cannot be
+found in operator save_combine" before any file existed). Nothing else changed;
+the predictions are the pre-registered ones.
 """
 
 import argparse
@@ -136,11 +141,14 @@ def _static_program(kind):
         x = paddle.static.data("x", shape=[2], dtype="float32")
         block = main.global_block()
         if kind == "save_combine":
+            raw = paddle.base.core.VarDesc.VarType.RAW
+            y = block.create_var(name="y", type=raw)
             block.append_op(type="save_combine", inputs={"X": [x]},
-                            outputs={}, attrs={"file_path": "/tmp/p5",
-                                               "overwrite": True,
-                                               "save_as_fp16": False,
-                                               "save_to_memory": False})
+                            outputs={"Y": [y]},
+                            attrs={"file_path": "/tmp/p5",
+                                   "overwrite": True,
+                                   "save_as_fp16": False,
+                                   "save_to_memory": False})
         elif kind == "load_combine":
             out = block.create_var(name="w", dtype="float32", shape=[2],
                                    persistable=True)
