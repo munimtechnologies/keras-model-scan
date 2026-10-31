@@ -72,7 +72,12 @@ Limits:
   checked against tensor shapes.
 - The search-path split is on `:` as Core ML documents; an identifier inside
   `$BUNDLE_IDENTIFIER(...)` that itself contains `:` would be split.
-- These tests use hand-encoded spec bytes. A check against files written by
-  coremltools itself has not been run yet.
+- The unit tests use hand-encoded spec bytes. Update, 31 October 2026: a
+  pre-registered check against files written by coremltools 9.0 itself has
+  now run, and all 7 predictions held (no findings on a converted ML Program
+  package or a plain neural network, and exactly the predicted rule on each
+  crafted case); see
+  [REALFILE_CHECK_COREML_2026-10.md](REALFILE_CHECK_COREML_2026-10.md). That
+  is one file per case, not a false-positive rate on published models.
 
 If you spot a mistake, the repo is the place to raise it.
