@@ -88,6 +88,8 @@ Legend: **✓** documented detection · **~** partial / related / historically a
 | R objects whose code runs on read (promises, active bindings) or stores risky calls (.rds/.RData) | – | – | – | ~ | ✓ |
 | OpenVINO IR Const weights range outside the .bin / size overflow (.xml + .bin) | – | – | – | ✗ | ✓ |
 | OpenVINO IR layers that bring external code, DOCTYPE/entity XML (.xml) | – | – | – | ✓ | ✓ |
+| XGBoost tree indices, loops, right child = left + 1, repeated keys, UBJSON lengths (.json/.ubj) | – | – | – | ~ | ✓ |
+| LightGBM tree indices, features, loops, categorical sets, tree_sizes, repeated keys (model.txt) | – | – | – | ✗ | ✓ |
 
 ## What the matrix shows
 
@@ -198,7 +200,20 @@ Legend: **✓** documented detection · **~** partial / related / historically a
    `REALFILE_CHECK_*` reports). Those checks used one file per prediction, so
    they are not a false-positive rate on published models. ModelAudit remains
    the broader tool, with scanners for formats keras-model-scan does not read
-   at all (for example TorchServe `.mar`, XGBoost, LightGBM, PMML).
+   at all (for example TorchServe `.mar` and PMML).
+
+8. **Gradient-boosted tree files: string search versus structure.** Two
+   rows added on 2026-11-01 cover XGBoost and LightGBM models, whose loaders
+   check array sizes but take node and feature indices as written (public
+   reports: dmlc/xgboost#7903, lightgbm-org/LightGBM#7357 and #7438). As we
+   read ModelAudit's source on 1 November 2026, its XGBoost scanner checks
+   that child indices are in range and bounds UBJSON lengths, but not feature
+   indices, parents, loops or the left + 1 layout the predictor relies on;
+   its LightGBM scanner searches text lines for commands, URLs and paths and
+   does not parse trees. keras-model-scan's two scanners walk the trees and
+   were checked against files written by XGBoost 3.4.1 (8 of 8 predictions)
+   and LightGBM 4.7.0 (10 of 10). They do not search for code strings, which
+   ModelAudit does, so the two are complementary.
 
 ## Honest limits
 
@@ -221,6 +236,8 @@ Legend: **✓** documented detection · **~** partial / related / historically a
   rows. The new ModelAudit cells come from reading its scanner source on
   2026-10-30/31; Core ML and R are not on its scanner page, so those two cells
   cite the source files.
+- The XGBoost and LightGBM rows (2026-11-01) cite ModelAudit's scanner source
+  read that day; neither format is described in detail on its scanner page.
 - This is a coverage map, not a ranking. The right choice depends on your formats and
   threat model; many teams run more than one scanner plus a SafeTensors-only ingestion
   policy.
@@ -261,3 +278,5 @@ Legend: **✓** documented detection · **~** partial / related / historically a
 - *Models Are Codes* (arXiv 2409.09368) — https://arxiv.org/abs/2409.09368
 - ModelAudit scanner sources (read 2026-10-30/31): `tflite_scanner.py`, `executorch_scanner.py`, `coreml_scanner.py`, `paddle_scanner.py`, `r_serialized_scanner.py`, `openvino_scanner.py` — https://github.com/promptfoo/modelaudit/tree/main/modelaudit/scanners
 - keras-model-scan real-file checks (pre-registered, graded) — https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_TFL_PTE_2026-10.md , https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_COREML_2026-10.md , https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_PADDLE_2026-10.md , https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_RDS_2026-10.md
+- ModelAudit scanner sources (read 2026-11-01): `xgboost_scanner.py`, `lightgbm_scanner.py` — https://github.com/promptfoo/modelaudit/tree/main/modelaudit/scanners
+- keras-model-scan real-file checks for tree models (pre-registered, graded) — https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_XGB_2026-10.md , https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_LGB_2026-10.md

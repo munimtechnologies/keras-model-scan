@@ -1,10 +1,10 @@
 {
   "schema": "mv2-scanner-coverage/1",
-  "generated": "2026-10-31",
+  "generated": "2026-11-01",
   "title": "Open-source model-file scanner coverage vs. attack-vector taxonomy",
   "author": "Made with AI by MV2 of Munim, Inc.",
   "license": "CC BY 4.0 (this data); code in this repository is Apache-2.0",
-  "methodology": "Documentation- and source-based coverage review, NOT an executed benchmark. Each cell reflects what a tool's own documentation, source, or linked advisory states it detects as of the generated date; the scanners were NOT run against a shared corpus here. Statuses: 'detects' = the tool documents detection of this vector; 'partial' = documents related/incomplete handling, or is historically affected; 'no' = in the tool's scope but not documented as covered; 'out-of-scope' = the tool does not target this format/layer at all; 'unknown' = not determinable from public docs. For executed head-to-head results see Promptfoo's ModelAudit-vs-ModelScan run and the cited academic evasion papers. ModelAudit cells were re-checked against its scanner reference (promptfoo.dev/docs/model-audit/scanners/) on 2026-10-16. keras-model-scan cells and the seven 2026-10-31 rows were re-checked against shipped scanners and ModelAudit's scanner source on 2026-10-30/31.",
+  "methodology": "Documentation- and source-based coverage review, NOT an executed benchmark. Each cell reflects what a tool's own documentation, source, or linked advisory states it detects as of the generated date; the scanners were NOT run against a shared corpus here. Statuses: 'detects' = the tool documents detection of this vector; 'partial' = documents related/incomplete handling, or is historically affected; 'no' = in the tool's scope but not documented as covered; 'out-of-scope' = the tool does not target this format/layer at all; 'unknown' = not determinable from public docs. For executed head-to-head results see Promptfoo's ModelAudit-vs-ModelScan run and the cited academic evasion papers. ModelAudit cells were re-checked against its scanner reference (promptfoo.dev/docs/model-audit/scanners/) on 2026-10-16. keras-model-scan cells and the seven 2026-10-31 rows were re-checked against shipped scanners and ModelAudit's scanner source on 2026-10-30/31. The XGBoost and LightGBM rows were added on 2026-11-01 from ModelAudit's scanner source and keras-model-scan's shipped scanners.",
   "status_legend": {
     "detects": "documented detection of this vector",
     "partial": "related or incomplete handling, or historically affected",
@@ -36,7 +36,7 @@
     {
       "id": "kms",
       "name": "keras-model-scan (MV2 / Munim, Inc.)",
-      "scope": "static, dependency-free, no-execution detectors for .keras, pickle, safetensors, GGUF, ONNX, HF config, chat templates, config-driven class instantiation keys, YAML object tags, MONAI bundle expressions, Diffusers manifests, the Diffusers pipeline-repository remote-code surface, skops schema types, TensorFlow SavedModel ops, archive payloads, Flax MessagePack, TensorFlow Lite, ExecuTorch, Core ML, PaddlePaddle, R serialized objects and OpenVINO IR"
+      "scope": "static, dependency-free, no-execution detectors for .keras, pickle, safetensors, GGUF, ONNX, HF config, chat templates, config-driven class instantiation keys, YAML object tags, MONAI bundle expressions, Diffusers manifests, the Diffusers pipeline-repository remote-code surface, skops schema types, TensorFlow SavedModel ops, archive payloads, Flax MessagePack, TensorFlow Lite, ExecuTorch, Core ML, PaddlePaddle, R serialized objects, OpenVINO IR, XGBoost JSON/UBJSON and LightGBM text models"
     }
   ],
   "vectors": [
@@ -267,6 +267,18 @@
       "title": "OpenVINO IR layers that bring external code (python or custom op types, library/implementation references), and DOCTYPE/entity XML",
       "formats": ".xml",
       "class": "CWE-829 (external code), CWE-611 (XML entities)"
+    },
+    {
+      "id": "xgb-tree-structure",
+      "title": "XGBoost tree arrays XGBoost's loader takes as written: child, parent, feature and category indices outside their range, loops, a stored right child other than left child + 1 (the predictor takes left + 1), repeated keys, UBJSON lengths past the end",
+      "formats": ".json, .ubj (also .bst/.model since XGBoost 2.0)",
+      "class": "CWE-125 / CWE-835 / CWE-20; the loader checks array sizes only (dmlc/xgboost#7903)"
+    },
+    {
+      "id": "lgb-tree-structure",
+      "title": "LightGBM text-model trees the loader takes as written: child nodes and leaves outside the tree, split features past max_feature_idx, loops, categorical sets outside their arrays, tree_sizes offsets past the end, repeated keys, short arrays the loader pads with 0",
+      "formats": "LightGBM text model (model.txt, .lgb)",
+      "class": "CWE-125 / CWE-835 / CWE-20; public reports lightgbm-org/LightGBM#7357 and #7438"
     }
   ],
   "cells": [
@@ -1840,6 +1852,86 @@
       "note": "openvino_ir_scan (OVI001/OVI002): refuses DOCTYPE/entity XML before parsing and flags python/custom op types and library/implementation attributes naming a native library or a path",
       "sources": [
         "https://github.com/munimtechnologies/keras-model-scan/blob/main/OPENVINO_IR_SCAN.md"
+      ]
+    },
+    {
+      "vector": "xgb-tree-structure",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read an XGBoost model",
+      "sources": []
+    },
+    {
+      "vector": "xgb-tree-structure",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read an XGBoost model",
+      "sources": []
+    },
+    {
+      "vector": "xgb-tree-structure",
+      "scanner": "ms",
+      "status": "out-of-scope",
+      "note": "scope is pickle/PyTorch/Keras-H5/TF-SavedModel; an XGBoost model is not a format it scans",
+      "sources": []
+    },
+    {
+      "vector": "xgb-tree-structure",
+      "scanner": "ma",
+      "status": "partial",
+      "note": "xgboost_scanner.py (read 2026-11-01) checks that child indices are in range, bounds UBJSON string and typed-array lengths before decoding, range-checks learner parameters and searches the model for code strings; it does not check split feature indices, parents, the left + 1 layout or categorical arrays, skips revisited nodes without a finding, and keeps the last of repeated JSON keys",
+      "sources": [
+        "https://github.com/promptfoo/modelaudit/blob/main/modelaudit/scanners/xgboost_scanner.py"
+      ]
+    },
+    {
+      "vector": "xgb-tree-structure",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "xgboost_model_scan (XGB001-XGB007): child, parent, feature and category indices, loops, right child = left + 1, repeated keys in JSON and UBJSON, UBJSON lengths; does not search for code strings; checked on files written by XGBoost 3.4.1 (all 387 honest split nodes had right = left + 1)",
+      "sources": [
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/XGBOOST_MODEL_SCAN.md",
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_XGB_2026-10.md"
+      ]
+    },
+    {
+      "vector": "lgb-tree-structure",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read a LightGBM text model",
+      "sources": []
+    },
+    {
+      "vector": "lgb-tree-structure",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read a LightGBM text model",
+      "sources": []
+    },
+    {
+      "vector": "lgb-tree-structure",
+      "scanner": "ms",
+      "status": "out-of-scope",
+      "note": "scope is pickle/PyTorch/Keras-H5/TF-SavedModel; a LightGBM text model is not a format it scans",
+      "sources": []
+    },
+    {
+      "vector": "lgb-tree-structure",
+      "scanner": "ma",
+      "status": "no",
+      "note": "lightgbm_scanner.py (read 2026-11-01) recognises LightGBM text by its markers and searches lines for commands, URLs, paths and encoded payloads; it does not parse tree blocks, so child, feature, categorical and tree_sizes values are not checked",
+      "sources": [
+        "https://github.com/promptfoo/modelaudit/blob/main/modelaudit/scanners/lightgbm_scanner.py"
+      ]
+    },
+    {
+      "vector": "lgb-tree-structure",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "lightgbm_model_scan (LGB001-LGB007): child nodes and leaves, split and linear-leaf features, loops, categorical sets and cat_boundaries, tree_sizes offsets, repeated keys, arrays read the way the loader pads them; does not search for command strings; checked on files written by LightGBM 4.7.0",
+      "sources": [
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/LIGHTGBM_MODEL_SCAN.md",
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_LGB_2026-10.md"
       ]
     }
   ]
