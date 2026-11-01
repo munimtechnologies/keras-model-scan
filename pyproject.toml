@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "model-file-scan"
-version = "0.9.0"
-description = "Static, no-execution security scanner for ML model files (.keras, .h5, pickle, .pt, .joblib, .npy, safetensors, GGUF, TFLite, ExecuTorch, Core ML, PaddlePaddle, R .rds/.RData, MessagePack weights, NeMo, ONNX external data, OpenVINO IR) and sharded-model index files, with SARIF output."
+version = "0.10.0"
+description = "Static, no-execution security scanner for ML model files (.keras, .h5, pickle, .pt, .joblib, .npy, safetensors, GGUF, TFLite, ExecuTorch, Core ML, PaddlePaddle, R .rds/.RData, MessagePack weights, NeMo, ONNX external data, OpenVINO IR, XGBoost JSON/UBJSON, LightGBM text models) and sharded-model index files, with SARIF output."
 readme = "README.md"
 requires-python = ">=3.8"
 license = { text = "Apache-2.0" }
@@ -19,6 +19,8 @@ keywords = [
     "tflite",
     "coreml",
     "onnx",
+    "xgboost",
+    "lightgbm",
     "model-scanning",
     "supply-chain",
     "sarif",
@@ -63,4 +65,6 @@ py-modules = [
     "nemo_container_scan",
     "onnx_external_data_scan",
     "openvino_ir_scan",
+    "xgboost_model_scan",
+    "lightgbm_model_scan",
 ]

@@ -7,7 +7,9 @@ import io
 import os
 import shutil
 import struct
+import sys
 import tempfile
+import types
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 
@@ -43,6 +45,12 @@ def _quiet(func, *args):
 # versions, native encoding "UTF-8", then NILVALUE_SXP (254).
 _RDS_NULL = (b"X\n" + struct.pack(">iiii", 3, 263425, 197888, 5) + b"UTF-8"
              + struct.pack(">i", 254))
+
+# The shapes the content routing looks at (not complete models).
+_XGB_JSON = b'{"learner":{"gradient_booster":{}},"version":[3,0,0]}'
+_XGB_UBJ = b"{L\x00\x00\x00\x00\x00\x00\x00\x07learner{}}"
+_LGB_TEXT = b"tree\nversion=v4\nnum_class=1\n"
+_KERAS_JSON = b'{"class_name":"Sequential","config":{"layers":[]}}'
 
 
 class RouteTests(unittest.TestCase):
@@ -81,6 +89,8 @@ class RouteTests(unittest.TestCase):
             "asr.nemo": "nemo",
             "model.onnx": "onnx",
             "openvino_model.xml": "openvino",
+            "booster.ubj": "xgboost",
+            "BOOSTER.UBJ": "xgboost",
         }
         for path, kind in cases.items():
             self.assertEqual(mfs.route(path), kind, path)
@@ -93,8 +103,101 @@ class RouteTests(unittest.TestCase):
 
     def test_every_route_has_a_scanner_module(self):
         kinds = set(mfs._EXT_ROUTES.values()) | {
-            "keras", "sti", "safetensors", "gguf", "pickle"}
+            "keras", "sti", "safetensors", "gguf", "pickle", "lightgbm"}
         self.assertEqual(kinds, set(mfs._SCANNERS))
+        self.assertEqual(mfs._SCANNERS["xgboost"], "xgboost_model_scan")
+        self.assertEqual(mfs._SCANNERS["lightgbm"], "lightgbm_model_scan")
+
+
+class ContentRouteTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp()
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def _kinds(self, name, data):
+        path = os.path.join(self.tmp, name)
+        _touch(path, data)
+        return mfs.route_kinds(path)
+
+    def test_xgboost_json(self):
+        self.assertEqual(self._kinds("model.json", _XGB_JSON), ["xgboost"])
+
+    def test_pretty_printed_xgboost_json(self):
+        data = b'{\n  "version": [3, 0, 0],\n  "learner": {}\n}\n'
+        self.assertEqual(self._kinds("pretty.json", data), ["xgboost"])
+
+    def test_keras_json_stays_keras(self):
+        self.assertEqual(self._kinds("arch.json", _KERAS_JSON), ["keras"])
+
+    def test_json_with_learner_and_other_keys_gets_both(self):
+        data = b'{"learner":{},"class_name":"Sequential","config":{}}'
+        self.assertEqual(self._kinds("both.json", data), ["xgboost", "keras"])
+
+    def test_learner_that_is_not_an_object_stays_keras(self):
+        self.assertEqual(self._kinds("odd.json", b'{"learner":1}'), ["keras"])
+
+    def test_invalid_or_non_object_json_stays_keras(self):
+        self.assertEqual(self._kinds("bad.json", b"{"), ["keras"])
+        self.assertEqual(self._kinds("list.json", b"[1, 2]"), ["keras"])
+        self.assertEqual(self._kinds("bom.json", b"\xef\xbb\xbf" + _XGB_JSON),
+                         ["keras"])
+
+    def test_config_json_is_never_rerouted(self):
+        self.assertEqual(self._kinds("config.json", _XGB_JSON), ["keras"])
+
+    def test_index_json_is_never_rerouted(self):
+        self.assertEqual(
+            self._kinds("model.safetensors.index.json", _XGB_JSON), ["sti"])
+
+    def test_model_and_bst_by_content(self):
+        self.assertEqual(self._kinds("a.model", _XGB_UBJ), ["xgboost"])
+        self.assertEqual(self._kinds("b.bst", b"  " + _XGB_JSON), ["xgboost"])
+        self.assertEqual(self._kinds("c.model", _LGB_TEXT), ["lightgbm"])
+        self.assertEqual(self._kinds("d.bst", b"tree\r\nversion=v4\r\n"),
+                         ["lightgbm"])
+        self.assertEqual(self._kinds("e.model", b"\x80\x04N."), ["pickle"])
+        self.assertEqual(self._kinds("f.bst", b"binf\x00\x00"), ["pickle"])
+
+    def test_txt_by_content(self):
+        self.assertEqual(self._kinds("model.txt", _LGB_TEXT), ["lightgbm"])
+        self.assertEqual(self._kinds("trees.txt", b"trees\n"), ["pickle"])
+        self.assertEqual(self._kinds("notes.txt", b"hello"), ["pickle"])
+        self.assertEqual(self._kinds("brace.txt", _XGB_JSON), ["pickle"])
+        self.assertEqual(self._kinds("m.lgb", _LGB_TEXT), ["lightgbm"])
+        self.assertEqual(self._kinds("M.LightGBM", _LGB_TEXT), ["lightgbm"])
+        self.assertEqual(self._kinds("other.lgb", b"\x80\x04N."), ["pickle"])
+
+    def test_other_extensions_ignore_content(self):
+        self.assertEqual(self._kinds("w.pkl", _XGB_JSON), ["pickle"])
+        self.assertEqual(self._kinds("w.bin", _LGB_TEXT), ["pickle"])
+        self.assertEqual(self._kinds("w.ubj", b"anything"), ["xgboost"])
+
+    def test_directory_is_not_read(self):
+        pkg = os.path.join(self.tmp, "M.mlpackage")
+        os.makedirs(pkg)
+        self.assertEqual(mfs.route_kinds(pkg), ["coreml"])
+
+    def test_scan_path_runs_every_routed_scanner(self):
+        path = os.path.join(self.tmp, "both.json")
+        _touch(path, b'{"learner":{},"class_name":"X"}')
+        made = []
+        for mod, rule in (("_mfs_fake_a", "A1"), ("_mfs_fake_b", "B1")):
+            m = types.ModuleType(mod)
+            m.scan_file = (lambda r: lambda p: [standalone(r, "high")])(rule)
+            sys.modules[mod] = m
+            made.append(mod)
+        saved = dict(mfs._SCANNERS)
+        try:
+            mfs._SCANNERS["xgboost"] = "_mfs_fake_a"
+            mfs._SCANNERS["keras"] = "_mfs_fake_b"
+            self.assertEqual(_rules(mfs.scan_path(path)), {"A1", "B1"})
+        finally:
+            mfs._SCANNERS.clear()
+            mfs._SCANNERS.update(saved)
+            for mod in made:
+                sys.modules.pop(mod, None)
 
 
 class ExpandTests(unittest.TestCase):
@@ -119,11 +222,36 @@ class ExpandTests(unittest.TestCase):
             "a.tflite", "b.rds", "c.xml", "c.bin",
             os.path.join("deep", "p.pte"), "M.mlpackage"})
 
+    def test_walk_picks_tree_models_by_content(self):
+        files_data = {
+            "xgb.json": _XGB_JSON,
+            "package.json": b'{"name": "x"}',
+            "arch.json": _KERAS_JSON,
+            "booster.ubj": _XGB_UBJ,
+            "lgb.txt": _LGB_TEXT,
+            "readme.txt": b"tree house\n",
+            "requirements.txt": b"lightgbm\n",
+            "legacy.bst": b"binf",
+            "m.lgb": _LGB_TEXT,
+            "x.lightgbm": b"hello",
+        }
+        for name, data in files_data.items():
+            _touch(os.path.join(self.tmp, name), data)
+        files, missing = mfs.expand_paths([self.tmp])
+        self.assertEqual(missing, [])
+        self.assertEqual(self._rel(files), {"xgb.json", "booster.ubj",
+                                            "lgb.txt", "m.lgb"})
+
     def test_explicit_mlpackage_is_kept_whole(self):
         pkg = os.path.join(self.tmp, "M.mlpackage")
         _touch(os.path.join(pkg, "Manifest.json"))
         files, missing = mfs.expand_paths([pkg])
         self.assertEqual((files, missing), ([pkg], []))
+
+    def test_explicit_txt_is_kept_as_given(self):
+        p = os.path.join(self.tmp, "notes.txt")
+        _touch(p, b"hello")
+        self.assertEqual(mfs.expand_paths([p]), ([p], []))
 
     def test_missing(self):
         gone = os.path.join(self.tmp, "nope.rds")
@@ -280,6 +408,25 @@ class IntegrationWiringTests(unittest.TestCase):
         _touch(p, b"\xff\xfe\xfd\xfc not a program")
         rules = _rules(self._scan(p))
         self.assertTrue(all(r.startswith("PDL") for r in rules), rules)
+
+    def test_truncated_ubj_reaches_the_xgboost_scanner(self):
+        p = os.path.join(self.tmp, "cut.ubj")
+        _touch(p, b"{L")
+        rules = _rules(self._scan(p))
+        self.assertTrue(rules, rules)
+        self.assertTrue(all(r.startswith("XGB") for r in rules), rules)
+
+    def test_xgboost_json_reaches_the_xgboost_scanner(self):
+        p = os.path.join(self.tmp, "model.json")
+        _touch(p, b'{"learner":{"gradient_booster":7},"version":[3,0,0]}')
+        rules = _rules(self._scan(p))
+        self.assertTrue(all(r.startswith("XGB") for r in rules), rules)
+
+    def test_lightgbm_text_reaches_the_lightgbm_scanner(self):
+        p = os.path.join(self.tmp, "model.txt")
+        _touch(p, _LGB_TEXT)
+        rules = _rules(self._scan(p))
+        self.assertTrue(all(r.startswith("LGB") for r in rules), rules)
 
 
 if __name__ == "__main__":

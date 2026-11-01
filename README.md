@@ -16,7 +16,7 @@ of remote-code-execution and path-traversal CVEs.
 
 The repository also ships `model-file-scan`, which sends each file to the right
 static scanner and reports everything in one place (text, `--json`, or `--sarif`
-for GitHub code scanning). Version 0.9.0 routes:
+for GitHub code scanning). Version 0.10.0 routes:
 
 | Files | Scanner | What it checks |
 |-------|---------|----------------|
@@ -33,19 +33,27 @@ for GitHub code scanning). Version 0.9.0 routes:
 | `.nemo` | `nemo_container_scan` | pickled callables in the archive, member paths and links that leave the folder |
 | `.onnx` | `onnx_external_data_scan` | external-data locations that leave the model directory |
 | `.xml` beside a `.bin` | `openvino_ir_scan` | DOCTYPE/entities, weight ranges against the `.bin`, external-code layers |
+| `.ubj`, and by content: a `.json` with an XGBoost `learner` object, a `.model`/`.bst` that starts with `{` | `xgboost_model_scan` | child, parent, feature and category indices, loops, the right child the predictor really takes, repeated keys, UBJSON lengths |
+| by content: a `.txt`/`.lgb`/`.lightgbm`/`.model`/`.bst` whose first line is `tree` | `lightgbm_model_scan` | child nodes and leaves, feature indices, loops, categorical sets, `tree_sizes` offsets, repeated keys, short arrays the loader pads |
 | everything else (`.pkl` `.pt` `.pth` `.bin` `.joblib` `.npy` `.npz` `.ckpt` ...) | `pickle_model_scan` | dangerous imports and opcodes |
+
+A `.json` that holds an XGBoost `learner` object next to other top-level keys is
+checked by both the XGBoost and the Keras scanner. A `.model` or `.bst` file that
+is a pickle still goes to the pickle scanner. In a directory walk, `.txt`, `.lgb`,
+`.lightgbm` and other `.json` files are picked up only when their content is a
+LightGBM or XGBoost model.
 
 ```bash
 pip install git+https://github.com/munimtechnologies/keras-model-scan
 model-file-scan path/to/models --fail-on high
-model-file-scan model.tflite fit.rds Model.mlpackage --sarif > results.sarif
+model-file-scan model.tflite fit.rds Model.mlpackage booster.ubj model.txt --sarif > results.sarif
 ```
 
 Each standalone scanner also runs on its own (`python r_serialized_scan.py fit.rds`)
 and has its own notes file in this repository. The TFLite, ExecuTorch, Core ML,
-PaddlePaddle, R, MessagePack and archive scanners have each been checked against
-files written by the real libraries, with the predictions written down before the
-check ran (`REALFILE_CHECK_*.md`).
+PaddlePaddle, R, MessagePack, archive, XGBoost and LightGBM scanners have each been
+checked against files written by the real libraries, with the predictions written
+down before the check ran (`REALFILE_CHECK_*.md`).
 
 ## It never runs the model
 

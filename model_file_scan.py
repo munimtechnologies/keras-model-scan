@@ -25,9 +25,20 @@ Unifies the scanners in this repository behind a single command:
   * ``.onnx`` (external-data references)                 -> onnx_external_data_scan
   * ``.xml`` (OpenVINO IR; in a directory walk only when
     a ``.bin`` of the same name sits next to it)         -> openvino_ir_scan
+  * ``.ubj`` (XGBoost UBJSON)                            -> xgboost_model_scan
+  * XGBoost models found by content: a ``.json`` whose top-level object
+    has a ``learner`` object, and a ``.model`` / ``.bst`` that starts with
+    ``{`` (UBJSON or JSON; a pickle never starts with ``{``) -> xgboost_model_scan
+  * LightGBM text models found by content: a ``.txt`` / ``.lgb`` /
+    ``.lightgbm`` / ``.model`` / ``.bst`` whose first line is ``tree``
+                                                         -> lightgbm_model_scan
   * everything else (pickle & container formats)         -> pickle_model_scan
     (``.pkl`` ``.pickle`` ``.joblib`` ``.pt`` ``.pth`` ``.bin`` ``.npy``
      ``.npz`` ``.ckpt`` ``.model``)
+
+A ``.json`` that has an XGBoost ``learner`` object next to other top-level
+keys is checked by both the XGBoost and the Keras scanner, so a file cannot
+pick which checks it gets by adding a key.
 
 It never loads, imports, unpickles or executes a model -- it only reads bytes
 and disassembles opcode/JSON structure. Output is human text (default), JSON
@@ -44,12 +55,12 @@ import json
 import os
 import sys
 
-__version__ = "0.9.0"
+__version__ = "0.10.0"
 
 REPO_URL = "https://github.com/munimtechnologies/keras-model-scan"
 
 # ---------------------------------------------------------------------------
-# Routing -- which scanner owns a given path. Pure, no I/O.
+# Routing -- which scanner owns a given path.
 # ---------------------------------------------------------------------------
 _KERAS_EXTS = {".keras", ".h5", ".hdf5"}
 
@@ -67,6 +78,7 @@ _EXT_ROUTES = {
     ".nemo": "nemo",
     ".onnx": "onnx",
     ".xml": "openvino",
+    ".ubj": "xgboost",
 }
 
 _SCANNERS = {
@@ -84,15 +96,27 @@ _SCANNERS = {
     "nemo": "nemo_container_scan",
     "onnx": "onnx_external_data_scan",
     "openvino": "openvino_ir_scan",
+    "xgboost": "xgboost_model_scan",
+    "lightgbm": "lightgbm_model_scan",
 }
+
+# Extensions XGBoost and LightGBM users commonly give model files that are
+# otherwise treated as pickles; their first bytes decide (see route_kinds).
+_TREE_MODEL_EXTS = {".model", ".bst"}
+# Text extensions that hold a LightGBM model only when the first line is
+# ``tree``; anything else keeps its old route.
+_LGB_TEXT_EXTS = {".txt", ".lgb", ".lightgbm"}
 
 # Extensions picked up when a directory is walked. ``.xml`` is left out (it
 # is added only beside a same-named ``.bin``) and ``.mlpackage`` is a
-# directory, handled in expand_paths.
+# directory, handled in expand_paths. ``.txt`` and other ``.json`` files are
+# added only when their content is a LightGBM or XGBoost model.
 _MODEL_EXTS = _KERAS_EXTS | {
     ".pkl", ".pickle", ".joblib", ".pt", ".pth", ".bin",
     ".npy", ".npz", ".safetensors", ".gguf", ".ckpt", ".model",
 } | (set(_EXT_ROUTES) - {".xml", ".mlpackage"})
+
+_HEAD_BYTES = 4096
 
 
 def _is_mlpackage(path):
@@ -100,9 +124,10 @@ def _is_mlpackage(path):
 
 
 def route(path):
-    """Return which scanner handles ``path``: 'keras', 'sti', 'safetensors',
-    'gguf', 'pickle', or a standalone format ('tflite', 'executorch',
-    'coreml', 'paddle', 'r', 'msgpack', 'nemo', 'onnx', 'openvino').
+    """Return which scanner handles ``path`` by its name alone: 'keras',
+    'sti', 'safetensors', 'gguf', 'pickle', or a standalone format ('tflite',
+    'executorch', 'coreml', 'paddle', 'r', 'msgpack', 'nemo', 'onnx',
+    'openvino', 'xgboost'). Pure, no I/O; route_kinds() also reads content.
 
     A sharded-model index (``*.index.json``) is checked for weight_map path
     safety and must win over the generic ``.json`` -> keras rule; so must the
@@ -125,13 +150,97 @@ def route(path):
     return _EXT_ROUTES.get(ext, "pickle")
 
 
+def _head(path, size=_HEAD_BYTES):
+    try:
+        with open(path, "rb") as fh:
+            return fh.read(size)
+    except OSError:
+        return b""
+
+
+def _first_line_is_tree(head):
+    """LightGBM's text model starts with a line that is exactly ``tree``."""
+    return head.split(b"\n", 1)[0].rstrip(b"\r") == b"tree"
+
+
+def _json_top_keys(path):
+    """Top-level keys of a JSON object file, or None if it is not one.
+
+    ``learner_is_object`` tells whether a ``learner`` key holds an object,
+    which is what XGBoost's loader reads."""
+    try:
+        with open(path, "rb") as fh:
+            doc = json.loads(fh.read().decode("utf-8"))
+    except (OSError, ValueError, UnicodeDecodeError, RecursionError):
+        return None, False
+    if not isinstance(doc, dict):
+        return None, False
+    return set(doc), isinstance(doc.get("learner"), dict)
+
+
+def route_kinds(path):
+    """Return the list of scanners that check ``path``, looking at content
+    where the name alone does not decide.
+
+    - ``.json`` (not ``config.json``, ``*.index.json`` or an ``.mlpackage``
+      manifest): 'xgboost' when the top-level object has a ``learner``
+      object; also 'keras' when it has any key besides ``learner`` and
+      ``version`` (XGBoost writes only those two), or when it is not an
+      XGBoost model at all.
+    - ``.model`` / ``.bst``: 'lightgbm' when the first line is ``tree``,
+      'xgboost' when the first non-blank byte is ``{``, else 'pickle'.
+    - ``.txt`` / ``.lgb`` / ``.lightgbm``: 'lightgbm' when the first line is
+      ``tree``, else as route().
+    - everything else: [route(path)].
+    """
+    kind = route(path)
+    trimmed = path.rstrip("/\\")
+    if os.path.isdir(trimmed):
+        return [kind]
+    name = os.path.basename(trimmed).lower()
+    ext = os.path.splitext(name)[1]
+    if kind == "keras" and ext == ".json" and name != "config.json":
+        keys, learner = _json_top_keys(path)
+        if keys is None or not learner:
+            return ["keras"]
+        if keys - {"learner", "version"}:
+            return ["xgboost", "keras"]
+        return ["xgboost"]
+    if ext in _TREE_MODEL_EXTS or ext in _LGB_TEXT_EXTS:
+        head = _head(path)
+        if _first_line_is_tree(head):
+            return ["lightgbm"]
+        if ext in _TREE_MODEL_EXTS and head.lstrip()[:1] == b"{":
+            return ["xgboost"]
+    return [kind]
+
+
 def scan_path(path):
-    """Dispatch one file to the right scanner and return its list of findings.
+    """Dispatch one file to the right scanner(s) and return all findings.
 
     Imports are lazy so this module loads even where the scanner modules are
     not importable (the tests rely on that)."""
-    scanner = importlib.import_module(_SCANNERS[route(path)])
-    return scanner.scan_file(path)
+    findings = []
+    for kind in route_kinds(path):
+        scanner = importlib.import_module(_SCANNERS[kind])
+        findings.extend(scanner.scan_file(path))
+    return findings
+
+
+def _walk_keeps(root, name):
+    """Whether a directory walk scans the file ``name`` in ``root``."""
+    low = name.lower()
+    ext = os.path.splitext(low)[1]
+    if ext in _MODEL_EXTS or low == "config.json" or low.endswith(".index.json"):
+        return True
+    if ext == ".xml":
+        return os.path.isfile(
+            os.path.join(root, os.path.splitext(name)[0] + ".bin"))
+    if ext in _LGB_TEXT_EXTS:
+        return _first_line_is_tree(_head(os.path.join(root, name)))
+    if ext == ".json":
+        return _json_top_keys(os.path.join(root, name))[1]
+    return False
 
 
 def expand_paths(paths):
@@ -140,8 +249,9 @@ def expand_paths(paths):
     Directories are walked for files whose extension looks like a model file;
     an ``.mlpackage`` directory is kept whole (its scanner reads the package);
     an OpenVINO ``.xml`` is kept only when a same-named ``.bin`` sits next to
-    it; files are kept as given; anything that does not exist is reported
-    missing."""
+    it; a ``.txt`` only when it is a LightGBM text model and any other
+    ``.json`` only when it holds an XGBoost ``learner`` object; files are kept
+    as given; anything that does not exist is reported missing."""
     files = []
     missing = []
     for p in paths:
@@ -154,13 +264,7 @@ def expand_paths(paths):
                         files.append(os.path.join(root, d))
                 dirs[:] = [d for d in dirs if not _is_mlpackage(d)]
                 for name in names:
-                    low = name.lower()
-                    stem, ext = os.path.splitext(low)
-                    if (ext in _MODEL_EXTS or low == "config.json"
-                            or low.endswith(".index.json")):
-                        files.append(os.path.join(root, name))
-                    elif ext == ".xml" and os.path.isfile(
-                            os.path.join(root, os.path.splitext(name)[0] + ".bin")):
+                    if _walk_keeps(root, name):
                         files.append(os.path.join(root, name))
         elif os.path.exists(p):
             files.append(p)
