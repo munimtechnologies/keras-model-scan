@@ -1,10 +1,10 @@
 {
   "schema": "mv2-scanner-coverage/1",
-  "generated": "2026-10-22",
+  "generated": "2026-10-31",
   "title": "Open-source model-file scanner coverage vs. attack-vector taxonomy",
   "author": "Made with AI by MV2 of Munim, Inc.",
   "license": "CC BY 4.0 (this data); code in this repository is Apache-2.0",
-  "methodology": "Documentation- and source-based coverage review, NOT an executed benchmark. Each cell reflects what a tool's own documentation, source, or linked advisory states it detects as of the generated date; the scanners were NOT run against a shared corpus here. Statuses: 'detects' = the tool documents detection of this vector; 'partial' = documents related/incomplete handling, or is historically affected; 'no' = in the tool's scope but not documented as covered; 'out-of-scope' = the tool does not target this format/layer at all; 'unknown' = not determinable from public docs. For executed head-to-head results see Promptfoo's ModelAudit-vs-ModelScan run and the cited academic evasion papers. ModelAudit cells were re-checked against its scanner reference (promptfoo.dev/docs/model-audit/scanners/) on 2026-10-16.",
+  "methodology": "Documentation- and source-based coverage review, NOT an executed benchmark. Each cell reflects what a tool's own documentation, source, or linked advisory states it detects as of the generated date; the scanners were NOT run against a shared corpus here. Statuses: 'detects' = the tool documents detection of this vector; 'partial' = documents related/incomplete handling, or is historically affected; 'no' = in the tool's scope but not documented as covered; 'out-of-scope' = the tool does not target this format/layer at all; 'unknown' = not determinable from public docs. For executed head-to-head results see Promptfoo's ModelAudit-vs-ModelScan run and the cited academic evasion papers. ModelAudit cells were re-checked against its scanner reference (promptfoo.dev/docs/model-audit/scanners/) on 2026-10-16. keras-model-scan cells and the seven 2026-10-31 rows were re-checked against shipped scanners and ModelAudit's scanner source on 2026-10-30/31.",
   "status_legend": {
     "detects": "documented detection of this vector",
     "partial": "related or incomplete handling, or historically affected",
@@ -36,7 +36,7 @@
     {
       "id": "kms",
       "name": "keras-model-scan (MV2 / Munim, Inc.)",
-      "scope": "static, dependency-free, no-execution detectors for .keras, pickle, safetensors, GGUF, ONNX, HF config, chat templates, config-driven class instantiation keys, YAML object tags, MONAI bundle expressions, Diffusers manifests, the Diffusers pipeline-repository remote-code surface and skops schema types"
+      "scope": "static, dependency-free, no-execution detectors for .keras, pickle, safetensors, GGUF, ONNX, HF config, chat templates, config-driven class instantiation keys, YAML object tags, MONAI bundle expressions, Diffusers manifests, the Diffusers pipeline-repository remote-code surface, skops schema types, TensorFlow SavedModel ops, archive payloads, Flax MessagePack, TensorFlow Lite, ExecuTorch, Core ML, PaddlePaddle, R serialized objects and OpenVINO IR"
     }
   ],
   "vectors": [
@@ -225,6 +225,48 @@
       "title": "Flax/JAX MessagePack weights - suspicious MessagePack structures / embedded code objects",
       "formats": ".msgpack, .flax, .orbax, .jax",
       "class": "weights-only serialization; object reconstruction via a custom MessagePack ext_hook is a deserialization sink (CWE-502) typically reached through a runtime checkpointer rather than the model file at rest"
+    },
+    {
+      "id": "tflite-flex-custom",
+      "title": "TensorFlow Lite Flex (select TF ops) and custom ops: full TensorFlow ops or app-registered native code run by the interpreter",
+      "formats": ".tflite",
+      "class": "CWE-829; the Flex delegate builds the TensorFlow op named in each Flex op's custom_options NodeDef"
+    },
+    {
+      "id": "pte-bounds",
+      "title": "ExecuTorch program bounds: tensor, segment and constant ranges outside their region, size overflow, out-of-range indices",
+      "formats": ".pte",
+      "class": "CWE-125 / CWE-190 / CWE-129 (malformed-program class); opaque delegate blobs CWE-829"
+    },
+    {
+      "id": "coreml-custom-paths",
+      "title": "Core ML app code and outside paths: custom layers or custom models (also inside branch/loop layers), linked-model search paths, ML Program weight paths, .mlpackage manifest paths and symlinks",
+      "formats": ".mlmodel, .mlpackage",
+      "class": "CWE-829 (Core ML instantiates the named app class); CWE-22 / CWE-73 (paths outside the model)"
+    },
+    {
+      "id": "paddle-io-pyfunc",
+      "title": "PaddlePaddle program ops that write or read host files (save/load ops with a stored file_path) or call a registered Python function (py_func)",
+      "formats": ".pdmodel (ProgramDesc), PIR .json",
+      "class": "CWE-73 (file paths), CWE-829 (py_func)"
+    },
+    {
+      "id": "rds-code-on-read",
+      "title": "R serialized objects whose code runs on read (unevaluated promises with call or bytecode code, active bindings) or that store calls to command, eval or load functions",
+      "formats": ".rds, .rda, .RData",
+      "class": "CWE-502 / CWE-94; CVE-2024-27322 class (promise deserialization, fixed in R 4.4.0)"
+    },
+    {
+      "id": "openvino-const-range",
+      "title": "OpenVINO IR Const weights range outside the .bin, or element-count times bitwidth overflowing 64-bit size arithmetic",
+      "formats": ".xml + .bin",
+      "class": "CWE-125 / CWE-190 (malformed IR; current runtimes bounds-check ranges at load)"
+    },
+    {
+      "id": "openvino-ext-layer",
+      "title": "OpenVINO IR layers that bring external code (python or custom op types, library/implementation references), and DOCTYPE/entity XML",
+      "formats": ".xml",
+      "class": "CWE-829 (external code), CWE-611 (XML entities)"
     }
   ],
   "cells": [
@@ -522,10 +564,10 @@
     {
       "vector": "tf-ops",
       "scanner": "kms",
-      "status": "no",
-      "note": "TensorFlow SavedModel not in scope",
+      "status": "partial",
+      "note": "tf_savedmodel_ops_scan (TFSM001-TFSM005): decodes SavedModel/GraphDef without TensorFlow and flags file-writing and file-reading ops, outside paths and Python callback ops (PyFunc, EagerPyFunc); custom shared-library ops are out of its scope",
       "sources": [
-        "https://github.com/munimtechnologies/keras-model-scan"
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/TF_SAVEDMODEL_OPS_SCAN.md"
       ]
     },
     {
@@ -894,10 +936,11 @@
     {
       "vector": "embedded-exe",
       "scanner": "kms",
-      "status": "no",
-      "note": "not an embedded-binary detector",
+      "status": "detects",
+      "note": "archive_payload_scan (ARC001-ARC003): identifies native binaries (ELF/PE/Mach-O, PE signature checked) and scripts inside PyTorch zips, .keras, .npz, .nemo and zip/tar bundles by content, up to 3 nesting levels; checked on real archives",
       "sources": [
-        "https://github.com/munimtechnologies/keras-model-scan"
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/ARCHIVE_PAYLOAD_SCAN.md",
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_2026-10.md"
       ]
     },
     {
@@ -1512,10 +1555,291 @@
     {
       "vector": "flax-msgpack",
       "scanner": "kms",
-      "status": "no",
-      "note": "no Flax/MessagePack detector in keras-model-scan; a documented coverage gap. The weights-only .msgpack container carries no file-at-rest code-execution signal a static scanner would flag - the object-reconstruction risk (custom ext_hook) is a runtime checkpointer path - so this is a roadmap note, not a shipped rule",
+      "status": "detects",
+      "note": "msgpack_weights_scan (MPK001-MPK004): flags msgpack-numpy object arrays whose pickle imports more than numpy's rebuild helpers (MPK001) or only those helpers (MPK002), Flax arrays Flax's own writer would not emit (MPK003) and extension types outside Flax's set (MPK004); checked on files written by Flax and msgpack-numpy",
       "sources": [
-        "https://github.com/munimtechnologies/keras-model-scan"
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/MSGPACK_WEIGHTS_SCAN.md",
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_2026-10.md"
+      ]
+    },
+    {
+      "vector": "tflite-flex-custom",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read TensorFlow Lite",
+      "sources": []
+    },
+    {
+      "vector": "tflite-flex-custom",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read TensorFlow Lite",
+      "sources": []
+    },
+    {
+      "vector": "tflite-flex-custom",
+      "scanner": "ms",
+      "status": "out-of-scope",
+      "note": "scope is pickle/PyTorch/Keras-H5/TF-SavedModel; TensorFlow Lite is not a format it scans",
+      "sources": []
+    },
+    {
+      "vector": "tflite-flex-custom",
+      "scanner": "ma",
+      "status": "detects",
+      "note": "documents a TensorFlow Lite scanner for custom operations and Flex delegate operations; as read on 2026-10-30, tflite_scanner.py names each custom op from custom_code and does not decode custom_options, so the NodeDef op the Flex delegate builds is not seen",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/",
+        "https://github.com/promptfoo/modelaudit/blob/main/modelaudit/scanners/tflite_scanner.py"
+      ]
+    },
+    {
+      "vector": "tflite-flex-custom",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "tflite_model_scan (TFL001-TFL005): decodes each Flex op's NodeDef and flags file-touching, debug-URL and Python-callback TensorFlow ops (TFL001), mismatched Flex labels (TFL002), other Flex/custom ops (TFL003) and out-of-range indices (TFL004); checked on files written by TensorFlow 2.21",
+      "sources": [
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/TFLITE_MODEL_SCAN.md",
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_TFL_PTE_2026-10.md"
+      ]
+    },
+    {
+      "vector": "pte-bounds",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read an ExecuTorch .pte program",
+      "sources": []
+    },
+    {
+      "vector": "pte-bounds",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read an ExecuTorch .pte program",
+      "sources": []
+    },
+    {
+      "vector": "pte-bounds",
+      "scanner": "ms",
+      "status": "out-of-scope",
+      "note": "scope is pickle/PyTorch/Keras-H5/TF-SavedModel; an ExecuTorch .pte program is not a format it scans",
+      "sources": []
+    },
+    {
+      "vector": "pte-bounds",
+      "scanner": "ma",
+      "status": "no",
+      "note": "documents an ExecuTorch scanner for embedded pickle, bundled code, custom operators and suspicious patterns; as read on 2026-10-30, executorch_scanner.py treats .pte mostly as a zip/pickle container and runs a signature check and raw byte scan on a binary program, without walking the FlatBuffer, so per-tensor ranges and indices are not checked",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/"
+      ]
+    },
+    {
+      "vector": "pte-bounds",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "executorch_pte_scan (PTE001-PTE005): walks the FlatBuffer program and flags negative or overflowing sizes (PTE001), references past their segment, buffer or planned region (PTE002), opaque backend delegates (PTE003) and out-of-range indices (PTE004); checked on files written by ExecuTorch 1.5.1",
+      "sources": [
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/EXECUTORCH_PTE_SCAN.md",
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_TFL_PTE_2026-10.md"
+      ]
+    },
+    {
+      "vector": "coreml-custom-paths",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read Core ML",
+      "sources": []
+    },
+    {
+      "vector": "coreml-custom-paths",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read Core ML",
+      "sources": []
+    },
+    {
+      "vector": "coreml-custom-paths",
+      "scanner": "ms",
+      "status": "out-of-scope",
+      "note": "scope is pickle/PyTorch/Keras-H5/TF-SavedModel; Core ML is not a format it scans",
+      "sources": []
+    },
+    {
+      "vector": "coreml-custom-paths",
+      "scanner": "ma",
+      "status": "partial",
+      "note": "coreml_scanner.py (read 2026-10-30) flags customModel, custom layers and unsafe linkedModel paths and walks nested pipelines, and is more thorough on metadata strings; it checks custom layers only at the top level of a network (not inside branch/loop bodies), does not read ML Program weight-file names, reads .mlmodel only (no .mlpackage manifest or symlinks) and marks files over 10 MB inconclusive; Core ML is not listed on its scanner page",
+      "sources": [
+        "https://github.com/promptfoo/modelaudit/blob/main/modelaudit/scanners/coreml_scanner.py"
+      ]
+    },
+    {
+      "vector": "coreml-custom-paths",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "coreml_model_scan (CML001-CML005): custom classes at any depth, linked-model paths, ML Program weight paths and .mlpackage manifest paths and symlinks; any file size; checked on files written by coremltools 9.0",
+      "sources": [
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/COREML_MODEL_SCAN.md",
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_COREML_2026-10.md"
+      ]
+    },
+    {
+      "vector": "paddle-io-pyfunc",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read a PaddlePaddle program",
+      "sources": []
+    },
+    {
+      "vector": "paddle-io-pyfunc",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read a PaddlePaddle program",
+      "sources": []
+    },
+    {
+      "vector": "paddle-io-pyfunc",
+      "scanner": "ms",
+      "status": "out-of-scope",
+      "note": "scope is pickle/PyTorch/Keras-H5/TF-SavedModel; a PaddlePaddle program is not a format it scans",
+      "sources": []
+    },
+    {
+      "vector": "paddle-io-pyfunc",
+      "scanner": "ma",
+      "status": "partial",
+      "note": "documents a PaddlePaddle scanner for suspicious operations and embedded code; as read on 2026-10-30, paddle_scanner.py searches the raw bytes of .pdmodel/.pdiparams for suspicious code strings, does not parse operators or their attributes and does not read PIR .json programs",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/",
+        "https://github.com/promptfoo/modelaudit/blob/main/modelaudit/scanners/paddle_scanner.py"
+      ]
+    },
+    {
+      "vector": "paddle-io-pyfunc",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "paddle_program_scan (PDL001-PDL004): parses ProgramDesc and PIR programs and names each save/load op with its file_path (PDL001/PDL002) and each py_func op (PDL003); checked on programs written by paddlepaddle 3.3.1",
+      "sources": [
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/PADDLE_PROGRAM_SCAN.md",
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_PADDLE_2026-10.md"
+      ]
+    },
+    {
+      "vector": "rds-code-on-read",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read R serialization",
+      "sources": []
+    },
+    {
+      "vector": "rds-code-on-read",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read R serialization",
+      "sources": []
+    },
+    {
+      "vector": "rds-code-on-read",
+      "scanner": "ms",
+      "status": "out-of-scope",
+      "note": "scope is pickle/PyTorch/Keras-H5/TF-SavedModel; R serialization is not a format it scans",
+      "sources": []
+    },
+    {
+      "vector": "rds-code-on-read",
+      "scanner": "ma",
+      "status": "partial",
+      "note": "r_serialized_scanner.py (read 2026-10-31) matches printable strings in the decompressed bytes against patterns such as system( or URLs; it does not decode the item tree, so it cannot tell a promise or function from text that mentions one; R is not listed on its scanner page",
+      "sources": [
+        "https://github.com/promptfoo/modelaudit/blob/main/modelaudit/scanners/r_serialized_scanner.py"
+      ]
+    },
+    {
+      "vector": "rds-code-on-read",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "r_serialized_scan (RDS001-RDS004): decodes R's serialization without R; flags promises whose code is a call or bytecode and active bindings (RDS001), named risky calls incl. do.call/get/:: (RDS002) and non-base namespaces or ALTREP classes (RDS003); checked on files written by R 4.6.2",
+      "sources": [
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/R_SERIALIZED_SCAN.md",
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_RDS_2026-10.md"
+      ]
+    },
+    {
+      "vector": "openvino-const-range",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read OpenVINO IR",
+      "sources": []
+    },
+    {
+      "vector": "openvino-const-range",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read OpenVINO IR",
+      "sources": []
+    },
+    {
+      "vector": "openvino-const-range",
+      "scanner": "ms",
+      "status": "out-of-scope",
+      "note": "scope is pickle/PyTorch/Keras-H5/TF-SavedModel; OpenVINO IR is not a format it scans",
+      "sources": []
+    },
+    {
+      "vector": "openvino-const-range",
+      "scanner": "ma",
+      "status": "no",
+      "note": "documents an OpenVINO scanner for malformed XML, oversized files, custom layers and plugin references; as read on 2026-10-30, openvino_scanner.py records the .bin size but does not check each Const offset/size against it or its shape against its size",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/"
+      ]
+    },
+    {
+      "vector": "openvino-const-range",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "openvino_ir_scan (OVI003/OVI004): overflow-safe range check of every Const against the .bin length, string constants included, and the shape-times-bitwidth overflow class; unit-tested on hand-built IR, not yet checked on files written by OpenVINO",
+      "sources": [
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/OPENVINO_IR_SCAN.md"
+      ]
+    },
+    {
+      "vector": "openvino-ext-layer",
+      "scanner": "ps",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read OpenVINO IR",
+      "sources": []
+    },
+    {
+      "vector": "openvino-ext-layer",
+      "scanner": "fk",
+      "status": "out-of-scope",
+      "note": "pickle only; does not read OpenVINO IR",
+      "sources": []
+    },
+    {
+      "vector": "openvino-ext-layer",
+      "scanner": "ms",
+      "status": "out-of-scope",
+      "note": "scope is pickle/PyTorch/Keras-H5/TF-SavedModel; OpenVINO IR is not a format it scans",
+      "sources": []
+    },
+    {
+      "vector": "openvino-ext-layer",
+      "scanner": "ma",
+      "status": "detects",
+      "note": "documents suspicious custom layer configurations, plugin references that might load unauthorized code and malformed XML; as read on 2026-10-30, openvino_scanner.py flags python/custom layer types and library/implementation references",
+      "sources": [
+        "https://www.promptfoo.dev/docs/model-audit/scanners/"
+      ]
+    },
+    {
+      "vector": "openvino-ext-layer",
+      "scanner": "kms",
+      "status": "detects",
+      "note": "openvino_ir_scan (OVI001/OVI002): refuses DOCTYPE/entity XML before parsing and flags python/custom op types and library/implementation attributes naming a native library or a path",
+      "sources": [
+        "https://github.com/munimtechnologies/keras-model-scan/blob/main/OPENVINO_IR_SCAN.md"
       ]
     }
   ]

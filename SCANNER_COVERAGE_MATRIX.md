@@ -56,7 +56,7 @@ Legend: **✓** documented detection · **~** partial / related / historically a
 | Keras Lambda-layer code execution — CWE-94 (.h5/.keras) | – | – | ✓ | ✓ | ✓ |
 | .keras v3 config.json safe_mode bypass — CVE-2025-1550 (.keras) | – | – | ✗ | ~ | ~ |
 | .keras archive zip-slip — CWE-22 (.keras) | – | – | ✗ | ✓ | ✓ |
-| TensorFlow SavedModel risky/custom ops (SavedModel) | – | – | ✓ | ✓ | ✗ |
+| TensorFlow SavedModel risky/custom ops (SavedModel) | – | – | ✓ | ✓ | ~ |
 | ONNX external_data path traversal — CVE-2022-25882 (.onnx) | – | – | ✗ | ✓ | ✓ |
 | ONNX external_data unexpected-key injection — CVE-2026-34445 (.onnx) | – | – | ✗ | ? | ✓ |
 | GGUF parser memory-safety, malformed counts (.gguf) | – | – | – | ~ | ~ |
@@ -65,7 +65,7 @@ Legend: **✓** documented detection · **~** partial / related / historically a
 | HF config auto_map / trust_remote_code pointer (config.json) | – | – | ✗ | ~ | ✓ |
 | Archive decompression bomb — CWE-409 (zip/tar) | ✗ | – | ~ | ✓ | ✓ |
 | SafeTensors header/metadata abuse, DoS not RCE (.safetensors) | – | – | – | ✓ | ~ |
-| Embedded executable in model archive (archives) | – | – | ✗ | ✓ | ✗ |
+| Embedded executable in model archive (archives) | – | – | ✗ | ✓ | ✓ |
 | Hydra/OmegaConf `_target_` instantiation — CVE-2025-23304, CVE-2026-22584, CVE-2026-68508 (YAML/JSON config, .nemo) | – | – | ✗ | ~ | ✓ |
 | pyannote `pipeline.name` class reference — issues #2000/#2019, unfixed (config.yaml) | – | – | ✗ | ~ | ✓ |
 | sentence-transformers module `type` outside the package — CVE-2026-68770 (modules.json) | – | – | ✗ | ~ | ✓ |
@@ -80,7 +80,14 @@ Legend: **✓** documented detection · **~** partial / related / historically a
 | PyTorch weights_only checkpoint storage bypass — CVE-2026-24747 (.pt/.pth/.bin) | ✗ | ✗ | ✗ | ? | ✓ |
 | HDF5 virtual-dataset external-file mapping — CVE-2026-12480 (.h5/.hdf5) | – | – | ✗ | ? | ✓ |
 | MLflow pyfunc MLmodel loader dispatch & `code` sys.path injection — CVE-2026-79721 (MLmodel YAML) | – | – | – | ? | ✓ |
-| Flax/JAX MessagePack weights - suspicious MessagePack structures / embedded code objects, object reconstruction is a runtime checkpointer path (.msgpack/.flax/.orbax) | – | – | – | ✓ | ✗ |
+| Flax/JAX MessagePack weights - suspicious MessagePack structures / embedded code objects, object reconstruction is a runtime checkpointer path (.msgpack/.flax/.orbax) | – | – | – | ✓ | ✓ |
+| TFLite Flex and custom ops, incl. which TensorFlow op a Flex op really builds (.tflite) | – | – | – | ✓ | ✓ |
+| ExecuTorch program bounds: ranges outside their region, size overflow, out-of-range indices (.pte) | – | – | – | ✗ | ✓ |
+| Core ML custom layers/models at any depth, linked-model, weight and manifest paths (.mlmodel/.mlpackage) | – | – | – | ~ | ✓ |
+| PaddlePaddle program ops that write/read host files or call registered Python (.pdmodel/PIR .json) | – | – | – | ~ | ✓ |
+| R objects whose code runs on read (promises, active bindings) or stores risky calls (.rds/.RData) | – | – | – | ~ | ✓ |
+| OpenVINO IR Const weights range outside the .bin / size overflow (.xml + .bin) | – | – | – | ✗ | ✓ |
+| OpenVINO IR layers that bring external code, DOCTYPE/entity XML (.xml) | – | – | – | ✓ | ✓ |
 
 ## What the matrix shows
 
@@ -110,7 +117,7 @@ Legend: **✓** documented detection · **~** partial / related / historically a
 3. **The newest file-format vectors are the least covered.** ONNX external_data
    *key* injection (CVE-2026-34445) has no documented rule in any general-purpose
    scanner reviewed here. keras-model-scan is included because it ships standalone
-   detectors for several of these; it is narrow (no TensorFlow, static-only, and
+   detectors for several of these; it is narrow (static-only, and
    shares every static scanner's evasion limitation), and it is listed on the same
    documentation-based footing as the others, not as a recommendation.
 
@@ -169,6 +176,30 @@ Legend: **✓** documented detection · **~** partial / related / historically a
    static detectors (`DRC001/002` for the repository Python, `SKP001-003`/`SKP010` for
    the skops schema), both no-execution and reading only file names or `schema.json`.
 
+7. **Mobile and alternative runtimes: ModelAudit has the breadth; depth
+   varies.** Seven rows added on 2026-10-31 cover formats outside the
+   pickle/Keras/TensorFlow triad: TensorFlow Lite, ExecuTorch, Core ML,
+   PaddlePaddle, R serialized objects and OpenVINO IR (two rows). picklescan,
+   fickling and ModelScan do not read these formats. ModelAudit has a scanner
+   for each, and several work at the byte or label level rather than walking
+   the format. As we read its source on 30-31 October 2026: the Paddle scanner
+   searches raw bytes for code strings and does not parse operators; the R
+   scanner matches printable strings and does not decode the object tree; the
+   ExecuTorch scanner does not walk the FlatBuffer program; the OpenVINO
+   scanner records the `.bin` size but does not check each `Const` range
+   against it; the Core ML scanner checks custom layers only at the top level
+   of a network and reads `.mlmodel` files only; and the TFLite scanner names
+   custom ops from `custom_code` without decoding the Flex `custom_options`,
+   so it does not see which TensorFlow op the Flex delegate would build.
+   keras-model-scan's standalone scanners walk each format's structure, and
+   all but the OpenVINO one were checked against files written by the real
+   library, with every pre-registered prediction holding (TFLite and
+   ExecuTorch 8 of 8, Core ML 7 of 7, PaddlePaddle 7 of 7, R 15 of 15; see the
+   `REALFILE_CHECK_*` reports). Those checks used one file per prediction, so
+   they are not a false-positive rate on published models. ModelAudit remains
+   the broader tool, with scanners for formats keras-model-scan does not read
+   at all (for example TorchServe `.mar`, XGBoost, LightGBM, PMML).
+
 ## Honest limits
 
 - Documentation-based, not executed: a "✓" means *documented*, not *verified on your
@@ -184,6 +215,12 @@ Legend: **✓** documented detection · **~** partial / related / historically a
   a custom-pipeline `.py`, reconstruct a skops node, or resolve an `EXT` opcode's
   target, and the MONAI `$`-expression rule flags the eval sink statically — it never
   evaluates the expression.
+- The keras-model-scan column was re-checked against its own shipped scanners on
+  2026-10-31. That moved three of its cells (TensorFlow SavedModel ops to ~,
+  embedded executables to ✓, Flax MessagePack to ✓) and added seven
+  rows. The new ModelAudit cells come from reading its scanner source on
+  2026-10-30/31; Core ML and R are not on its scanner page, so those two cells
+  cite the source files.
 - This is a coverage map, not a ranking. The right choice depends on your formats and
   threat model; many teams run more than one scanner plus a SafeTensors-only ingestion
   policy.
@@ -222,3 +259,5 @@ Legend: **✓** documented detection · **~** partial / related / historically a
 - *SafePickle* (arXiv 2602.19818) — https://arxiv.org/abs/2602.19818
 - *PickleBall: Secure Deserialization of Pickle-based ML Models* (arXiv 2508.15987) — https://arxiv.org/abs/2508.15987
 - *Models Are Codes* (arXiv 2409.09368) — https://arxiv.org/abs/2409.09368
+- ModelAudit scanner sources (read 2026-10-30/31): `tflite_scanner.py`, `executorch_scanner.py`, `coreml_scanner.py`, `paddle_scanner.py`, `r_serialized_scanner.py`, `openvino_scanner.py` — https://github.com/promptfoo/modelaudit/tree/main/modelaudit/scanners
+- keras-model-scan real-file checks (pre-registered, graded) — https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_TFL_PTE_2026-10.md , https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_COREML_2026-10.md , https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_PADDLE_2026-10.md , https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_RDS_2026-10.md
