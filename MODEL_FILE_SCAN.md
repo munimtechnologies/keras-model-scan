@@ -1,5 +1,37 @@
 # model-file-scan
 
+<!-- routes-0.10.0 -->
+## Formats routed in 0.10.0 (release v0.49.0)
+
+This page grew one scanner at a time; this table is the current routing.
+Everything is static: nothing is loaded, imported, unpickled or executed.
+
+| file | scanner | real-file check |
+|---|---|---|
+| `.keras` `.h5` `.hdf5` `config.json`, other Keras `.json` | `keras_model_scan` | |
+| `*.index.json` (sharded-model index) | `safetensors_index_scan` | |
+| `.safetensors` | `safetensors_scan` | |
+| `.gguf` | `gguf_scan` | |
+| `.tflite` | `tflite_model_scan` | [TFLite + ExecuTorch, 8 of 8](REALFILE_CHECK_TFL_PTE_2026-10.md) |
+| `.pte` (ExecuTorch) | `executorch_pte_scan` | (same check) |
+| `.mlmodel` / `.mlpackage` (Core ML) | `coreml_model_scan` | [7 of 7](REALFILE_CHECK_COREML_2026-10.md) |
+| `.pdmodel` (PaddlePaddle) | `paddle_program_scan` | [every prediction that ran held](REALFILE_CHECK_PADDLE_2026-10.md) |
+| `.rds` / `.rda` / `.RData` (R) | `r_serialized_scan` | [15 of 15](REALFILE_CHECK_RDS_2026-10.md) |
+| `.msgpack` (Flax / msgpack-numpy) | `msgpack_weights_scan` | [MessagePack + archives, 13 of 13](REALFILE_CHECK_2026-10.md) |
+| `.nemo` (NeMo archive) | `nemo_container_scan` | |
+| `.onnx` (external-data references) | `onnx_external_data_scan` | |
+| `.xml` + same-named `.bin` (OpenVINO IR) | `openvino_ir_scan` | not yet |
+| `.ubj`; `.json` whose top level has an XGBoost `learner` object; `.model` / `.bst` starting with `{` | `xgboost_model_scan` | [8 of 8](REALFILE_CHECK_XGB_2026-10.md) |
+| `.txt` / `.lgb` / `.lightgbm` / `.model` / `.bst` whose first line is `tree` | `lightgbm_model_scan` | [10 of 10](REALFILE_CHECK_LGB_2026-10.md) |
+| everything else (`.pkl` `.pickle` `.joblib` `.pt` `.pth` `.bin` `.npy` `.npz` `.ckpt`, and a `.model` that is neither of the above) | `pickle_model_scan` | |
+
+The routing itself was checked on files written by XGBoost 3.4.1 and
+LightGBM 4.7.0: [7 of 7 predictions held](REALFILE_CHECK_MFS_ROUTING_2026-11.md).
+A `.json` that has a `learner` object next to other top-level keys gets both
+the XGBoost and the Keras scanner. A pickle named `.model` or `.bst` stays on
+the pickle scanner. The sections below describe the original scanners in
+detail; the newer ones each have their own `*.md` page in this repository.
+
 One command for a **static, no-execution** security scan of machine-learning
 model files. It unifies the scanners in this repository and adds **SARIF
 output** and a **GitHub Action** so you can gate model files in CI.
@@ -144,7 +176,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-      - uses: munimtechnologies/keras-model-scan@v0.8.0
+      - uses: munimtechnologies/keras-model-scan@v0.49.0
         with:
           paths: "."
           fail-on: "high"
