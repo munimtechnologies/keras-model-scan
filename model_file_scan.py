@@ -32,6 +32,9 @@ Unifies the scanners in this repository behind a single command:
   * LightGBM text models found by content: a ``.txt`` / ``.lgb`` /
     ``.lightgbm`` / ``.model`` / ``.bst`` whose first line is ``tree``
                                                          -> lightgbm_model_scan
+  * ``.skops`` (scikit-learn via skops)                  -> skops_scan AND
+    pickle_model_scan (the type audit of schema.json, plus the archive and
+    pickle checks a ``.skops`` name must not switch off)
   * everything else (pickle & container formats)         -> pickle_model_scan
     (``.pkl`` ``.pickle`` ``.joblib`` ``.pt`` ``.pth`` ``.bin`` ``.npy``
      ``.npz`` ``.ckpt`` ``.model``)
@@ -55,7 +58,7 @@ import json
 import os
 import sys
 
-__version__ = "0.10.0"
+__version__ = "0.11.0"
 
 REPO_URL = "https://github.com/munimtechnologies/keras-model-scan"
 
@@ -79,6 +82,7 @@ _EXT_ROUTES = {
     ".onnx": "onnx",
     ".xml": "openvino",
     ".ubj": "xgboost",
+    ".skops": "skops",
 }
 
 _SCANNERS = {
@@ -98,6 +102,7 @@ _SCANNERS = {
     "openvino": "openvino_ir_scan",
     "xgboost": "xgboost_model_scan",
     "lightgbm": "lightgbm_model_scan",
+    "skops": "skops_scan",
 }
 
 # Extensions XGBoost and LightGBM users commonly give model files that are
@@ -127,7 +132,8 @@ def route(path):
     """Return which scanner handles ``path`` by its name alone: 'keras',
     'sti', 'safetensors', 'gguf', 'pickle', or a standalone format ('tflite',
     'executorch', 'coreml', 'paddle', 'r', 'msgpack', 'nemo', 'onnx',
-    'openvino', 'xgboost'). Pure, no I/O; route_kinds() also reads content.
+    'openvino', 'xgboost', 'skops'). Pure, no I/O; route_kinds() also reads
+    content and adds the pickle scanner for ``.skops``.
 
     A sharded-model index (``*.index.json``) is checked for weight_map path
     safety and must win over the generic ``.json`` -> keras rule; so must the
@@ -191,12 +197,17 @@ def route_kinds(path):
       'xgboost' when the first non-blank byte is ``{``, else 'pickle'.
     - ``.txt`` / ``.lgb`` / ``.lightgbm``: 'lightgbm' when the first line is
       ``tree``, else as route().
+    - ``.skops``: 'skops' and 'pickle'. A ``.skops`` is a ZIP; the pickle
+      scanner still checks its members and catches a pickle that only
+      carries a ``.skops`` name.
     - everything else: [route(path)].
     """
     kind = route(path)
     trimmed = path.rstrip("/\\")
     if os.path.isdir(trimmed):
         return [kind]
+    if kind == "skops":
+        return ["skops", "pickle"]
     name = os.path.basename(trimmed).lower()
     ext = os.path.splitext(name)[1]
     if kind == "keras" and ext == ".json" and name != "config.json":
@@ -215,6 +226,31 @@ def route_kinds(path):
     return [kind]
 
 
+def _scan_skops(path):
+    """Run skops_scan, whose interface fills a ScanResult instead of
+    returning a list. A schema it could not audit (no schema.json, invalid
+    JSON, or an error while walking it) becomes SKP099 (medium): a CI gate
+    cannot vouch for a type list it never read."""
+    scanner = importlib.import_module(_SCANNERS["skops"])
+    result = scanner.ScanResult()
+    try:
+        scanner.scan_file(path, result)
+    except Exception as exc:  # a hostile schema must not pass silently
+        result.errors.append("%s: %s: %s" % (path, type(exc).__name__, exc))
+    findings = list(result.findings)
+    for err in result.errors:
+        findings.append({
+            "rule": "SKP099", "severity": "medium", "cve": "",
+            "cwe": "CWE-693",
+            "message": "the skops schema could not be audited",
+            "evidence": str(err)[:300]})
+    return findings
+
+
+# Scanners whose module does not expose ``scan_file(path) -> list``.
+_ADAPTERS = {"skops": _scan_skops}
+
+
 def scan_path(path):
     """Dispatch one file to the right scanner(s) and return all findings.
 
@@ -222,6 +258,10 @@ def scan_path(path):
     not importable (the tests rely on that)."""
     findings = []
     for kind in route_kinds(path):
+        adapter = _ADAPTERS.get(kind)
+        if adapter is not None:
+            findings.extend(adapter(path))
+            continue
         scanner = importlib.import_module(_SCANNERS[kind])
         findings.extend(scanner.scan_file(path))
     return findings

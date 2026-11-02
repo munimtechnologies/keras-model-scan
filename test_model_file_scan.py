@@ -91,6 +91,8 @@ class RouteTests(unittest.TestCase):
             "openvino_model.xml": "openvino",
             "booster.ubj": "xgboost",
             "BOOSTER.UBJ": "xgboost",
+            "model.skops": "skops",
+            "CLF.SKOPS": "skops",
         }
         for path, kind in cases.items():
             self.assertEqual(mfs.route(path), kind, path)
@@ -107,6 +109,10 @@ class RouteTests(unittest.TestCase):
         self.assertEqual(kinds, set(mfs._SCANNERS))
         self.assertEqual(mfs._SCANNERS["xgboost"], "xgboost_model_scan")
         self.assertEqual(mfs._SCANNERS["lightgbm"], "lightgbm_model_scan")
+        self.assertEqual(mfs._SCANNERS["skops"], "skops_scan")
+
+    def test_every_adapter_is_a_known_kind(self):
+        self.assertTrue(set(mfs._ADAPTERS) <= set(mfs._SCANNERS))
 
 
 class ContentRouteTests(unittest.TestCase):
@@ -120,6 +126,20 @@ class ContentRouteTests(unittest.TestCase):
         path = os.path.join(self.tmp, name)
         _touch(path, data)
         return mfs.route_kinds(path)
+
+    def _with_fakes(self, fakes, path):
+        """Run scan_path with scanner kinds pointed at fake modules."""
+        saved = dict(mfs._SCANNERS)
+        try:
+            for kind, module in fakes.items():
+                sys.modules[module.__name__] = module
+                mfs._SCANNERS[kind] = module.__name__
+            return mfs.scan_path(path)
+        finally:
+            mfs._SCANNERS.clear()
+            mfs._SCANNERS.update(saved)
+            for module in fakes.values():
+                sys.modules.pop(module.__name__, None)
 
     def test_xgboost_json(self):
         self.assertEqual(self._kinds("model.json", _XGB_JSON), ["xgboost"])
@@ -174,6 +194,12 @@ class ContentRouteTests(unittest.TestCase):
         self.assertEqual(self._kinds("w.bin", _LGB_TEXT), ["pickle"])
         self.assertEqual(self._kinds("w.ubj", b"anything"), ["xgboost"])
 
+    def test_skops_gets_skops_and_pickle(self):
+        self.assertEqual(self._kinds("clf.skops", b"PK\x03\x04"),
+                         ["skops", "pickle"])
+        self.assertEqual(self._kinds("RENAMED.SKOPS", b"\x80\x04N."),
+                         ["skops", "pickle"])
+
     def test_directory_is_not_read(self):
         pkg = os.path.join(self.tmp, "M.mlpackage")
         os.makedirs(pkg)
@@ -198,6 +224,62 @@ class ContentRouteTests(unittest.TestCase):
             mfs._SCANNERS.update(saved)
             for mod in made:
                 sys.modules.pop(mod, None)
+
+    def test_skops_adapter_maps_findings_and_errors(self):
+        path = os.path.join(self.tmp, "m.skops")
+        _touch(path, b"PK\x03\x04")
+
+        class Result(object):
+            def __init__(self):
+                self.findings = []
+                self.scanned_files = []
+                self.errors = []
+
+        class Found(object):
+            def as_dict(self):
+                return {"rule": "SKP002", "severity": "HIGH", "file": path,
+                        "loader": "MethodNode", "type": "x.y",
+                        "message": "m"}
+
+        def scan_file(p, result):
+            result.findings.append(Found())
+            result.errors.append(p + ": ZIP has no schema.json")
+
+        sk = types.ModuleType("_mfs_fake_skops")
+        sk.ScanResult = Result
+        sk.scan_file = scan_file
+        pk = types.ModuleType("_mfs_fake_pickle")
+        pk.scan_file = lambda p: [standalone("PKL099", "info")]
+        findings = self._with_fakes({"skops": sk, "pickle": pk}, path)
+        self.assertEqual(_rules(findings), {"SKP002", "SKP099", "PKL099"})
+        audit = [mfs._as_dict(f) for f in findings
+                 if mfs._as_dict(f)["rule"] == "SKP099"]
+        self.assertEqual(len(audit), 1)
+        self.assertEqual(audit[0]["severity"], "MEDIUM")
+        self.assertIn("schema.json", audit[0]["location"])
+
+    def test_skops_adapter_turns_a_crash_into_skp099(self):
+        path = os.path.join(self.tmp, "deep.skops")
+        _touch(path, b"PK\x03\x04")
+
+        class Result(object):
+            def __init__(self):
+                self.findings = []
+                self.scanned_files = []
+                self.errors = []
+
+        def scan_file(p, result):
+            raise RecursionError("too deep")
+
+        sk = types.ModuleType("_mfs_fake_skops")
+        sk.ScanResult = Result
+        sk.scan_file = scan_file
+        pk = types.ModuleType("_mfs_fake_pickle")
+        pk.scan_file = lambda p: []
+        findings = self._with_fakes({"skops": sk, "pickle": pk}, path)
+        self.assertEqual(_rules(findings), {"SKP099"})
+        self.assertIn("RecursionError", mfs._as_dict(findings[0])["location"])
+        self.assertEqual(mfs._as_dict(findings[0])["severity"], "MEDIUM")
 
 
 class ExpandTests(unittest.TestCase):
@@ -241,6 +323,14 @@ class ExpandTests(unittest.TestCase):
         self.assertEqual(missing, [])
         self.assertEqual(self._rel(files), {"xgb.json", "booster.ubj",
                                             "lgb.txt", "m.lgb"})
+
+    def test_walk_picks_skops(self):
+        for name in ["clf.skops", "notes.md", os.path.join("sub", "R.SKOPS")]:
+            _touch(os.path.join(self.tmp, name))
+        files, missing = mfs.expand_paths([self.tmp])
+        self.assertEqual(missing, [])
+        self.assertEqual(self._rel(files),
+                         {"clf.skops", os.path.join("sub", "R.SKOPS")})
 
     def test_explicit_mlpackage_is_kept_whole(self):
         pkg = os.path.join(self.tmp, "M.mlpackage")
@@ -427,6 +517,11 @@ class IntegrationWiringTests(unittest.TestCase):
         _touch(p, _LGB_TEXT)
         rules = _rules(self._scan(p))
         self.assertTrue(all(r.startswith("LGB") for r in rules), rules)
+
+    def test_non_zip_skops_reaches_the_skops_scanner(self):
+        p = os.path.join(self.tmp, "renamed.skops")
+        _touch(p, b"not a zip archive")
+        self.assertIn("SKP010", _rules(self._scan(p)))
 
 
 if __name__ == "__main__":
