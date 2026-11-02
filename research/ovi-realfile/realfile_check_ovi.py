@@ -17,6 +17,17 @@ now built and saved in a child process (--build / --sweep), so a crash in
 OpenVINO's writer makes the cases that need that model NOT RUN instead of
 ending the job. The predictions are unchanged.
 
+v3 (second amendment, 2 November 2026, before ovi-realfile-v3 ran): v2 left
+two cases not run. (a) The string-const model: openvino 2026.4.1 crashes when
+a Constant is made directly from a numpy str array. That is the known,
+already-fixed OpenVINO issue #23611 (fix merged 30 October 2026 for 2026.5).
+v3 builds the same string constant through openvino.Tensor and the
+op.Constant(tensor) constructor instead. (b) E4: OpenVINO's IR writer spells
+the ReLU layer type "ReLU", so the anchor type="Relu" was never found. v3
+accepts either spelling. The predictions are unchanged. v3 also reports
+(not predicts) the string Const's attributes and leading .bin bytes, and the
+first bytes of any sweep .bin that the pickle scanner reports nothing on.
+
 Writes OUT/realfile_summary.json and the small honest/edited files under
 OUT/files/. Made with AI agents working in the name of MV2 of Munim, Inc.
 Apache-2.0.
@@ -42,6 +53,7 @@ import openvino_ir_scan as oi  # noqa: E402
 MFS = os.path.join(KMS, "model_file_scan.py")
 SELF = os.path.abspath(__file__)
 HIGH_SEVERITIES = ("MEDIUM", "HIGH", "CRITICAL")
+RELU_RE = re.compile(r'\btype="(?:Relu|ReLU)"')
 
 CHILD = (
     "import sys\n"
@@ -71,6 +83,16 @@ def _ops():
     raise ImportError("; ".join(errors))
 
 
+def _constant_class():
+    errors = []
+    for name in ("openvino.op", "openvino.runtime.op"):
+        try:
+            return importlib.import_module(name).Constant
+        except (ImportError, AttributeError) as exc:
+            errors.append("%s: %s" % (name, exc))
+    raise ImportError("; ".join(errors))
+
+
 def _dense(ops, seed, n_in, n_out):
     rng = np.random.default_rng(seed)
     x = ops.parameter([1, n_in], np.float32, name="x")
@@ -95,15 +117,16 @@ def build_i64(ops):
 
 
 def build_string(ops):
+    # Not ops.constant(numpy str array): that call crashes in openvino
+    # 2026.4.1 (OpenVINO issue #23611, fixed for 2026.5). The Tensor
+    # constructor converts numpy str arrays itself.
     x, y = _dense(ops, 0, 16, 16)
     labels = np.array(["alpha", "beta", "gamma"])
-    _stage("string constant from a numpy %s array" % labels.dtype)
-    try:
-        s = ops.constant(labels, name="labels")
-    except Exception as exc:  # older bindings may need the type spelled out
-        _stage("string constant with dtype=ov.Type.string (first try: %s)"
-               % type(exc).__name__)
-        s = ops.constant(labels, dtype=ov.Type.string, name="labels")
+    _stage("openvino.Tensor from a numpy %s array" % labels.dtype)
+    tensor = ov.Tensor(labels)
+    _stage("op.Constant from the string Tensor")
+    s = _constant_class()(tensor)
+    s.set_friendly_name("labels")
     _stage("model with a string output")
     return ov.Model([y, s], [x], "tiny_string")
 
@@ -205,6 +228,36 @@ def _write(path, data):
         handle.write(data)
 
 
+def _head_hex(path, n=8):
+    try:
+        with open(path, "rb") as handle:
+            return handle.read(n).hex()
+    except OSError as exc:
+        return "unreadable: %s" % exc
+
+
+def _string_const_report(xml):
+    """Attributes of each string Const and the .bin bytes they point at."""
+    text = _read(xml).decode("utf-8", "replace")
+    try:
+        blob = _read(xml[:-4] + ".bin")
+    except OSError:
+        blob = b""
+    out = []
+    for m in CONST_RE.finditer(text):
+        attrs = m.group(1)
+        if 'element_type="string"' not in attrs:
+            continue
+        item = {"attrs": attrs.strip(), "bin_bytes": len(blob)}
+        om = re.search(r'\boffset="(\d+)"', attrs)
+        sm = re.search(r'\bsize="(\d+)"', attrs)
+        if om and sm:
+            off, size = int(om.group(1)), int(sm.group(1))
+            item["data_hex"] = blob[off:off + min(size, 96)].hex()
+        out.append(item)
+    return out
+
+
 def _runtime_read(xml):
     try:
         proc = subprocess.run([sys.executable, "-c", CHILD, xml],
@@ -283,7 +336,7 @@ def main(argv=None):
     os.makedirs(files, exist_ok=True)
     os.makedirs(args.work, exist_ok=True)
     rows = []
-    reported = {"writer_crashes": []}
+    reported = {"writer_crashes": [], "writer_errors": []}
 
     def row(case_id, case, expected, func):
         r = {"id": case_id, "case": case, "expected": expected}
@@ -331,15 +384,22 @@ def main(argv=None):
                     "model": label, "signal": -built["returncode"],
                     "stage": built["stage"],
                     "stderr_tail": built["stderr_tail"]})
+            else:
+                reported["writer_errors"].append({
+                    "model": label, "stage": built["stage"],
+                    "problem": problem})
             sub.update({"result": "NOT RUN", "reason": problem})
             h1.append(sub)
             continue
         text = _read(xml).decode("utf-8", "replace")
-        if label == "string-const" and 'element_type="string"' not in text:
-            sub.update({"result": "NOT RUN",
-                        "reason": "no element_type=\"string\" Const written"})
-            h1.append(sub)
-            continue
+        if label == "string-const":
+            reported["string_consts"] = _string_const_report(xml)
+            if 'element_type="string"' not in text:
+                sub.update({"result": "NOT RUN",
+                            "reason": "no element_type=\"string\" Const "
+                                      "written"})
+                h1.append(sub)
+                continue
         honest[label] = xml
         findings = oi.scan_file(xml)
         sub.update({"xml_bytes": len(text),
@@ -423,11 +483,12 @@ def main(argv=None):
     def e4():
         if base_text is None:
             return "plain-f32 was not written"
-        if 'type="Relu"' not in base_text:
-            return "no type=\"Relu\" layer in the XML"
-        return scan_edit("e4-custom-op",
-                         base_text.replace('type="Relu"', 'type="Custom"', 1),
-                         ["OVI002"])
+        m = RELU_RE.search(base_text)
+        if not m:
+            return "no type=\"Relu\" or type=\"ReLU\" layer in the XML"
+        reported["e4_anchor"] = m.group(0)
+        text = base_text[:m.start()] + 'type="Custom"' + base_text[m.end():]
+        return scan_edit("e4-custom-op", text, ["OVI002"])
 
     def e5():
         if base_text is None:
@@ -449,7 +510,7 @@ def main(argv=None):
         e1)
     row("E2", "largest f32 Const size set to 4 bytes short", ["OVI005"], e2)
     row("E3", "largest f32 Const shape set to 2^32 x 2^32", ["OVI004"], e3)
-    row("E4", "first Relu layer type changed to Custom", ["OVI002"], e4)
+    row("E4", "first ReLU layer type changed to Custom", ["OVI002"], e4)
     row("E5", "DOCTYPE with an internal ENTITY inserted", ["OVI001"], e5)
     row("E6", "the .xml alone, no .bin beside it", ["OVI005"], e6)
 
@@ -549,6 +610,7 @@ def main(argv=None):
                 if e.get("path", "").endswith(".bin")]
         histogram = {}
         loud = []
+        quiet = []
         for e in bins:
             found = _entry_rules(e)
             for rule, sev in found:
@@ -556,7 +618,14 @@ def main(argv=None):
                 histogram[key] = histogram.get(key, 0) + 1
             if any(sev in HIGH_SEVERITIES for _, sev in found):
                 loud.append(os.path.basename(e["path"]))
+            if not found:
+                path = e["path"]
+                if not os.path.isabs(path):
+                    path = os.path.join(sweep, os.path.basename(path))
+                quiet.append({"file": os.path.basename(e["path"]),
+                              "first_bytes_hex": _head_hex(path)})
         reported["sweep_bin_rule_histogram"] = histogram
+        reported["sweep_bins_without_findings"] = quiet[:10]
         reported["sweep_exit"] = sweep_doc["exit"]
         return len(bins) == 50 and not loud, {
             "bin_entries": len(bins), "bins_at_medium_or_above": loud,
@@ -590,7 +659,7 @@ def main(argv=None):
 
     graded = [r for r in rows if r["result"] in ("PASS", "FAIL")]
     summary = {
-        "check_version": 2,
+        "check_version": 3,
         "openvino": getattr(ov, "__version__", "") or ov.get_version(),
         "openvino_build": ov.get_version(),
         "numpy": np.__version__,
@@ -608,7 +677,7 @@ def main(argv=None):
         print(r["id"], r["result"], json.dumps(r.get("got", ""),
                                                default=str)[:400],
               r.get("reason", ""))
-    print("reported:", json.dumps(reported, default=str)[:1500])
+    print("reported:", json.dumps(reported, default=str)[:2500])
     print("held %d of %d graded" % (summary["held"], summary["graded"]))
     return 0
 

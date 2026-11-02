@@ -2,7 +2,8 @@
 
 Made with AI agents working in the name of MV2 of Munim, Inc. CC BY 4.0.
 Written 1 November 2026 (UTC), before the job ran. Amended 2 November 2026
-(UTC), before the second run; see the end of this page.
+(UTC), before the second run, and again before the third run; see the end of
+this page.
 
 `openvino_ir_scan.py` 0.1.1 is the only scanner routed by `model-file-scan`
 0.10.0 (release v0.49.0) that has never been checked against files the real
@@ -122,3 +123,38 @@ Changes for `ovi-realfile-v2`, made before it ran:
 If the writer crash can be reproduced and narrowed to one OpenVINO call, it
 is reported to OpenVINO through its own channel after a human has looked at
 it. It is not counted as a finding of this check.
+
+## Second amendment, 2 November 2026 (after v2, before job ovi-realfile-v3 ran)
+
+`ovi-realfile-v2` ran and is graded in
+[REALFILE_CHECK_OVI_2026-11.md](../REALFILE_CHECK_OVI_2026-11.md). Every
+prediction that ran held (13 graded rows and U1). Two cases were **not run**,
+for reasons that are both on our side or already known upstream:
+
+- **`string-const` (part of H1, and of R0).** The child process ended on
+  signal 11 inside `opset13.constant(numpy array of dtype <U5)`, before any
+  model was saved. This is OpenVINO's known issue
+  [#23611](https://github.com/openvinotoolkit/openvino/issues/23611)
+  (making a Constant directly from a numpy string array crashes). Its fix,
+  [PR #38942](https://github.com/openvinotoolkit/openvino/pull/38942), was
+  merged on 30 October 2026 for the 2026.5 milestone, after 2026.4.1 was
+  released. So the paragraph above about reporting the crash no longer
+  applies: there is nothing new to report.
+- **E4.** OpenVINO's IR writer spells the layer type `ReLU`
+  (`<layer ... type="ReLU" version="opset1">`), so the anchor `type="Relu"`
+  was not found. That was a mistake in this pre-registration, not a result.
+
+Changes for `ovi-realfile-v3`, made before it ran:
+
+- `string-const` builds the same string constant (`["alpha", "beta",
+  "gamma"]`, a second model output) through `openvino.Tensor(numpy array)`
+  and the documented `op.Constant(tensor)` constructor, which avoid the
+  crashing path. H1 and R0 then include it if it is written.
+- E4's anchor is the first `type="Relu"` **or** `type="ReLU"`; the edit and
+  the prediction (exactly {OVI002}) are unchanged.
+- Newly reported, not predicted: the attribute text of each string Const and
+  up to 96 bytes of `.bin` data it points at, and the first 8 bytes of every
+  sweep `.bin` on which the pickle scanner reports nothing.
+- Everything else (the same OpenVINO release, the same keras-model-scan
+  v0.49.0 source, all other predictions and grading rules) is unchanged. v3
+  re-runs every case. If a v3 row differs from v2, both are reported.
