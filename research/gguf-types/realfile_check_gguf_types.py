@@ -10,6 +10,10 @@ both versions of the one-command model-file-scan, scans one edited copy whose
 type id is set to 44 (one past GGML_TYPE_COUNT - 1), and reads every honest
 file back with gguf-py's GGUFReader. No network is used.
 
+check_version 2: the module loader registers each module in sys.modules
+before executing it (dataclasses needs this; version 1 crashed there before
+any case ran). Nothing else about the cases or grading changed.
+
 Usage: realfile_check_gguf_types.py --old KMS --new KMS_NEW --out OUT
 
 Made with AI agents working in the name of MV2 of Munim, Inc. Apache-2.0.
@@ -23,6 +27,7 @@ import shutil
 import struct
 import subprocess
 import sys
+import traceback
 
 import numpy as np
 import gguf
@@ -43,7 +48,12 @@ ROWS = 2
 def load_module(path, name):
     spec = importlib.util.spec_from_file_location(name, path)
     mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
+    sys.modules[name] = mod  # dataclasses looks the module up here
+    try:
+        spec.loader.exec_module(mod)
+    except Exception:
+        sys.modules.pop(name, None)
+        raise
     return mod
 
 
@@ -105,15 +115,11 @@ def mfs(kms, target):
                            os.path.join(kms, "model_file_scan.py"), target],
                           capture_output=True, text=True, timeout=600)
     return {"exit": proc.returncode,
-            "tail": (proc.stdout.strip().splitlines() or [""])[-3:]}
+            "tail": (proc.stdout.strip().splitlines() or [""])[-6:],
+            "stderr_tail": (proc.stderr.strip().splitlines() or [""])[-3:]}
 
 
-def main(argv=None):
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--old", required=True)
-    ap.add_argument("--new", required=True)
-    ap.add_argument("--out", required=True)
-    args = ap.parse_args(argv)
+def run(args):
     old = load_module(os.path.join(args.old, "gguf_scan.py"), "gguf_scan_old")
     new = load_module(os.path.join(args.new, "gguf_scan.py"), "gguf_scan_new")
     files = os.path.join(args.out, "files")
@@ -281,9 +287,27 @@ def main(argv=None):
         add("N4", "gguf_scan 0.2.0 on one file holding every written type",
             "no GG010, nothing at MEDIUM or above", "NOT RUN",
             reason="mixed file not written")
+    return reported, rows
 
+
+def main(argv=None):
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--old", required=True)
+    ap.add_argument("--new", required=True)
+    ap.add_argument("--out", required=True)
+    args = ap.parse_args(argv)
+    os.makedirs(args.out, exist_ok=True)
+    try:
+        reported, rows = run(args)
+        error = ""
+    except Exception:
+        # Recorded, never graded; exit 0 so the unit-test steps still run.
+        reported, rows = {}, []
+        error = traceback.format_exc()[-3000:]
+        print(error, file=sys.stderr)
     graded = [r for r in rows if r["result"] in ("PASS", "FAIL")]
-    summary = {"check_version": 1,
+    summary = {"check_version": 2,
+               "error": error,
                "held": sum(1 for r in graded if r["result"] == "PASS"),
                "graded": len(graded),
                "not_run": [r["id"] for r in rows
@@ -294,9 +318,9 @@ def main(argv=None):
         json.dump(summary, fh, indent=1, default=str)
     for r in rows:
         print(r["id"], r["result"],
-              json.dumps(r.get("got", ""), default=str)[:600],
+              json.dumps(r.get("got", ""), default=str)[:800],
               r.get("reason", ""))
-    print("reported:", json.dumps(reported, default=str)[:2000])
+    print("reported:", json.dumps(reported, default=str)[:2500])
     print("held %d of %d graded" % (summary["held"], summary["graded"]))
     return 0
 

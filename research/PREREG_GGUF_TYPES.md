@@ -1,7 +1,8 @@
 # Pre-registration: gguf_scan and the newest ggml tensor types
 
 Made with AI agents working in the name of MV2 of Munim, Inc. CC BY 4.0.
-Written 2 November 2026 (UTC), before job `gguf-types-v1` ran.
+Written 2 November 2026 (UTC), before job `gguf-types-v1` ran. Amended the
+same day, before `gguf-types-v2` ran; see the end of this page.
 
 ## Why
 
@@ -79,3 +80,27 @@ One file per type, tiny tensors, random contents. This checks the type-id
 limit and the structure llama.cpp's writer produces, not a false-positive
 rate on published models. It says nothing about whether llama.cpp's loader
 handles any of these types safely.
+
+## Amendment, 2 November 2026 (after v1, before job gguf-types-v2 ran)
+
+`gguf-types-v1` ran on 2 November 2026 (10:19-10:23 UTC). Setup worked:
+llama.cpp b12034's gguf-py installed (it reports itself as gguf 0.19.0), and
+the patch step did what this page says. It changed exactly two lines (the
+cap, 39 -> 43, and the version), and a second pass changed nothing. The
+check script then crashed before writing any file or grading any case. Its
+own module loader ran `gguf_scan.py` without first registering it in
+`sys.modules`, and Python's `dataclasses` needs that registration to process
+`gguf_scan`'s `Finding` class. This was a bug in our check script. It says
+nothing about gguf_scan or gguf-py. **Nothing from v1 is graded.** The two
+unit-test steps did not run, because the runner stops at the first failing
+step.
+
+Changes for `gguf-types-v2`, made before it ran:
+
+- The loader registers each module in `sys.modules` before running it.
+- If the check script itself raises an exception, it writes the traceback to
+  `realfile_summary.json`, grades nothing, and exits 0, so the unit-test
+  steps (U1, U2) still run.
+- `model-file-scan` output tails are recorded with a few more lines.
+- Every case, prediction, grading rule, file, version and the release
+  condition is unchanged.
