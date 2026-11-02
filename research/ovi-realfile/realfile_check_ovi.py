@@ -11,6 +11,12 @@ of 50 honest pairs (S1, S2). Asks the OpenVINO runtime itself, in a child
 process, to read the honest files and the two edited copies whose rejection
 the scanner's documentation states (R0-R2). No network is used.
 
+v2 (amendment of 2 November 2026): v1 ended on a segmentation fault after
+writing three honest models, before any result was recorded. Every model is
+now built and saved in a child process (--build / --sweep), so a crash in
+OpenVINO's writer makes the cases that need that model NOT RUN instead of
+ending the job. The predictions are unchanged.
+
 Writes OUT/realfile_summary.json and the small honest/edited files under
 OUT/files/. Made with AI agents working in the name of MV2 of Munim, Inc.
 Apache-2.0.
@@ -34,6 +40,7 @@ import openvino as ov  # noqa: E402
 import openvino_ir_scan as oi  # noqa: E402
 
 MFS = os.path.join(KMS, "model_file_scan.py")
+SELF = os.path.abspath(__file__)
 HIGH_SEVERITIES = ("MEDIUM", "HIGH", "CRITICAL")
 
 CHILD = (
@@ -47,6 +54,10 @@ CHILD = (
     "print('loaded')\n"
     "sys.exit(0)\n"
 )
+
+
+def _stage(text):
+    print("stage: " + text, flush=True)
 
 
 def _ops():
@@ -86,10 +97,14 @@ def build_i64(ops):
 def build_string(ops):
     x, y = _dense(ops, 0, 16, 16)
     labels = np.array(["alpha", "beta", "gamma"])
+    _stage("string constant from a numpy %s array" % labels.dtype)
     try:
         s = ops.constant(labels, name="labels")
-    except Exception:  # older bindings may need the type spelled out
+    except Exception as exc:  # older bindings may need the type spelled out
+        _stage("string constant with dtype=ov.Type.string (first try: %s)"
+               % type(exc).__name__)
         s = ops.constant(labels, dtype=ov.Type.string, name="labels")
+    _stage("model with a string output")
     return ov.Model([y, s], [x], "tiny_string")
 
 
@@ -98,6 +113,81 @@ def _save(model, folder, stem, fp16=False):
     xml = os.path.join(folder, stem + ".xml")
     ov.save_model(model, xml, compress_to_fp16=fp16)
     return xml
+
+
+BUILDERS = {
+    "plain-f32": (lambda ops: build_plain(ops), False),
+    "plain-fp16": (lambda ops: build_plain(ops), True),
+    "reshape-i64": (build_i64, False),
+    "string-const": (build_string, False),
+}
+
+
+def child_build(label, dest):
+    """Child-process mode: build one honest model and save it."""
+    try:
+        ops, _ = _ops()
+        make, fp16 = BUILDERS[label]
+        _stage("build")
+        model = make(ops)
+        _stage("save_model")
+        _save(model, dest, "model", fp16=fp16)
+        _stage("saved")
+    except Exception as exc:
+        print("error %s: %s" % (type(exc).__name__, str(exc)[:300]),
+              flush=True)
+        return 3
+    return 0
+
+
+def child_sweep(dest):
+    """Child-process mode: write the 50 honest sweep pairs."""
+    try:
+        ops, _ = _ops()
+    except ImportError as exc:
+        print("error ImportError: %s" % exc, flush=True)
+        return 3
+    for seed in range(1, 51):
+        try:
+            _save(build_plain(ops, seed, 4 + seed % 13, 2 + seed % 7),
+                  dest, "m%02d" % seed)
+            print("wrote %d" % seed, flush=True)
+        except Exception as exc:
+            print("error %d %s: %s" % (seed, type(exc).__name__,
+                                       str(exc)[:200]), flush=True)
+    return 0
+
+
+def _child(args, timeout=600):
+    """Run this script in child mode; never raises on a crash."""
+    try:
+        proc = subprocess.run([sys.executable, SELF] + args,
+                              capture_output=True, text=True,
+                              timeout=timeout)
+    except subprocess.TimeoutExpired:
+        return {"returncode": None, "lines": [], "stage": "timeout",
+                "stderr_tail": ""}
+    lines = proc.stdout.splitlines()
+    stages = [ln[len("stage: "):] for ln in lines if ln.startswith("stage: ")]
+    errors = [ln for ln in lines if ln.startswith("error ")]
+    return {"returncode": proc.returncode, "lines": lines,
+            "stage": stages[-1] if stages else "",
+            "errors": errors[:5],
+            "stderr_tail": proc.stderr.strip()[-300:]}
+
+
+def _child_problem(result):
+    """A one-line reason when a child build did not finish cleanly."""
+    rc = result["returncode"]
+    if rc is None:
+        return "the writer process timed out"
+    if rc < 0:
+        return ("the writer process ended on signal %d during stage '%s'"
+                % (-rc, result["stage"]))
+    if rc != 0:
+        return "OpenVINO API error: %s" % (
+            "; ".join(result.get("errors") or []) or "exit %d" % rc)
+    return None
 
 
 def _rules(findings):
@@ -179,13 +269,21 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default="/out")
     ap.add_argument("--work", default="/tmp/ovi")
+    ap.add_argument("--build", choices=sorted(BUILDERS))
+    ap.add_argument("--sweep")
+    ap.add_argument("--dest")
     args = ap.parse_args(argv)
+    if args.build:
+        return child_build(args.build, args.dest)
+    if args.sweep:
+        return child_sweep(args.sweep)
+
     files = os.path.join(args.out, "files")
     shutil.rmtree(args.work, ignore_errors=True)
     os.makedirs(files, exist_ok=True)
     os.makedirs(args.work, exist_ok=True)
     rows = []
-    reported = {}
+    reported = {"writer_crashes": []}
 
     def row(case_id, case, expected, func):
         r = {"id": case_id, "case": case, "expected": expected}
@@ -205,30 +303,35 @@ def main(argv=None):
         return r
 
     try:
-        ops, ops_name = _ops()
+        _ops_mod, ops_name = _ops()
+        have_ops = True
     except ImportError as exc:
-        ops, ops_name = None, "none (%s)" % exc
+        ops_name, have_ops = "none (%s)" % exc, False
     reported["opset_module"] = ops_name
 
     # ---- H1: honest files written by openvino.save_model ----------------
     honest = {}
-    builders = [
-        ("plain-f32", lambda: build_plain(ops), False),
-        ("plain-fp16", lambda: build_plain(ops), True),
-        ("reshape-i64", lambda: build_i64(ops), False),
-        ("string-const", lambda: build_string(ops), False),
-    ]
     h1 = []
-    for label, make, fp16 in builders:
+    for label in ("plain-f32", "plain-fp16", "reshape-i64", "string-const"):
         sub = {"model": label}
-        try:
-            if ops is None:
-                raise ImportError("no opset module")
-            xml = _save(make(), os.path.join(files, "honest", label), "model",
-                        fp16=fp16)
-        except Exception as exc:
-            sub.update({"result": "NOT RUN",
-                        "reason": "%s: %s" % (type(exc).__name__, exc)})
+        folder = os.path.join(files, "honest", label)
+        xml = os.path.join(folder, "model.xml")
+        if not have_ops:
+            sub.update({"result": "NOT RUN", "reason": "no opset module"})
+            h1.append(sub)
+            continue
+        built = _child(["--build", label, "--dest", folder])
+        problem = _child_problem(built)
+        if problem is None and not (os.path.isfile(xml) and
+                                    os.path.isfile(xml[:-4] + ".bin")):
+            problem = "save_model finished but model.xml/.bin is missing"
+        if problem:
+            if built["returncode"] is not None and built["returncode"] < 0:
+                reported["writer_crashes"].append({
+                    "model": label, "signal": -built["returncode"],
+                    "stage": built["stage"],
+                    "stderr_tail": built["stderr_tail"]})
+            sub.update({"result": "NOT RUN", "reason": problem})
             h1.append(sub)
             continue
         text = _read(xml).decode("utf-8", "replace")
@@ -397,15 +500,21 @@ def main(argv=None):
     sweep = os.path.join(args.work, "sweep")
     sweep_written = []
     sweep_errors = []
-    if ops is not None:
-        for seed in range(1, 51):
-            try:
-                _save(build_plain(ops, seed, 4 + seed % 13, 2 + seed % 7),
-                      sweep, "m%02d" % seed)
-                sweep_written.append(seed)
-            except Exception as exc:
-                sweep_errors.append("%d %s: %s" % (seed, type(exc).__name__,
-                                                   exc))
+    if have_ops:
+        swept = _child(["--sweep", sweep], timeout=1200)
+        for ln in swept["lines"]:
+            if ln.startswith("wrote "):
+                sweep_written.append(int(ln.split()[1]))
+            elif ln.startswith("error "):
+                sweep_errors.append(ln[6:])
+        crash = _child_problem(swept)
+        if crash:
+            sweep_errors.append(crash)
+            if swept["returncode"] is not None and swept["returncode"] < 0:
+                reported["writer_crashes"].append({
+                    "model": "sweep", "signal": -swept["returncode"],
+                    "after_written": len(sweep_written),
+                    "stderr_tail": swept["stderr_tail"]})
     reported["sweep_written"] = len(sweep_written)
     reported["sweep_errors"] = sweep_errors[:5]
     sweep_doc = {}
@@ -421,7 +530,7 @@ def main(argv=None):
         sweep_doc["doc"] = doc
         return None
 
-    sweep_problem = run_sweep() if ops is not None else "no opset module"
+    sweep_problem = run_sweep() if have_ops else "no opset module"
 
     def s1():
         if sweep_problem:
@@ -481,6 +590,7 @@ def main(argv=None):
 
     graded = [r for r in rows if r["result"] in ("PASS", "FAIL")]
     summary = {
+        "check_version": 2,
         "openvino": getattr(ov, "__version__", "") or ov.get_version(),
         "openvino_build": ov.get_version(),
         "numpy": np.__version__,

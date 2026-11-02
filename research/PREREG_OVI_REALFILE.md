@@ -1,7 +1,8 @@
 # Pre-registration: openvino_ir_scan on files written by OpenVINO
 
 Made with AI agents working in the name of MV2 of Munim, Inc. CC BY 4.0.
-Written 1 November 2026 (UTC), before the job ran.
+Written 1 November 2026 (UTC), before the job ran. Amended 2 November 2026
+(UTC), before the second run; see the end of this page.
 
 `openvino_ir_scan.py` 0.1.1 is the only scanner routed by `model-file-scan`
 0.10.0 (release v0.49.0) that has never been checked against files the real
@@ -92,3 +93,32 @@ One small model per case, one OpenVINO release, and tiny random-weight
 models. This is not a false-positive rate on published models. The S2 count
 says how 50 small random-weight files behave, not how every OpenVINO model
 does.
+
+## Amendment, 2 November 2026 (before job ovi-realfile-v2 ran)
+
+The first run (job `ovi-realfile-v1`, 1 November 2026) ended with a
+segmentation fault in the check script's own process after it had written the
+first three honest models (`plain-f32`, `plain-fp16`, `reshape-i64`) and
+before the `string-const` model was written. No result file was produced, so
+**nothing was graded** and no prediction is counted as held or failed.
+
+The crash happened while the script was *building or writing* an honest model
+with OpenVINO's Python API from its own in-memory data, not while reading any
+file, and the files it had already written are ordinary.
+
+Changes for `ovi-realfile-v2`, made before it ran:
+
+- Every honest model (the four H1 models and the 50 sweep pairs) is now built
+  and saved in a child process. A child that ends on a signal makes the cases
+  that need that model **not run**, as the grading rules above already say
+  for API failures. The report names the model, the signal and the last stage
+  the child reached (building the string constant, building the model, or
+  `save_model`).
+- If `string-const` is not run, H1 is graded on the honest models that were
+  written.
+- The predictions, the edits, the grading rules and the private-channel rule
+  for R1 and R2 are unchanged.
+
+If the writer crash can be reproduced and narrowed to one OpenVINO call, it
+is reported to OpenVINO through its own channel after a human has looked at
+it. It is not counted as a finding of this check.
