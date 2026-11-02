@@ -1,7 +1,7 @@
 # model-file-scan
 
-<!-- routes-0.10.0 -->
-## Formats routed in 0.10.0 (release v0.49.0)
+<!-- routes-0.11.0 -->
+## Formats routed in 0.11.0 (release v0.50.0)
 
 This page grew one scanner at a time; this table is the current routing.
 Everything is static: nothing is loaded, imported, unpickled or executed.
@@ -23,6 +23,7 @@ Everything is static: nothing is loaded, imported, unpickled or executed.
 | `.xml` + same-named `.bin` (OpenVINO IR) | `openvino_ir_scan` | not yet |
 | `.ubj`; `.json` whose top level has an XGBoost `learner` object; `.model` / `.bst` starting with `{` | `xgboost_model_scan` | [8 of 8](REALFILE_CHECK_XGB_2026-10.md) |
 | `.txt` / `.lgb` / `.lightgbm` / `.model` / `.bst` whose first line is `tree` | `lightgbm_model_scan` | [10 of 10](REALFILE_CHECK_LGB_2026-10.md) |
+| `.skops` (scikit-learn via skops) | `skops_scan` and `pickle_model_scan` | [10 of 10](REALFILE_CHECK_SKOPS_2026-11.md) |
 | everything else (`.pkl` `.pickle` `.joblib` `.pt` `.pth` `.bin` `.npy` `.npz` `.ckpt`, and a `.model` that is neither of the above) | `pickle_model_scan` | |
 
 The routing itself was checked on files written by XGBoost 3.4.1 and
@@ -176,7 +177,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-      - uses: munimtechnologies/keras-model-scan@v0.49.0
+      - uses: munimtechnologies/keras-model-scan@v0.50.0
         with:
           paths: "."
           fail-on: "high"
