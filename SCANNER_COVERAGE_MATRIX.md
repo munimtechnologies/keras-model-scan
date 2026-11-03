@@ -194,13 +194,14 @@ Legend: **✓** documented detection · **~** partial / related / historically a
    custom ops from `custom_code` without decoding the Flex `custom_options`,
    so it does not see which TensorFlow op the Flex delegate would build.
    keras-model-scan's standalone scanners walk each format's structure, and
-   all but the OpenVINO one were checked against files written by the real
+   all of the formats here were checked against files written by the real
    library, with every pre-registered prediction holding (TFLite and
    ExecuTorch 8 of 8, Core ML 7 of 7, PaddlePaddle 7 of 7, R 15 of 15; see the
    `REALFILE_CHECK_*` reports). Those checks used one file per prediction, so
    they are not a false-positive rate on published models. ModelAudit remains
    the broader tool, with scanners for formats keras-model-scan does not read
    at all (for example TorchServe `.mar` and PMML).
+   The OpenVINO IR scanner was checked the same way on 2 November 2026: all 14 pre-registered rows held ([report](REALFILE_CHECK_OVI_2026-11.md)).
 
 8. **Gradient-boosted tree files: string search versus structure.** Two
    rows added on 2026-11-01 cover XGBoost and LightGBM models, whose loaders
