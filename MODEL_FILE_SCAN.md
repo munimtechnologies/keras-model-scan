@@ -20,7 +20,7 @@ Everything is static: nothing is loaded, imported, unpickled or executed.
 | `.msgpack` (Flax / msgpack-numpy) | `msgpack_weights_scan` | [MessagePack + archives, 13 of 13](REALFILE_CHECK_2026-10.md) |
 | `.nemo` (NeMo archive) | `nemo_container_scan` | |
 | `.onnx` (external-data references) | `onnx_external_data_scan` | |
-| `.xml` + same-named `.bin` (OpenVINO IR) | `openvino_ir_scan` | [every prediction that ran held](REALFILE_CHECK_OVI_2026-11.md) |
+| `.xml` + same-named `.bin` (OpenVINO IR) | `openvino_ir_scan` | [14 of 14](REALFILE_CHECK_OVI_2026-11.md) |
 | `.ubj`; `.json` whose top level has an XGBoost `learner` object; `.model` / `.bst` starting with `{` | `xgboost_model_scan` | [8 of 8](REALFILE_CHECK_XGB_2026-10.md) |
 | `.txt` / `.lgb` / `.lightgbm` / `.model` / `.bst` whose first line is `tree` | `lightgbm_model_scan` | [10 of 10](REALFILE_CHECK_LGB_2026-10.md) |
 | `.skops` (scikit-learn via skops) | `skops_scan` and `pickle_model_scan` | [10 of 10](REALFILE_CHECK_SKOPS_2026-11.md) |
