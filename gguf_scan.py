@@ -52,7 +52,7 @@ import sys
 from dataclasses import dataclass
 from typing import Iterable, List, Optional
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 # Read at most this many bytes of the header region. A real GGUF header + metadata
 # + tensor-info table is kilobytes to low megabytes; the weight data that follows
@@ -85,7 +85,7 @@ _KNOWN_VALUE_TYPES = set(_SCALAR_SIZE) | {_T_STRING, _T_ARRAY}
 # added and removed, but a value far above the live range is an out-of-bounds
 # table index in a loader that does not range-check it. We treat ids above this
 # as out-of-range (GG010); churn within the range is not flagged.
-_MAX_GGML_TYPE = 39
+_MAX_GGML_TYPE = 43  # GGML_TYPE_F8_E4M3; GGML_TYPE_COUNT is 44 in llama.cpp b12034
 
 # Per the spec: a tensor name is "at most 64 bytes" and n_dimensions is "currently
 # at most 4". A loader that reads n_dimensions uint64 values into a fixed[4] array
