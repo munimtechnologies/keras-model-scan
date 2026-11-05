@@ -66,10 +66,26 @@ class Licence(unittest.TestCase):
         self.assertIn("Apache-2.0", _read("gguf_scan.py"))
 
     def test_versions(self):
-        self.assertEqual(model_file_scan.__version__, "0.8.0")
-        self.assertEqual(safetensors_scan.__version__, "0.3.0")
-        self.assertEqual(safetensors_index_scan.__version__, "0.1.0")
-        self.assertEqual(gguf_scan.__version__, "0.1.0")
+        # Exact version pins went stale (this test pinned model_file_scan
+        # to 0.8.0 until release v0.51.0). Check instead that each version
+        # is X.Y.Z, is not below the release that last changed it, and that
+        # pyproject.toml carries the same version as model_file_scan.
+        import re
+        floors = ((model_file_scan, (0, 11, 1)),
+                  (safetensors_scan, (0, 3, 0)),
+                  (safetensors_index_scan, (0, 1, 0)),
+                  (gguf_scan, (0, 2, 0)))
+        for mod, floor in floors:
+            version = mod.__version__
+            self.assertRegex(version, r"^\d+\.\d+\.\d+$", mod.__name__)
+            self.assertGreaterEqual(
+                tuple(int(part) for part in version.split(".")), floor,
+                mod.__name__)
+        text = _read("pyproject.toml")
+        if text is not None:
+            found = re.search(r'(?m)^version\s*=\s*"([^"]+)"', text)
+            self.assertIsNotNone(found)
+            self.assertEqual(found.group(1), model_file_scan.__version__)
 
 
 class SafetensorsDtypes(unittest.TestCase):

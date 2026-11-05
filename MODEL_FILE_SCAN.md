@@ -1,7 +1,7 @@
 # model-file-scan
 
-<!-- routes-0.11.0 -->
-## Formats routed in 0.11.0 (release v0.50.0)
+<!-- routes-0.11.1 -->
+## Formats routed in 0.11.1 (release v0.51.0)
 
 This page grew one scanner at a time; this table is the current routing.
 Everything is static: nothing is loaded, imported, unpickled or executed.
@@ -11,7 +11,7 @@ Everything is static: nothing is loaded, imported, unpickled or executed.
 | `.keras` `.h5` `.hdf5` `config.json`, other Keras `.json` | `keras_model_scan` | |
 | `*.index.json` (sharded-model index) | `safetensors_index_scan` | |
 | `.safetensors` | `safetensors_scan` | |
-| `.gguf` | `gguf_scan` | |
+| `.gguf` | `gguf_scan` | [tensor types, 10 of 10](REALFILE_CHECK_GGUF_TYPES_2026-11.md) |
 | `.tflite` | `tflite_model_scan` | [TFLite + ExecuTorch, 8 of 8](REALFILE_CHECK_TFL_PTE_2026-10.md) |
 | `.pte` (ExecuTorch) | `executorch_pte_scan` | (same check) |
 | `.mlmodel` / `.mlpackage` (Core ML) | `coreml_model_scan` | [7 of 7](REALFILE_CHECK_COREML_2026-10.md) |
@@ -177,7 +177,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-      - uses: munimtechnologies/keras-model-scan@v0.50.0
+      - uses: munimtechnologies/keras-model-scan@v0.51.0
         with:
           paths: "."
           fail-on: "high"
@@ -221,7 +221,7 @@ truncated structures, plus a clean control) in `test_gguf_scan.py`.
 - The GGUF scanner validates the **header, metadata and tensor-info** structure,
   not weight contents; it reads up to a 64 MiB header cap and reports a larger
   structure as truncated rather than allocate it. `ggml_type` ids drift as quant
-  formats are added and removed, so it flags only ids well above the live range
+  formats are added and removed, so it flags only ids at or above `GGML_TYPE_COUNT` (44 in llama.cpp b12034)
   (a likely out-of-bounds table index), not every unknown id. GGUF v1 (uint32
   counts) is flagged as legacy and not deep-parsed. Other GGUF static auditors
   exist (e.g. ModelAudit, gguf-sentinel); this adds the same integrity class to
