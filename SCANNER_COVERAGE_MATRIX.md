@@ -216,6 +216,16 @@ Legend: **✓** documented detection · **~** partial / related / historically a
    and LightGBM 4.7.0 (10 of 10). They do not search for code strings, which
    ModelAudit does, so the two are complementary.
 
+<!-- gguf-xtool-2026-11 -->
+**Tested on real files (4 November 2026): GGUF tensor-type ids.** On
+GGUF files written by llama.cpp b12034's own `gguf-py`, ModelAudit 0.2.54
+ends the scan inconclusive (exit 2) on tensors of ggml types 35 and
+39-43, and its `main` branch (commit `415819f`) still does on type 43,
+`F8_E4M3`, which llama.cpp added on 29 October 2026. Both fail closed:
+no file was passed as clean. `gguf_scan` 0.2.0 here accepts every id
+below `GGML_TYPE_COUNT` (44) and flags the rest. All 8 pre-registered
+predictions held: [REALFILE_CHECK_GGUF_XTOOL_2026-11.md](REALFILE_CHECK_GGUF_XTOOL_2026-11.md).
+
 ## Honest limits
 
 - Documentation-based, not executed: a "✓" means *documented*, not *verified on your
@@ -281,3 +291,6 @@ Legend: **✓** documented detection · **~** partial / related / historically a
 - keras-model-scan real-file checks (pre-registered, graded) — https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_TFL_PTE_2026-10.md , https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_COREML_2026-10.md , https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_PADDLE_2026-10.md , https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_RDS_2026-10.md
 - ModelAudit scanner sources (read 2026-11-01): `xgboost_scanner.py`, `lightgbm_scanner.py` — https://github.com/promptfoo/modelaudit/tree/main/modelaudit/scanners
 - keras-model-scan real-file checks for tree models (pre-registered, graded) — https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_XGB_2026-10.md , https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_LGB_2026-10.md
+- keras-model-scan real-file check, ModelAudit on GGUF files of the
+  newest ggml tensor types (ModelAudit 0.2.54 and main `415819f`, run
+  2026-11-03): [REALFILE_CHECK_GGUF_XTOOL_2026-11.md](REALFILE_CHECK_GGUF_XTOOL_2026-11.md)
