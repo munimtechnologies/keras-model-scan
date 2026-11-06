@@ -71,9 +71,9 @@ class Licence(unittest.TestCase):
         # is X.Y.Z, is not below the release that last changed it, and that
         # pyproject.toml carries the same version as model_file_scan.
         import re
-        floors = ((model_file_scan, (0, 11, 1)),
+        floors = ((model_file_scan, (0, 12, 0)),
                   (safetensors_scan, (0, 3, 0)),
-                  (safetensors_index_scan, (0, 1, 0)),
+                  (safetensors_index_scan, (0, 2, 0)),
                   (gguf_scan, (0, 2, 0)))
         for mod, floor in floors:
             version = mod.__version__

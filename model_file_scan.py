@@ -58,7 +58,7 @@ import json
 import os
 import sys
 
-__version__ = "0.11.1"
+__version__ = "0.12.0"
 
 REPO_URL = "https://github.com/munimtechnologies/keras-model-scan"
 
@@ -128,6 +128,21 @@ def _is_mlpackage(path):
     return os.path.basename(path.rstrip("/\\")).lower().endswith(".mlpackage")
 
 
+# Shard-index file names, including weights variants. transformers and
+# diffusers write save_pretrained(..., variant="fp16") as
+# model.safetensors.index.fp16.json, a name that does not end in .index.json
+# (REALFILE_CHECK_STI_2026-11.md).
+import re as _shard_re  # noqa: E402
+
+_SHARD_INDEX_NAME = _shard_re.compile(
+    r"\.index(\.[A-Za-z0-9_\-]+)?\.json$", _shard_re.IGNORECASE)
+
+
+def _is_shard_index(name):
+    """True for ``*.index.json`` and ``*.index.<variant>.json`` names."""
+    return bool(_SHARD_INDEX_NAME.search(str(name)))
+
+
 def route(path):
     """Return which scanner handles ``path`` by its name alone: 'keras',
     'sti', 'safetensors', 'gguf', 'pickle', or a standalone format ('tflite',
@@ -143,7 +158,7 @@ def route(path):
     ext = os.path.splitext(name)[1]
     if ext in _KERAS_EXTS:
         return "keras"
-    if name.endswith(".index.json"):
+    if _is_shard_index(name):
         return "sti"
     if name == "manifest.json" and _is_mlpackage(os.path.dirname(trimmed)):
         return "coreml"
@@ -271,7 +286,7 @@ def _walk_keeps(root, name):
     """Whether a directory walk scans the file ``name`` in ``root``."""
     low = name.lower()
     ext = os.path.splitext(low)[1]
-    if ext in _MODEL_EXTS or low == "config.json" or low.endswith(".index.json"):
+    if ext in _MODEL_EXTS or low == "config.json" or _is_shard_index(low):
         return True
     if ext == ".xml":
         return os.path.isfile(

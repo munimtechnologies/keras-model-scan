@@ -50,7 +50,7 @@ import sys
 from dataclasses import dataclass
 from typing import Any, Iterable, Optional
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 # A real shard index is a few KB to a few MB of filenames. Anything far larger is
 # abnormal and would make a loader that json.load()s it allocate the whole thing;
@@ -297,8 +297,23 @@ def scan_file(path: str) -> list[Finding]:
     return findings + scan_text(text, loc)
 
 
+# Shard-index file names, including weights variants. transformers and
+# diffusers write save_pretrained(..., variant="fp16") as
+# model.safetensors.index.fp16.json, a name that does not end in .index.json
+# (REALFILE_CHECK_STI_2026-11.md).
+import re as _shard_re  # noqa: E402
+
+_SHARD_INDEX_NAME = _shard_re.compile(
+    r"\.index(\.[A-Za-z0-9_\-]+)?\.json$", _shard_re.IGNORECASE)
+
+
+def _is_shard_index(name):
+    """True for ``*.index.json`` and ``*.index.<variant>.json`` names."""
+    return bool(_SHARD_INDEX_NAME.search(str(name)))
+
+
 def _looks_like_index(name: str) -> bool:
-    return name.lower().endswith(".index.json")
+    return _is_shard_index(name.lower())
 
 
 def scan_path(path: str) -> list[Finding]:

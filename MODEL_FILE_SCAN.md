@@ -1,7 +1,7 @@
 # model-file-scan
 
 <!-- routes-0.11.1 -->
-## Formats routed in 0.11.1 (release v0.51.0)
+## Formats routed in 0.12.0 (release v0.52.0)
 
 This page grew one scanner at a time; this table is the current routing.
 Everything is static: nothing is loaded, imported, unpickled or executed.
@@ -9,7 +9,7 @@ Everything is static: nothing is loaded, imported, unpickled or executed.
 | file | scanner | real-file check |
 |---|---|---|
 | `.keras` `.h5` `.hdf5` `config.json`, other Keras `.json` | `keras_model_scan` | |
-| `*.index.json` (sharded-model index) | `safetensors_index_scan` | |
+| `*.index.json` and variant names such as `*.index.fp16.json` (sharded-model index) | `safetensors_index_scan` | [21 of 22](REALFILE_CHECK_STI_2026-11.md); [variant names, 16 of 16](REALFILE_CHECK_STI_VARIANT_FIX_2026-11.md) |
 | `.safetensors` | `safetensors_scan` | |
 | `.gguf` | `gguf_scan` | [tensor types, 10 of 10](REALFILE_CHECK_GGUF_TYPES_2026-11.md) |
 | `.tflite` | `tflite_model_scan` | [TFLite + ExecuTorch, 8 of 8](REALFILE_CHECK_TFL_PTE_2026-10.md) |
@@ -48,7 +48,7 @@ opcode/JSON structure.
 | File | Scanner | Looks for |
 |------|---------|-----------|
 | `.keras` `.h5` `.hdf5` `config.json` | `keras_model_scan` | non-allowlist Lambda/class deserialization, `enable_unsafe_deserialization`, `TFSMLayer`, Zip/Tar Slip, legacy `.h5` (CVE-2025-1550, 2025-9905/9906, 2026-1462, 2026-9257) |
-| `*.index.json` (e.g. `model.safetensors.index.json`, `pytorch_model.bin.index.json`) | `safetensors_index_scan` | **path safety of the shard `weight_map`**: absolute shard paths, `..` traversal, backslash separators, URL/fsspec schemes, NUL bytes — a shard path that escapes the model directory (CWE-22) |
+| `*.index.json` (e.g. `model.safetensors.index.json`, `pytorch_model.bin.index.json`; also variant names such as `model.safetensors.index.fp16.json`) | `safetensors_index_scan` | **path safety of the shard `weight_map`**: absolute shard paths, `..` traversal, backslash separators, URL/fsspec schemes, NUL bytes — a shard path that escapes the model directory (CWE-22) |
 | `.pkl` `.pickle` `.joblib` `.pt` `.pth` `.bin` `.npy` `.npz` `.ckpt` `.model` | `pickle_model_scan` | dangerous import + REDUCE/BUILD (CWE-502), deferred-call gadgets, unresolvable `STACK_GLOBAL` (the GHSA-9gvj-pp9x-gcfr / CVE-2025-71325 scanner-bypass class), object-dtype NumPy, Zip Slip |
 | `.safetensors` | `safetensors_scan` | header/offset integrity: oversized or over-cap header length, out-of-bounds or size-mismatched `data_offsets`, overlaps and gaps, deeply nested header JSON, trailing bytes after the last tensor |
 | `.gguf` | `gguf_scan` | **header/tensor-info integrity**: counts and string/array lengths that cannot fit the file, array lengths whose byte size overflows, tensor dimensions whose product overflows a 64-bit element count, out-of-range type ids, unaligned offsets — the integer-overflow class behind the ggml/llama.cpp heap overflows (CVE-2024-21825, CVE-2025-53630, CVE-2026-27940, CVE-2026-33298). New in 0.8.0 |
@@ -177,7 +177,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-      - uses: munimtechnologies/keras-model-scan@v0.51.0
+      - uses: munimtechnologies/keras-model-scan@v0.52.0
         with:
           paths: "."
           fail-on: "high"
@@ -227,4 +227,3 @@ truncated structures, plus a clean control) in `test_gguf_scan.py`.
   exist (e.g. ModelAudit, gguf-sentinel); this adds the same integrity class to
   the unified, dependency-free `model-file-scan` entry point.
 - This tool and this document were made with AI.
-```

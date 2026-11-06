@@ -1,0 +1,69 @@
+{
+ "files": {
+  "model_file_scan.py": {
+   "changes": [
+    "helper",
+    "2 endswith",
+    "version"
+   ],
+   "endswith_replaced": 2,
+   "second_pass": [],
+   "lost": [],
+   "quoted_left": [],
+   "lines": [
+    512,
+    527
+   ],
+   "ok": true
+  },
+  "safetensors_index_scan.py": {
+   "changes": [
+    "helper",
+    "1 endswith",
+    "version"
+   ],
+   "endswith_replaced": 1,
+   "second_pass": [],
+   "lost": [],
+   "quoted_left": [],
+   "lines": [
+    361,
+    376
+   ],
+   "ok": true
+  },
+  "pyproject.toml": {
+   "changes": [
+    "version = \"0.12.0\""
+   ],
+   "second_pass": [],
+   "ok": true
+  },
+  "test_attribution.py": {
+   "changes": [
+    "(model_file_scan, (0, 12, 0))",
+    "(safetensors_index_scan, (0, 2, 0))"
+   ],
+   "second_pass": [],
+   "ok": true
+  },
+  "MODEL_FILE_SCAN.md": {
+   "changes": [
+    "## Formats routed in 0.12.0 (release v0.52.0)",
+    "| `*.index.json` and variant names such as `*.index.fp16.jso",
+    "| `*.index.json` (e.g. `model.safetensors.index.json`, `pyto"
+   ],
+   "skipped": [],
+   "optional": true
+  }
+ },
+ "ok": true,
+ "written": [
+  "MODEL_FILE_SCAN.md",
+  "model_file_scan.py",
+  "pyproject.toml",
+  "safetensors_index_scan.py",
+  "test_attribution.py",
+  "test_safetensors_index_variant.py"
+ ]
+}

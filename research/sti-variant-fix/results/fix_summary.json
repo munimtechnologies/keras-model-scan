@@ -1,0 +1,482 @@
+{
+ "check_version": 1,
+ "error": "",
+ "held": 16,
+ "graded": 16,
+ "not_run": [],
+ "reported": {
+  "setup": {
+   "torch_ok": true,
+   "libs_ok": true,
+   "versions": {
+    "torch": "2.15.0+cpu",
+    "transformers": "5.22.1",
+    "huggingface_hub": "2.4.0",
+    "safetensors": "0.8.0",
+    "numpy": "2.5.4"
+   }
+  },
+  "writer_exit": 0,
+  "writer_tail": "[transformers] Model config: bos_token_id must be `None` or an integer within the vocabulary (between 0 and 999), got 50256. This may result in unexpected behavior.\n[transformers] Model config: eos_token_id must be `None` or an integer within the vocabulary (between 0 and 999), got 50256. This may result in unexpected behavior.\n\nWriting model shards:   0%|          | 0/7 [00:00<?, ?it/s]\nWriting model shards: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 7/7 [00:00<00:00, 2163.77it/s]\n\nWriting model shards:   0%|          | 0/7 [00:00<?, ?it/s]\nWriting model shards: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 7/7 [00:00<00:00, 4027.45it/s]\n\nWriting model shards:   0%|          | 0/7 [00:00<?, ?it/s]\nWriting model shards: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 7/7 [00:00<00:00, 3906.35it/s]",
+  "writers": {
+   "cases": {
+    "tf_st": {
+     "ok": true,
+     "files": [
+      "config.json",
+      "generation_config.json",
+      "model-00001-of-00007.safetensors",
+      "model-00002-of-00007.safetensors",
+      "model-00003-of-00007.safetensors",
+      "model-00004-of-00007.safetensors",
+      "model-00005-of-00007.safetensors",
+      "model-00006-of-00007.safetensors",
+      "model-00007-of-00007.safetensors",
+      "model.safetensors.index.json"
+     ]
+    },
+    "tf_st_fp16": {
+     "ok": true,
+     "files": [
+      "config.json",
+      "generation_config.json",
+      "model.fp16-00001-of-00007.safetensors",
+      "model.fp16-00002-of-00007.safetensors",
+      "model.fp16-00003-of-00007.safetensors",
+      "model.fp16-00004-of-00007.safetensors",
+      "model.fp16-00005-of-00007.safetensors",
+      "model.fp16-00006-of-00007.safetensors",
+      "model.fp16-00007-of-00007.safetensors",
+      "model.safetensors.index.fp16.json"
+     ]
+    },
+    "tf_st_ema": {
+     "ok": true,
+     "files": [
+      "config.json",
+      "generation_config.json",
+      "model.ema-00001-of-00007.safetensors",
+      "model.ema-00002-of-00007.safetensors",
+      "model.ema-00003-of-00007.safetensors",
+      "model.ema-00004-of-00007.safetensors",
+      "model.ema-00005-of-00007.safetensors",
+      "model.ema-00006-of-00007.safetensors",
+      "model.ema-00007-of-00007.safetensors",
+      "model.safetensors.index.ema.json"
+     ]
+    },
+    "hub_st": {
+     "ok": true,
+     "files": [
+      "model-00001-of-00007.safetensors",
+      "model-00002-of-00007.safetensors",
+      "model-00003-of-00007.safetensors",
+      "model-00004-of-00007.safetensors",
+      "model-00005-of-00007.safetensors",
+      "model-00006-of-00007.safetensors",
+      "model-00007-of-00007.safetensors",
+      "model.safetensors.index.json"
+     ]
+    }
+   },
+   "versions": {
+    "torch": "2.15.0+cpu",
+    "transformers": "5.22.1",
+    "huggingface_hub": "2.4.0"
+   }
+  },
+  "index_names": {
+   "tf_st": [
+    "model.safetensors.index.json"
+   ],
+   "tf_st_fp16": [
+    "model.safetensors.index.fp16.json"
+   ],
+   "tf_st_ema": [
+    "model.safetensors.index.ema.json"
+   ],
+   "hub_st": [
+    "model.safetensors.index.json"
+   ]
+  },
+  "hub_manifest": {
+   "started": "2026-11-06T09:45:34Z",
+   "lists": {
+    "safetensors": 1000,
+    "diffusers": 200
+   },
+   "info_calls": 0,
+   "finished": "2026-11-06T09:48:06Z",
+   "ok_files": 394,
+   "models_with_files": 359
+  },
+  "hub_skipped_gated": 25,
+  "hub_errors": [],
+  "hub_download_errors": [
+   [
+    "moonshotai/Kimi-K3",
+    "model.safetensors.index.json",
+    "error: ValueError: larger than 30000000 bytes"
+   ],
+   [
+    "ornith-ai/Ornith-1.5-397B-NVFP4",
+    "model.safetensors.index.json",
+    "error: ValueError: larger than 30000000 bytes"
+   ],
+   [
+    "RadixArk/Qwen3.8-Flash-Next-NVFP4",
+    "model.safetensors.index.json",
+    "error: ValueError: larger than 30000000 bytes"
+   ],
+   [
+    "0xSero/deepseek-v4-flash-0731-spark",
+    "model.safetensors.index.json",
+    "error: ValueError: larger than 30000000 bytes"
+   ],
+   [
+    "nvidia/Qwen3.8-Flash-Next-NVFP4",
+    "model.safetensors.index.json",
+    "error: ValueError: larger than 30000000 bytes"
+   ],
+   [
+    "nvidia/Kimi-K2.5-NVFP4",
+    "model.safetensors.index.json",
+    "error: ValueError: larger than 30000000 bytes"
+   ]
+  ],
+  "hub_n_files": 394,
+  "hub_n_models": 359,
+  "hub_rule_counts": {}
+ },
+ "rows": [
+  {
+   "id": "P1",
+   "case": "patch applies once, second pass no-op, nothing lost, no quoted .index.json left",
+   "expected": "ok",
+   "result": "PASS",
+   "got": {
+    "ok": true,
+    "error": null,
+    "files": {
+     "model_file_scan.py": {
+      "changes": [
+       "helper",
+       "2 endswith",
+       "version"
+      ],
+      "endswith_replaced": 2,
+      "second_pass": [],
+      "quoted_left": [],
+      "lines": [
+       512,
+       527
+      ],
+      "ok": true
+     },
+     "safetensors_index_scan.py": {
+      "changes": [
+       "helper",
+       "1 endswith",
+       "version"
+      ],
+      "endswith_replaced": 1,
+      "second_pass": [],
+      "quoted_left": [],
+      "lines": [
+       361,
+       376
+      ],
+      "ok": true
+     },
+     "pyproject.toml": {
+      "changes": [
+       "version = \"0.12.0\""
+      ],
+      "second_pass": [],
+      "ok": true
+     },
+     "test_attribution.py": {
+      "changes": [
+       "(model_file_scan, (0, 12, 0))",
+       "(safetensors_index_scan, (0, 2, 0))"
+      ],
+      "second_pass": [],
+      "ok": true
+     },
+     "MODEL_FILE_SCAN.md": {
+      "changes": [
+       "## Formats routed in 0.12.0 (release v0.52.0)",
+       "| `*.index.json` and variant names such as `*.index.fp16.jso",
+       "| `*.index.json` (e.g. `model.safetensors.index.json`, `pyto"
+      ],
+      "skipped": [],
+      "optional": true
+     }
+    }
+   }
+  },
+  {
+   "id": "S1",
+   "case": "full unit-test suite on the patched tree",
+   "expected": "ok; 0 failures; 0 errors",
+   "result": "PASS",
+   "got": {
+    "ran": 1319,
+    "failures": [],
+    "errors": [],
+    "skipped": 3,
+    "ok": true,
+    "error": null,
+    "missing": null
+   }
+  },
+  {
+   "id": "S2",
+   "case": "new test module alone",
+   "expected": "exit 0; at least 9 tests",
+   "result": "PASS",
+   "got": {
+    "exit": 0,
+    "ran": 9,
+    "tail": "test_clean_variant_index_passes_folder_gate (test_safetensors_index_variant.VariantIndexTests.test_clean_variant_index_passes_folder_gate) ... ok\ntest_looks_like_index (test_safetensors_index_variant.VariantIndexTests.test_looks_like_index) ... ok\ntest_route_other_names_unchanged (test_safetensors_index_variant.VariantIndexTests.test_route_other_names_unchanged) ... ok\ntest_route_variant_and_standard_names (test_safetensors_index_variant.VariantIndexTests.test_route_variant_and_standard_names) ... ok\ntest_sti_scan_path_walks_variant_index (test_safetensors_index_variant.VariantIndexTests.test_sti_scan_path_walks_variant_index) ... ok\ntest_traversal_in_bin_variant_index_found_by_folder_walk (test_safetensors_index_variant.VariantIndexTests.test_traversal_in_bin_variant_index_found_by_folder_walk) ... ok\ntest_traversal_in_variant_index_found_by_folder_walk (test_safetensors_index_variant.VariantIndexTests.test_traversal_in_variant_index_found_by_folder_walk) ... ok\ntest_versions (test_safetensors_index_variant.VariantIndexTests.test_versions) ... ok\ntest_walk_keeps_variant_index (test_safetensors_index_variant.VariantIndexTests.test_walk_keeps_variant_index) ... ok\n\n----------------------------------------------------------------------\nRan 9 tests in 0.013s\n\nOK\n"
+   }
+  },
+  {
+   "id": "V1",
+   "case": "versions",
+   "expected": "mfs 0.12.0, sti 0.2.0, pyproject 0.12.0",
+   "result": "PASS",
+   "got": {
+    "mfs": "0.12.0",
+    "sti": "0.2.0",
+    "pyproject": "0.12.0"
+   }
+  },
+  {
+   "id": "W1",
+   "case": "tf_st",
+   "expected": "model.safetensors.index.json; only STI000; exits 0/0; route sti",
+   "result": "PASS",
+   "got": {
+    "name": "model.safetensors.index.json",
+    "non_info": [],
+    "rules": [
+     "STI000"
+    ],
+    "sti_exit": 0,
+    "mfs_exit": 0,
+    "mfs_route": "sti"
+   }
+  },
+  {
+   "id": "W3",
+   "case": "hub_st",
+   "expected": "model.safetensors.index.json; only STI000; exits 0/0; route sti",
+   "result": "PASS",
+   "got": {
+    "name": "model.safetensors.index.json",
+    "non_info": [],
+    "rules": [
+     "STI000"
+    ],
+    "sti_exit": 0,
+    "mfs_exit": 0,
+    "mfs_route": "sti"
+   }
+  },
+  {
+   "id": "R1",
+   "case": "variant indexes routed, kept, walked, clean",
+   "expected": "route sti; kept by expand_paths; scan_path STI000; only STI000; folder gate exit 0 on the index alone",
+   "result": "PASS",
+   "got": {
+    "tf_st_fp16": {
+     "name": "model.safetensors.index.fp16.json",
+     "route": "sti",
+     "kept": true,
+     "sti_scan_path_rules": [
+      "STI000"
+     ],
+     "non_info": [],
+     "mfs_exit_alone": 0,
+     "mfs_exit_writer_folder_reported": 0,
+     "writer_folder_tail": "bare filenames that resolve inside the model directory. No path-traversal, absolute, remote or NUL-byte shard paths were found.\n      at /out/files/writers/tf_st_fp16/model.safetensors.index.fp16.json"
+    },
+    "tf_st_ema": {
+     "name": "model.safetensors.index.ema.json",
+     "route": "sti",
+     "kept": true,
+     "sti_scan_path_rules": [
+      "STI000"
+     ],
+     "non_info": [],
+     "mfs_exit_alone": 0,
+     "mfs_exit_writer_folder_reported": 0,
+     "writer_folder_tail": "s and data_offsets are internally consistent and cover the whole data section. safetensors carries no code-execution surface.\n      at /out/files/writers/tf_st_ema/model.ema-00004-of-00007.safetensors"
+    },
+    "missing": []
+   }
+  },
+  {
+   "id": "R3",
+   "case": "'..' in a variant-named index, folder walks",
+   "expected": "MFS walk STI002; sti.scan_path STI002; MFS folder exit 1",
+   "result": "PASS",
+   "got": {
+    "walk_rules": [
+     "STI002"
+    ],
+    "sti_scan_path": [
+     "STI002"
+    ],
+    "mfs_dir_exit": 1,
+    "tail": "it, letting an untrusted index make a naive loader read/write outside the model package.\n      at /out/files/edited/G2/model.safetensors.index.fp16.json [weight_map 'transformer.h.0.attn.c_attn.bias']"
+   }
+  },
+  {
+   "id": "R4",
+   "case": "edited copies E1-E9 unchanged",
+   "expected": "each exactly its one rule; MFS exit 1 on E1, 0 on E6",
+   "result": "PASS",
+   "got": {
+    "got": {
+     "E1": [
+      [
+       "STI002",
+       "HIGH"
+      ]
+     ],
+     "E2": [
+      [
+       "STI001",
+       "HIGH"
+      ]
+     ],
+     "E3": [
+      [
+       "STI001",
+       "HIGH"
+      ]
+     ],
+     "E4": [
+      [
+       "STI004",
+       "MEDIUM"
+      ]
+     ],
+     "E5": [
+      [
+       "STI003",
+       "MEDIUM"
+      ]
+     ],
+     "E6": [
+      [
+       "STI005",
+       "LOW"
+      ]
+     ],
+     "E7": [
+      [
+       "STI007",
+       "LOW"
+      ]
+     ],
+     "E8": [
+      [
+       "STI006",
+       "MEDIUM"
+      ]
+     ],
+     "E9": [
+      1,
+      0
+     ]
+    },
+    "bad": []
+   }
+  },
+  {
+   "id": "R5",
+   "case": "writer files: route sti exactly for index names",
+   "expected": "0 mismatches (route and weight_map holders)",
+   "result": "PASS",
+   "got": {
+    "files": 38,
+    "route_mismatch": [],
+    "holder_mismatch": []
+   }
+  },
+  {
+   "id": "H2",
+   "case": "Hub: no HIGH finding",
+   "expected": "0 files",
+   "result": "PASS",
+   "got": {
+    "n": 0,
+    "files": []
+   }
+  },
+  {
+   "id": "H3",
+   "case": "Hub: MEDIUM findings",
+   "expected": "<= 2% of files",
+   "result": "PASS",
+   "got": {
+    "n": 0,
+    "of": 394,
+    "files": []
+   }
+  },
+  {
+   "id": "H4",
+   "case": "Hub: STI005",
+   "expected": "<= 2% of files",
+   "result": "PASS",
+   "got": {
+    "n": 0,
+    "of": 394,
+    "files": []
+   }
+  },
+  {
+   "id": "H5",
+   "case": "Hub: a variant-named index is present",
+   "expected": ">= 1",
+   "result": "PASS",
+   "got": {
+    "n": 2,
+    "files": [
+     [
+      "openai/whisper-large-v3",
+      "model.safetensors.index.fp32.json"
+     ],
+     [
+      "openai/whisper-large-v3",
+      "pytorch_model.bin.index.fp32.json"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "H6",
+   "case": "Hub: every file routes to sti (standard and variant)",
+   "expected": "0 files elsewhere",
+   "result": "PASS",
+   "got": {
+    "n": 0,
+    "files": []
+   }
+  },
+  {
+   "id": "H7",
+   "case": "Hub: every file kept by expand_paths of its folder",
+   "expected": "0 files left out",
+   "result": "PASS",
+   "got": {
+    "n": 0,
+    "files": []
+   }
+  }
+ ]
+}
