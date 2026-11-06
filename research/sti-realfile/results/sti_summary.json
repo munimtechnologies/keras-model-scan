@@ -1,0 +1,546 @@
+{
+ "check_version": 1,
+ "error": "",
+ "held": 21,
+ "graded": 22,
+ "not_run": [],
+ "reported": {
+  "sti_version": "0.1.0",
+  "mfs_version": "0.11.1",
+  "setup": {
+   "torch_ok": true,
+   "libs_ok": true,
+   "versions": {
+    "torch": "2.15.0+cpu",
+    "transformers": "5.22.1",
+    "huggingface_hub": "2.4.0",
+    "safetensors": "0.8.0",
+    "numpy": "2.5.4"
+   }
+  },
+  "writer_exit": 0,
+  "writer_tail": "[transformers] Model config: bos_token_id must be `None` or an integer within the vocabulary (between 0 and 999), got 50256. This may result in unexpected behavior.\n[transformers] Model config: eos_token_id must be `None` or an integer within the vocabulary (between 0 and 999), got 50256. This may result in unexpected behavior.\n\nWriting model shards:   0%|          | 0/7 [00:00<?, ?it/s]\nWriting model shards: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 7/7 [00:00<00:00, 1281.99it/s]\n\nWriting model shards:   0%|          | 0/7 [00:00<?, ?it/s]\nWriting model shards: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 7/7 [00:00<00:00, 2409.33it/s]\n\nWriting model shards:   0%|          | 0/7 [00:00<?, ?it/s]\nWriting model shards: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 7/7 [00:00<00:00, 3081.46it/s]\n\nWriting model shards:   0%|          | 0/7 [00:00<?, ?it/s]\nWriting model shards: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 7/7 [00:00<00:00, 2459.18it/s]",
+  "writers": {
+   "cases": {
+    "tf_st": {
+     "ok": true,
+     "files": [
+      "config.json",
+      "generation_config.json",
+      "model-00001-of-00007.safetensors",
+      "model-00002-of-00007.safetensors",
+      "model-00003-of-00007.safetensors",
+      "model-00004-of-00007.safetensors",
+      "model-00005-of-00007.safetensors",
+      "model-00006-of-00007.safetensors",
+      "model-00007-of-00007.safetensors",
+      "model.safetensors.index.json"
+     ]
+    },
+    "tf_bin": {
+     "ok": true,
+     "files": [
+      "config.json",
+      "generation_config.json",
+      "model-00001-of-00007.safetensors",
+      "model-00002-of-00007.safetensors",
+      "model-00003-of-00007.safetensors",
+      "model-00004-of-00007.safetensors",
+      "model-00005-of-00007.safetensors",
+      "model-00006-of-00007.safetensors",
+      "model-00007-of-00007.safetensors",
+      "model.safetensors.index.json"
+     ]
+    },
+    "tf_st_fp16": {
+     "ok": true,
+     "files": [
+      "config.json",
+      "generation_config.json",
+      "model.fp16-00001-of-00007.safetensors",
+      "model.fp16-00002-of-00007.safetensors",
+      "model.fp16-00003-of-00007.safetensors",
+      "model.fp16-00004-of-00007.safetensors",
+      "model.fp16-00005-of-00007.safetensors",
+      "model.fp16-00006-of-00007.safetensors",
+      "model.fp16-00007-of-00007.safetensors",
+      "model.safetensors.index.fp16.json"
+     ]
+    },
+    "tf_bin_fp16": {
+     "ok": true,
+     "files": [
+      "config.json",
+      "generation_config.json",
+      "model.fp16-00001-of-00007.safetensors",
+      "model.fp16-00002-of-00007.safetensors",
+      "model.fp16-00003-of-00007.safetensors",
+      "model.fp16-00004-of-00007.safetensors",
+      "model.fp16-00005-of-00007.safetensors",
+      "model.fp16-00006-of-00007.safetensors",
+      "model.fp16-00007-of-00007.safetensors",
+      "model.safetensors.index.fp16.json"
+     ]
+    },
+    "hub_st": {
+     "ok": true,
+     "files": [
+      "model-00001-of-00007.safetensors",
+      "model-00002-of-00007.safetensors",
+      "model-00003-of-00007.safetensors",
+      "model-00004-of-00007.safetensors",
+      "model-00005-of-00007.safetensors",
+      "model-00006-of-00007.safetensors",
+      "model-00007-of-00007.safetensors",
+      "model.safetensors.index.json"
+     ]
+    }
+   },
+   "versions": {
+    "torch": "2.15.0+cpu",
+    "transformers": "5.22.1",
+    "huggingface_hub": "2.4.0"
+   }
+  },
+  "index_names": {
+   "tf_st": [
+    "model.safetensors.index.json"
+   ],
+   "tf_bin": [
+    "model.safetensors.index.json"
+   ],
+   "tf_st_fp16": [
+    "model.safetensors.index.fp16.json"
+   ],
+   "tf_bin_fp16": [
+    "model.safetensors.index.fp16.json"
+   ],
+   "hub_st": [
+    "model.safetensors.index.json"
+   ]
+  },
+  "index_descr": {
+   "tf_st": {
+    "name": "model.safetensors.index.json",
+    "keys": [
+     "metadata",
+     "weight_map"
+    ],
+    "metadata": {
+     "total_parameters": 168192,
+     "total_size": 672768
+    },
+    "entries": 28,
+    "tensor_bytes": 672768
+   },
+   "tf_bin": {
+    "name": "model.safetensors.index.json",
+    "keys": [
+     "metadata",
+     "weight_map"
+    ],
+    "metadata": {
+     "total_parameters": 168192,
+     "total_size": 672768
+    },
+    "entries": 28,
+    "tensor_bytes": 672768
+   },
+   "tf_st_fp16": {
+    "name": "model.safetensors.index.fp16.json",
+    "keys": [
+     "metadata",
+     "weight_map"
+    ],
+    "metadata": {
+     "total_parameters": 168192,
+     "total_size": 672768
+    },
+    "entries": 28,
+    "tensor_bytes": 672768
+   },
+   "tf_bin_fp16": {
+    "name": "model.safetensors.index.fp16.json",
+    "keys": [
+     "metadata",
+     "weight_map"
+    ],
+    "metadata": {
+     "total_parameters": 168192,
+     "total_size": 672768
+    },
+    "entries": 28,
+    "tensor_bytes": 672768
+   },
+   "hub_st": {
+    "name": "model.safetensors.index.json",
+    "keys": [
+     "metadata",
+     "weight_map"
+    ],
+    "metadata": {
+     "total_size": 672768,
+     "transformer.wte.weight": "lm_head.weight"
+    },
+    "entries": 28,
+    "tensor_bytes": 672768
+   }
+  },
+  "hub_manifest": {
+   "started": "2026-11-06T02:57:53Z",
+   "lists": {
+    "safetensors": 1000,
+    "diffusers": 200
+   },
+   "info_calls": 0,
+   "finished": "2026-11-06T03:00:32Z",
+   "ok_files": 394,
+   "models_with_files": 360
+  },
+  "hub_skipped_gated": 22,
+  "hub_errors": [],
+  "hub_download_errors": [
+   [
+    "moonshotai/Kimi-K3",
+    "model.safetensors.index.json",
+    "error: ValueError: larger than 30000000 bytes"
+   ],
+   [
+    "ornith-ai/Ornith-1.5-397B-NVFP4",
+    "model.safetensors.index.json",
+    "error: ValueError: larger than 30000000 bytes"
+   ],
+   [
+    "RadixArk/Qwen3.8-Flash-Next-NVFP4",
+    "model.safetensors.index.json",
+    "error: ValueError: larger than 30000000 bytes"
+   ],
+   [
+    "0xSero/deepseek-v4-flash-0731-spark",
+    "model.safetensors.index.json",
+    "error: ValueError: larger than 30000000 bytes"
+   ],
+   [
+    "nvidia/Qwen3.8-Flash-Next-NVFP4",
+    "model.safetensors.index.json",
+    "error: ValueError: larger than 30000000 bytes"
+   ],
+   [
+    "nvidia/Kimi-K2.5-NVFP4",
+    "model.safetensors.index.json",
+    "error: ValueError: larger than 30000000 bytes"
+   ]
+  ],
+  "hub_n_files": 394,
+  "hub_n_models": 360,
+  "hub_no_weight_map": [],
+  "hub_no_weight_map_n": 0,
+  "hub_metadata_keys": {
+   "total_size": 315,
+   "total_parameters,total_size": 67,
+   "<none>": 10,
+   "format": 1,
+   "format,total_parameters,total_shards,total_size": 1
+  },
+  "hub_rule_counts": {}
+ },
+ "rows": [
+  {
+   "id": "W1",
+   "case": "tf_st",
+   "expected": "model.safetensors.index.json; only STI000 INFO; exits 0/0",
+   "result": "PASS",
+   "got": {
+    "name": "model.safetensors.index.json",
+    "non_info": [],
+    "rules": [
+     "STI000"
+    ],
+    "sti_exit": 0,
+    "mfs_exit": 0,
+    "mfs_route": "sti"
+   }
+  },
+  {
+   "id": "W2",
+   "case": "tf_bin",
+   "expected": "pytorch_model.bin.index.json; only STI000 INFO; exits 0/0",
+   "result": "FAIL",
+   "got": {
+    "name": "model.safetensors.index.json",
+    "non_info": [],
+    "rules": [
+     "STI000"
+    ],
+    "sti_exit": 0,
+    "mfs_exit": 0,
+    "mfs_route": "sti"
+   }
+  },
+  {
+   "id": "W3",
+   "case": "hub_st",
+   "expected": "model.safetensors.index.json; only STI000 INFO; exits 0/0",
+   "result": "PASS",
+   "got": {
+    "name": "model.safetensors.index.json",
+    "non_info": [],
+    "rules": [
+     "STI000"
+    ],
+    "sti_exit": 0,
+    "mfs_exit": 0,
+    "mfs_route": "sti"
+   }
+  },
+  {
+   "id": "W4",
+   "case": "tf_st_fp16 index name and shard names",
+   "expected": "model.safetensors.index.fp16.json; model.fp16-0000k-of-0000N",
+   "result": "PASS",
+   "got": {
+    "name": "model.safetensors.index.fp16.json",
+    "shards": [
+     "model.fp16-00001-of-00007.safetensors",
+     "model.fp16-00002-of-00007.safetensors",
+     "model.fp16-00003-of-00007.safetensors",
+     "model.fp16-00004-of-00007.safetensors"
+    ],
+    "n_shards": 7
+   }
+  },
+  {
+   "id": "W5",
+   "case": "explicit sti.scan_file on the variant index",
+   "expected": "only STI000 INFO",
+   "result": "PASS",
+   "got": [
+    "STI000"
+   ]
+  },
+  {
+   "id": "G1",
+   "case": "the variant index is missed by routing and walks",
+   "expected": "route != sti; not kept by expand_paths; scan_path(dir) silent",
+   "result": "PASS",
+   "got": {
+    "route": "keras",
+    "route_kinds": [
+     "keras"
+    ],
+    "kept": [
+     "model.fp16-00006-of-00007.safetensors",
+     "model.fp16-00007-of-00007.safetensors",
+     "model.fp16-00001-of-00007.safetensors",
+     "model.fp16-00004-of-00007.safetensors",
+     "config.json",
+     "model.fp16-00005-of-00007.safetensors",
+     "model.fp16-00002-of-00007.safetensors",
+     "model.fp16-00003-of-00007.safetensors"
+    ],
+    "scan_path_hits": []
+   }
+  },
+  {
+   "id": "E1",
+   "case": "edited value '../outside.safetensors'",
+   "expected": "exactly STI002 HIGH",
+   "result": "PASS",
+   "got": [
+    [
+     "STI002",
+     "HIGH"
+    ]
+   ]
+  },
+  {
+   "id": "E2",
+   "case": "edited value '/tmp/outside.safetensors'",
+   "expected": "exactly STI001 HIGH",
+   "result": "PASS",
+   "got": [
+    [
+     "STI001",
+     "HIGH"
+    ]
+   ]
+  },
+  {
+   "id": "E3",
+   "case": "edited value 'C:\\\\outside.safetensors'",
+   "expected": "exactly STI001 HIGH",
+   "result": "PASS",
+   "got": [
+    [
+     "STI001",
+     "HIGH"
+    ]
+   ]
+  },
+  {
+   "id": "E4",
+   "case": "edited value 'https://example.invalid/x.safetensors'",
+   "expected": "exactly STI004 MEDIUM",
+   "result": "PASS",
+   "got": [
+    [
+     "STI004",
+     "MEDIUM"
+    ]
+   ]
+  },
+  {
+   "id": "E5",
+   "case": "edited value 'sub\\\\x.safetensors'",
+   "expected": "exactly STI003 MEDIUM",
+   "result": "PASS",
+   "got": [
+    [
+     "STI003",
+     "MEDIUM"
+    ]
+   ]
+  },
+  {
+   "id": "E6",
+   "case": "edited value 'sub/x.safetensors'",
+   "expected": "exactly STI005 LOW",
+   "result": "PASS",
+   "got": [
+    [
+     "STI005",
+     "LOW"
+    ]
+   ]
+  },
+  {
+   "id": "E7",
+   "case": "edited value 123",
+   "expected": "exactly STI007 LOW",
+   "result": "PASS",
+   "got": [
+    [
+     "STI007",
+     "LOW"
+    ]
+   ]
+  },
+  {
+   "id": "E8",
+   "case": "edited value 'a\\x00b.safetensors'",
+   "expected": "exactly STI006 MEDIUM",
+   "result": "PASS",
+   "got": [
+    [
+     "STI006",
+     "MEDIUM"
+    ]
+   ]
+  },
+  {
+   "id": "E9",
+   "case": "model-file-scan default gate on E1 and E6",
+   "expected": "exit 1 on E1, exit 0 on E6",
+   "result": "PASS",
+   "got": {
+    "E1": 1,
+    "E6": 0,
+    "E1_tail": "t of it, letting an untrusted index make a naive loader read/write outside the model package.\n      at /out/files/edited/E1/model.safetensors.index.json [weight_map 'transformer.h.0.attn.c_attn.bias']",
+    "E6_tail": "ther than a bare filename beside the index. This is unusual for a shard map and worth review.\n      at /out/files/edited/E6/model.safetensors.index.json [weight_map 'transformer.h.0.attn.c_attn.bias']"
+   }
+  },
+  {
+   "id": "G2",
+   "case": "edited '..' in a variant-named index",
+   "expected": "explicit scan_file STI002 HIGH; MFS dir walk no STI finding",
+   "result": "PASS",
+   "got": {
+    "explicit": [
+     [
+      "STI002",
+      "HIGH"
+     ]
+    ],
+    "walk_files": [],
+    "walk_rules": [],
+    "mfs_dir_exit": 0
+   }
+  },
+  {
+   "id": "C1",
+   "case": "candidate name pattern on every writer file",
+   "expected": "matches exactly the files holding a weight_map",
+   "result": "PASS",
+   "got": {
+    "matched": [
+     "tf_st/model.safetensors.index.json",
+     "tf_bin/model.safetensors.index.json",
+     "tf_st_fp16/model.safetensors.index.fp16.json",
+     "tf_bin_fp16/model.safetensors.index.fp16.json",
+     "hub_st/model.safetensors.index.json"
+    ],
+    "mismatch": []
+   }
+  },
+  {
+   "id": "H2",
+   "case": "Hub sample: no HIGH finding",
+   "expected": "0 files",
+   "result": "PASS",
+   "got": {
+    "n": 0,
+    "files": []
+   }
+  },
+  {
+   "id": "H3",
+   "case": "Hub sample: MEDIUM findings",
+   "expected": "<= 2% of files",
+   "result": "PASS",
+   "got": {
+    "n": 0,
+    "of": 394,
+    "files": []
+   }
+  },
+  {
+   "id": "H4",
+   "case": "Hub sample: STI005 sub-folder shards",
+   "expected": "<= 2% of files",
+   "result": "PASS",
+   "got": {
+    "n": 0,
+    "of": 394,
+    "files": []
+   }
+  },
+  {
+   "id": "H5",
+   "case": "Hub sample: a variant-named index is present",
+   "expected": ">= 1",
+   "result": "PASS",
+   "got": {
+    "n": 2,
+    "files": [
+     [
+      "openai/whisper-large-v3",
+      "model.safetensors.index.fp32.json"
+     ],
+     [
+      "openai/whisper-large-v3",
+      "pytorch_model.bin.index.fp32.json"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "H6",
+   "case": "Hub sample: routing by name",
+   "expected": "*.index.json -> sti; variant names -> not sti",
+   "result": "PASS",
+   "got": {
+    "mismatches": []
+   }
+  }
+ ]
+}
