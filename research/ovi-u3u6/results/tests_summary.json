@@ -1,0 +1,9 @@
+{
+ "ran": 1316,
+ "failures": [
+  "test_version (test_openvino_ir_scan.OpenVinoIrScanTests.test_version)"
+ ],
+ "errors": [],
+ "skipped": 3,
+ "ok": false
+}
