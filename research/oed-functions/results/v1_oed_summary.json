@@ -1,0 +1,479 @@
+{
+ "rows": {
+  "P1": {
+   "files": {
+    "onnx_external_data_scan.py": {
+     "changes": [
+      "version 0.2.0",
+      "MAX_BYTES 2 GiB",
+      "field constants",
+      "_as_text accepts memoryview",
+      "_walk_function/_walk_training_info",
+      "scan_bytes walks functions/training_info",
+      "scan_bytes uses memoryview",
+      "scan_file OED006"
+     ],
+     "second_pass": [],
+     "lines": [
+      361,
+      407
+     ],
+     "compiles": true,
+     "ok": true
+    },
+    "onnx_external_data_key_scan.py": {
+     "changes": [
+      "version 0.2.0",
+      "field constants",
+      "_walk_function/_walk_training_info",
+      "scan_bytes walks functions/training_info"
+     ],
+     "second_pass": [],
+     "lines": [
+      297,
+      335
+     ],
+     "compiles": true,
+     "ok": true
+    },
+    "ONNX_EXTERNAL_DATA_SCAN.md": {
+     "changes": [
+      "doc section"
+     ],
+     "second_pass": [],
+     "lines": [
+      85,
+      108
+     ],
+     "compiles": true,
+     "ok": true
+    },
+    "ONNX_EXTERNAL_DATA_KEY_SCAN.md": {
+     "changes": [
+      "doc section"
+     ],
+     "second_pass": [],
+     "lines": [
+      83,
+      93
+     ],
+     "compiles": true,
+     "ok": true
+    }
+   },
+   "held": true
+  },
+  "S1": {
+   "ran": 1335,
+   "failures": [],
+   "errors": [],
+   "held": true
+  },
+  "W1": {
+   "func_tensor_name": "fconst",
+   "func_data_location": 1,
+   "func_external": {
+    "location": "weights.bin",
+    "offset": "4096",
+    "length": "4096"
+   },
+   "func_has_raw_data": false,
+   "init_external": {
+    "location": "weights.bin",
+    "offset": "0",
+    "length": "4096"
+   },
+   "weights_bin_bytes": 8192,
+   "held": true
+  },
+  "L1": {
+   "raw_data_bytes": 4096,
+   "equal_to_written": true,
+   "data_location_after_load": 0,
+   "held": true
+  },
+  "H1": {
+   "oed_new": {
+    "honest_func": null,
+    "honest_plain": null,
+    "honest_train": null,
+    "h4_big_honest": null
+   },
+   "oek_new": {
+    "honest_func": null,
+    "honest_plain": null,
+    "honest_train": null
+   },
+   "held": false
+  },
+  "E1": {
+   "old": null,
+   "new": null,
+   "held": false
+  },
+  "E2": {
+   "old": null,
+   "new": null,
+   "held": false
+  },
+  "E3": {
+   "old": null,
+   "new": null,
+   "held": false
+  },
+  "E4": {
+   "pre": {
+    "file_bytes": 272000099,
+    "location_offset": 272000079,
+    "old_cap": 268435456
+   },
+   "old": null,
+   "new": null,
+   "held": false
+  },
+  "K1": {
+   "old": [
+    null,
+    null
+   ],
+   "new": [
+    null,
+    null
+   ],
+   "held": false
+  },
+  "C1": {
+   "old": null,
+   "new": null,
+   "held": false
+  },
+  "T1": {
+   "seconds": null,
+   "maxrss_mb": 18.9,
+   "old_seconds": null,
+   "old_maxrss_mb": 18.9,
+   "held": false
+  },
+  "Hb": {
+   "bands": {
+    "<=256MiB": 60,
+    "256MiB-2GiB": 33,
+    ">2GiB": 0
+   },
+   "repos_read": 100,
+   "unique_blobs": 31,
+   "repos_with_band_file": 14,
+   "held": true
+  }
+ },
+ "reported": {
+  "fetch": {
+   "tarball_bytes": 749272,
+   "missing": [],
+   "versions": {
+    "model_file_scan.py": "0.12.0",
+    "onnx_external_data_scan.py": "0.1.0",
+    "onnx_external_data_key_scan.py": "0.1.0"
+   }
+  },
+  "setup": {
+   "pip_returncode": 0,
+   "pip_stderr_tail": "",
+   "versions": {
+    "onnx": "1.23.2",
+    "numpy": "2.5.4"
+   }
+  },
+  "scans": {
+   "honest_func": {
+    "oed_old": {
+     "module": "orig/onnx_external_data_scan.py",
+     "file": "/work/files/honest_func/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 18.9
+    },
+    "oed_new": {
+     "module": "tree/onnx_external_data_scan.py",
+     "file": "/work/files/honest_func/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 18.8
+    },
+    "oek_old": {
+     "module": "orig/onnx_external_data_key_scan.py",
+     "file": "/work/files/honest_func/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 19.0
+    },
+    "oek_new": {
+     "module": "tree/onnx_external_data_key_scan.py",
+     "file": "/work/files/honest_func/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 18.8
+    }
+   },
+   "honest_plain": {
+    "oed_old": {
+     "module": "orig/onnx_external_data_scan.py",
+     "file": "/work/files/honest_plain/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 18.9
+    },
+    "oed_new": {
+     "module": "tree/onnx_external_data_scan.py",
+     "file": "/work/files/honest_plain/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 19.0
+    },
+    "oek_old": {
+     "module": "orig/onnx_external_data_key_scan.py",
+     "file": "/work/files/honest_plain/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 18.9
+    },
+    "oek_new": {
+     "module": "tree/onnx_external_data_key_scan.py",
+     "file": "/work/files/honest_plain/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 18.9
+    }
+   },
+   "honest_train": {
+    "oed_old": {
+     "module": "orig/onnx_external_data_scan.py",
+     "file": "/work/files/honest_train/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 18.9
+    },
+    "oed_new": {
+     "module": "tree/onnx_external_data_scan.py",
+     "file": "/work/files/honest_train/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 18.9
+    },
+    "oek_old": {
+     "module": "orig/onnx_external_data_key_scan.py",
+     "file": "/work/files/honest_train/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 19.1
+    },
+    "oek_new": {
+     "module": "tree/onnx_external_data_key_scan.py",
+     "file": "/work/files/honest_train/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 18.9
+    }
+   },
+   "h4_big_honest": {
+    "oed_old": {
+     "module": "orig/onnx_external_data_scan.py",
+     "file": "/work/files/h4_big_honest/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 18.9
+    },
+    "oed_new": {
+     "module": "tree/onnx_external_data_scan.py",
+     "file": "/work/files/h4_big_honest/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 18.9
+    }
+   },
+   "e1_func_parent": {
+    "oed_old": {
+     "module": "orig/onnx_external_data_scan.py",
+     "file": "/work/files/e1_func_parent/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 18.9
+    },
+    "oed_new": {
+     "module": "tree/onnx_external_data_scan.py",
+     "file": "/work/files/e1_func_parent/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 19.0
+    }
+   },
+   "e2_func_attrproto_abs": {
+    "oed_old": {
+     "module": "orig/onnx_external_data_scan.py",
+     "file": "/work/files/e2_func_attrproto_abs/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 18.8
+    },
+    "oed_new": {
+     "module": "tree/onnx_external_data_scan.py",
+     "file": "/work/files/e2_func_attrproto_abs/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 19.0
+    }
+   },
+   "e3_train_backslash": {
+    "oed_old": {
+     "module": "orig/onnx_external_data_scan.py",
+     "file": "/work/files/e3_train_backslash/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 18.9
+    },
+    "oed_new": {
+     "module": "tree/onnx_external_data_scan.py",
+     "file": "/work/files/e3_train_backslash/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 18.9
+    }
+   },
+   "e4_big_after_cap": {
+    "oed_old": {
+     "module": "orig/onnx_external_data_scan.py",
+     "file": "/work/files/e4_big_after_cap/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 18.9
+    },
+    "oed_new": {
+     "module": "tree/onnx_external_data_scan.py",
+     "file": "/work/files/e4_big_after_cap/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 18.9
+    }
+   },
+   "k1_func_key": {
+    "oed_old": {
+     "module": "orig/onnx_external_data_scan.py",
+     "file": "/work/files/k1_func_key/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 18.8
+    },
+    "oed_new": {
+     "module": "tree/onnx_external_data_scan.py",
+     "file": "/work/files/k1_func_key/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 19.0
+    },
+    "oek_old": {
+     "module": "orig/onnx_external_data_key_scan.py",
+     "file": "/work/files/k1_func_key/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 19.0
+    },
+    "oek_new": {
+     "module": "tree/onnx_external_data_key_scan.py",
+     "file": "/work/files/k1_func_key/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 19.0
+    }
+   },
+   "c1_graph_parent": {
+    "oed_old": {
+     "module": "orig/onnx_external_data_scan.py",
+     "file": "/work/files/c1_graph_parent/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 18.9
+    },
+    "oed_new": {
+     "module": "tree/onnx_external_data_scan.py",
+     "file": "/work/files/c1_graph_parent/model.onnx",
+     "error": "AttributeError: 'NoneType' object has no attribute '__dict__'",
+     "maxrss_mb": 18.9
+    }
+   }
+  },
+  "hub": {
+   "repos_listed": 100,
+   "repos_read": 100,
+   "errors": [],
+   "onnx_files": 93,
+   "bands": {
+    "<=256MiB": 60,
+    "256MiB-2GiB": 33,
+    ">2GiB": 0
+   },
+   "unique_blobs_256MiB_2GiB": 31,
+   "repos_with_band_file": 14,
+   "repos_with_external_data_file": 3,
+   "examples_band": [
+    [
+     "openai-community/gpt2",
+     "onnx/decoder_model.onnx",
+     653665842
+    ],
+    [
+     "openai-community/gpt2",
+     "onnx/decoder_model_merged.onnx",
+     655189339
+    ],
+    [
+     "openai-community/gpt2",
+     "onnx/decoder_with_past_model.onnx",
+     653672649
+    ],
+    [
+     "google-bert/bert-base-uncased",
+     "model.onnx",
+     532091246
+    ],
+    [
+     "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+     "onnx/model.onnx",
+     470301610
+    ],
+    [
+     "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+     "onnx/model_O1.onnx",
+     470212363
+    ],
+    [
+     "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+     "onnx/model_O2.onnx",
+     470145917
+    ],
+    [
+     "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+     "onnx/model_O3.onnx",
+     470145772
+    ],
+    [
+     "sentence-transformers/all-mpnet-base-v2",
+     "onnx/model.onnx",
+     435826548
+    ],
+    [
+     "sentence-transformers/all-mpnet-base-v2",
+     "onnx/model_O1.onnx",
+     435730180
+    ],
+    [
+     "sentence-transformers/all-mpnet-base-v2",
+     "onnx/model_O2.onnx",
+     435666661
+    ],
+    [
+     "sentence-transformers/all-mpnet-base-v2",
+     "onnx/model_O3.onnx",
+     435666516
+    ],
+    [
+     "nomic-ai/nomic-embed-text-v1.5",
+     "onnx/model.onnx",
+     547310275
+    ],
+    [
+     "nomic-ai/nomic-embed-text-v1.5",
+     "onnx/model_fp16.onnx",
+     273859028
+    ],
+    [
+     "intfloat/multilingual-e5-small",
+     "onnx/model.onnx",
+     470268510
+    ]
+   ],
+   "examples_over_2GiB": []
+  }
+ },
+ "held": 5,
+ "graded": 13,
+ "held_rows": [
+  "P1",
+  "S1",
+  "W1",
+  "L1",
+  "Hb"
+ ]
+}

@@ -3,7 +3,8 @@
 # SPDX-License-Identifier: Apache-2.0
 """Graded check for onnx_external_data_scan 0.2.0 and
 onnx_external_data_key_scan 0.2.0 (pre-registered in
-research/PREREG_OED_FUNCTIONS.md). Rows:
+research/PREREG_OED_FUNCTIONS.md; job oed-functions-v2 under amendment 1).
+Rows:
 
   P1  the patch applied cleanly to all four files
   S1  the whole keras-model-scan suite passes with the patched files
@@ -22,6 +23,9 @@ research/PREREG_OED_FUNCTIONS.md). Rows:
   C1  graph initializer "../g.bin": {OED001} in both versions
   T1  0.2.0 on the 272 MB file: under 60 s and under 1024 MB peak RSS
   Hb  Hub census: at least 10 .onnx files in (256 MiB, 2 GiB]
+
+The rows and their criteria are the same as in v1. v2 only fixes the scan
+harness (scan_one.py) and also reports how many scans errored.
 
 Writes OUT/oed_summary.json and OUT/writer_report.json. Always exits 0.
 
@@ -124,6 +128,9 @@ def main():
                     res[case]["oek_old"] = scan(os.path.join(a.orig, OEK), f)
                     res[case]["oek_new"] = scan(os.path.join(a.tree, OEK), f)
             summary["reported"]["scans"] = res
+            summary["reported"]["scan_errors"] = sorted(
+                "%s/%s" % (c, w) for c, d in res.items()
+                for w, v in d.items() if "error" in v)
 
             def rules(case, which):
                 return res[case][which].get("rules")

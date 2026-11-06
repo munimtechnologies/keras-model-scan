@@ -9,6 +9,10 @@ No model file is downloaded. Counts .onnx files by size band, especially the
 band (256 MiB, 2 GiB] that onnx_external_data_scan 0.1.0 never fully read.
 Writes hub_sizes.json. Always exits 0.
 
+v2 (amendment 1): the list query uses filter=onnx. v1 used library=onnx,
+which the Hub API ignores, so v1 listed the 100 most-downloaded repos of any
+kind, not the onnx-tagged repos that the pre-registration names.
+
 Made with AI agents working in the name of MV2 of Munim, Inc. Apache-2.0.
 """
 import json
@@ -17,7 +21,7 @@ import time
 import urllib.parse
 import urllib.request
 
-LIST = ("https://huggingface.co/api/models?library=onnx&sort=downloads"
+LIST = ("https://huggingface.co/api/models?filter=onnx&sort=downloads"
         "&direction=-1&limit=100")
 INFO = "https://huggingface.co/api/models/%s?blobs=true"
 MIB = 1024 * 1024
