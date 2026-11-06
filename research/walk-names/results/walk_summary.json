@@ -1,0 +1,732 @@
+{
+ "check_version": 1,
+ "error": "",
+ "held": 13,
+ "graded": 15,
+ "not_run": [],
+ "reported": {
+  "setup": {
+   "torch_ok": true,
+   "torch_tail": "kB)\nDownloading https://download.pytorch.org/whl/markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)\nDownloading mpmath-1.3.0-py3-none-any.whl (536 kB)\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 536.2/536.2 kB 126.1 MB/s eta 0:00:00\nInstalling collected packages: mpmath, typing-extensions, sympy, setuptools, networkx, MarkupSafe, fsspec, filelock, jinja2, torch\nSuccessfully installed MarkupSafe-3.0.3 filelock-4.2.4 fsspec-2026.9.0 jinja2-3.1.6 mpmath-1.3.0 networkx-3.7 setuptools-78.1.0 sympy-1.14.0 torch-2.15.0+cpu typing-extensions-4.16.0",
+   "paddle_ok": true,
+   "paddle_tail": "\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 7.1/7.1 MB 64.8 MB/s eta 0:00:00\nDownloading anyio-4.16.0-py3-none-any.whl (134 kB)\nDownloading idna-3.20-py3-none-any.whl (69 kB)\nDownloading certifi-2026.10.23-py3-none-any.whl (135 kB)\nDownloading h11-0.16.0-py3-none-any.whl (37 kB)\nInstalling collected packages: safetensors, protobuf, Pillow, numpy, idna, h11, certifi, opt_einsum, httpcore, anyio, httpx, paddlepaddle\nSuccessfully installed Pillow-13.0.0 anyio-4.16.0 certifi-2026.10.23 h11-0.16.0 httpcore-1.0.9 httpx-0.28.1 idna-3.20 numpy-2.5.4 opt_einsum-3.3.0 paddlepaddle-3.3.1 protobuf-7.36.2 safetensors-0.8.0",
+   "versions": {
+    "torch": "2.15.0+cpu",
+    "paddlepaddle": "3.3.1",
+    "numpy": "2.5.4"
+   }
+  },
+  "fetch": {
+   "waited_seconds": 0,
+   "polls": 1,
+   "pyproject_seen": "0.12.0",
+   "tree_mfs_version": "0.12.0",
+   "combined": true,
+   "tarball_bytes": 766287,
+   "missing": []
+  },
+  "writers": {
+   "tv_pth_tar": {
+    "exit": 0,
+    "files": [
+     "checkpoint.pth.tar",
+     "model_best.pth.tar"
+    ],
+    "tail": "written ['checkpoint.pth.tar', 'model_best.pth.tar']"
+   },
+   "legacy_pth_tar": {
+    "exit": 0,
+    "files": [
+     "checkpoint.pth.tar"
+    ],
+    "tail": "written ['checkpoint.pth.tar']"
+   },
+   "pd_params": {
+    "exit": 0,
+    "files": [
+     "model.pdopt",
+     "model.pdparams"
+    ],
+    "tail": "written ['model.pdopt', 'model.pdparams']\n/usr/local/lib/python3.12/site-packages/paddle/utils/cpp_extension/extension_utils.py:712: UserWarning: No ccache found. Please be aware that recompiling all source files may be required. You can download and install ccache from: https://github.com/ccache/ccache/blob/master/doc/INSTALL.md\n  warnings.warn(warning_message)"
+   },
+   "ptl": {
+    "exit": 0,
+    "files": [
+     "model.ptl"
+    ],
+    "tail": "ecuTorch.             https://docs.pytorch.org/executorch/stable/getting-started.html\n  torch.jit.script(m)._save_for_lite_interpreter(\n/usr/local/lib/python3.12/site-packages/typing_extensions.py:3140: FutureWarning: Lite Interpreter is deprecated. Please consider switching to ExecuTorch.                 https://docs.pytorch.org/executorch/stable/getting-started.html\n  return arg(*args, **kwargs)"
+   },
+   "pt2": {
+    "exit": 0,
+    "files": [
+     "model.pt2"
+    ],
+    "tail": "written ['model.pt2']"
+   }
+  },
+  "magic": {
+   "tv_pth_tar/checkpoint.pth.tar": "504b0304",
+   "tv_pth_tar/model_best.pth.tar": "504b0304",
+   "legacy_pth_tar/checkpoint.pth.tar": "80028a0a",
+   "pd_params/model.pdopt": "800495b5",
+   "pd_params/model.pdparams": "80049529",
+   "ptl/model.ptl": "504b0304",
+   "pt2/model.pt2": "504b0304"
+  },
+  "ptl_pt2": {
+   "ptl": {
+    "scan": [
+     [
+      "PKL003",
+      "MEDIUM"
+     ]
+    ],
+    "kept_orig": [],
+    "kept_new": [],
+    "file_exit": 1
+   },
+   "pt2": {
+    "scan": [
+     [
+      "PKL000",
+      "LOW"
+     ]
+    ],
+    "kept_orig": [],
+    "kept_new": [],
+    "file_exit": 0
+   }
+  },
+  "hub_lists": {
+   "pytorch": 1000,
+   "paddlepaddle": 261
+  },
+  "hub_name_classes": {
+   ".pdparams": 1427,
+   ".pdopt": 48
+  },
+  "hub_skipped_ext_top30": [
+   [
+    ".md",
+    1645
+   ],
+   [
+    "(none)",
+    1428
+   ],
+   [
+    ".yml",
+    908
+   ],
+   [
+    ".py",
+    879
+   ],
+   [
+    ".png",
+    629
+   ],
+   [
+    ".pyc",
+    276
+   ],
+   [
+    ".log",
+    174
+   ],
+   [
+    ".jpg",
+    148
+   ],
+   [
+    ".yaml",
+    137
+   ],
+   [
+    ".pdstate",
+    120
+   ],
+   [
+    ".csv",
+    83
+   ],
+   [
+    ".states",
+    71
+   ],
+   [
+    ".mnn",
+    69
+   ],
+   [
+    ".0",
+    67
+   ],
+   [
+    ".sh",
+    60
+   ],
+   [
+    ".pdiparams",
+    59
+   ],
+   [
+    ".jsonl",
+    58
+   ],
+   [
+    ".ot",
+    51
+   ],
+   [
+    ".mapping",
+    50
+   ],
+   [
+    ".nb",
+    49
+   ],
+   [
+    ".h",
+    46
+   ],
+   [
+    ".spm",
+    44
+   ],
+   [
+    ".1",
+    42
+   ],
+   [
+    ".param",
+    36
+   ],
+   [
+    ".cc",
+    33
+   ],
+   [
+    ".wav",
+    30
+   ],
+   [
+    ".tnnmodel",
+    30
+   ],
+   [
+    ".tnnproto",
+    30
+   ],
+   [
+    ".jinja",
+    27
+   ],
+   [
+    ".gif",
+    25
+   ]
+  ],
+  "hub_download": {
+   "ok": 7,
+   "errors": [
+    [
+     "PaddlePaddle/PP-Chart2Table",
+     "model_state.pdparams",
+     "error: ValueError: larger than 25000000 bytes"
+    ],
+    [
+     "Kellenok/PP-OCRv6_manga",
+     "rec/manga_rec_v0.3.pdparams",
+     "error: ValueError: larger than 25000000 bytes"
+    ],
+    [
+     "PaddlePaddle/PP-DocBee2-3B",
+     "model_state.pdparams",
+     "error: ValueError: larger than 25000000 bytes"
+    ],
+    [
+     "tieubaoca/pp-ocrv6-medium-rec-vietnamese",
+     "training_checkpoint/best_accuracy.pdparams",
+     "error: ValueError: larger than 25000000 bytes"
+    ],
+    [
+     "junnyu/roformer_chinese_base",
+     "model_state.pdparams",
+     "error: ValueError: larger than 25000000 bytes"
+    ],
+    [
+     "PaddlePaddle/PP-DocBee-2B",
+     "model_state.pdparams",
+     "error: ValueError: larger than 25000000 bytes"
+    ],
+    [
+     "thealper2/LaTeX_OCR_rec-im2latex",
+     "best_accuracy.pdparams",
+     "error: ValueError: larger than 25000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-deepseek-coder-1.3b-base",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 25000000 bytes"
+    ],
+    [
+     "ANZ-Innovation/PP-DocLayoutV3-VNExercise",
+     "checkpoint-54/54.pdopt",
+     "error: ValueError: larger than 25000000 bytes"
+    ],
+    [
+     "ANZ-Innovation/PP-DocLayoutV3-VNExercise",
+     "checkpoint-54/54.pdparams",
+     "error: ValueError: larger than 25000000 bytes"
+    ],
+    [
+     "third-party-dev/yolo5su",
+     "yolov5su_paddle_model/model.pdparams",
+     "error: ValueError: larger than 25000000 bytes"
+    ],
+    [
+     "PaddlePaddle/PP-DocBee-7B",
+     "model_state.pdparams",
+     "error: ValueError: larger than 25000000 bytes"
+    ],
+    [
+     "junnyu/roformer_chinese_char_base",
+     "model_state.pdparams",
+     "error: ValueError: larger than 25000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-UnlikelihoodTraining-Token-Level",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 25000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-galactica-125m",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 25000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-gpt-neo-125m",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 25000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-opt-125m",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 25000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-gpt-sw3-126m",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 25000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-internlm2-1_8b",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 25000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-pythia-70m",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 25000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-phi-1_5",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 25000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-TinyLlama-1.1B-intermediate-step-1195k-token-2.5T",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 25000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-UnlikelihoodTraining-Sequence-Level",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 25000000 bytes"
+    ]
+   ],
+   "skipped_gated": [
+    "Vphuc/PP-OCRv5-mobile-rec-vi"
+   ]
+  },
+  "hub_scans": {
+   "Kellenok/PP-OCRv6_manga/det/manga_det_v0.3.pdparams": [
+    [
+     "PKL007",
+     "HIGH"
+    ]
+   ],
+   "meister1378/VLLORA_OCRPUBLIC_v2/scheduler.pdparams": [],
+   "PaddleCI/tiny-random-plato-mini/model_state.pdparams": [
+    [
+     "PKL007",
+     "HIGH"
+    ]
+   ],
+   "PaddleCI/tiny-random-bert/model_state.pdparams": [
+    [
+     "PKL007",
+     "HIGH"
+    ]
+   ],
+   "sijunhe/test_unet1d/model_state.pdparams": [
+    [
+     "PKL007",
+     "HIGH"
+    ]
+   ],
+   "sijunhe/ci-test-ernie-model-test/model_state.pdparams": [
+    [
+     "PKL007",
+     "HIGH"
+    ]
+   ],
+   "PaddleCI/tiny-random-unimo-text-1.0/model_state.pdparams": [
+    [
+     "PKL007",
+     "HIGH"
+    ]
+   ]
+  }
+ },
+ "rows": [
+  {
+   "id": "P1",
+   "case": "patch applies once, second pass no-op, nothing lost",
+   "expected": "ok",
+   "result": "PASS",
+   "got": {
+    "files": {
+     "model_file_scan.py": {
+      "changes": [
+       "helper",
+       "walk keeps pickle names",
+       "version 0.13.0"
+      ],
+      "second_pass": [],
+      "lost": [],
+      "lines": [
+       527,
+       544
+      ],
+      "ok": true
+     },
+     "pyproject.toml": {
+      "changes": [
+       "version = \"0.13.0\""
+      ],
+      "second_pass": [],
+      "ok": true
+     },
+     "test_attribution.py": {
+      "changes": [
+       "(model_file_scan, (0, 13, 0))"
+      ],
+      "second_pass": [],
+      "ok": true
+     },
+     "MODEL_FILE_SCAN.md": {
+      "changes": [
+       "## Formats routed in 0.13.0 (release v0.53.0)",
+       "`.ckpt`, and a `.model` that is neither of the above; directory walks ",
+       "munimtechnologies/keras-model-scan@v0.53.0"
+      ],
+      "skipped": [],
+      "optional": true
+     }
+    },
+    "ok": true,
+    "written": [
+     "MODEL_FILE_SCAN.md",
+     "model_file_scan.py",
+     "pyproject.toml",
+     "test_attribution.py",
+     "test_model_file_scan_walk_names.py"
+    ]
+   }
+  },
+  {
+   "id": "V1",
+   "case": "versions",
+   "expected": "orig 0.12.0, new 0.13.0, pyproject 0.13.0",
+   "result": "PASS",
+   "got": {
+    "orig": "0.12.0",
+    "new": "0.13.0",
+    "pyproject": "0.13.0"
+   }
+  },
+  {
+   "id": "S1",
+   "case": "full unit-test suite on the patched tree",
+   "expected": "0 failures, 0 errors",
+   "result": "PASS",
+   "got": {
+    "ran": 1328,
+    "failures": [],
+    "errors": [],
+    "skipped": 3,
+    "error": null
+   }
+  },
+  {
+   "id": "S2",
+   "case": "new test module alone",
+   "expected": "exit 0; at least 9 tests",
+   "result": "PASS",
+   "got": {
+    "exit": 0,
+    "ran": 9,
+    "tail": ". ok\ntest_plain_tar_archive_still_skipped (test_model_file_scan_walk_names.WalkNames.test_plain_tar_archive_still_skipped) ... ok\ntest_route_is_pickle (test_model_file_scan_walk_names.WalkNames.test_route_is_pickle) ... ok\ntest_version (test_model_file_scan_walk_names.WalkNames.test_version) ... ok\ntest_walk_keeps_names (test_model_file_scan_walk_names.WalkNames.test_walk_keeps_names) ... ok\ntest_walk_skips_other_names (test_model_file_scan_walk_names.WalkNames.test_walk_skips_other_names) ... ok\n\n----------------------------------------------------------------------\nRan 9 tests in 0.129s\n\nOK\n"
+   }
+  },
+  {
+   "id": "R0",
+   "case": "route() of every written and planted name, both versions",
+   "expected": "pickle / pickle",
+   "result": "PASS",
+   "got": {
+    "checkpoint.pth.tar": [
+     "pickle",
+     "pickle"
+    ],
+    "evil.pdparams": [
+     "pickle",
+     "pickle"
+    ],
+    "model.pdopt": [
+     "pickle",
+     "pickle"
+    ],
+    "model.pdparams": [
+     "pickle",
+     "pickle"
+    ],
+    "model.pt2": [
+     "pickle",
+     "pickle"
+    ],
+    "model.ptl": [
+     "pickle",
+     "pickle"
+    ],
+    "model_best.pth.tar": [
+     "pickle",
+     "pickle"
+    ],
+    "weights.pt.tar": [
+     "pickle",
+     "pickle"
+    ]
+   }
+  },
+  {
+   "id": "G1",
+   "case": "0.12.0 walk of the writer folders",
+   "expected": "keeps nothing",
+   "result": "PASS",
+   "got": {
+    "tv_pth_tar": [],
+    "legacy_pth_tar": [],
+    "pd_params": []
+   }
+  },
+  {
+   "id": "F1",
+   "case": "0.13.0 walk of the writer folders",
+   "expected": "keeps exactly the written files",
+   "result": "PASS",
+   "got": {
+    "tv_pth_tar": [
+     "checkpoint.pth.tar",
+     "model_best.pth.tar"
+    ],
+    "legacy_pth_tar": [
+     "checkpoint.pth.tar"
+    ],
+    "pd_params": [
+     "model.pdopt",
+     "model.pdparams"
+    ]
+   }
+  },
+  {
+   "id": "F3",
+   "case": "0.13.0 on honest writer files",
+   "expected": "nothing above LOW; folder exit 0",
+   "result": "FAIL",
+   "got": {
+    "tv_pth_tar": {
+     "scan": {
+      "checkpoint.pth.tar": [],
+      "model_best.pth.tar": []
+     },
+     "folder_exit": 0
+    },
+    "legacy_pth_tar": {
+     "scan": {
+      "checkpoint.pth.tar": []
+     },
+     "folder_exit": 0
+    },
+    "pd_params": {
+     "scan": {
+      "model.pdopt": [
+       [
+        "PKL007",
+        "HIGH"
+       ]
+      ],
+      "model.pdparams": [
+       [
+        "PKL007",
+        "HIGH"
+       ]
+      ]
+     },
+     "folder_exit": 1
+    }
+   }
+  },
+  {
+   "id": "G2",
+   "case": "0.12.0 CLI on the planted folders",
+   "expected": "exit 0, 'no model files found'",
+   "result": "PASS",
+   "got": {
+    "E1": 0,
+    "E2": 0,
+    "E3": 0,
+    "E4": 0
+   }
+  },
+  {
+   "id": "F2",
+   "case": "0.13.0 CLI on the planted folders",
+   "expected": "exit 1; PKL001 in the planted file",
+   "result": "PASS",
+   "got": {
+    "E1": {
+     "exit": 1,
+     "rules": [
+      [
+       "PKL001",
+       "CRITICAL"
+      ]
+     ]
+    },
+    "E2": {
+     "exit": 1,
+     "rules": [
+      [
+       "PKL001",
+       "CRITICAL"
+      ]
+     ]
+    },
+    "E3": {
+     "exit": 1,
+     "rules": [
+      [
+       "PKL001",
+       "CRITICAL"
+      ]
+     ]
+    },
+    "E4": {
+     "exit": 1,
+     "rules": [
+      [
+       "PKL001",
+       "CRITICAL"
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "id": "C1",
+   "case": "plain data.tar and logs.tar.gz",
+   "expected": "neither version keeps them; 0.13.0 exits 0",
+   "result": "PASS",
+   "got": {
+    "orig": [],
+    "new": [],
+    "new_exit": 0
+   }
+  },
+  {
+   "id": "H1",
+   "case": "gate: models listed",
+   "expected": ">= 100",
+   "result": "PASS",
+   "got": 1261
+  },
+  {
+   "id": "H2",
+   "case": "census: a .pdparams file among the listed models",
+   "expected": ">= 1",
+   "result": "PASS",
+   "got": 1427
+  },
+  {
+   "id": "H3",
+   "case": "0.13.0 on published files of these names",
+   "expected": "no HIGH or CRITICAL finding",
+   "result": "FAIL",
+   "got": {
+    "n": 7,
+    "high_or_critical": {
+     "Kellenok/PP-OCRv6_manga/det/manga_det_v0.3.pdparams": [
+      [
+       "PKL007",
+       "HIGH"
+      ]
+     ],
+     "PaddleCI/tiny-random-plato-mini/model_state.pdparams": [
+      [
+       "PKL007",
+       "HIGH"
+      ]
+     ],
+     "PaddleCI/tiny-random-bert/model_state.pdparams": [
+      [
+       "PKL007",
+       "HIGH"
+      ]
+     ],
+     "sijunhe/test_unet1d/model_state.pdparams": [
+      [
+       "PKL007",
+       "HIGH"
+      ]
+     ],
+     "sijunhe/ci-test-ernie-model-test/model_state.pdparams": [
+      [
+       "PKL007",
+       "HIGH"
+      ]
+     ],
+     "PaddleCI/tiny-random-unimo-text-1.0/model_state.pdparams": [
+      [
+       "PKL007",
+       "HIGH"
+      ]
+     ]
+    },
+    "medium": []
+   }
+  },
+  {
+   "id": "H4",
+   "case": "walks of published files' folders",
+   "expected": "0.12.0 keeps none; 0.13.0 keeps each",
+   "result": "PASS",
+   "got": {
+    "n": 7,
+    "bad": {}
+   }
+  }
+ ]
+}

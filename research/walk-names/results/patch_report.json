@@ -1,0 +1,49 @@
+{
+ "files": {
+  "model_file_scan.py": {
+   "changes": [
+    "helper",
+    "walk keeps pickle names",
+    "version 0.13.0"
+   ],
+   "second_pass": [],
+   "lost": [],
+   "lines": [
+    527,
+    544
+   ],
+   "ok": true
+  },
+  "pyproject.toml": {
+   "changes": [
+    "version = \"0.13.0\""
+   ],
+   "second_pass": [],
+   "ok": true
+  },
+  "test_attribution.py": {
+   "changes": [
+    "(model_file_scan, (0, 13, 0))"
+   ],
+   "second_pass": [],
+   "ok": true
+  },
+  "MODEL_FILE_SCAN.md": {
+   "changes": [
+    "## Formats routed in 0.13.0 (release v0.53.0)",
+    "`.ckpt`, and a `.model` that is neither of the above; directory walks ",
+    "munimtechnologies/keras-model-scan@v0.53.0"
+   ],
+   "skipped": [],
+   "optional": true
+  }
+ },
+ "ok": true,
+ "written": [
+  "MODEL_FILE_SCAN.md",
+  "model_file_scan.py",
+  "pyproject.toml",
+  "test_attribution.py",
+  "test_model_file_scan_walk_names.py"
+ ]
+}
