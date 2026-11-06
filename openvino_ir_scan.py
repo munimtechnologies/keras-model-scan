@@ -56,7 +56,7 @@ import re
 import sys
 import xml.etree.ElementTree as ET
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 MAX_FINDINGS = 1000
 MAX_EXAMPLES = 3
@@ -83,6 +83,7 @@ _BITWIDTH = {
     "i64": 64, "i32": 32, "i16": 16, "i8": 8, "i4": 4,
     "u64": 64, "u32": 32, "u16": 16, "u8": 8, "u4": 4, "u2": 2, "u1": 1,
     "nf4": 4, "boolean": 8,
+    "u3": 3, "u6": 6,  # tight size; never above the 3-byte split size
 }
 
 _LIB_SUFFIX = re.compile(r"\.(?:so(?:\.\d+)*|dll|dylib|lib)$", re.IGNORECASE)

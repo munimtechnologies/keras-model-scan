@@ -69,6 +69,21 @@ begin/end offset against the region. OVI003 still flags an out-of-range string
 `Const` as a malformed file; only the explanation changed. We found the error
 by reading the runtime source again; no test or user report was involved.
 
+<!-- ovi-u3u6 -->
+## u3 and u6 (v0.1.2, November 2026)
+
+OpenVINO's element types include `u3` and `u6`. Up to 0.1.1 they had no
+entry in the bit-width table, so the size-overflow check (OVI004) and the
+declared-size check (OVI005) skipped Consts of those types. 0.1.2 gives them
+3 and 6 bits. The size it requires is the tight size, ceil(n x bits / 8)
+bytes. OpenVINO up to 2026.4 writes a larger 3-byte layout (8 u3 or 4 u6
+values per 3 bytes, rounded up); OpenVINO PR #37430 (milestone 2026.5) packs
+them tightly. Honest files of either layout pass. Pre-registered checks on
+files written by OpenVINO 2026.4.1:
+[first run](REALFILE_CHECK_OVI_U3U6_2026-11.md) (its only failure was an old
+test pinning the version string) and the re-run in
+[research/PREREG_OVI_U3U6_V2.md](research/PREREG_OVI_U3U6_V2.md).
+
 ## Prior art and honest limits
 
 promptfoo's ModelAudit has an OpenVINO scanner that flags `python`/`custom`

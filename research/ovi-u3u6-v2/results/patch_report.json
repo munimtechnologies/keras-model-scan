@@ -1,0 +1,48 @@
+{
+ "files": {
+  "openvino_ir_scan.py": {
+   "changes": [
+    "u3/u6 bit widths",
+    "version 0.1.2"
+   ],
+   "second_pass": [],
+   "lost": [],
+   "lines": [
+    360,
+    361
+   ],
+   "ok": true
+  },
+  "test_openvino_ir_scan.py": {
+   "changes": [
+    "version pin -> minimum (0, 1, 2)"
+   ],
+   "second_pass": [],
+   "lost": [],
+   "lines": [
+    217,
+    218
+   ],
+   "ok": true
+  },
+  "OPENVINO_IR_SCAN.md": {
+   "changes": [
+    "doc section"
+   ],
+   "second_pass": [],
+   "lost": [],
+   "lines": [
+    91,
+    106
+   ],
+   "ok": true
+  }
+ },
+ "ok": true,
+ "written": [
+  "OPENVINO_IR_SCAN.md",
+  "openvino_ir_scan.py",
+  "test_openvino_ir_scan.py",
+  "test_openvino_ir_scan_u3u6.py"
+ ]
+}

@@ -31,7 +31,8 @@ def _rules(findings):
 class OpenVinoIrScanTests(unittest.TestCase):
 
     def test_version(self):
-        self.assertEqual(ov.__version__, "0.1.1")
+        parts = tuple(int(p) for p in ov.__version__.split("."))
+        self.assertGreaterEqual(parts, (0, 1, 2))
 
     def test_clean_const_no_findings(self):
         xml = _const({"element_type": "f32", "shape": "2,3",
