@@ -1,0 +1,50 @@
+{
+ "ok": true,
+ "cases": {
+  "w_small": {
+   "weights_bytes": 4002005,
+   "weights_head": "504b0304",
+   "nemo_bytes": 4014080,
+   "members": [
+    ".",
+    "./model_config.yaml",
+    "./model_weights.ckpt"
+   ],
+   "mode": "w:"
+  },
+  "w_big": {
+   "weights_bytes": 280002005,
+   "weights_head": "504b0304",
+   "nemo_bytes": 280012800,
+   "members": [
+    ".",
+    "./model_config.yaml",
+    "./model_weights.ckpt"
+   ],
+   "mode": "w:"
+  },
+  "w_big_gz": {
+   "weights_bytes": 280002005,
+   "weights_head": "504b0304",
+   "nemo_bytes": 273419,
+   "members": [
+    ".",
+    "./model_config.yaml",
+    "./model_weights.ckpt"
+   ],
+   "mode": "w:gz"
+  },
+  "w_legacy_big": {
+   "weights_bytes": 280000567,
+   "weights_head": "80028a0a",
+   "nemo_bytes": 280012800,
+   "members": [
+    ".",
+    "./model_config.yaml",
+    "./model_weights.ckpt"
+   ],
+   "mode": "w:"
+  }
+ },
+ "torch": "2.15.0+cpu"
+}

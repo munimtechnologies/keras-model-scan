@@ -187,7 +187,8 @@ class TestFindingShape(unittest.TestCase):
             self.assertTrue(f["cwe"])
 
     def test_version(self):
-        self.assertEqual(scan.__version__, "0.1.0")
+        self.assertGreaterEqual(
+            tuple(int(p) for p in scan.__version__.split(".")), (0, 2, 0))
 
 
 class TestScanFileAndMain(unittest.TestCase):

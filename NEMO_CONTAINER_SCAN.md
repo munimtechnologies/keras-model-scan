@@ -73,6 +73,36 @@ Exit `1` on any high finding, `0` otherwise, `2` on usage error or unreadable
 file. `scan_bytes(data, name=...)` and `scan_file(path)` return a list of finding
 dicts with keys `rule, severity, cve, cwe, message, evidence`.
 
+<!-- nemo-big -->
+## Big checkpoints (v0.2.0, November 2026)
+
+NeMo's `SaveRestoreConnector` writes `model_weights.ckpt` with `torch.save`
+and tars the folder uncompressed (`tarfile.open(filename, "w:")`,
+`arcname="."`). Most published `.nemo` models have a checkpoint larger than
+256 MiB. Up to 0.1.0 this scanner skipped any member larger than
+`MAX_MEMBER_BYTES` (256 MiB) **with no finding**, so for those models the
+pickle that `restore_from` loads was never checked and the result was clean,
+while a smaller honest model got NEMO010. `scan_file` also read the whole
+file into memory.
+
+0.2.0 opens a nested torch-save zip in place from the tar member (as a
+seekable file) and reads only the zip directory and its `*.pkl` entries, so a
+checkpoint of any size is checked. `scan_file` streams the tar from disk. Two
+new medium findings replace the silent skips:
+
+| Rule | Severity | When |
+|---|---|---|
+| NEMO030 | medium | a pickle that is still too big to check: a bare pickle member (protocol 2-5) or a `*.pkl` zip entry larger than `MAX_MEMBER_BYTES` |
+| NEMO031 | medium | the container has more members than `MAX_MEMBERS`; the rest were not checked |
+
+For comparison, promptfoo's ModelAudit `nemo_scanner` marks a checkpoint
+member above its 50 MB limit (`NEMO_MAX_CHECKPOINT_SCAN_BYTES`) inconclusive
+instead of scanning it (main, read 2026-11-06): it fails closed, where 0.1.0
+of this scanner failed open.
+
+Pre-registered check on files written by torch and on two published NVIDIA
+models: [research/PREREG_NEMO_BIG.md](research/PREREG_NEMO_BIG.md).
+
 ## Honest limits
 
 This is static source review, not exploitation. It flags imports, the container

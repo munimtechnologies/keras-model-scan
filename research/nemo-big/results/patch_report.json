@@ -1,0 +1,55 @@
+{
+ "files": {
+  "nemo_container_scan.py": {
+   "changes": [
+    "version 0.2.0",
+    "helpers + scan_bytes",
+    "scan_file streams"
+   ],
+   "second_pass": [],
+   "lost": [],
+   "removed_lines": 72,
+   "lines": [
+    372,
+    478
+   ],
+   "compiles": true,
+   "ok": true
+  },
+  "test_nemo_container_scan.py": {
+   "changes": [
+    "version pin -> floor"
+   ],
+   "second_pass": [],
+   "lost": [],
+   "removed_lines": 1,
+   "lines": [
+    223,
+    224
+   ],
+   "compiles": true,
+   "ok": true
+  },
+  "NEMO_CONTAINER_SCAN.md": {
+   "changes": [
+    "doc section"
+   ],
+   "second_pass": [],
+   "lost": [],
+   "removed_lines": 0,
+   "lines": [
+    85,
+    115
+   ],
+   "compiles": true,
+   "ok": true
+  }
+ },
+ "ok": true,
+ "written": [
+  "NEMO_CONTAINER_SCAN.md",
+  "nemo_container_scan.py",
+  "test_nemo_container_scan.py",
+  "test_nemo_container_scan_big.py"
+ ]
+}

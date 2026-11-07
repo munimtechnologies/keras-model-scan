@@ -1,0 +1,1763 @@
+{
+ "rows": {
+  "P1": {
+   "files": {
+    "nemo_container_scan.py": {
+     "changes": [
+      "version 0.2.0",
+      "helpers + scan_bytes",
+      "scan_file streams"
+     ],
+     "second_pass": [],
+     "lost": [],
+     "removed_lines": 72,
+     "lines": [
+      372,
+      478
+     ],
+     "compiles": true,
+     "ok": true
+    },
+    "test_nemo_container_scan.py": {
+     "changes": [
+      "version pin -> floor"
+     ],
+     "second_pass": [],
+     "lost": [],
+     "removed_lines": 1,
+     "lines": [
+      223,
+      224
+     ],
+     "compiles": true,
+     "ok": true
+    },
+    "NEMO_CONTAINER_SCAN.md": {
+     "changes": [
+      "doc section"
+     ],
+     "second_pass": [],
+     "lost": [],
+     "removed_lines": 0,
+     "lines": [
+      85,
+      115
+     ],
+     "compiles": true,
+     "ok": true
+    }
+   },
+   "held": true
+  },
+  "S1": {
+   "ran": 1338,
+   "failures": [],
+   "errors": [],
+   "held": true
+  },
+  "W1": {
+   "torch": "2.15.0+cpu",
+   "cases": {
+    "w_small": {
+     "weights_bytes": 4002005,
+     "weights_head": "504b0304",
+     "nemo_bytes": 4014080,
+     "mode": "w:"
+    },
+    "w_big": {
+     "weights_bytes": 280002005,
+     "weights_head": "504b0304",
+     "nemo_bytes": 280012800,
+     "mode": "w:"
+    },
+    "w_big_gz": {
+     "weights_bytes": 280002005,
+     "weights_head": "504b0304",
+     "nemo_bytes": 273419,
+     "mode": "w:gz"
+    },
+    "w_legacy_big": {
+     "weights_bytes": 280000567,
+     "weights_head": "80028a0a",
+     "nemo_bytes": 280012800,
+     "mode": "w:"
+    }
+   },
+   "held": true
+  },
+  "R1": {
+   "titanet": {
+    "bytes": 101621760,
+    "compression": "none",
+    "weights_member": "model_weights.ckpt",
+    "weights_bytes": 101611209,
+    "weights_head": "504b0304",
+    "sha256": "e838520693f269e7984f55bc8eb3c2d60ccf246bf4b896d4be9bcabe3e4b0fe3"
+   },
+   "parakeet": {
+    "bytes": 459243520,
+    "compression": "none",
+    "weights_member": "./model_weights.ckpt",
+    "weights_bytes": 458921226,
+    "weights_head": "504b0304",
+    "sha256": "1e6b5c3bcaa390b479bd8112512ede515d2ef5b61495568f2c266d6d5e680c3a"
+   },
+   "held": true
+  },
+  "N1": {
+   "old": [
+    "NEMO010"
+   ],
+   "new": [
+    "NEMO010"
+   ],
+   "held": true
+  },
+  "N2": {
+   "old": [],
+   "new": [
+    "NEMO010"
+   ],
+   "held": true
+  },
+  "N3": {
+   "old": [],
+   "new": [
+    "NEMO010"
+   ],
+   "held": true
+  },
+  "N4": {
+   "old": [
+    "NEMO010"
+   ],
+   "new": [
+    "NEMO010"
+   ],
+   "held": true
+  },
+  "N5": {
+   "old": [],
+   "new": [
+    "NEMO010"
+   ],
+   "held": true
+  },
+  "M1": {
+   "new_maxrss_mb": 19.0,
+   "old_maxrss_mb": 967.8,
+   "held": true
+  },
+  "T1": {
+   "new_seconds": 0.141,
+   "old_seconds": 1.639,
+   "held": true
+  },
+  "Hb": {
+   "repos_listed": 100,
+   "repos_read": 100,
+   "errors": [],
+   "repos_with_nemo": 63,
+   "nemo_files": 264,
+   "bands": {
+    "<=50MiB": 3,
+    "50-256MiB": 3,
+    "256MiB-2GiB": 218,
+    ">2GiB": 40
+   },
+   "unique_blobs": 245,
+   "unique_blobs_over_256MiB": 239,
+   "repos_with_nemo_over_256MiB": 57,
+   "library_names": [
+    "cosmos",
+    "generic",
+    "ggml",
+    "mlx",
+    "nemo",
+    "parakeet.cpp",
+    "transformers"
+   ],
+   "share_over_256MiB": 0.9773,
+   "share_over_50MiB": 0.9886,
+   "held": true
+  }
+ },
+ "reported": {
+  "fetch": {
+   "tarball_bytes": 793661,
+   "missing": [],
+   "versions": {
+    "model_file_scan.py": "0.12.0",
+    "nemo_container_scan.py": "0.1.0"
+   }
+  },
+  "setup": {
+   "pip_returncode": [
+    0,
+    0
+   ],
+   "pip_stderr_tail": "",
+   "versions": {
+    "torch": "2.15.0+cpu",
+    "numpy": "2.5.4"
+   }
+  },
+  "real": {
+   "titanet_large": {
+    "url": "https://huggingface.co/nvidia/speakerverification_en_titanet_large/resolve/0dc382f40121a5fbd34db10a2bb04d826c2be6a8/speakerverification_en_titanet_large.nemo",
+    "expected_bytes": 101621760,
+    "bytes": 101621760,
+    "sha256": "e838520693f269e7984f55bc8eb3c2d60ccf246bf4b896d4be9bcabe3e4b0fe3",
+    "size_ok": true,
+    "compression": "none",
+    "weights_member": "model_weights.ckpt",
+    "weights_bytes": 101611209,
+    "weights_head": "504b0304",
+    "members": [
+     "model_config.yaml",
+     "model_weights.ckpt"
+    ],
+    "member_count": 2
+   },
+   "parakeet_tdt_ctc_110m": {
+    "url": "https://huggingface.co/nvidia/parakeet-tdt_ctc-110m/resolve/431a349f3051ab85c22b9b7a2741b5fe77065665/parakeet-tdt_ctc-110m.nemo",
+    "expected_bytes": 459243520,
+    "bytes": 459243520,
+    "sha256": "1e6b5c3bcaa390b479bd8112512ede515d2ef5b61495568f2c266d6d5e680c3a",
+    "size_ok": true,
+    "compression": "none",
+    "weights_member": "./model_weights.ckpt",
+    "weights_bytes": 458921226,
+    "weights_head": "504b0304",
+    "members": [
+     ".",
+     "./0f176c5829c3472daa16f5065b15081d_tokenizer.vocab",
+     "./a4c254472f6a4c388105ae0109636cdc_tokenizer.model",
+     "./dad8b72697f34006bfd597c3a560ea75_vocab.txt",
+     "./model_config.yaml",
+     "./model_weights.ckpt"
+    ],
+    "member_count": 6
+   }
+  },
+  "scans": {
+   "w_small": {
+    "old": {
+     "module": "orig/nemo_container_scan.py",
+     "file": "/work/files/w_small.nemo",
+     "version": "0.1.0",
+     "seconds": 0.184,
+     "n": 1,
+     "rules": [
+      "NEMO010"
+     ],
+     "evidence": [
+      "tar:./model_weights.ckpt>zip:model_weights/data.pkl; imports=collections.OrderedDict, torch._utils._rebuild_tensor_v2, torch.ByteStorage, torch.FloatStorage"
+     ],
+     "maxrss_mb": 29.1
+    },
+    "new": {
+     "module": "tree/nemo_container_scan.py",
+     "file": "/work/files/w_small.nemo",
+     "version": "0.2.0",
+     "seconds": 0.186,
+     "n": 1,
+     "rules": [
+      "NEMO010"
+     ],
+     "evidence": [
+      "tar:./model_weights.ckpt>zip:model_weights/data.pkl; imports=collections.OrderedDict, torch._utils._rebuild_tensor_v2, torch.ByteStorage, torch.FloatStorage"
+     ],
+     "maxrss_mb": 18.9
+    }
+   },
+   "w_big": {
+    "old": {
+     "module": "orig/nemo_container_scan.py",
+     "file": "/work/files/w_big.nemo",
+     "version": "0.1.0",
+     "seconds": 1.056,
+     "n": 0,
+     "rules": [],
+     "evidence": [],
+     "maxrss_mb": 796.9
+    },
+    "new": {
+     "module": "tree/nemo_container_scan.py",
+     "file": "/work/files/w_big.nemo",
+     "version": "0.2.0",
+     "seconds": 0.113,
+     "n": 1,
+     "rules": [
+      "NEMO010"
+     ],
+     "evidence": [
+      "tar:./model_weights.ckpt>zip:model_weights/data.pkl; imports=collections.OrderedDict, torch._utils._rebuild_tensor_v2, torch.ByteStorage, torch.FloatStorage"
+     ],
+     "maxrss_mb": 18.6
+    }
+   },
+   "w_big_gz": {
+    "old": {
+     "module": "orig/nemo_container_scan.py",
+     "file": "/work/files/w_big_gz.nemo",
+     "version": "0.1.0",
+     "seconds": 1.269,
+     "n": 0,
+     "rules": [],
+     "evidence": [],
+     "maxrss_mb": 530.3
+    },
+    "new": {
+     "module": "tree/nemo_container_scan.py",
+     "file": "/work/files/w_big_gz.nemo",
+     "version": "0.2.0",
+     "seconds": 2.948,
+     "n": 1,
+     "rules": [
+      "NEMO010"
+     ],
+     "evidence": [
+      "tar:./model_weights.ckpt>zip:model_weights/data.pkl; imports=collections.OrderedDict, torch._utils._rebuild_tensor_v2, torch.ByteStorage, torch.FloatStorage"
+     ],
+     "maxrss_mb": 19.0
+    }
+   },
+   "w_legacy_big": {
+    "old": {
+     "module": "orig/nemo_container_scan.py",
+     "file": "/work/files/w_legacy_big.nemo",
+     "version": "0.1.0",
+     "seconds": 0.934,
+     "n": 0,
+     "rules": [],
+     "evidence": [],
+     "maxrss_mb": 796.8
+    },
+    "new": {
+     "module": "tree/nemo_container_scan.py",
+     "file": "/work/files/w_legacy_big.nemo",
+     "version": "0.2.0",
+     "seconds": 0.061,
+     "n": 1,
+     "rules": [
+      "NEMO030"
+     ],
+     "evidence": [
+      "tar:./model_weights.ckpt (280000567 bytes); limit=268435456 bytes"
+     ],
+     "maxrss_mb": 18.2
+    }
+   },
+   "titanet_large": {
+    "old": {
+     "module": "orig/nemo_container_scan.py",
+     "file": "/work/real/titanet_large.nemo",
+     "version": "0.1.0",
+     "seconds": 0.375,
+     "n": 1,
+     "rules": [
+      "NEMO010"
+     ],
+     "evidence": [
+      "tar:model_weights.ckpt>zip:archive/data.pkl; imports=collections.OrderedDict, torch._utils._rebuild_tensor_v2, torch.FloatStorage, torch.LongStorage"
+     ],
+     "maxrss_mb": 308.6
+    },
+    "new": {
+     "module": "tree/nemo_container_scan.py",
+     "file": "/work/real/titanet_large.nemo",
+     "version": "0.2.0",
+     "seconds": 0.108,
+     "n": 1,
+     "rules": [
+      "NEMO010"
+     ],
+     "evidence": [
+      "tar:model_weights.ckpt>zip:archive/data.pkl; imports=collections.OrderedDict, torch._utils._rebuild_tensor_v2, torch.FloatStorage, torch.LongStorage"
+     ],
+     "maxrss_mb": 18.8
+    }
+   },
+   "parakeet_tdt_ctc_110m": {
+    "old": {
+     "module": "orig/nemo_container_scan.py",
+     "file": "/work/real/parakeet_tdt_ctc_110m.nemo",
+     "version": "0.1.0",
+     "seconds": 1.639,
+     "n": 0,
+     "rules": [],
+     "evidence": [],
+     "maxrss_mb": 967.8
+    },
+    "new": {
+     "module": "tree/nemo_container_scan.py",
+     "file": "/work/real/parakeet_tdt_ctc_110m.nemo",
+     "version": "0.2.0",
+     "seconds": 0.141,
+     "n": 1,
+     "rules": [
+      "NEMO010"
+     ],
+     "evidence": [
+      "tar:./model_weights.ckpt>zip:model_weights/data.pkl; imports=collections.OrderedDict, torch._utils._rebuild_tensor_v2, torch.FloatStorage, torch.LongStorage"
+     ],
+     "maxrss_mb": 19.0
+    }
+   }
+  },
+  "scan_errors": [],
+  "legacy": {
+   "predicted": {
+    "old": [],
+    "new": [
+     "NEMO030"
+    ]
+   },
+   "old": [],
+   "new": [
+    "NEMO030"
+   ],
+   "writer_error": null
+  },
+  "hub_files": [
+   [
+    "nvidia/nemotron-3.5-asr-streaming-0.6b",
+    "nemotron-3.5-asr-streaming-0.6b.nemo",
+    2368284501
+   ],
+   [
+    "nvidia/parakeet-tdt-0.6b-v3",
+    "parakeet-tdt-0.6b-v3.nemo",
+    2509332480
+   ],
+   [
+    "1-800-BAD-CODE/xlm-roberta_punctuation_fullstop_truecase",
+    "pcs47_1jun.nemo",
+    1119815680
+   ],
+   [
+    "nvidia/canary-1b-v2",
+    "canary-1b-v2.nemo",
+    6358958080
+   ],
+   [
+    "nvidia/Nemotron-3-Diarization",
+    "Nemotron-3-Diarization.nemo",
+    198676480
+   ],
+   [
+    "nvidia/parakeet-tdt-0.6b-v2",
+    "parakeet-tdt-0.6b-v2.nemo",
+    2472222720
+   ],
+   [
+    "nvidia/speakerverification_en_titanet_large",
+    "speakerverification_en_titanet_large.nemo",
+    101621760
+   ],
+   [
+    "nvidia/diar_sortformer_4spk-v1",
+    "diar_sortformer_4spk-v1.nemo",
+    493434880
+   ],
+   [
+    "nvidia/nemotron-speech-streaming-en-0.6b",
+    "nemotron-speech-streaming-en-0.6b.nemo",
+    2473041920
+   ],
+   [
+    "nvidia/parakeet-ctc-1.1b",
+    "parakeet-ctc-1.1b.nemo",
+    4251525120
+   ],
+   [
+    "nvidia/diar_streaming_sortformer_4spk-v2",
+    "diar_streaming_sortformer_4spk-v2.nemo",
+    471367680
+   ],
+   [
+    "oruk/orukeet",
+    "orukeet-v0.1.0.nemo",
+    2509342720
+   ],
+   [
+    "mohammadjafari-dev/local-ai-toolkit",
+    "6-STT/Quality/Persian_ASR/Anti_Hallucination_FastConformer_Fa/stt_fa_fastconformer_hybrid_large.nemo",
+    459233280
+   ],
+   [
+    "nvidia/parakeet-ctc-0.6b",
+    "parakeet-ctc-0.6b.nemo",
+    2436147200
+   ],
+   [
+    "nvidia/parakeet-rnnt-0.6b",
+    "parakeet-rnnt-0.6b.nemo",
+    2467727360
+   ],
+   [
+    "nvidia/Nemotron-Mini-4B-Instruct",
+    "nemo/nemotron-mini-4b-instruct.nemo",
+    8386488320
+   ],
+   [
+    "nvidia/magpie_tts_multilingual_357m",
+    "magpie_tts_multilingual_357m.nemo",
+    1470208000
+   ],
+   [
+    "nvidia/diar_streaming_sortformer_4spk-v2.1",
+    "diar_streaming_sortformer_4spk-v2.1.nemo",
+    471367680
+   ],
+   [
+    "nvidia/parakeet-rnnt-1.1b",
+    "parakeet-rnnt-1.1b.nemo",
+    4283105280
+   ],
+   [
+    "ayymen/stt_zgh_fastconformer_ctc_small",
+    "stt_zgh_fastconformer_ctc_small.nemo",
+    50872320
+   ],
+   [
+    "nvidia/parakeet-tdt_ctc-110m",
+    "parakeet-tdt_ctc-110m.nemo",
+    459243520
+   ],
+   [
+    "Soul-AILab/SoulX-Singer-Preprocess",
+    "parakeet-tdt-0.6b-v2/parakeet-tdt-0.6b-v2.nemo",
+    2472222720
+   ],
+   [
+    "nvidia/stt_en_conformer_ctc_large",
+    "stt_en_conformer_ctc_large.nemo",
+    451486220
+   ],
+   [
+    "nvidia/parakeet-unified-en-0.6b",
+    "parakeet-unified-en-0.6b.nemo",
+    2474055680
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "4spk-v0.3-bs1-acc8-l4-diskcache-shardedval-v1-1778065009/best.nemo",
+    471377920
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-ami-sdm-debug-bs10-a100-80gb-1gpu-v1-1781805281/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-ami-sdm-debug-bs10-a100-80gb-1gpu-v1-1781805281/checkpoints/step_130_epoch_1_val-der_0.1837.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-ami-sdm-debug-bs10-a100-80gb-1gpu-v1-1781805281/checkpoints/step_210_epoch_2_val-der_0.1709.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-ami-sdm-debug-bs10-a100-80gb-1gpu-v1-1781805281/checkpoints/step_50_epoch_0_val-der_0.3708.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-ami-sdm-flac-debug-bs10-a100-80gb-1gpu-v1-1781828240/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-ami-sdm-flac-debug-bs10-a100-80gb-1gpu-v1-1781828240/checkpoints/step_130_epoch_1_val-der_0.1841.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-ami-sdm-flac-debug-bs10-a100-80gb-1gpu-v1-1781828240/checkpoints/step_210_epoch_2_val-der_0.1806.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-ami-sdm-flac-debug-bs10-a100-80gb-1gpu-v1-1781828240/checkpoints/step_50_epoch_0_val-der_0.3563.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-debug-prepared-shar-worldfix-1780478585/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-debug-prepared-shar-worldfix-1780478585/checkpoints/step_2_epoch_0_val-der_1.3011.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-debug-prepared-shar-worldfix-1780478585/checkpoints/step_4_epoch_1_val-der_1.1216.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-fullrandom-bs10-ga8-a100-80gb-1gpu-lr1e-4-lr-v1-1781045285/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-fullrandom-bs10-ga8-a100-80gb-1gpu-lr1e-4-lr-v1-1781045285/checkpoints/step_6_epoch_0_val-der_1.0000.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.3-bs1-acc8-l4-diskcache-shardedval-v1-1778010364/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_1080_epoch_2_val-der_0.1535.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_1170_epoch_2_val-der_0.1446.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_1350_epoch_2_val-der_0.1436.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_1440_epoch_3_val-der_0.1423.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_1530_epoch_3_val-der_0.1397.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_1620_epoch_3_val-der_0.1388.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_1710_epoch_3_val-der_0.1382.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_180_epoch_0_val-der_0.2089.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_1980_epoch_4_val-der_0.1346.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_2430_epoch_5_val-der_0.1340.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_2520_epoch_5_val-der_0.1338.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_2700_epoch_5_val-der_0.1335.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_270_epoch_0_val-der_0.2001.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_3060_epoch_6_val-der_0.1302.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_360_epoch_0_val-der_0.1928.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_3870_epoch_8_val-der_0.1289.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_3960_epoch_8_val-der_0.1285.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_4140_epoch_9_val-der_0.1280.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_450_epoch_0_val-der_0.1911.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_540_epoch_1_val-der_0.1894.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_630_epoch_1_val-der_0.1871.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_720_epoch_1_val-der_0.1813.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_900_epoch_1_val-der_0.1706.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_90_epoch_0_val-der_0.3542.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-ami-bs1-acc8-l4-diskcache-shardedval-v1-1778218672/checkpoints/step_990_epoch_2_val-der_0.1561.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v3-1778228622/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v3-1778228622/checkpoints/step_1440_epoch_1_val-der_0.2048.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v3-1778228622/checkpoints/step_1530_epoch_1_val-der_0.2042.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v3-1778228622/checkpoints/step_1620_epoch_1_val-der_0.2035.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v3-1778228622/checkpoints/step_180_epoch_0_val-der_0.2159.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v3-1778228622/checkpoints/step_270_epoch_0_val-der_0.2146.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v3-1778228622/checkpoints/step_360_epoch_0_val-der_0.2138.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v3-1778228622/checkpoints/step_450_epoch_0_val-der_0.2116.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v3-1778228622/checkpoints/step_630_epoch_0_val-der_0.2103.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v3-1778228622/checkpoints/step_810_epoch_0_val-der_0.2059.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v3-1778228622/checkpoints/step_90_epoch_0_val-der_0.2223.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_1080_epoch_1_val-der_0.1398.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_1260_epoch_1_val-der_0.1390.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_1350_epoch_1_val-der_0.1374.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_1440_epoch_1_val-der_0.1353.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_1530_epoch_1_val-der_0.1346.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_1710_epoch_1_val-der_0.1343.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_1800_epoch_1_val-der_0.1334.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_180_epoch_0_val-der_0.2056.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_2070_epoch_2_val-der_0.1327.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_2160_epoch_2_val-der_0.1317.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_2250_epoch_2_val-der_0.1302.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_2520_epoch_2_val-der_0.1283.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_270_epoch_0_val-der_0.1998.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_2880_epoch_3_val-der_0.1271.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_3060_epoch_3_val-der_0.1269.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_3240_epoch_3_val-der_0.1268.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_3330_epoch_3_val-der_0.1266.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_3420_epoch_3_val-der_0.1252.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_360_epoch_0_val-der_0.1911.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_4050_epoch_4_val-der_0.1241.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_4410_epoch_4_val-der_0.1238.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_450_epoch_0_val-der_0.1895.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_4770_epoch_5_val-der_0.1237.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_4950_epoch_5_val-der_0.1219.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_540_epoch_0_val-der_0.1872.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_5940_epoch_6_val-der_0.1207.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_630_epoch_0_val-der_0.1612.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_6390_epoch_7_val-der_0.1200.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_720_epoch_0_val-der_0.1542.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_7290_epoch_8_val-der_0.1193.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_7470_epoch_8_val-der_0.1188.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_7560_epoch_8_val-der_0.1182.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_810_epoch_0_val-der_0.1480.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_900_epoch_0_val-der_0.1433.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_90_epoch_0_val-der_0.2223.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-ami-bs1-acc8-l4-diskcache-shardedval-v5-1778286481/checkpoints/step_990_epoch_1_val-der_0.1429.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_1080_epoch_2_val-der_0.1069.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_1170_epoch_2_val-der_0.1058.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_1260_epoch_2_val-der_0.1043.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_1710_epoch_3_val-der_0.1027.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_180_epoch_0_val-der_0.1670.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_2160_epoch_4_val-der_0.1016.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_2430_epoch_5_val-der_0.1014.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_2700_epoch_5_val-der_0.1002.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_270_epoch_0_val-der_0.1644.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_2880_epoch_6_val-der_0.0996.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_2970_epoch_6_val-der_0.0992.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_3150_epoch_6_val-der_0.0982.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_3600_epoch_7_val-der_0.0981.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_360_epoch_0_val-der_0.1619.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_3780_epoch_8_val-der_0.0976.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_4050_epoch_8_val-der_0.0964.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_4140_epoch_9_val-der_0.0958.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_4230_epoch_9_val-der_0.0915.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_4320_epoch_9_val-der_0.0872.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_4410_epoch_9_val-der_0.0843.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_450_epoch_0_val-der_0.1291.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_540_epoch_1_val-der_0.1151.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_720_epoch_1_val-der_0.1120.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_810_epoch_1_val-der_0.1082.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.4-librispeech-bs1-acc8-l4-diskcache-shardedval-v1-1778198761/checkpoints/step_90_epoch_0_val-der_0.1700.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs1-acc8-l4-worldfix-v1-1780479980/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs1-acc8-l4-worldfix-v1-1780479980/checkpoints/step_180_epoch_0_val-der_0.2104.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs1-acc8-l4-worldfix-v1-1780479980/checkpoints/step_270_epoch_0_val-der_0.2067.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs1-acc8-l4-worldfix-v1-1780479980/checkpoints/step_360_epoch_0_val-der_0.1966.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs1-acc8-l4-worldfix-v1-1780479980/checkpoints/step_450_epoch_0_val-der_0.1530.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs1-acc8-l4-worldfix-v1-1780479980/checkpoints/step_540_epoch_0_val-der_0.1469.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs1-acc8-l4-worldfix-v1-1780479980/checkpoints/step_630_epoch_0_val-der_0.1446.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs1-acc8-l4-worldfix-v1-1780479980/checkpoints/step_900_epoch_0_val-der_0.1436.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs1-acc8-l4-worldfix-v1-1780479980/checkpoints/step_90_epoch_0_val-der_0.2187.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs1-acc8-l4-worldfix-v1-1780479980/checkpoints/step_990_epoch_1_val-der_0.1416.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs1-ga8-l4-8gpu-fullset-smoketest-v5-1780559280/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs1-ga8-l4-8gpu-fullset-smoketest-v5-1780559280/checkpoints/step_62_epoch_0_val-der_0.2269.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-2gpu-debug-debug-v1-1780602245/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-2gpu-debug-debug-v1-1780602245/checkpoints/step_100_epoch_0_val-der_0.2319.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-2gpu-debug-debug-v1-1780602245/checkpoints/step_150_epoch_0_val-der_0.2183.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-2gpu-debug-debug-v1-1780602245/checkpoints/step_250_epoch_1_val-der_0.2163.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-2gpu-debug-debug-v1-1780602245/checkpoints/step_350_epoch_1_val-der_0.2109.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-2gpu-debug-debug-v1-1780602245/checkpoints/step_400_epoch_1_val-der_0.2094.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-2gpu-debug-debug-v1-1780602245/checkpoints/step_50_epoch_0_val-der_0.3624.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-4gpu-debug-debug-v1-1780602382/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-4gpu-debug-debug-v1-1780602382/checkpoints/step_100_epoch_0_val-der_0.2269.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-4gpu-debug-debug-v1-1780602382/checkpoints/step_150_epoch_1_val-der_0.2196.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-4gpu-debug-debug-v1-1780602382/checkpoints/step_200_epoch_1_val-der_0.2164.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-4gpu-debug-debug-v1-1780602382/checkpoints/step_300_epoch_2_val-der_0.2103.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-4gpu-debug-debug-v1-1780602382/checkpoints/step_50_epoch_0_val-der_0.3548.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-4gpu-fullset-v11-1780998497/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-4gpu-fullset-v11-1780998497/checkpoints/step_11235_epoch_0_val-der_0.0716.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-4gpu-fullset-v11-1780998497/checkpoints/step_14980_epoch_0_val-der_0.0702.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-4gpu-fullset-v11-1780998497/checkpoints/step_3745_epoch_0_val-der_0.0756.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-4gpu-fullset-v11-1780998497/checkpoints/step_7490_epoch_0_val-der_0.0723.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-8gpu-debug-debug-v1-1780604170/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-8gpu-debug-debug-v1-1780604170/checkpoints/step_100_epoch_1_val-der_0.2204.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-8gpu-debug-debug-v1-1780604170/checkpoints/step_150_epoch_2_val-der_0.2128.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-8gpu-debug-debug-v1-1780604170/checkpoints/step_50_epoch_0_val-der_0.3458.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-8gpu-fullset-v10-1780606582/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-8gpu-fullset-v10-1780606582/checkpoints/step_11232_epoch_0_val-der_0.0901.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-8gpu-fullset-v10-1780606582/checkpoints/step_13104_epoch_0_val-der_0.0887.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-8gpu-fullset-v10-1780606582/checkpoints/step_14976_epoch_0_val-der_0.0879.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-8gpu-fullset-v10-1780606582/checkpoints/step_16848_epoch_0_val-der_0.0865.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-8gpu-fullset-v10-1780606582/checkpoints/step_18720_epoch_0_val-der_0.0854.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-8gpu-fullset-v10-1780606582/checkpoints/step_1872_epoch_0_val-der_0.1109.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-8gpu-fullset-v10-1780606582/checkpoints/step_20592_epoch_0_val-der_0.0846.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-8gpu-fullset-v10-1780606582/checkpoints/step_22464_epoch_0_val-der_0.0840.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-8gpu-fullset-v10-1780606582/checkpoints/step_24336_epoch_0_val-der_0.0838.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-8gpu-fullset-v10-1780606582/checkpoints/step_26208_epoch_0_val-der_0.0828.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-8gpu-fullset-v10-1780606582/checkpoints/step_28080_epoch_0_val-der_0.0815.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-8gpu-fullset-v10-1780606582/checkpoints/step_31824_epoch_0_val-der_0.0807.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-8gpu-fullset-v10-1780606582/checkpoints/step_35568_epoch_0_val-der_0.0804.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-8gpu-fullset-v10-1780606582/checkpoints/step_37440_epoch_0_val-der_0.0797.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-8gpu-fullset-v10-1780606582/checkpoints/step_3744_epoch_0_val-der_0.1021.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-8gpu-fullset-v10-1780606582/checkpoints/step_5616_epoch_0_val-der_0.0964.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-8gpu-fullset-v10-1780606582/checkpoints/step_7488_epoch_0_val-der_0.0941.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-v0.6-fastmss-prepared-shar-bs10-a100-80gb-8gpu-fullset-v10-1780606582/checkpoints/step_9360_epoch_0_val-der_0.0917.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-vox-ami-aishell-ali-bs10-ga2-a100-80gb-4gpu-5ep-v2-1782411519/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-vox-ami-aishell-ali-bs10-ga2-a100-80gb-4gpu-5ep-v2-1782411519/checkpoints/step_104_epoch_0_val-der_0.1575.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-vox-ami-aishell-ali-bs10-ga2-a100-80gb-4gpu-5ep-v2-1782411519/checkpoints/step_131_epoch_1_val-der_0.1559.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-vox-ami-aishell-ali-bs10-ga2-a100-80gb-4gpu-5ep-v2-1782411519/checkpoints/step_183_epoch_1_val-der_0.1529.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-vox-ami-aishell-ali-bs10-ga2-a100-80gb-4gpu-5ep-v2-1782411519/checkpoints/step_236_epoch_2_val-der_0.1527.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-vox-ami-aishell-ali-bs10-ga2-a100-80gb-4gpu-5ep-v2-1782411519/checkpoints/step_26_epoch_0_val-der_0.1865.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-vox-ami-aishell-ali-bs10-ga2-a100-80gb-4gpu-5ep-v2-1782411519/checkpoints/step_288_epoch_2_val-der_0.1515.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-vox-ami-aishell-ali-bs10-ga2-a100-80gb-4gpu-5ep-v2-1782411519/checkpoints/step_341_epoch_3_val-der_0.1510.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-vox-ami-aishell-ali-bs10-ga2-a100-80gb-4gpu-5ep-v2-1782411519/checkpoints/step_419_epoch_3_val-der_0.1496.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-vox-ami-aishell-ali-bs10-ga2-a100-80gb-4gpu-5ep-v2-1782411519/checkpoints/step_472_epoch_4_val-der_0.1480.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-vox-ami-aishell-ali-bs10-ga2-a100-80gb-4gpu-5ep-v2-1782411519/checkpoints/step_52_epoch_0_val-der_0.1649.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "6spk-vox-ami-aishell-ali-bs10-ga2-a100-80gb-4gpu-5ep-v2-1782411519/checkpoints/step_78_epoch_0_val-der_0.1603.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "8spk-v0.2-bs1-acc8-l4-cachedtrain-shardedval_v3-1777960366/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "8spk-v0.2-bs1-acc8-l4-cachedtrain-shardedval_v6-1777969623/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "8spk-v0.2-bs1-acc8-l4-cachedval-1777594506/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "8spk-v0.2-bs1-acc8-l4-diskcache-shardedval-v1-1778007921/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "smoke-1777401758/best.nemo",
+    471367680
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "sortformer-train-1777492805/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "sortformer-train-1777563938/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "sortformer-train-1777567093/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "sortformer-train-1777578793/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "sortformer-train-1777589381/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "vertex-streaming-smoke-train-1777405971/best.nemo",
+    471388160
+   ],
+   [
+    "arda-argmax/sortformer-finetuned",
+    "vertex-streaming-smoke-train-1777413928/best.nemo",
+    471388160
+   ],
+   [
+    "nvidia/parakeet-tdt_ctc-0.6b-ja",
+    "parakeet-tdt_ctc-0.6b-ja.nemo",
+    2490951680
+   ],
+   [
+    "nvidia/nemo-nano-codec-22khz-1.89kbps-21.5fps",
+    "nemo-nano-codec-22khz-1.89kbps-21.5fps.nemo",
+    425021440
+   ],
+   [
+    "MohammadGholizadeh/parakeet-ctc-1.1b-persian.nemo",
+    "parakeet-ctc-1.1b.nemo",
+    4251555840
+   ],
+   [
+    "bodhan-ai/indic-transcribe-flex",
+    "nemo/indic_transcribe_flex.nemo",
+    4891883520
+   ],
+   [
+    "nvidia/Frame_VAD_Multilingual_MarbleNet_v2.0",
+    "frame_vad_multilingual_marblenet_v2.0.nemo",
+    501760
+   ],
+   [
+    "nvidia/Mistral-NeMo-Minitron-8B-Instruct",
+    "nemo/mistral-nemo-minitron-8b-8k-instruct.nemo",
+    16860682240
+   ],
+   [
+    "nvidia/parakeet-tdt-1.1b",
+    "parakeet-tdt-1.1b.nemo",
+    4283136000
+   ],
+   [
+    "bodhan-ai/indic-transcribe-core",
+    "nemo/indic_transcribe_core.nemo",
+    4891883520
+   ],
+   [
+    "nvidia/multitalker-parakeet-streaming-0.6b-v1",
+    "multitalker-parakeet-streaming-0.6b-v1.nemo",
+    2489825280
+   ],
+   [
+    "mehdi-hf/nemotron-asr-streaming-farsi",
+    "nemotron-asr-streaming-farsi.nemo",
+    2491002880
+   ],
+   [
+    "nvidia/stt_ar_fastconformer_hybrid_large_pcd_v1.0",
+    "stt_ar_fastconformer_hybrid_large_pcd_v1.0.nemo",
+    459233280
+   ],
+   [
+    "nvidia/canary-1b-flash",
+    "canary-1b-flash.nemo",
+    3540715520
+   ],
+   [
+    "danielrosehill/Parakeet-TDT-0.6B-v2-English-Hebrew-Codeswitching",
+    "Parakeet-TDT-0.6B-v2-English-Hebrew-Codeswitching.nemo",
+    2472212480
+   ],
+   [
+    "grider-transwithai/parakeet-ctc-1.1b-ja",
+    "parakeet-ja-gal.nemo",
+    4263628800
+   ],
+   [
+    "grider-transwithai/parakeet-ctc-1.1b-ja",
+    "parakeet-ja.nemo",
+    4263598080
+   ],
+   [
+    "nvidia/canary-1b",
+    "canary-1b.nemo",
+    4071127040
+   ],
+   [
+    "nvidia/Llama-3.1-Minitron-4B-Width-Base",
+    "nemo/llama-3.1-minitron-4b-width-base.nemo",
+    9037537280
+   ],
+   [
+    "nvidia/Mistral-NeMo-Minitron-8B-Base",
+    "nemo/mistral-nemo-minitron-8b-base.nemo",
+    16878551040
+   ],
+   [
+    "nvidia/Minitron-4B-Base",
+    "nemo/minitron-4b-base.nemo",
+    8391639040
+   ],
+   [
+    "reazon-research/reazonspeech-nemo-v2",
+    "reazonspeech-nemo-v2.nemo",
+    2477946880
+   ],
+   [
+    "nvidia/canary-180m-flash",
+    "canary-180m-flash.nemo",
+    736665600
+   ],
+   [
+    "fhai50032/bibo-asr-ckpt",
+    "fix-zloss/fix-zloss.nemo",
+    482816000
+   ],
+   [
+    "fhai50032/bibo-asr-ckpt",
+    "kdab-pzn2/kdab-pzn2.nemo",
+    482826240
+   ],
+   [
+    "fhai50032/bibo-asr-ckpt",
+    "kdab-pzn2x5/kdab-pzn2x5.nemo",
+    482826240
+   ],
+   [
+    "fhai50032/bibo-asr-ckpt",
+    "prune_nt/nt-ft2epB-l22.nemo",
+    2271498240
+   ],
+   [
+    "fhai50032/bibo-asr-ckpt",
+    "prune_nt/nt-l14.nemo",
+    1465354240
+   ],
+   [
+    "fhai50032/bibo-asr-ckpt",
+    "prune_nt/nt-l16.nemo",
+    1666887680
+   ],
+   [
+    "fhai50032/bibo-asr-ckpt",
+    "prune_nt/nt-l19.nemo",
+    1969192960
+   ],
+   [
+    "fhai50032/bibo-asr-ckpt",
+    "run2v2/run2v2.nemo",
+    481945600
+   ],
+   [
+    "fhai50032/bibo-asr-ckpt",
+    "run5/run5.nemo",
+    481945600
+   ],
+   [
+    "fhai50032/bibo-asr-ckpt",
+    "run6/run6.nemo",
+    496517120
+   ],
+   [
+    "nvidia/stt_en_conformer_ctc_small",
+    "stt_en_conformer_ctc_small.nemo",
+    49088734
+   ],
+   [
+    "third-intelligence/Haas-ja-v1.0",
+    "Haas-ja-v1.0.nemo",
+    1232384000
+   ],
+   [
+    "nvidia/nemotron-labs-unified-asr-0.6b",
+    "nemotron-labs-unified-asr-0.6b.nemo",
+    2507735040
+   ],
+   [
+    "nvidia/parakeet-ctc-0.6b-Vietnamese",
+    "parakeet-ctc-0.6b-vi.nemo",
+    2436157440
+   ],
+   [
+    "typhoon-ai/typhoon-asr-realtime",
+    "typhoon-asr-realtime.nemo",
+    462469120
+   ],
+   [
+    "nvidia/stt_en_fastconformer_hybrid_large_pc",
+    "stt_en_fastconformer_hybrid_large_pc.nemo",
+    459233280
+   ],
+   [
+    "nvidia/stt_en_fastconformer_ctc_large",
+    "stt_en_fastconformer_ctc_large.nemo",
+    463155200
+   ],
+   [
+    "nvidia/stt_en_fastconformer_hybrid_large_streaming_multi",
+    "stt_en_fastconformer_hybrid_large_streaming_multi.nemo",
+    459673600
+   ],
+   [
+    "nvidia/Minitron-8B-Base",
+    "nemo/minitron-8b-base.nemo",
+    16554813440
+   ],
+   [
+    "nvidia/parakeet_realtime_eou_120m-v1",
+    "parakeet_realtime_eou_120m-v1.nemo",
+    460062720
+   ],
+   [
+    "nvidia/Llama-3.1-Minitron-4B-Depth-Base",
+    "nemo/llama-3.1-minitron-4b-depth-base.nemo",
+    9094860800
+   ],
+   [
+    "nvidia/parakeet-tdt_ctc-1.1b",
+    "parakeet-tdt_ctc-1.1b.nemo",
+    4287344640
+   ],
+   [
+    "TRiLinLID/ambernet-lid-si-ta-en-v1",
+    "lid_ambernet_si_ta_en.nemo",
+    115834880
+   ],
+   [
+    "nvidia/Nemotron-4-Mini-Hindi-4B-Instruct",
+    "nemotron-4-mini-hindi-4b-instruct.nemo",
+    8387092480
+   ],
+   [
+    "addisai/addis-scribe-streaming",
+    "addis-scribe-streaming.nemo",
+    2504366080
+   ],
+   [
+    "pyannoteAI/parakeet-tdt-0.6b-v3",
+    "parakeet-tdt-0.6b-v3.nemo",
+    2509332480
+   ],
+   [
+    "aoiandroid/orukeet",
+    "orukeet-v0.1.0.nemo",
+    2509342720
+   ]
+  ]
+ },
+ "held": 12,
+ "graded": 12,
+ "held_rows": [
+  "P1",
+  "S1",
+  "W1",
+  "R1",
+  "N1",
+  "N2",
+  "N3",
+  "N4",
+  "N5",
+  "M1",
+  "T1",
+  "Hb"
+ ],
+ "release_rule_holds": true
+}
