@@ -1,0 +1,20 @@
+{
+  "name": "oed-functions",
+  "job": "oed-functions-v2",
+  "about": "onnx_external_data_scan 0.2.0 and onnx_external_data_key_scan 0.2.0: walk local functions (ModelProto.functions) and training_info graphs; onnx_external_data_scan reads up to 2 GiB and reports OED006 above that. Files exactly as job oed-functions-v2 wrote them (13 of 13 pre-registered predictions held). Not live yet: released only after the release gate (research/PREREG_RELEASE_GATE_OED.md) passes on main. Made with AI agents working in the name of MV2 of Munim, Inc. Apache-2.0.",
+  "expect_main": {
+    "onnx_external_data_scan.py": "0.1.0",
+    "onnx_external_data_key_scan.py": "0.1.0"
+  },
+  "expect_after": {
+    "onnx_external_data_scan.py": "0.2.0",
+    "onnx_external_data_key_scan.py": "0.2.0"
+  },
+  "files": {
+    "onnx_external_data_scan.py": "onnx_external_data_scan.py",
+    "onnx_external_data_key_scan.py": "onnx_external_data_key_scan.py",
+    "ONNX_EXTERNAL_DATA_SCAN.md": "ONNX_EXTERNAL_DATA_SCAN.md",
+    "ONNX_EXTERNAL_DATA_KEY_SCAN.md": "ONNX_EXTERNAL_DATA_KEY_SCAN.md",
+    "candidate_test_onnx_external_data_functions.py": "test_onnx_external_data_functions.py"
+  }
+}

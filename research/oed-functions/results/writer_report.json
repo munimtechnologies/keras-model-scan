@@ -1,0 +1,39 @@
+{
+ "ok": true,
+ "onnx": "1.23.2",
+ "checker_ok": true,
+ "W1": {
+  "func_tensor_name": "fconst",
+  "func_data_location": 1,
+  "func_external": {
+   "location": "weights.bin",
+   "offset": "4096",
+   "length": "4096"
+  },
+  "func_has_raw_data": false,
+  "init_external": {
+   "location": "weights.bin",
+   "offset": "0",
+   "length": "4096"
+  },
+  "weights_bin_bytes": 8192
+ },
+ "L1": {
+  "raw_data_bytes": 4096,
+  "equal_to_written": true,
+  "data_location_after_load": 0
+ },
+ "planted_set": {
+  "e1": true,
+  "c1": true
+ },
+ "E4_pre": {
+  "file_bytes": 272000099,
+  "location_offset": 272000079,
+  "old_cap": 268435456
+ },
+ "H4_pre": {
+  "file_bytes": 272000096,
+  "location_offset": 272000079
+ }
+}
