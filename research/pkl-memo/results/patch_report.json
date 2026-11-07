@@ -1,0 +1,87 @@
+{
+ "files": {
+  "pickle_model_scan.py": {
+   "changes": [
+    "version 0.3.0",
+    "MEMO_PUT_OPCODES",
+    "operand tracking replaced",
+    "PKL007 wording (optional)"
+   ],
+   "second_pass": [],
+   "lost": [],
+   "removed_lines": 25,
+   "lines": [
+    437,
+    456
+   ],
+   "compiles": true,
+   "ok": true,
+   "wording_changed": true
+  },
+  "test_pickle_model_scan.py": {
+   "changes": [
+    "PKL007 test uses a non-string memo slot"
+   ],
+   "second_pass": [],
+   "lost": [],
+   "removed_lines": 10,
+   "lines": [
+    229,
+    233
+   ],
+   "compiles": true,
+   "ok": true
+  },
+  "model_file_scan.py": {
+   "changes": [
+    "version 0.12.1"
+   ],
+   "second_pass": [],
+   "lost": [],
+   "removed_lines": 1,
+   "lines": [
+    526,
+    526
+   ],
+   "compiles": true,
+   "ok": true
+  },
+  "pyproject.toml": {
+   "changes": [
+    "version 0.12.1"
+   ],
+   "second_pass": [],
+   "lost": [],
+   "removed_lines": 1,
+   "lines": [
+    72,
+    72
+   ],
+   "compiles": true,
+   "ok": true
+  },
+  "PICKLE_SCAN.md": {
+   "changes": [
+    "doc section (appended)"
+   ],
+   "second_pass": [],
+   "lost": [],
+   "removed_lines": 0,
+   "lines": [
+    81,
+    110
+   ],
+   "compiles": true,
+   "ok": true
+  }
+ },
+ "ok": true,
+ "written": [
+  "PICKLE_SCAN.md",
+  "model_file_scan.py",
+  "pickle_model_scan.py",
+  "pyproject.toml",
+  "test_pickle_model_scan.py",
+  "test_pickle_model_scan_memo.py"
+ ]
+}

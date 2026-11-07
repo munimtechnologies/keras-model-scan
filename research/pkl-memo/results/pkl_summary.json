@@ -1,0 +1,954 @@
+{
+ "check_version": 1,
+ "error": "",
+ "held": 12,
+ "graded": 13,
+ "not_run": [],
+ "reported": {
+  "setup": {
+   "torch_ok": true,
+   "torch_tail": "kB)\nDownloading https://download.pytorch.org/whl/markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)\nDownloading mpmath-1.3.0-py3-none-any.whl (536 kB)\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 536.2/536.2 kB 51.2 MB/s eta 0:00:00\nInstalling collected packages: mpmath, typing-extensions, sympy, setuptools, networkx, MarkupSafe, fsspec, filelock, jinja2, torch\nSuccessfully installed MarkupSafe-3.0.3 filelock-4.2.4 fsspec-2026.9.0 jinja2-3.1.6 mpmath-1.3.0 networkx-3.7 setuptools-78.1.0 sympy-1.14.0 torch-2.15.0+cpu typing-extensions-4.16.0",
+   "paddle_ok": true,
+   "paddle_tail": "\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 7.1/7.1 MB 37.9 MB/s eta 0:00:00\nDownloading anyio-4.16.0-py3-none-any.whl (134 kB)\nDownloading idna-3.20-py3-none-any.whl (69 kB)\nDownloading certifi-2026.10.23-py3-none-any.whl (135 kB)\nDownloading h11-0.16.0-py3-none-any.whl (37 kB)\nInstalling collected packages: safetensors, protobuf, Pillow, numpy, idna, h11, certifi, opt_einsum, httpcore, anyio, httpx, paddlepaddle\nSuccessfully installed Pillow-13.0.0 anyio-4.16.0 certifi-2026.10.23 h11-0.16.0 httpcore-1.0.9 httpx-0.28.1 idna-3.20 numpy-2.5.4 opt_einsum-3.3.0 paddlepaddle-3.3.1 protobuf-7.36.2 safetensors-0.8.0",
+   "versions": {
+    "torch": "2.15.0+cpu",
+    "paddlepaddle": "3.3.1",
+    "numpy": "2.5.4"
+   }
+  },
+  "fetch": {
+   "waited_seconds": 0,
+   "polls": 1,
+   "remote_ovi_seen": "0.1.2",
+   "tree_versions": {
+    "openvino_ir_scan.py": "0.1.2",
+    "pickle_model_scan.py": "0.2.1",
+    "model_file_scan.py": "0.12.0"
+   },
+   "combined": true,
+   "tarball_bytes": 826561,
+   "missing": []
+  },
+  "writers": {
+   "pd": {
+    "exit": 0,
+    "files": [
+     "model.pdopt",
+     "model.pdparams"
+    ],
+    "tail": "written ['model.pdopt', 'model.pdparams']\n/usr/local/lib/python3.12/site-packages/paddle/utils/cpp_extension/extension_utils.py:712: UserWarning: No ccache found. Please be aware that recompiling all source files may be required. You can download and install ccache from: https://github.com/ccache/ccache/blob/master/doc/INSTALL.md\n  warnings.warn(warning_message)"
+   },
+   "coll": {
+    "exit": 0,
+    "files": [
+     "coll_p4.pkl",
+     "coll_p5.pkl"
+    ],
+    "tail": "written ['coll_p4.pkl', 'coll_p5.pkl']"
+   },
+   "np": {
+    "exit": 0,
+    "files": [
+     "np_p4.pkl",
+     "np_p5.pkl"
+    ],
+    "tail": "written ['np_p4.pkl', 'np_p5.pkl']"
+   },
+   "torch": {
+    "exit": 0,
+    "files": [
+     "t_p2.pt",
+     "t_p4.pt"
+    ],
+    "tail": "written ['t_p2.pt', 't_p4.pt']"
+   }
+  },
+  "magic": {
+   "pd/model.pdopt": "800495b5",
+   "pd/model.pdparams": "80049529",
+   "coll/coll_p4.pkl": "8004957d",
+   "coll/coll_p5.pkl": "8005957d",
+   "np/np_p4.pkl": "8004956b",
+   "np/np_p5.pkl": "8005954c",
+   "torch/t_p2.pt": "504b0304",
+   "torch/t_p4.pt": "504b0304"
+  },
+  "hub": {
+   "lists": {
+    "paddlepaddle": 261,
+    "sklearn": 500
+   },
+   "ok": 23,
+   "errors": [
+    [
+     "PaddlePaddle/PP-Chart2Table",
+     "model_state.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "Kellenok/PP-OCRv6_manga",
+     "rec/manga_rec.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "PaddlePaddle/PP-DocBee2-3B",
+     "model_state.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "tieubaoca/pp-ocrv6-medium-rec-vietnamese",
+     "training_checkpoint/best_accuracy.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "junnyu/roformer_chinese_base",
+     "model_state.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "PaddlePaddle/PP-DocBee-2B",
+     "model_state.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "thealper2/LaTeX_OCR_rec-im2latex",
+     "best_accuracy.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "ANZ-Innovation/PP-DocLayoutV3-VNExercise",
+     "checkpoint-54/54.pdopt",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "ANZ-Innovation/PP-DocLayoutV3-VNExercise",
+     "checkpoint-54/54.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-deepseek-coder-1.3b-base",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "PaddlePaddle/PP-DocBee-7B",
+     "model_state.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "junnyu/roformer_chinese_char_base",
+     "model_state.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-UnlikelihoodTraining-Token-Level",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-galactica-125m",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-gpt-neo-125m",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-opt-125m",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-gpt-sw3-126m",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-internlm2-1_8b",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-pythia-70m",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-phi-1_5",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-TinyLlama-1.1B-intermediate-step-1195k-token-2.5T",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-UnlikelihoodTraining-Sequence-Level",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-SimCTG",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-gpt2",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-bloom-396m-zh",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-DITTO",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-ScaleGrad",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "ylwt/PaddlePaddle-Qwen1.5-0.5B",
+     "paddle_model.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "HJHGJGHHG/paddle-fnet-base",
+     "model_state.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "HJHGJGHHG/paddle-fnet-large",
+     "model_state.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "HighCWu/rudalle-paddle-utils",
+     "RealESRGAN_x2.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "HighCWu/rudalle-paddle-utils",
+     "RealESRGAN_x4.pdparams",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "ryukkt62/Suncast",
+     "Suncast_v1.pkl",
+     "error: ValueError: larger than 40000000 bytes"
+    ],
+    [
+     "quantile-forest/california-housing-example",
+     "model.pkl",
+     "error: ValueError: larger than 40000000 bytes"
+    ]
+   ],
+   "skipped_gated": [
+    "Vphuc/PP-OCRv5-mobile-rec-vi"
+   ]
+  },
+  "scan_errors": {
+   "orig": "",
+   "new": ""
+  },
+  "versions": {
+   "orig": {
+    "mfs": "0.12.0",
+    "pms": "0.2.1",
+    "pms_file": "/work/orig_tree/pickle_model_scan.py",
+    "pyproject": "0.12.0"
+   },
+   "new": {
+    "mfs": "0.12.1",
+    "pms": "0.3.0",
+    "pms_file": "/work/tree/pickle_model_scan.py",
+    "pyproject": "0.12.1"
+   }
+  },
+  "written_scans": {
+   "pd/model.pdopt": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "orig_cli": 1,
+    "new_cli": 0
+   },
+   "pd/model.pdparams": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "orig_cli": 1,
+    "new_cli": 0
+   },
+   "coll/coll_p4.pkl": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "orig_cli": 1,
+    "new_cli": 0
+   },
+   "coll/coll_p5.pkl": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "orig_cli": 1,
+    "new_cli": 0
+   },
+   "np/np_p4.pkl": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "orig_cli": 1,
+    "new_cli": 0
+   },
+   "np/np_p5.pkl": {
+    "orig": [],
+    "new": [],
+    "orig_cli": 0,
+    "new_cli": 0
+   },
+   "torch/t_p2.pt": {
+    "orig": [],
+    "new": [],
+    "orig_cli": 0,
+    "new_cli": 0
+   },
+   "torch/t_p4.pt": {
+    "orig": [],
+    "new": [],
+    "orig_cli": 0,
+    "new_cli": 0
+   }
+  },
+  "hub_scans": {
+   "Kellenok/PP-OCRv6_manga/det/manga_det.pdparams": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "meister1378/VLLORA_OCRPUBLIC_v2/scheduler.pdparams": {
+    "orig": [],
+    "new": []
+   },
+   "third-party-dev/yolo5su/yolov5su_paddle_model/model.pdparams": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "PaddleCI/tiny-random-bert/model_state.pdparams": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "PaddleCI/tiny-random-plato-mini/model_state.pdparams": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "sijunhe/test_unet1d/model_state.pdparams": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "sijunhe/ci-test-ernie-model-test/model_state.pdparams": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "PaddleCI/tiny-random-unimo-text-1.0/model_state.pdparams": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "OKTAYBBS/DataScientst-models/classification/churn_model.pkl": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ]
+   },
+   "OKTAYBBS/DataScientst-models/classification/mobile_model.pkl": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ]
+   },
+   "danupurnomo/dummy-titanic/final_pipeline.pkl": {
+    "orig": [],
+    "new": []
+   },
+   "AbhishekS2005/mlforge-test-model/sgd_classifier.pkl": {
+    "orig": [
+     [
+      "PKL003",
+      "MEDIUM"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [
+     [
+      "PKL003",
+      "MEDIUM"
+     ]
+    ]
+   },
+   "imshriya/mlforge-cicd-test-model/sgd_classifier.pkl": {
+    "orig": [
+     [
+      "PKL003",
+      "MEDIUM"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [
+     [
+      "PKL003",
+      "MEDIUM"
+     ]
+    ]
+   },
+   "prabinpanta0/Patient-Readmission-Prediction/model_K_nearest.pkl": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "prabinpanta0/Patient-Readmission-Prediction/model_Logistic_Regression.pkl": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "MarceloLZR/titanic/final_pipeline.pkl": {
+    "orig": [],
+    "new": []
+   },
+   "sborhade/expense_forecaster/model/expense_forecaster_model.pkl": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "vvmnnnkv/wine-quality/model.pkl": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "vvmnnnkv/wine-quality/model_w_features.pkl": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "mohammed781234712/amazon-books-sentiment/label_encoder.pkl": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "mohammed781234712/amazon-books-sentiment/model.pkl": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "delineiro/soflexpoc/model.pkl": {
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [
+     [
+      "PKL000",
+      "LOW"
+     ]
+    ]
+   },
+   "delineiro/soflexpoc/vectorizer.pkl": {
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [
+     [
+      "PKL000",
+      "LOW"
+     ]
+    ]
+   }
+  },
+  "hub_new_rules": {},
+  "hub_new_high_or_critical": [
+   "OKTAYBBS/DataScientst-models/classification/churn_model.pkl",
+   "OKTAYBBS/DataScientst-models/classification/mobile_model.pkl"
+  ],
+  "hub_pkl007_only_high_orig": [
+   "AbhishekS2005/mlforge-test-model/sgd_classifier.pkl",
+   "Kellenok/PP-OCRv6_manga/det/manga_det.pdparams",
+   "OKTAYBBS/DataScientst-models/classification/churn_model.pkl",
+   "OKTAYBBS/DataScientst-models/classification/mobile_model.pkl",
+   "PaddleCI/tiny-random-bert/model_state.pdparams",
+   "PaddleCI/tiny-random-plato-mini/model_state.pdparams",
+   "PaddleCI/tiny-random-unimo-text-1.0/model_state.pdparams",
+   "delineiro/soflexpoc/model.pkl",
+   "delineiro/soflexpoc/vectorizer.pkl",
+   "imshriya/mlforge-cicd-test-model/sgd_classifier.pkl",
+   "mohammed781234712/amazon-books-sentiment/label_encoder.pkl",
+   "mohammed781234712/amazon-books-sentiment/model.pkl",
+   "prabinpanta0/Patient-Readmission-Prediction/model_K_nearest.pkl",
+   "prabinpanta0/Patient-Readmission-Prediction/model_Logistic_Regression.pkl",
+   "sborhade/expense_forecaster/model/expense_forecaster_model.pkl",
+   "sijunhe/ci-test-ernie-model-test/model_state.pdparams",
+   "sijunhe/test_unet1d/model_state.pdparams",
+   "third-party-dev/yolo5su/yolov5su_paddle_model/model.pdparams",
+   "vvmnnnkv/wine-quality/model.pkl",
+   "vvmnnnkv/wine-quality/model_w_features.pkl"
+  ]
+ },
+ "rows": [
+  {
+   "id": "P1",
+   "case": "patch applies once, second pass no-op, nothing lost",
+   "expected": "ok",
+   "result": "PASS",
+   "got": {
+    "files": {
+     "pickle_model_scan.py": {
+      "changes": [
+       "version 0.3.0",
+       "MEMO_PUT_OPCODES",
+       "operand tracking replaced",
+       "PKL007 wording (optional)"
+      ],
+      "second_pass": [],
+      "lost": [],
+      "removed_lines": 25,
+      "lines": [
+       437,
+       456
+      ],
+      "compiles": true,
+      "ok": true,
+      "wording_changed": true
+     },
+     "test_pickle_model_scan.py": {
+      "changes": [
+       "PKL007 test uses a non-string memo slot"
+      ],
+      "second_pass": [],
+      "lost": [],
+      "removed_lines": 10,
+      "lines": [
+       229,
+       233
+      ],
+      "compiles": true,
+      "ok": true
+     },
+     "model_file_scan.py": {
+      "changes": [
+       "version 0.12.1"
+      ],
+      "second_pass": [],
+      "lost": [],
+      "removed_lines": 1,
+      "lines": [
+       526,
+       526
+      ],
+      "compiles": true,
+      "ok": true
+     },
+     "pyproject.toml": {
+      "changes": [
+       "version 0.12.1"
+      ],
+      "second_pass": [],
+      "lost": [],
+      "removed_lines": 1,
+      "lines": [
+       72,
+       72
+      ],
+      "compiles": true,
+      "ok": true
+     },
+     "PICKLE_SCAN.md": {
+      "changes": [
+       "doc section (appended)"
+      ],
+      "second_pass": [],
+      "lost": [],
+      "removed_lines": 0,
+      "lines": [
+       81,
+       110
+      ],
+      "compiles": true,
+      "ok": true
+     }
+    },
+    "ok": true,
+    "written": [
+     "PICKLE_SCAN.md",
+     "model_file_scan.py",
+     "pickle_model_scan.py",
+     "pyproject.toml",
+     "test_pickle_model_scan.py",
+     "test_pickle_model_scan_memo.py"
+    ]
+   }
+  },
+  {
+   "id": "S1",
+   "case": "full unit-test suite on the patched tree",
+   "expected": "0 failures, 0 errors",
+   "result": "PASS",
+   "got": {
+    "ran": 1349,
+    "failures": [],
+    "errors": [],
+    "skipped": 3,
+    "error": null
+   }
+  },
+  {
+   "id": "S2",
+   "case": "new test module alone",
+   "expected": "exit 0; at least 10 tests",
+   "result": "PASS",
+   "got": {
+    "exit": 0,
+    "ran": 11,
+    "tail": "pickle_model_scan_memo.MemoResolution.test_memoized_dangerous_import_is_critical) ... ok\ntest_python_pickler_repeated_module_resolves (test_pickle_model_scan_memo.MemoResolution.test_python_pickler_repeated_module_resolves) ... ok\ntest_version (test_pickle_model_scan_memo.MemoResolution.test_version) ... ok\ntest_memo_index_never_stored (test_pickle_model_scan_memo.StillUnresolved.test_memo_index_never_stored) ... ok\ntest_memo_slot_holding_a_tuple (test_pickle_model_scan_memo.StillUnresolved.test_memo_slot_holding_a_tuple) ... ok\ntest_memo_slot_overwritten_by_a_tuple (test_pickle_model_scan_memo.StillUnresolved.test_memo_slot_overwritten_by_a_tuple) ... ok\ntest_operands_must_be_the_last_two_pushes (test_pickle_model_scan_memo.StillUnresolved.test_operands_must_be_the_last_two_pushes) ... ok\n\n----------------------------------------------------------------------\nRan 11 tests in 0.001s\n\nOK\n"
+   }
+  },
+  {
+   "id": "V1",
+   "case": "versions",
+   "expected": "orig pms 0.2.1 / mfs 0.12.0; new pms 0.3.0 / mfs 0.12.1 / pyproject 0.12.1",
+   "result": "PASS",
+   "got": {
+    "orig_pms": "0.2.1",
+    "orig_mfs": "0.12.0",
+    "new_pms": "0.3.0",
+    "new_mfs": "0.12.1",
+    "new_pyproject": "0.12.1"
+   }
+  },
+  {
+   "id": "G1",
+   "case": "0.2.1 on paddle .pdparams/.pdopt and protocol 4/5 collections pickles",
+   "expected": "PKL007 HIGH on each",
+   "result": "PASS",
+   "got": {
+    "pd/model.pdparams": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "pd/model.pdopt": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "coll/coll_p4.pkl": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "coll/coll_p5.pkl": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "N1",
+   "case": "0.3.0 on every honest written file",
+   "expected": "no PKL007; nothing HIGH or CRITICAL",
+   "result": "PASS",
+   "got": {
+    "n": 8,
+    "bad": {},
+    "all": {
+     "pd/model.pdopt": [],
+     "pd/model.pdparams": [],
+     "coll/coll_p4.pkl": [],
+     "coll/coll_p5.pkl": [],
+     "np/np_p4.pkl": [],
+     "np/np_p5.pkl": [],
+     "torch/t_p2.pt": [],
+     "torch/t_p4.pt": []
+    }
+   }
+  },
+  {
+   "id": "N2",
+   "case": "0.3.0 on the collections pickles",
+   "expected": "nothing above LOW",
+   "result": "PASS",
+   "got": {
+    "coll/coll_p4.pkl": [],
+    "coll/coll_p5.pkl": []
+   }
+  },
+  {
+   "id": "F1",
+   "case": "0.3.0 on planted streams",
+   "expected": "Fa/Fb/Fc PKL007 HIGH; Fd/Fe PKL001 CRITICAL",
+   "result": "PASS",
+   "got": {
+    "Fa": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "Fb": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "Fc": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "Fd": [
+     [
+      "PKL001",
+      "CRITICAL"
+     ]
+    ],
+    "Fe": [
+     [
+      "PKL001",
+      "CRITICAL"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "F2",
+   "case": "0.2.1 on planted Fd and Fc",
+   "expected": "Fd: PKL007 but no PKL001; Fc: nothing above LOW",
+   "result": "PASS",
+   "got": {
+    "Fd": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "Fc": [],
+    "all_orig": {
+     "Fa": [
+      [
+       "PKL007",
+       "HIGH"
+      ]
+     ],
+     "Fb": [
+      [
+       "PKL007",
+       "HIGH"
+      ]
+     ],
+     "Fc": [],
+     "Fd": [
+      [
+       "PKL007",
+       "HIGH"
+      ]
+     ],
+     "Fe": [
+      [
+       "PKL001",
+       "CRITICAL"
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "id": "H1",
+   "case": "gate: published files downloaded",
+   "expected": ">= 10",
+   "result": "PASS",
+   "got": 23
+  },
+  {
+   "id": "H2",
+   "case": "0.2.1: published files with PKL007",
+   "expected": ">= 5",
+   "result": "PASS",
+   "got": {
+    "n": 20,
+    "files": [
+     "AbhishekS2005/mlforge-test-model/sgd_classifier.pkl",
+     "Kellenok/PP-OCRv6_manga/det/manga_det.pdparams",
+     "OKTAYBBS/DataScientst-models/classification/churn_model.pkl",
+     "OKTAYBBS/DataScientst-models/classification/mobile_model.pkl",
+     "PaddleCI/tiny-random-bert/model_state.pdparams",
+     "PaddleCI/tiny-random-plato-mini/model_state.pdparams",
+     "PaddleCI/tiny-random-unimo-text-1.0/model_state.pdparams",
+     "delineiro/soflexpoc/model.pkl",
+     "delineiro/soflexpoc/vectorizer.pkl",
+     "imshriya/mlforge-cicd-test-model/sgd_classifier.pkl",
+     "mohammed781234712/amazon-books-sentiment/label_encoder.pkl",
+     "mohammed781234712/amazon-books-sentiment/model.pkl",
+     "prabinpanta0/Patient-Readmission-Prediction/model_K_nearest.pkl",
+     "prabinpanta0/Patient-Readmission-Prediction/model_Logistic_Regression.pkl",
+     "sborhade/expense_forecaster/model/expense_forecaster_model.pkl",
+     "sijunhe/ci-test-ernie-model-test/model_state.pdparams",
+     "sijunhe/test_unet1d/model_state.pdparams",
+     "third-party-dev/yolo5su/yolov5su_paddle_model/model.pdparams",
+     "vvmnnnkv/wine-quality/model.pkl",
+     "vvmnnnkv/wine-quality/model_w_features.pkl"
+    ]
+   }
+  },
+  {
+   "id": "H3",
+   "case": "0.3.0: published files with PKL007",
+   "expected": "none",
+   "result": "FAIL",
+   "got": {
+    "n": 2,
+    "files": [
+     "OKTAYBBS/DataScientst-models/classification/churn_model.pkl",
+     "OKTAYBBS/DataScientst-models/classification/mobile_model.pkl"
+    ],
+    "scan_errors": 0
+   }
+  },
+  {
+   "id": "H4",
+   "case": "0.3.0 keeps every 0.2.1 rule except PKL007",
+   "expected": "no rule lost on any file",
+   "result": "PASS",
+   "got": {
+    "lost": {}
+   }
+  }
+ ]
+}
