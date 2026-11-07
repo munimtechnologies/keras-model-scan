@@ -60,6 +60,16 @@ python onnx_external_data_key_scan.py model.onnx --json
 Exit code is non-zero when a finding at or above `--fail-on` is present, so it drops
 into CI as a gate.
 
+<!-- oek-functions -->
+## Local functions and training graphs (v0.2.0, November 2026)
+
+Up to 0.1.0 this scanner walked only `ModelProto.graph`. onnx's loader also
+loads external data for attribute tensors in the model's local functions
+(`ModelProto.functions`), so their `external_data` entries reach the same
+`ExternalDataInfo` code. 0.2.0 also walks function nodes, function default
+attributes (`attribute_proto`) and both `training_info` graphs. Pre-registered
+check: [research/PREREG_OED_FUNCTIONS.md](research/PREREG_OED_FUNCTIONS.md).
+
 ## Honest limits
 
 - This is **detection, not exploitation**. The scanner reads only key strings; it

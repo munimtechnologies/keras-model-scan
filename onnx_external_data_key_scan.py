@@ -37,7 +37,7 @@ import os
 import sys
 from dataclasses import asdict, dataclass
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 # onnx >= 1.21.0 `_ALLOWED_EXTERNAL_DATA_KEYS`. The ONNX IR spec documents the first
 # four for TensorProto.external_data; "basepath" is onnx's internal round-trip key.
@@ -61,6 +61,12 @@ _TENSOR_EXTERNAL_DATA = 13
 _TENSOR_DATA_LOCATION = 14
 _SSE_KEY = 1
 _SSE_VALUE = 2
+_MODEL_TRAINING_INFO = 20  # ModelProto.training_info (TrainingInfoProto)
+_MODEL_FUNCTIONS = 25  # ModelProto.functions (FunctionProto)
+_TRAINING_INITIALIZATION = 1  # TrainingInfoProto.initialization (GraphProto)
+_TRAINING_ALGORITHM = 2  # TrainingInfoProto.algorithm (GraphProto)
+_FUNCTION_NODE = 7  # FunctionProto.node
+_FUNCTION_ATTRIBUTE_PROTO = 11  # FunctionProto.attribute_proto
 
 _MAX_DEPTH = 64  # guard against hostile deeply-nested subgraphs
 
@@ -222,6 +228,34 @@ def _walk_graph(buf: bytes, path: str, findings: list[Finding], depth: int) -> N
             _walk_node(val, path + ".node", findings, depth + 1)
 
 
+def _walk_function(buf: bytes, path: str, findings: list[Finding],
+                   depth: int) -> None:
+    """FunctionProto: onnx's loader reads external data for these tensors."""
+    if depth > _MAX_DEPTH:
+        return
+    for fn, wt, val in _iter_fields(buf):
+        if wt != 2:
+            continue
+        if fn == _FUNCTION_NODE:
+            _walk_node(val, path + ".node", findings, depth + 1)
+        elif fn == _FUNCTION_ATTRIBUTE_PROTO:
+            _walk_attribute(val, path + ".attribute_proto", findings,
+                            depth + 1)
+
+
+def _walk_training_info(buf: bytes, path: str, findings: list[Finding],
+                        depth: int) -> None:
+    if depth > _MAX_DEPTH:
+        return
+    for fn, wt, val in _iter_fields(buf):
+        if wt != 2:
+            continue
+        if fn == _TRAINING_INITIALIZATION:
+            _walk_graph(val, path + ".initialization", findings, depth + 1)
+        elif fn == _TRAINING_ALGORITHM:
+            _walk_graph(val, path + ".algorithm", findings, depth + 1)
+
+
 def scan_bytes(data: bytes, source: str = "<bytes>") -> list[Finding]:
     """Return findings for one serialised ModelProto."""
     findings: list[Finding] = []
@@ -229,6 +263,10 @@ def scan_bytes(data: bytes, source: str = "<bytes>") -> list[Finding]:
         for fn, wt, val in _iter_fields(data):
             if wt == 2 and fn == _MODEL_GRAPH:
                 _walk_graph(val, source + ":graph", findings, depth=0)
+            elif wt == 2 and fn == _MODEL_FUNCTIONS:
+                _walk_function(val, source + ":functions", findings, depth=0)
+            elif wt == 2 and fn == _MODEL_TRAINING_INFO:
+                _walk_training_info(val, source + ":training_info", findings, depth=0)
     except _WireError as exc:
         findings.append(Finding(
             rule="OEK000", severity=SEVERITY["OEK000"], path=source, key="",

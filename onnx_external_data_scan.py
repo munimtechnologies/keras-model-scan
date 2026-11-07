@@ -31,12 +31,12 @@ import sys
 from dataclasses import dataclass
 from typing import Iterable, Optional
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 SEVERITY_ORDER = {"INFO": 0, "LOW": 1, "MEDIUM": 2, "HIGH": 3, "CRITICAL": 4}
 
 # Caps so a malformed or hostile file cannot exhaust memory or recursion.
-MAX_BYTES = 256 * 1024 * 1024      # read at most 256 MiB of a file
+MAX_BYTES = 2 * 1024 * 1024 * 1024  # protobuf's own 2 GiB message limit
 MAX_DEPTH = 64                      # subgraph nesting
 MAX_FINDINGS = 10000
 
@@ -59,6 +59,12 @@ _F_TENSOR_EXTDATA = 13             # TensorProto.external_data (StringStringEntr
 _F_TENSOR_DATALOC = 14             # TensorProto.data_location (int32)
 _F_SSE_KEY = 1                     # StringStringEntryProto.key (string)
 _F_SSE_VALUE = 2                   # StringStringEntryProto.value (string)
+_F_MODEL_TRAINING = 20             # ModelProto.training_info (TrainingInfoProto)
+_F_MODEL_FUNCTIONS = 25            # ModelProto.functions (FunctionProto)
+_F_TRAIN_INIT = 1                  # TrainingInfoProto.initialization (GraphProto)
+_F_TRAIN_ALGO = 2                  # TrainingInfoProto.algorithm (GraphProto)
+_F_FUNC_NODE = 7                   # FunctionProto.node (repeated NodeProto)
+_F_FUNC_ATTR = 11                  # FunctionProto.attribute_proto (AttributeProto)
 
 _URL_RE = re.compile(r"[A-Za-z][A-Za-z0-9+.\-]*://")
 _DRIVE_RE = re.compile(r"[A-Za-z]:[\\/]")
@@ -149,7 +155,7 @@ def _iter_fields(buf: bytes):
 def _as_text(b: bytes) -> str:
     # Preserve every byte (including NUL and high bytes) so control-character
     # and NUL-injection checks see the real content.
-    return b.decode("utf-8", "surrogateescape")
+    return bytes(b).decode("utf-8", "surrogateescape")
 
 
 # --------------------------------------------------------------------------
@@ -274,6 +280,27 @@ def _walk_graph(buf: bytes, loc: str, findings: list, seen: set,
             _walk_node(val, loc, findings, seen, depth)
 
 
+def _walk_function(buf, loc: str, findings: list, seen: set,
+                   depth: int) -> None:
+    """FunctionProto: onnx's loader reads external data for these tensors."""
+    if depth > MAX_DEPTH:
+        return
+    for field, wt, val in _iter_fields(buf):
+        if wt != 2:
+            continue
+        if field == _F_FUNC_NODE:
+            _walk_node(val, loc, findings, seen, depth)
+        elif field == _F_FUNC_ATTR:
+            _walk_attribute(val, loc, findings, seen, depth)
+
+
+def _walk_training_info(buf, loc: str, findings: list, seen: set,
+                        depth: int) -> None:
+    for field, wt, val in _iter_fields(buf):
+        if wt == 2 and field in (_F_TRAIN_INIT, _F_TRAIN_ALGO):
+            _walk_graph(val, loc, findings, seen, depth + 1)
+
+
 # --------------------------------------------------------------------------
 # Public API.
 # --------------------------------------------------------------------------
@@ -283,10 +310,15 @@ def scan_bytes(data: bytes, loc: str) -> list:
     findings: list = []
     seen: set = set()
     found_graph = False
+    data = memoryview(data)
     for field, wt, val in _iter_fields(data):
         if wt == 2 and field == _F_MODEL_GRAPH:
             found_graph = True
             _walk_graph(val, loc, findings, seen, 0)
+        elif wt == 2 and field == _F_MODEL_FUNCTIONS:
+            _walk_function(val, loc, findings, seen, 0)
+        elif wt == 2 and field == _F_MODEL_TRAINING:
+            _walk_training_info(val, loc, findings, seen, 0)
     if not found_graph:
         # Be lenient: a bare GraphProto, or a file we could not frame as a
         # ModelProto, is still walked as a graph so nothing is silently missed.
@@ -296,9 +328,23 @@ def scan_bytes(data: bytes, loc: str) -> list:
 
 
 def scan_file(path: str) -> list:
+    # Read in 16 MiB chunks: read(MAX_BYTES + 1) would reserve 2 GiB up front.
+    data = bytearray()
     with open(path, "rb") as fh:
-        data = fh.read(MAX_BYTES)
-    return scan_bytes(data, path)
+        while len(data) <= MAX_BYTES:
+            chunk = fh.read(min(16 * 1024 * 1024, MAX_BYTES + 1 - len(data)))
+            if not chunk:
+                break
+            data += chunk
+    if len(data) <= MAX_BYTES:
+        return scan_bytes(data, path)
+    findings = scan_bytes(memoryview(data)[:MAX_BYTES], path)
+    findings.append(Finding(
+        "OED006", "MEDIUM", "File larger than the scan limit",
+        "only the first %d bytes were checked; a single ONNX protobuf "
+        "cannot exceed 2 GiB, so this file is not a plain .onnx model or "
+        "is malformed" % MAX_BYTES, path, ""))
+    return findings
 
 
 def scan_path(path: str) -> list:

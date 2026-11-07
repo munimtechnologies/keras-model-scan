@@ -1,0 +1,117 @@
+{
+ "rows": {
+  "G0": {
+   "held": true,
+   "needs": {
+    "nemo_container_scan.py": {
+     "want": "0.2.0",
+     "have": "0.2.0",
+     "met": true
+    }
+   },
+   "manifests": {
+    "oed-functions": true
+   }
+  },
+  "G1": {
+   "held": true,
+   "candidates": [
+    {
+     "name": "oed-functions",
+     "ok": true,
+     "problems": [],
+     "main_versions": {
+      "onnx_external_data_scan.py": "0.1.0",
+      "onnx_external_data_key_scan.py": "0.1.0"
+     },
+     "after_versions": {
+      "onnx_external_data_scan.py": "0.2.0",
+      "onnx_external_data_key_scan.py": "0.2.0"
+     }
+    }
+   ]
+  },
+  "G2": {
+   "held": true,
+   "ran": 1354,
+   "failures": [],
+   "errors": [],
+   "skipped": 3,
+   "error": null
+  }
+ },
+ "reported": {
+  "predicted_ran": 1354,
+  "ran": 1354,
+  "ran_as_predicted": true,
+  "predicted_skipped": 3,
+  "skipped": 3,
+  "tree_versions": {
+   "archive_bomb_scan.py": "0.15.0",
+   "archive_payload_scan.py": "0.1.0",
+   "archive_symlink_scan.py": "0.1.0",
+   "chat_template_corpus.py": "0.19.0",
+   "chat_template_scan.py": "0.1.0",
+   "config_chat_template_path_scan.py": "0.1.0",
+   "config_trust_remote_code_scan.py": "0.1.0",
+   "coreml_model_scan.py": "0.1.0",
+   "corpus_manifest.py": "0.22.0",
+   "diffusers_manifest_scan.py": "0.1.0",
+   "diffusers_remote_code_scan.py": "0.1.0",
+   "executorch_pte_scan.py": "0.1.0",
+   "gguf_chat_template_scan.py": "0.20.0",
+   "gguf_cve_corpus.py": "0.1.0",
+   "gguf_data_region_scan.py": "0.1.0",
+   "gguf_scan.py": "0.2.0",
+   "hdf5_external_storage_scan.py": "0.1.0",
+   "hdf5_keras_lambda_scan.py": "0.1.1",
+   "hdf5_virtual_dataset_scan.py": "0.1.0",
+   "hf_config_injection_corpus.py": "0.17.0",
+   "hf_config_injection_scan.py": "0.1.0",
+   "hydra_target_scan.py": "0.4.0",
+   "joblib_pickle_scan.py": "0.1.0",
+   "jsonargparse_config_scan.py": "0.1.0",
+   "keras_layer_name_traversal_scan.py": "0.1.0",
+   "keras_lookup_vocab_scan.py": "0.1.0",
+   "keras_model_scan.py": "0.1.0",
+   "keras_torch_wrapper_scan.py": "0.2.0",
+   "lightgbm_model_scan.py": "0.1.0",
+   "mlflow_manifest_scan.py": "0.2.0",
+   "model_file_scan.py": "0.12.0",
+   "msgpack_weights_scan.py": "0.1.0",
+   "nemo_container_scan.py": "0.2.0",
+   "nested_container_scan.py": "0.1.0",
+   "numpy_npy_scan.py": "0.1.0",
+   "onnx_external_data_corpus.py": "0.1.0",
+   "onnx_external_data_key_corpus.py": "0.1.0",
+   "onnx_external_data_key_scan.py": "0.1.0",
+   "onnx_external_data_scan.py": "0.1.0",
+   "openvino_ir_scan.py": "0.1.2",
+   "paddle_program_scan.py": "0.1.0",
+   "pickle_eval_global_scan.py": "0.1.0",
+   "pickle_ext_registry_scan.py": "0.1.0",
+   "pickle_model_scan.py": "0.2.1",
+   "pytorch_checkpoint_scan.py": "0.1.0",
+   "r_serialized_scan.py": "0.1.0",
+   "safetensors_index_scan.py": "0.2.0",
+   "safetensors_scan.py": "0.3.0",
+   "skops_scan.py": "0.1.0",
+   "tf_savedmodel_ops_scan.py": "0.1.0",
+   "tflite_model_scan.py": "0.1.0",
+   "torch_module_wrapper_scan.py": "0.1.0",
+   "torch_storage_scan.py": "0.1.0",
+   "xgboost_model_scan.py": "0.1.0",
+   "yaml_python_tag_scan.py": "0.1.0"
+  },
+  "waited_seconds": 0,
+  "tarball_bytes": 826561
+ },
+ "held": 3,
+ "graded": 3,
+ "held_rows": [
+  "G0",
+  "G1",
+  "G2"
+ ],
+ "release_rule_holds": true
+}

@@ -1,0 +1,46 @@
+{
+ "candidates": [
+  {
+   "name": "oed-functions",
+   "ok": true,
+   "problems": [],
+   "job": "oed-functions-v2",
+   "main_versions": {
+    "onnx_external_data_scan.py": "0.1.0",
+    "onnx_external_data_key_scan.py": "0.1.0"
+   },
+   "copied": {
+    "onnx_external_data_scan.py": {
+     "from": "onnx_external_data_scan.py",
+     "replaced": true,
+     "sha256": "9c4d41fb1220547efd608f3a42edd2a1e0fee4eea5f15412d341d6adcbeecaf2"
+    },
+    "onnx_external_data_key_scan.py": {
+     "from": "onnx_external_data_key_scan.py",
+     "replaced": true,
+     "sha256": "77437730b54d53b5151d5991d76f19605c7f0417f7f4e61dcc1333be9bc0602b"
+    },
+    "ONNX_EXTERNAL_DATA_SCAN.md": {
+     "from": "ONNX_EXTERNAL_DATA_SCAN.md",
+     "replaced": true,
+     "sha256": "6cad351096cfd90e770a717231b7f233683d2c2f668928925d8b89da03682479"
+    },
+    "ONNX_EXTERNAL_DATA_KEY_SCAN.md": {
+     "from": "ONNX_EXTERNAL_DATA_KEY_SCAN.md",
+     "replaced": true,
+     "sha256": "9c8fb21ce9936811dca02e061fba0a38269fe0666eae579899ea84ec3b0fae1d"
+    },
+    "test_onnx_external_data_functions.py": {
+     "from": "candidate_test_onnx_external_data_functions.py",
+     "replaced": false,
+     "sha256": "6a30520279137863197b8d9f948dacb873a47b0296e441002b068033ab7449a6"
+    }
+   },
+   "after_versions": {
+    "onnx_external_data_scan.py": "0.2.0",
+    "onnx_external_data_key_scan.py": "0.2.0"
+   }
+  }
+ ],
+ "all_ok": true
+}

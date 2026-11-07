@@ -72,6 +72,29 @@ python onnx_external_data_scan.py ./model-dir --fail-on HIGH
 python onnx_external_data_scan.py ./model.onnx --json
 ```
 
+<!-- oed-functions -->
+## Local functions, training graphs and big files (v0.2.0, November 2026)
+
+onnx's loader loads external data for every tensor that
+`external_data_helper._get_all_tensors` returns. That includes tensors in node
+attributes of the model's local functions (`ModelProto.functions`), and
+`onnx.save_model(..., save_as_external_data=True, convert_attribute=True)`
+writes those tensors as external data. Up to 0.1.0 this scanner walked only
+`ModelProto.graph`, so a location in a function never reached the checks.
+0.2.0 also walks function nodes, function default attributes
+(`attribute_proto`) and both `training_info` graphs (initialization and
+algorithm). onnx itself does not walk `training_info`, but other tools may.
+
+0.1.0 also read at most 256 MiB of a file. In an honest inline model above
+that size (most of the file is weights), the graph field ran past the read
+and nothing was checked, so the result was clean. 0.2.0 reads up to 2 GiB,
+protobuf's own limit for one message, without copying slices. A file larger
+than that cannot be a single ONNX protobuf, so it gets OED006 (MEDIUM,
+"file larger than the scan limit") instead of a silent clean result.
+
+Pre-registered check on files written by onnx's own writer:
+[research/PREREG_OED_FUNCTIONS.md](research/PREREG_OED_FUNCTIONS.md).
+
 ## Honest limits
 
 - It flags **suspicious path shapes**, not confirmed exploitation; a patched
