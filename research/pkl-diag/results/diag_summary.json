@@ -1,0 +1,1160 @@
+{
+ "check_version": 1,
+ "error": "",
+ "rows": [
+  {
+   "id": "F0",
+   "case": "setup: both files downloaded; main has pms 0.2.1, the published 0.3.0 and joblib_pickle_scan",
+   "expected": "all true",
+   "result": "PASS",
+   "got": {
+    "hub_ok": [
+     "churn_model.pkl",
+     "mobile_model.pkl",
+     "wine_model.pkl"
+    ],
+    "versions": {
+     "pickle_model_scan.py": "0.2.1",
+     "joblib_pickle_scan.py": "0.1.0",
+     "model_file_scan.py": "0.12.0",
+     "research/pkl-memo/results/patched/pickle_model_scan.py": "0.3.0"
+    }
+   }
+  },
+  {
+   "id": "T1",
+   "case": "trace walker's unresolved STACK_GLOBAL positions equal 0.3.0's PKL007 positions on both files, non-empty",
+   "expected": "equal",
+   "result": "PASS",
+   "got": {
+    "churn_model.pkl": {
+     "trace": [
+      985
+     ],
+     "pms030": [
+      985
+     ]
+    },
+    "mobile_model.pkl": {
+     "trace": [
+      975
+     ],
+     "pms030": [
+      975
+     ]
+    }
+   }
+  },
+  {
+   "id": "D1",
+   "case": "every unresolved STACK_GLOBAL in churn and mobile sits inside a nested pickle (after a PROTO at pos > 0)",
+   "expected": "all nested-pickle",
+   "result": "PASS",
+   "got": {
+    "churn_model.pkl": {
+     "nested-pickle": 1
+    },
+    "mobile_model.pkl": {
+     "nested-pickle": 1
+    },
+    "wine_model.pkl": {
+     "nested-pickle": 1
+    }
+   }
+  },
+  {
+   "id": "W0",
+   "case": "four honest files written; ground truth has >= 3 distinct imports each",
+   "expected": "all",
+   "result": "PASS",
+   "got": {
+    "j1_df_str.pkl": {
+     "error": false,
+     "distinct": 8
+    },
+    "j2_np_int.pkl": {
+     "error": false,
+     "distinct": 7
+    },
+    "j3_df_str_z3.pkl": {
+     "error": false,
+     "distinct": 8
+    },
+    "j4_df_str_p5.pkl": {
+     "error": false,
+     "distinct": 8
+    }
+   }
+  },
+  {
+   "id": "W1",
+   "case": "J4 plain pickle p5: walk reaches STOP at the last byte, nothing unresolved, imports equal ground truth",
+   "expected": "true",
+   "result": "PASS",
+   "got": {
+    "stop": {
+     "kind": "STOP",
+     "pos": 7586
+    },
+    "coverage": 1.0,
+    "stop_at_last_byte": true,
+    "walk_distinct": 8,
+    "truth_distinct": 8,
+    "missed": [],
+    "extra": [],
+    "unresolved": 0
+   }
+  },
+  {
+   "id": "W2",
+   "case": "J1, J2, J3 (joblib.dump): the walk ends before the stream's last byte and misses at least one real import",
+   "expected": "true for all three",
+   "result": "PASS",
+   "got": {
+    "j1_df_str.pkl": {
+     "stop": {
+      "kind": "STOP",
+      "pos": 1054
+     },
+     "coverage": 0.128894,
+     "stop_at_last_byte": false,
+     "walk_distinct": 6,
+     "truth_distinct": 8,
+     "missed": [
+      "numpy._core.multiarray scalar",
+      "sklearn.tree._tree Tree"
+     ],
+     "extra": [],
+     "unresolved": 1
+    },
+    "j2_np_int.pkl": {
+     "stop": {
+      "kind": "error",
+      "pos": 913,
+      "msg": "ValueError: at position 913, opcode b'\\x0e' unknown",
+      "bytes_here": "0effffffffffffffffffffffffffff00"
+     },
+     "coverage": 0.116211,
+     "stop_at_last_byte": false,
+     "walk_distinct": 5,
+     "truth_distinct": 7,
+     "missed": [
+      "numpy._core.multiarray scalar",
+      "sklearn.tree._tree Tree"
+     ],
+     "extra": [],
+     "unresolved": 0
+    },
+    "j3_df_str_z3.pkl": {
+     "stop": {
+      "kind": "STOP",
+      "pos": 1054
+     },
+     "coverage": 0.128894,
+     "stop_at_last_byte": false,
+     "walk_distinct": 6,
+     "truth_distinct": 8,
+     "missed": [
+      "numpy._core.multiarray scalar",
+      "sklearn.tree._tree Tree"
+     ],
+     "extra": [],
+     "unresolved": 1
+    }
+   }
+  },
+  {
+   "id": "W3",
+   "case": "0.3.0 on J4: no PKL007, nothing HIGH or CRITICAL",
+   "expected": "true",
+   "result": "PASS",
+   "got": []
+  },
+  {
+   "id": "W4",
+   "case": "J2: walk stops with a parse error and 0.3.0 reports PKL000",
+   "expected": "true",
+   "result": "PASS",
+   "got": {
+    "rules": [
+     [
+      "PKL000",
+      "LOW"
+     ]
+    ],
+    "stop": {
+     "kind": "error",
+     "pos": 913,
+     "msg": "ValueError: at position 913, opcode b'\\x0e' unknown",
+     "bytes_here": "0effffffffffffffffffffffffffff00"
+    }
+   }
+  },
+  {
+   "id": "W5",
+   "case": "J1 and J3: walk enters a nested pickle and ends at its STOP; 0.3.0 gives no PKL000 but PKL007, all after the nested PROTO",
+   "expected": "true for both",
+   "result": "PASS",
+   "got": {
+    "j1_df_str.pkl": {
+     "rules": [
+      [
+       "PKL007",
+       "HIGH"
+      ]
+     ],
+     "stop": {
+      "kind": "STOP",
+      "pos": 1054
+     },
+     "nested_proto": [
+      873
+     ],
+     "pkl007_at": [
+      975
+     ]
+    },
+    "j3_df_str_z3.pkl": {
+     "rules": [
+      [
+       "PKL007",
+       "HIGH"
+      ]
+     ],
+     "stop": {
+      "kind": "STOP",
+      "pos": 1054
+     },
+     "nested_proto": [
+      873
+     ],
+     "pkl007_at": [
+      975
+     ]
+    }
+   }
+  }
+ ],
+ "reported": {
+  "fetch": {
+   "started": "2026-11-07T21:12:49Z",
+   "tree": {
+    "waited_seconds": 0,
+    "polls": 1,
+    "ready_seen": true,
+    "tarball_bytes": 855836,
+    "versions": {
+     "pickle_model_scan.py": "0.2.1",
+     "joblib_pickle_scan.py": "0.1.0",
+     "model_file_scan.py": "0.12.0",
+     "research/pkl-memo/results/patched/pickle_model_scan.py": "0.3.0"
+    }
+   },
+   "hub": {
+    "repo": "OKTAYBBS/DataScientst-models",
+    "files": [
+     {
+      "rfilename": "classification/churn_model.pkl",
+      "status": "ok",
+      "bytes": 39282889,
+      "sha256": "746ebfaca9bfb1bdee915c5a016a0f12a20a550438d41d3e889e8f3796d9b6b6",
+      "path": "hub/01/churn_model.pkl"
+     },
+     {
+      "rfilename": "classification/mobile_model.pkl",
+      "status": "ok",
+      "bytes": 4431401,
+      "sha256": "c60dd168fb9adade1ebeb863e5d041879357a368e6380e8907117763580406a5",
+      "path": "hub/02/mobile_model.pkl"
+     },
+     {
+      "rfilename": "classification/wine_model.pkl",
+      "status": "ok",
+      "bytes": 21572777,
+      "sha256": "83128a83c9ec92af5b4e162fdf5c98b6d10c900196154ebefbf199ac1c4aa388",
+      "path": "hub/03/wine_model.pkl"
+     }
+    ],
+    "revision": "c40104b6f379f3bc7a0f5d000cdf35fa8caf9467"
+   },
+   "finished": "2026-11-07T21:12:54Z"
+  },
+  "writers": {
+   "versions": {
+    "joblib": "1.6.0",
+    "numpy": "2.5.4",
+    "pandas": "3.1.1",
+    "sklearn": "1.9.1",
+    "python": "3.12.15",
+    "pickle_default_protocol": 4
+   },
+   "errors": [],
+   "files": {
+    "j1_df_str.pkl": {
+     "kind": "joblib",
+     "bytes": 8185,
+     "magic": "8004955e",
+     "distinct_imports": [
+      "joblib.numpy_pickle NumpyArrayWrapper",
+      "numpy dtype",
+      "numpy ndarray",
+      "numpy._core.multiarray _reconstruct",
+      "numpy._core.multiarray scalar",
+      "sklearn.ensemble._forest RandomForestClassifier",
+      "sklearn.tree._classes DecisionTreeClassifier",
+      "sklearn.tree._tree Tree"
+     ]
+    },
+    "j2_np_int.pkl": {
+     "kind": "joblib",
+     "bytes": 7865,
+     "magic": "80049586",
+     "distinct_imports": [
+      "joblib.numpy_pickle NumpyArrayWrapper",
+      "numpy dtype",
+      "numpy ndarray",
+      "numpy._core.multiarray scalar",
+      "sklearn.ensemble._forest RandomForestClassifier",
+      "sklearn.tree._classes DecisionTreeClassifier",
+      "sklearn.tree._tree Tree"
+     ]
+    },
+    "j3_df_str_z3.pkl": {
+     "kind": "joblib",
+     "bytes": 2915,
+     "magic": "785edd59",
+     "distinct_imports": [
+      "joblib.numpy_pickle NumpyArrayWrapper",
+      "numpy dtype",
+      "numpy ndarray",
+      "numpy._core.multiarray _reconstruct",
+      "numpy._core.multiarray scalar",
+      "sklearn.ensemble._forest RandomForestClassifier",
+      "sklearn.tree._classes DecisionTreeClassifier",
+      "sklearn.tree._tree Tree"
+     ]
+    },
+    "j4_df_str_p5.pkl": {
+     "kind": "pickle",
+     "bytes": 7587,
+     "magic": "80059598",
+     "distinct_imports": [
+      "numpy dtype",
+      "numpy ndarray",
+      "numpy._core.multiarray _reconstruct",
+      "numpy._core.multiarray scalar",
+      "numpy._core.numeric _frombuffer",
+      "sklearn.ensemble._forest RandomForestClassifier",
+      "sklearn.tree._classes DecisionTreeClassifier",
+      "sklearn.tree._tree Tree"
+     ]
+    }
+   }
+  },
+  "traces": {
+   "churn_model.pkl": {
+    "bytes": 39282889,
+    "ops": 328,
+    "stack_globals": 8,
+    "stop": {
+     "kind": "STOP",
+     "pos": 1742
+    },
+    "stop_at_last_byte": false,
+    "coverage": 4.4e-05,
+    "nested_proto": [
+     883
+    ],
+    "wrapper_builds": [],
+    "first_wrapper_build": null,
+    "resolved_distinct": [
+     "joblib.numpy_pickle NumpyArrayWrapper",
+     "numpy dtype",
+     "numpy ndarray",
+     "numpy._core.multiarray _reconstruct",
+     "sklearn.ensemble._forest RandomForestClassifier",
+     "sklearn.tree._classes DecisionTreeClassifier"
+    ],
+    "unresolved_positions": [
+     985
+    ],
+    "unresolved": [
+     {
+      "pos": 985,
+      "op": "STACK_GLOBAL",
+      "resolved": false,
+      "operands": [
+       [
+        "other",
+        null,
+        "BINGET slot 3 <- NEWOBJ"
+       ],
+       [
+        "str",
+        "'dtype'",
+        "SHORT_BINUNICODE"
+       ]
+      ],
+      "context": [
+       [
+        963,
+        "MEMOIZE",
+        null
+       ],
+       [
+        964,
+        "TUPLE3",
+        null
+       ],
+       [
+        965,
+        "MEMOIZE",
+        null
+       ],
+       [
+        966,
+        "REDUCE",
+        null
+       ],
+       [
+        967,
+        "MEMOIZE",
+        null
+       ],
+       [
+        968,
+        "MARK",
+        null
+       ],
+       [
+        969,
+        "BININT1",
+        "1"
+       ],
+       [
+        971,
+        "BININT1",
+        "30"
+       ],
+       [
+        973,
+        "TUPLE1",
+        null
+       ],
+       [
+        974,
+        "MEMOIZE",
+        null
+       ],
+       [
+        975,
+        "BINGET",
+        "3"
+       ],
+       [
+        977,
+        "SHORT_BINUNICODE",
+        "'dtype'"
+       ],
+       [
+        984,
+        "MEMOIZE",
+        null
+       ],
+       [
+        985,
+        "STACK_GLOBAL",
+        null
+       ]
+      ],
+      "class": "nested-pickle"
+     }
+    ],
+    "unwrapped": [],
+    "file_bytes": 39282889
+   },
+   "j1_df_str.pkl": {
+    "bytes": 8185,
+    "ops": 275,
+    "stack_globals": 8,
+    "stop": {
+     "kind": "STOP",
+     "pos": 1054
+    },
+    "stop_at_last_byte": false,
+    "coverage": 0.128894,
+    "nested_proto": [
+     873
+    ],
+    "wrapper_builds": [],
+    "first_wrapper_build": null,
+    "resolved_distinct": [
+     "joblib.numpy_pickle NumpyArrayWrapper",
+     "numpy dtype",
+     "numpy ndarray",
+     "numpy._core.multiarray _reconstruct",
+     "sklearn.ensemble._forest RandomForestClassifier",
+     "sklearn.tree._classes DecisionTreeClassifier"
+    ],
+    "unresolved_positions": [
+     975
+    ],
+    "unresolved": [
+     {
+      "pos": 975,
+      "op": "STACK_GLOBAL",
+      "resolved": false,
+      "operands": [
+       [
+        "other",
+        null,
+        "BINGET slot 3 <- NEWOBJ"
+       ],
+       [
+        "str",
+        "'dtype'",
+        "SHORT_BINUNICODE"
+       ]
+      ],
+      "context": [
+       [
+        953,
+        "MEMOIZE",
+        null
+       ],
+       [
+        954,
+        "TUPLE3",
+        null
+       ],
+       [
+        955,
+        "MEMOIZE",
+        null
+       ],
+       [
+        956,
+        "REDUCE",
+        null
+       ],
+       [
+        957,
+        "MEMOIZE",
+        null
+       ],
+       [
+        958,
+        "MARK",
+        null
+       ],
+       [
+        959,
+        "BININT1",
+        "1"
+       ],
+       [
+        961,
+        "BININT1",
+        "4"
+       ],
+       [
+        963,
+        "TUPLE1",
+        null
+       ],
+       [
+        964,
+        "MEMOIZE",
+        null
+       ],
+       [
+        965,
+        "BINGET",
+        "3"
+       ],
+       [
+        967,
+        "SHORT_BINUNICODE",
+        "'dtype'"
+       ],
+       [
+        974,
+        "MEMOIZE",
+        null
+       ],
+       [
+        975,
+        "STACK_GLOBAL",
+        null
+       ]
+      ],
+      "class": "nested-pickle"
+     }
+    ],
+    "unwrapped": [],
+    "file_bytes": 8185
+   },
+   "j2_np_int.pkl": {
+    "bytes": 7865,
+    "ops": 213,
+    "stack_globals": 5,
+    "stop": {
+     "kind": "error",
+     "pos": 913,
+     "msg": "ValueError: at position 913, opcode b'\\x0e' unknown",
+     "bytes_here": "0effffffffffffffffffffffffffff00"
+    },
+    "stop_at_last_byte": false,
+    "coverage": 0.116211,
+    "nested_proto": [],
+    "wrapper_builds": [
+     [
+      912,
+      913,
+      "0effffffffffffff"
+     ]
+    ],
+    "first_wrapper_build": 912,
+    "resolved_distinct": [
+     "joblib.numpy_pickle NumpyArrayWrapper",
+     "numpy dtype",
+     "numpy ndarray",
+     "sklearn.ensemble._forest RandomForestClassifier",
+     "sklearn.tree._classes DecisionTreeClassifier"
+    ],
+    "unresolved_positions": [],
+    "unresolved": [],
+    "unwrapped": [],
+    "file_bytes": 7865
+   },
+   "j3_df_str_z3.pkl": {
+    "bytes": 8185,
+    "ops": 275,
+    "stack_globals": 8,
+    "stop": {
+     "kind": "STOP",
+     "pos": 1054
+    },
+    "stop_at_last_byte": false,
+    "coverage": 0.128894,
+    "nested_proto": [
+     873
+    ],
+    "wrapper_builds": [],
+    "first_wrapper_build": null,
+    "resolved_distinct": [
+     "joblib.numpy_pickle NumpyArrayWrapper",
+     "numpy dtype",
+     "numpy ndarray",
+     "numpy._core.multiarray _reconstruct",
+     "sklearn.ensemble._forest RandomForestClassifier",
+     "sklearn.tree._classes DecisionTreeClassifier"
+    ],
+    "unresolved_positions": [
+     975
+    ],
+    "unresolved": [
+     {
+      "pos": 975,
+      "op": "STACK_GLOBAL",
+      "resolved": false,
+      "operands": [
+       [
+        "other",
+        null,
+        "BINGET slot 3 <- NEWOBJ"
+       ],
+       [
+        "str",
+        "'dtype'",
+        "SHORT_BINUNICODE"
+       ]
+      ],
+      "context": [
+       [
+        953,
+        "MEMOIZE",
+        null
+       ],
+       [
+        954,
+        "TUPLE3",
+        null
+       ],
+       [
+        955,
+        "MEMOIZE",
+        null
+       ],
+       [
+        956,
+        "REDUCE",
+        null
+       ],
+       [
+        957,
+        "MEMOIZE",
+        null
+       ],
+       [
+        958,
+        "MARK",
+        null
+       ],
+       [
+        959,
+        "BININT1",
+        "1"
+       ],
+       [
+        961,
+        "BININT1",
+        "4"
+       ],
+       [
+        963,
+        "TUPLE1",
+        null
+       ],
+       [
+        964,
+        "MEMOIZE",
+        null
+       ],
+       [
+        965,
+        "BINGET",
+        "3"
+       ],
+       [
+        967,
+        "SHORT_BINUNICODE",
+        "'dtype'"
+       ],
+       [
+        974,
+        "MEMOIZE",
+        null
+       ],
+       [
+        975,
+        "STACK_GLOBAL",
+        null
+       ]
+      ],
+      "class": "nested-pickle"
+     }
+    ],
+    "unwrapped": [
+     "inflated"
+    ],
+    "file_bytes": 2915
+   },
+   "j4_df_str_p5.pkl": {
+    "bytes": 7587,
+    "ops": 834,
+    "stack_globals": 8,
+    "stop": {
+     "kind": "STOP",
+     "pos": 7586
+    },
+    "stop_at_last_byte": true,
+    "coverage": 1.0,
+    "nested_proto": [],
+    "wrapper_builds": [],
+    "first_wrapper_build": null,
+    "resolved_distinct": [
+     "numpy dtype",
+     "numpy ndarray",
+     "numpy._core.multiarray _reconstruct",
+     "numpy._core.multiarray scalar",
+     "numpy._core.numeric _frombuffer",
+     "sklearn.ensemble._forest RandomForestClassifier",
+     "sklearn.tree._classes DecisionTreeClassifier",
+     "sklearn.tree._tree Tree"
+    ],
+    "unresolved_positions": [],
+    "unresolved": [],
+    "unwrapped": [],
+    "file_bytes": 7587
+   },
+   "mobile_model.pkl": {
+    "bytes": 4431401,
+    "ops": 289,
+    "stack_globals": 8,
+    "stop": {
+     "kind": "STOP",
+     "pos": 1138
+    },
+    "stop_at_last_byte": false,
+    "coverage": 0.000257,
+    "nested_proto": [
+     873
+    ],
+    "wrapper_builds": [],
+    "first_wrapper_build": null,
+    "resolved_distinct": [
+     "joblib.numpy_pickle NumpyArrayWrapper",
+     "numpy dtype",
+     "numpy ndarray",
+     "numpy._core.multiarray _reconstruct",
+     "sklearn.ensemble._forest RandomForestClassifier",
+     "sklearn.tree._classes DecisionTreeClassifier"
+    ],
+    "unresolved_positions": [
+     975
+    ],
+    "unresolved": [
+     {
+      "pos": 975,
+      "op": "STACK_GLOBAL",
+      "resolved": false,
+      "operands": [
+       [
+        "other",
+        null,
+        "BINGET slot 3 <- NEWOBJ"
+       ],
+       [
+        "str",
+        "'dtype'",
+        "SHORT_BINUNICODE"
+       ]
+      ],
+      "context": [
+       [
+        953,
+        "MEMOIZE",
+        null
+       ],
+       [
+        954,
+        "TUPLE3",
+        null
+       ],
+       [
+        955,
+        "MEMOIZE",
+        null
+       ],
+       [
+        956,
+        "REDUCE",
+        null
+       ],
+       [
+        957,
+        "MEMOIZE",
+        null
+       ],
+       [
+        958,
+        "MARK",
+        null
+       ],
+       [
+        959,
+        "BININT1",
+        "1"
+       ],
+       [
+        961,
+        "BININT1",
+        "11"
+       ],
+       [
+        963,
+        "TUPLE1",
+        null
+       ],
+       [
+        964,
+        "MEMOIZE",
+        null
+       ],
+       [
+        965,
+        "BINGET",
+        "3"
+       ],
+       [
+        967,
+        "SHORT_BINUNICODE",
+        "'dtype'"
+       ],
+       [
+        974,
+        "MEMOIZE",
+        null
+       ],
+       [
+        975,
+        "STACK_GLOBAL",
+        null
+       ]
+      ],
+      "class": "nested-pickle"
+     }
+    ],
+    "unwrapped": [],
+    "file_bytes": 4431401
+   },
+   "wine_model.pkl": {
+    "bytes": 21572777,
+    "ops": 290,
+    "stack_globals": 8,
+    "stop": {
+     "kind": "STOP",
+     "pos": 1192
+    },
+    "stop_at_last_byte": false,
+    "coverage": 5.5e-05,
+    "nested_proto": [
+     884
+    ],
+    "wrapper_builds": [],
+    "first_wrapper_build": null,
+    "resolved_distinct": [
+     "joblib.numpy_pickle NumpyArrayWrapper",
+     "numpy dtype",
+     "numpy ndarray",
+     "numpy._core.multiarray _reconstruct",
+     "sklearn.ensemble._forest RandomForestClassifier",
+     "sklearn.tree._classes DecisionTreeClassifier"
+    ],
+    "unresolved_positions": [
+     986
+    ],
+    "unresolved": [
+     {
+      "pos": 986,
+      "op": "STACK_GLOBAL",
+      "resolved": false,
+      "operands": [
+       [
+        "other",
+        null,
+        "BINGET slot 3 <- NEWOBJ"
+       ],
+       [
+        "str",
+        "'dtype'",
+        "SHORT_BINUNICODE"
+       ]
+      ],
+      "context": [
+       [
+        964,
+        "MEMOIZE",
+        null
+       ],
+       [
+        965,
+        "TUPLE3",
+        null
+       ],
+       [
+        966,
+        "MEMOIZE",
+        null
+       ],
+       [
+        967,
+        "REDUCE",
+        null
+       ],
+       [
+        968,
+        "MEMOIZE",
+        null
+       ],
+       [
+        969,
+        "MARK",
+        null
+       ],
+       [
+        970,
+        "BININT1",
+        "1"
+       ],
+       [
+        972,
+        "BININT1",
+        "11"
+       ],
+       [
+        974,
+        "TUPLE1",
+        null
+       ],
+       [
+        975,
+        "MEMOIZE",
+        null
+       ],
+       [
+        976,
+        "BINGET",
+        "3"
+       ],
+       [
+        978,
+        "SHORT_BINUNICODE",
+        "'dtype'"
+       ],
+       [
+        985,
+        "MEMOIZE",
+        null
+       ],
+       [
+        986,
+        "STACK_GLOBAL",
+        null
+       ]
+      ],
+      "class": "nested-pickle"
+     }
+    ],
+    "unwrapped": [],
+    "file_bytes": 21572777
+   }
+  },
+  "scans": {
+   "churn_model.pkl": {
+    "pms021": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "pms030": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "jlb": []
+   },
+   "mobile_model.pkl": {
+    "pms021": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "pms030": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "jlb": []
+   },
+   "wine_model.pkl": {
+    "pms021": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "pms030": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "jlb": []
+   },
+   "j1_df_str.pkl": {
+    "pms021": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "pms030": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "jlb": []
+   },
+   "j2_np_int.pkl": {
+    "pms021": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "pms030": [
+     [
+      "PKL000",
+      "LOW"
+     ]
+    ],
+    "jlb": []
+   },
+   "j3_df_str_z3.pkl": {
+    "pms021": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "pms030": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "jlb": [
+     [
+      "JLB010",
+      "MEDIUM"
+     ]
+    ]
+   },
+   "j4_df_str_p5.pkl": {
+    "pms021": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "pms030": [],
+    "jlb": []
+   }
+  },
+  "scanner_versions": {
+   "pms021": "0.2.1",
+   "pms030": "0.3.0",
+   "jlb": "0.1.0"
+  },
+  "scanner_problems": {
+   "pms021": null,
+   "pms030": null,
+   "jlb": null
+  },
+  "D1_classes": {
+   "churn_model.pkl": {
+    "nested-pickle": 1
+   },
+   "mobile_model.pkl": {
+    "nested-pickle": 1
+   },
+   "wine_model.pkl": {
+    "nested-pickle": 1
+   }
+  }
+ },
+ "held": 9,
+ "graded": 9,
+ "not_run": []
+}

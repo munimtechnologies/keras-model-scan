@@ -1,0 +1,115 @@
+{
+ "versions": {
+  "joblib": "1.6.0",
+  "numpy": "2.5.4",
+  "pandas": "3.1.1",
+  "sklearn": "1.9.1",
+  "python": "3.12.15",
+  "pickle_default_protocol": 4
+ },
+ "files": {
+  "j1_df_str.pkl": {
+   "kind": "joblib",
+   "bytes": 8185,
+   "magic": "8004955e",
+   "imports": [
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray _reconstruct",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray scalar",
+    "sklearn.tree._tree Tree"
+   ],
+   "distinct_imports": [
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy dtype",
+    "numpy ndarray",
+    "numpy._core.multiarray _reconstruct",
+    "numpy._core.multiarray scalar",
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "sklearn.tree._tree Tree"
+   ]
+  },
+  "j2_np_int.pkl": {
+   "kind": "joblib",
+   "bytes": 7865,
+   "magic": "80049586",
+   "imports": [
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray scalar",
+    "sklearn.tree._tree Tree"
+   ],
+   "distinct_imports": [
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy dtype",
+    "numpy ndarray",
+    "numpy._core.multiarray scalar",
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "sklearn.tree._tree Tree"
+   ]
+  },
+  "j3_df_str_z3.pkl": {
+   "kind": "joblib",
+   "bytes": 2915,
+   "magic": "785edd59",
+   "imports": [
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray _reconstruct",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray scalar",
+    "sklearn.tree._tree Tree"
+   ],
+   "distinct_imports": [
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy dtype",
+    "numpy ndarray",
+    "numpy._core.multiarray _reconstruct",
+    "numpy._core.multiarray scalar",
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "sklearn.tree._tree Tree"
+   ]
+  },
+  "j4_df_str_p5.pkl": {
+   "kind": "pickle",
+   "bytes": 7587,
+   "magic": "80059598",
+   "imports": [
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "numpy._core.multiarray _reconstruct",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.numeric _frombuffer",
+    "numpy._core.multiarray scalar",
+    "sklearn.tree._tree Tree"
+   ],
+   "distinct_imports": [
+    "numpy dtype",
+    "numpy ndarray",
+    "numpy._core.multiarray _reconstruct",
+    "numpy._core.multiarray scalar",
+    "numpy._core.numeric _frombuffer",
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "sklearn.tree._tree Tree"
+   ]
+  }
+ },
+ "errors": []
+}
