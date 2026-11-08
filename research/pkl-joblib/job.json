@@ -1,0 +1,22 @@
+{
+  "name": "pkl-joblib-v1",
+  "kind": "poc",
+  "workdir": "E:/MV2-Pursuit/work/20261108T121940Z-security/compete/pkl-joblib",
+  "image": "python:3.12",
+  "setup": [
+    "python -m pip install --no-cache-dir --quiet scikit-learn pandas scipy joblib==1.6.0",
+    "python fetch_jl.py"
+  ],
+  "run": [
+    "python patch_jl.py tree /out orig_tree",
+    "python run_tests.py tree /out",
+    "python write_jl.py /out",
+    "python jl_check.py --out /out --orig orig_tree --tree tree"
+  ],
+  "network": true,
+  "data_urls": [],
+  "data_key": "mpk-arc-realfile",
+  "cpu": 1,
+  "memory_gb": 2,
+  "timeout_minutes": 200
+}
