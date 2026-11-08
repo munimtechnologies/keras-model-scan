@@ -15,6 +15,14 @@ surface - and reports them as such, and it explicitly flags STACK_GLOBAL operand
 that cannot be resolved from preceding string literals, a documented way to bypass
 naive scanners (GHSA-9gvj-pp9x-gcfr / CVE-2025-71325) rather than silently passing.
 
+Since 0.4.0 it reads joblib.dump files the way joblib.load does. joblib writes
+each numpy array as a NumpyArrayWrapper object followed by the array itself,
+inside the pickle stream: raw bytes for a numeric array, a separate nested
+pickle for an object-dtype array. The walk now skips the raw bytes by the size
+the wrapper's pickled shape and dtype give, walks each nested pickle with its
+own memo, and carries on to the end of the file. Up to 0.3.0 it stopped at the
+first array and never saw the rest of the file.
+
 A flag means a pattern worth human review, not proof of malice. A clean result is
 not a guarantee of safety: this is a static heuristic, not a sandbox.
 
@@ -31,15 +39,17 @@ import bz2
 import gzip
 import io
 import json
+import lzma
 import os
 import pickletools
+import re
 import struct
 import sys
 import zipfile
 import zlib
 from dataclasses import dataclass
 
-__version__ = "0.2.1"
+__version__ = "0.4.0"
 
 # Modules whose presence in a pickle is a direct code-execution concern.
 DANGEROUS_MODULES = frozenset({
@@ -76,7 +86,10 @@ STRING_OPCODES = frozenset({
     "SHORT_BINSTRING", "BINSTRING", "STRING",
 })
 MEMO_GET_OPCODES = frozenset({"GET", "BINGET", "LONG_BINGET"})
+MEMO_PUT_OPCODES = frozenset({"PUT", "BINPUT", "LONG_BINPUT"})
 EXEC_OPCODES = frozenset({"REDUCE", "INST", "OBJ", "NEWOBJ", "NEWOBJ_EX", "BUILD"})
+INT_OPCODES = frozenset({"INT", "BININT", "BININT1", "BININT2", "LONG",
+                         "LONG1", "LONG4"})
 
 SEVERITY_ORDER = {"CRITICAL": 4, "HIGH": 3, "MEDIUM": 2, "LOW": 1, "INFO": 0}
 
@@ -84,6 +97,19 @@ PICKLE_EXTS = frozenset({
     ".pkl", ".pickle", ".joblib", ".pt", ".pth", ".bin", ".model", ".ckpt",
     ".dat", ".pck", ".pt2",
 })
+
+# joblib's array placeholder class. joblib.load replaces it, right after its
+# BUILD, with the array data that follows in the file (joblib/numpy_pickle.py,
+# NumpyUnpickler.load_build and NumpyArrayWrapper.read_array). The second
+# module name is the copy of joblib that scikit-learn bundled before 0.23.
+JOBLIB_WRAPPER_MODULES = frozenset({
+    "joblib.numpy_pickle", "sklearn.externals.joblib.numpy_pickle",
+})
+JOBLIB_WRAPPER_NAME = "NumpyArrayWrapper"
+_JOBLIB_MARKER = JOBLIB_WRAPPER_NAME.encode("ascii")
+# Containers bigger than this keep no items in the symbolic stack (a wrapper's
+# state dict has 6 keys, a shape tuple at most 64 entries).
+_SYM_KEEP = 256
 
 
 @dataclass(frozen=True)
@@ -131,49 +157,468 @@ def _classify(module, name):
     return "unknown"
 
 
+# ---------------------------------------------------------------------------
+# Symbolic stack (joblib files only). Values are described, never built.
+# ---------------------------------------------------------------------------
+class _Broken(Exception):
+    """The symbolic stack no longer matches the stream (e.g. an underflow)."""
+
+
+class _V(object):
+    """A symbolic stack value: kind is one of str, int, bool, none, tuple,
+    list, dict, global, obj, other. ``val`` holds the literal, the items, the
+    (module, name) pair, or the (callable, args) pair; ``state`` is what a
+    BUILD set on it."""
+    __slots__ = ("kind", "val", "state")
+
+    def __init__(self, kind, val=None):
+        self.kind = kind
+        self.val = val
+        self.state = None
+
+
+_MARK = object()
+
+
+def _sym_pop(stack):
+    if not stack or stack[-1] is _MARK:
+        raise _Broken("stack underflow")
+    return stack.pop()
+
+
+def _sym_top(stack):
+    if not stack or stack[-1] is _MARK:
+        raise _Broken("stack underflow")
+    return stack[-1]
+
+
+def _sym_pop_mark(stack):
+    for i in range(len(stack) - 1, -1, -1):
+        if stack[i] is _MARK:
+            items = stack[i + 1:]
+            del stack[i:]
+            return items
+    raise _Broken("no MARK")
+
+
+def _sym_tuple(items):
+    return _V("tuple", list(items) if len(items) <= _SYM_KEEP else None)
+
+
+def _sym_setitem(d, k, v):
+    if d.kind != "dict" or d.val is None or k.kind != "str":
+        return
+    if len(d.val) >= _SYM_KEEP and k.val not in d.val:
+        d.val = None  # too big to be a wrapper state; stop keeping items
+        return
+    d.val[k.val] = v
+
+
+def _sym_step(opcode, arg, stack, vmemo):
+    """Apply one opcode's stack effect to the symbolic stack, the way the
+    unpickler would but without building anything. Returns the value a BUILD
+    just updated, else None. Raises _Broken when the stream does not fit."""
+    name = opcode.name
+    push = stack.append
+    if name in STRING_OPCODES:
+        push(_V("str", arg if isinstance(arg, str) else str(arg)))
+    elif name in INT_OPCODES:
+        push(_V("bool" if isinstance(arg, bool) else "int", arg))
+    elif name in ("NEWTRUE", "NEWFALSE"):
+        push(_V("bool", name == "NEWTRUE"))
+    elif name == "NONE":
+        push(_V("none"))
+    elif name == "EMPTY_TUPLE":
+        push(_V("tuple", []))
+    elif name in ("TUPLE1", "TUPLE2", "TUPLE3"):
+        n = int(name[-1])
+        items = [_sym_pop(stack) for _ in range(n)]
+        items.reverse()
+        push(_sym_tuple(items))
+    elif name == "TUPLE":
+        push(_sym_tuple(_sym_pop_mark(stack)))
+    elif name == "EMPTY_LIST":
+        push(_V("list"))
+    elif name == "LIST":
+        _sym_pop_mark(stack)
+        push(_V("list"))
+    elif name == "APPEND":
+        _sym_pop(stack)
+        _sym_top(stack)
+    elif name == "APPENDS":
+        _sym_pop_mark(stack)
+        _sym_top(stack)
+    elif name == "EMPTY_DICT":
+        push(_V("dict", {}))
+    elif name == "DICT":
+        items = _sym_pop_mark(stack)
+        d = _V("dict", {})
+        for i in range(0, len(items) - 1, 2):
+            _sym_setitem(d, items[i], items[i + 1])
+        push(d)
+    elif name == "SETITEM":
+        v = _sym_pop(stack)
+        k = _sym_pop(stack)
+        _sym_setitem(_sym_top(stack), k, v)
+    elif name == "SETITEMS":
+        items = _sym_pop_mark(stack)
+        d = _sym_top(stack)
+        for i in range(0, len(items) - 1, 2):
+            _sym_setitem(d, items[i], items[i + 1])
+    elif name == "MARK":
+        push(_MARK)
+    elif name == "POP":
+        if not stack:
+            raise _Broken("stack underflow")
+        stack.pop()  # an empty frame pops its MARK, as the unpickler does
+    elif name == "POP_MARK":
+        _sym_pop_mark(stack)
+    elif name == "DUP":
+        push(_sym_top(stack))
+    elif name in MEMO_PUT_OPCODES:
+        vmemo[arg] = _sym_top(stack)
+    elif name == "MEMOIZE":
+        vmemo[len(vmemo)] = _sym_top(stack)
+    elif name in MEMO_GET_OPCODES:
+        if arg not in vmemo:
+            raise _Broken("memo index %r was never stored" % (arg,))
+        push(vmemo[arg])
+    elif name == "GLOBAL":
+        mod, _, fn = (arg or "").partition(" ")
+        push(_V("global", (mod, fn)))
+    elif name == "STACK_GLOBAL":
+        fn = _sym_pop(stack)
+        mod = _sym_pop(stack)
+        if mod.kind == "str" and fn.kind == "str":
+            push(_V("global", (mod.val, fn.val)))
+        else:
+            push(_V("global", (None, None)))
+    elif name in ("REDUCE", "NEWOBJ"):
+        args = _sym_pop(stack)
+        fn = _sym_pop(stack)
+        push(_V("obj", (fn, args)))
+    elif name == "NEWOBJ_EX":
+        _sym_pop(stack)
+        args = _sym_pop(stack)
+        cls = _sym_pop(stack)
+        push(_V("obj", (cls, args)))
+    elif name == "OBJ":
+        items = _sym_pop_mark(stack)
+        if not items:
+            raise _Broken("OBJ without a class")
+        push(_V("obj", (items[0], _sym_tuple(items[1:]))))
+    elif name == "INST":
+        items = _sym_pop_mark(stack)
+        mod, _, fn = (arg or "").partition(" ")
+        push(_V("obj", (_V("global", (mod, fn)), _sym_tuple(items))))
+    elif name == "BUILD":
+        state = _sym_pop(stack)
+        target = _sym_top(stack)
+        target.state = state
+        return target
+    elif name == "STOP":
+        _sym_pop(stack)
+    elif name in ("FRAME", "PROTO"):
+        pass
+    else:
+        # Anything else (floats, bytes, sets, buffers, persistent ids,
+        # extension codes): the effect pickletools documents, values unknown.
+        before = opcode.stack_before
+        if pickletools.markobject in before:
+            _sym_pop_mark(stack)
+            for _ in range(before.index(pickletools.markobject)):
+                _sym_pop(stack)
+        else:
+            for _ in range(len(before)):
+                _sym_pop(stack)
+        for _ in range(len(opcode.stack_after)):
+            push(_V("other"))
+    return None
+
+
+def _is_wrapper_class(v):
+    return (v is not None and v.kind == "global"
+            and v.val[1] == JOBLIB_WRAPPER_NAME
+            and v.val[0] in JOBLIB_WRAPPER_MODULES)
+
+
+def _is_wrapper(v):
+    """True for an object the unpickler would create as a NumpyArrayWrapper:
+    NEWOBJ of the class (protocol 2+), or copyreg._reconstructor(class, ...)
+    (protocols 0 and 1)."""
+    if v is None or v.kind != "obj":
+        return False
+    fn, args = v.val
+    if _is_wrapper_class(fn):
+        return True
+    return (fn.kind == "global"
+            and fn.val in (("copyreg", "_reconstructor"),
+                           ("copy_reg", "_reconstructor"))
+            and args.kind == "tuple" and bool(args.val)
+            and _is_wrapper_class(args.val[0]))
+
+
+def _dtype_info(v, depth=0):
+    """(itemsize or None, hasobject) of a pickled numpy dtype, from the
+    arguments and state numpy's dtype.__reduce__ writes: args (typestr, align,
+    copy); state (version, byteorder, subarray, names, fields, elsize,
+    alignment, flags[, metadata]). elsize > 0 is the itemsize of flexible and
+    structured dtypes; builtin types give -1 and their typestr ('f8', 'i4',
+    'M8', 'O8') carries the size. Flag bit 1 is NPY_ITEM_HASOBJECT."""
+    if v is None or v.kind != "obj" or depth > 16:
+        return None, False
+    fn, args = v.val
+    if (fn.kind != "global" or fn.val[1] != "dtype"
+            or (fn.val[0] or "").split(".", 1)[0] != "numpy"):
+        return None, False
+    if args.kind != "tuple" or not args.val or args.val[0].kind != "str":
+        return None, False
+    typestr = args.val[0].val
+    st = v.state.val if (v.state is not None and v.state.kind == "tuple"
+                         and v.state.val is not None) else []
+
+    def item(i, kind):
+        return st[i].val if len(st) > i and st[i].kind == kind else None
+
+    hasobj = typestr[:1] == "O"
+    flags = item(7, "int")
+    if flags is not None and flags & 1:
+        hasobj = True
+    fields = st[4] if len(st) > 4 else None
+    if fields is not None and fields.kind == "dict" and fields.val:
+        for fv in fields.val.values():
+            if fv.kind == "tuple" and fv.val:
+                if _dtype_info(fv.val[0], depth + 1)[1]:
+                    hasobj = True
+    sub = st[2] if len(st) > 2 else None
+    if sub is not None and sub.kind == "tuple" and sub.val:
+        if _dtype_info(sub.val[0], depth + 1)[1]:
+            hasobj = True
+    elsize = item(5, "int")
+    if elsize is not None and elsize > 0:
+        return elsize, hasobj
+    m = re.match(r"^([A-Za-z])(\d+)$", typestr)
+    if m and int(m.group(2)) > 0:
+        n = int(m.group(2))
+        return (4 * n if m.group(1) == "U" else n), hasobj
+    return None, hasobj
+
+
+def _wrapper_layout(wrapper):
+    """What joblib.load reads after this wrapper's BUILD: ('object', None,
+    None) for a nested pickle, ('raw', nbytes, aligned) for raw array bytes,
+    or (None, reason, None) when the state does not tell."""
+    state = wrapper.state
+    if state is None or state.kind != "dict" or state.val is None:
+        return None, "the wrapper's state is not a readable dict", None
+    d = state.val
+    itemsize, hasobj = _dtype_info(d.get("dtype"))
+    if hasobj:
+        return "object", None, None
+    if itemsize is None:
+        return None, "the array's dtype or itemsize could not be read", None
+    shape = d.get("shape")
+    if shape is None or shape.kind not in ("tuple", "list") or shape.val is None:
+        return None, "the array's shape could not be read", None
+    count = 1
+    for dim in shape.val:
+        if dim.kind != "int" or dim.val < 0:
+            return None, "the array's shape is not a tuple of sizes", None
+        count *= dim.val
+    align = d.get("numpy_array_alignment_bytes")
+    aligned = align is not None and align.kind != "none"
+    return "raw", count * itemsize, aligned
+
+
+class _Walk(object):
+    """State shared by the outer stream and the pickles nested in it."""
+
+    def __init__(self, data, source):
+        self.data = data
+        self.end = len(data)
+        self.source = source
+        self.findings = []
+        self.globals_found = []   # (module, name, pos, resolvable)
+        self.exec_ops = 0
+        self.stop = None          # byte offset of the outer STOP, if reached
+        self.joblib_arrays = 0    # numeric arrays skipped
+        self.nested_pickles = 0   # object arrays walked as nested pickles
+        self.wrapper_class_seen = False
+        self.symbolic_lost = False
+
+
+def _read_wrapped_array(buf, walk, wrapper, pos):
+    """Move past the array joblib wrote after this wrapper. Returns True to
+    continue the outer walk, False when the rest cannot be analysed."""
+    loc = "%s @ byte %d" % (walk.source, pos)
+    kind, size, aligned = _wrapper_layout(wrapper)
+    if kind is None:
+        walk.findings.append(Finding(
+            "PKL008", "MEDIUM", "joblib array data could not be sized",
+            "This is a joblib.dump file. joblib.load reads array data right "
+            "after each NumpyArrayWrapper, and here %s, so the scanner cannot "
+            "tell where the array ends. The rest of the file was not "
+            "analysed; treat it as unscanned." % size, loc))
+        return False
+    if kind == "object":
+        walk.nested_pickles += 1
+        # joblib reads an object array with a fresh unpickler on the same
+        # file: a complete pickle with its own memo, then the outer stream
+        # goes on after its STOP.
+        return _walk_stream(buf, walk, joblib_mode=False, nested=True)
+    if aligned:
+        pad = buf.read(1)
+        if len(pad) < 1:
+            return _truncated(walk, loc)
+        n = pad[0]
+        if walk.end - buf.tell() < n:
+            return _truncated(walk, loc)
+        buf.seek(n, io.SEEK_CUR)
+    if walk.end - buf.tell() < size:
+        return _truncated(walk, loc)
+    buf.seek(size, io.SEEK_CUR)
+    walk.joblib_arrays += 1
+    return True
+
+
+def _truncated(walk, loc):
+    walk.findings.append(Finding(
+        "PKL000", "LOW", "Pickle stream could not be fully parsed",
+        "The file ends inside the data of a joblib array, so it is truncated. "
+        "Part of the stream was not analysed; treat the file with caution.",
+        loc))
+    return False
+
+
+def _walk_stream(buf, walk, joblib_mode, nested=False):
+    """Walk one pickle stream from buf's position to its STOP. Returns True
+    when it reached STOP and the caller may go on."""
+    # Each STACK_GLOBAL takes its module and name from the top two stack
+    # items. Since 0.3.0 they are resolved when the two opcodes that pushed
+    # them are string literals or memo fetches (GET/BINGET/LONG_BINGET) of a
+    # memoized string literal, with nothing in between that changes the stack
+    # (memo stores, FRAME and PROTO do not). Pickle protocols 4 and 5 write
+    # exactly this when a module name repeats (numpy.ndarray, then
+    # numpy.dtype). Any other operand stays unresolved (PKL007), as before.
+    # Every stream, including a nested one, has its own memo.
+    memo = {}            # memo index -> ('str', value) or ('other', None)
+    pushes = []          # the last two stack pushes, same shape
+    stack = []           # symbolic stack (joblib files only)
+    vmemo = {}
+    sym = joblib_mode
+    broken = None
+    try:
+        for opcode, arg, pos in pickletools.genops(buf):
+            name = opcode.name
+            built = None
+            if sym:
+                try:
+                    built = _sym_step(opcode, arg, stack, vmemo)
+                except _Broken as exc:
+                    sym = False
+                    broken = (pos, str(exc))
+                    walk.symbolic_lost = True
+                    stack, vmemo = [], {}
+            if name in EXEC_OPCODES:
+                walk.exec_ops += 1
+            if name == "STOP" and not nested:
+                walk.stop = pos
+            if name in ("FRAME", "PROTO"):
+                continue
+            if name in MEMO_PUT_OPCODES or name == "MEMOIZE":
+                key = len(memo) if name == "MEMOIZE" else arg
+                memo[key] = pushes[-1] if pushes else ("other", None)
+                continue
+            if name in ("GLOBAL", "INST"):
+                mod, _, fn = (arg or "").partition(" ")
+                walk.globals_found.append((mod, fn, pos, True))
+                if mod in JOBLIB_WRAPPER_MODULES and fn == JOBLIB_WRAPPER_NAME:
+                    walk.wrapper_class_seen = True
+            elif name == "STACK_GLOBAL":
+                last_two = pushes[-2:]
+                if (len(last_two) == 2 and last_two[0][0] == "str"
+                        and last_two[1][0] == "str"):
+                    walk.globals_found.append((last_two[0][1], last_two[1][1], pos, True))
+                    if (last_two[0][1] in JOBLIB_WRAPPER_MODULES
+                            and last_two[1][1] == JOBLIB_WRAPPER_NAME):
+                        walk.wrapper_class_seen = True
+                else:
+                    walk.globals_found.append((None, None, pos, False))
+            if name in STRING_OPCODES:
+                pushes.append(("str", arg))
+            elif name in MEMO_GET_OPCODES:
+                pushes.append(memo.get(arg, ("other", None)))
+            else:
+                pushes.append(("other", None))
+            del pushes[:-2]
+            if built is not None and _is_wrapper(built):
+                if not _read_wrapped_array(buf, walk, built, pos):
+                    return False
+                # joblib.load swaps the wrapper for the array it just read.
+                stack[-1] = _V("other")
+    except Exception as exc:  # truncated / malformed stream
+        walk.findings.append(Finding(
+            "PKL000", "LOW", "Pickle stream could not be fully parsed",
+            f"pickletools stopped reading at an opcode: {exc}. Part of the stream "
+            "was not analysed; treat the file with caution.", walk.source))
+        return False
+    if broken is not None and walk.wrapper_class_seen:
+        walk.findings.append(Finding(
+            "PKL008", "MEDIUM", "joblib array data could not be sized",
+            "This stream uses joblib's NumpyArrayWrapper, but its opcodes did "
+            "not fit a consistent stack at byte %d (%s), so the scanner could "
+            "not follow where joblib.load reads array data. Parts of the file "
+            "may not have been analysed; treat it as unscanned."
+            % (broken[0], broken[1]), walk.source))
+    return True
+
+
+def _walk_pickle(data, source):
+    walk = _Walk(data, source)
+    joblib_mode = _JOBLIB_MARKER in data
+    _walk_stream(io.BytesIO(data), walk, joblib_mode)
+    return walk
+
+
+def pickle_walk(data, source="<bytes>"):
+    """Describe what the static walk of one pickle stream covered, without
+    unpickling anything: the imports it resolved in stream order ('module
+    name'), how many it could not resolve, the byte offset of the outer STOP
+    (None if the walk did not reach it), and how many joblib arrays it
+    skipped or walked as nested pickles."""
+    walk = _walk_pickle(data, source)
+    return {
+        "imports": ["%s %s" % (m, n) for m, n, _p, ok in walk.globals_found
+                    if ok],
+        "unresolved": sum(1 for g in walk.globals_found if not g[3]),
+        "stop": walk.stop,
+        "length": len(data),
+        "joblib_arrays": walk.joblib_arrays,
+        "nested_pickles": walk.nested_pickles,
+        "joblib_mode": _JOBLIB_MARKER in data,
+        "symbolic_stack_lost": walk.symbolic_lost,
+        "rules": sorted({f.rule for f in walk.findings}),
+    }
+
+
 def scan_pickle_bytes(data, source):
     """Disassemble a pickle opcode stream and flag dangerous patterns.
 
     Uses pickletools.genops, which reads opcodes without unpickling. Never
     imports, executes, or reconstructs any object from the data.
     """
-    findings = []
-    recent = []          # operand candidates: ('str', value) or ('memo', None)
-    globals_found = []   # (module, name, pos, resolvable)
-    exec_ops = 0
+    walk = _walk_pickle(data, source)
+    findings = walk.findings
+    exec_ops = walk.exec_ops
 
-    try:
-        for opcode, arg, pos in pickletools.genops(data):
-            name = opcode.name
-            if name in STRING_OPCODES:
-                recent.append(("str", arg))
-            elif name in MEMO_GET_OPCODES:
-                recent.append(("memo", None))
-            if name in EXEC_OPCODES:
-                exec_ops += 1
-            if name in ("GLOBAL", "INST"):
-                mod, _, fn = (arg or "").partition(" ")
-                globals_found.append((mod, fn, pos, True))
-            elif name == "STACK_GLOBAL":
-                last_two = recent[-2:]
-                if (len(last_two) == 2 and last_two[0][0] == "str"
-                        and last_two[1][0] == "str"):
-                    globals_found.append((last_two[0][1], last_two[1][1], pos, True))
-                else:
-                    globals_found.append((None, None, pos, False))
-    except Exception as exc:  # truncated / malformed stream
-        findings.append(Finding(
-            "PKL000", "LOW", "Pickle stream could not be fully parsed",
-            f"pickletools stopped reading at an opcode: {exc}. Part of the stream "
-            "was not analysed; treat the file with caution.", source))
-
-    for mod, fn, pos, resolvable in globals_found:
+    for mod, fn, pos, resolvable in walk.globals_found:
         loc = f"{source} @ byte {pos}"
         if not resolvable:
             findings.append(Finding(
                 "PKL007", "HIGH", "Unresolved STACK_GLOBAL operands",
                 "A STACK_GLOBAL opcode's module/name could not be resolved from the "
-                "two preceding string literals (the operands come from the memo or are "
+                "two string literals pushed just before it, directly or as "
+                "memoized copies (the operands come from other objects or are "
                 "built at load time). This is a documented way to hide a dangerous "
                 "import from naive scanners - treat the file as untrusted and do not "
                 "load it without manual review.", loc, "GHSA-9gvj-pp9x-gcfr"))
@@ -322,6 +767,14 @@ def scan_zip(data, source):
     return findings
 
 
+# joblib's compressors (joblib/compressor.py): 'xz' writes the .xz container,
+# 'lzma' the legacy .lzma ("alone") format, whose header starts 5d 00. No
+# pickle starts with those two bytes (']' then an invalid opcode), and a blob
+# that does not decompress falls through to the checks below.
+_XZ_MAGIC = b"\xfd7zXZ\x00"
+_LZMA_ALONE_MAGIC = b"\x5d\x00"
+
+
 def scan_blob(data, source, assume_pickle=False):
     if data[:4] in (b"PK\x03\x04", b"PK\x05\x06", b"PK\x07\x08"):
         return scan_zip(data, source)
@@ -343,6 +796,19 @@ def scan_blob(data, source, assume_pickle=False):
         except Exception as exc:
             return [Finding("PKL006", "LOW", "Could not decompress bz2 container",
                             f"{exc}", source)]
+    if data[:6] == _XZ_MAGIC:
+        try:
+            return scan_blob(lzma.decompress(data), source + " (unxz)", assume_pickle)
+        except Exception as exc:
+            return [Finding("PKL006", "LOW", "Could not decompress xz container",
+                            f"{exc}", source)]
+    if data[:2] == _LZMA_ALONE_MAGIC:
+        try:
+            inner = lzma.decompress(data, format=lzma.FORMAT_ALONE)
+        except Exception:
+            inner = None
+        if inner is not None:
+            return scan_blob(inner, source + " (unlzma)", assume_pickle)
     if data[:4] == b"\x04\x22\x4d\x18":
         return [Finding("PKL006", "LOW", "lz4-compressed container not scanned",
                         "File is lz4-compressed (common for compressed joblib). Static "

@@ -85,14 +85,18 @@ class PickleOpcodeTests(unittest.TestCase):
         self.assertEqual(by_rule(findings, "PKL004")[0].severity, "HIGH")
 
     def test_unresolved_stack_global_is_flagged(self):
-        # Operands fetched from the memo (BINGET) instead of pushed as strings:
-        # the documented picklescan bypass (GHSA-9gvj-pp9x-gcfr).
-        data = (pickle.PROTO + b"\x04" + su("x") + pickle.MEMOIZE
+        # STACK_GLOBAL operands fetched from memo slots that hold no string
+        # (here an empty tuple) cannot be resolved: the shape behind the
+        # picklescan bypass GHSA-9gvj-pp9x-gcfr. Since 0.4.0 a memoized
+        # string IS resolved, as Python's pickler writes it at protocols 4
+        # and 5 (see test_pickle_model_scan_memo.py).
+        data = (b"\x80\x04" + pickle.EMPTY_TUPLE + pickle.MEMOIZE
                 + pickle.BINGET + b"\x00" + pickle.BINGET + b"\x00"
                 + pickle.STACK_GLOBAL + pickle.STOP)
-        findings = pms.scan_pickle_bytes(data, "x")
-        self.assertIn("PKL007", rules(findings))
-        self.assertEqual(by_rule(findings, "PKL007")[0].severity, "HIGH")
+        hits = [f for f in pms.scan_pickle_bytes(data, "t")
+                if getattr(f, "rule", None) == "PKL007"]
+        self.assertTrue(hits)
+        self.assertEqual(hits[0].severity, "HIGH")
 
 
 class NumpyTests(unittest.TestCase):

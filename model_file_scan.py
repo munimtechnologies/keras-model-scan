@@ -58,7 +58,7 @@ import json
 import os
 import sys
 
-__version__ = "0.12.0"
+__version__ = "0.12.1"
 
 REPO_URL = "https://github.com/munimtechnologies/keras-model-scan"
 

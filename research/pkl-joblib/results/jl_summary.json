@@ -1,0 +1,2506 @@
+{
+ "check_version": 1,
+ "error": "",
+ "held": 16,
+ "graded": 16,
+ "not_run": [],
+ "release_rows_all_pass": true,
+ "reported": {
+  "fetch": {
+   "started": "2026-11-08T17:36:00Z",
+   "tree": {
+    "waited_seconds": 0,
+    "polls": 1,
+    "prereg_seen": true,
+    "tarball_bytes": 901582,
+    "versions": {
+     "pickle_model_scan.py": "0.2.1",
+     "model_file_scan.py": "0.12.0"
+    },
+    "prereg_in_tree": true
+   },
+   "hub": {
+    "list": 500,
+    "ok_files": 30,
+    "pinned_ok": 3,
+    "total_bytes": 38589773
+   },
+   "finished": "2026-11-08T17:36:32Z"
+  },
+  "writers": {
+   "versions": {
+    "joblib": "1.6.0",
+    "numpy": "2.5.4",
+    "pandas": "3.1.1",
+    "scipy": "1.18.1",
+    "sklearn": "1.9.1",
+    "python": "3.12.15",
+    "pickle_default_protocol": 4
+   },
+   "errors": []
+  },
+  "hub": {
+   "list": 500,
+   "ok": 30,
+   "total_bytes": 38589773,
+   "errors": [
+    [
+     "ryukkt62/Suncast",
+     "Suncast_v1.pkl",
+     "error: ValueError: larger than 40000000 bytes"
+    ]
+   ],
+   "skipped_gated": [],
+   "pinned": [
+    {
+     "model": "OKTAYBBS/DataScientst-models",
+     "rfilename": "classification/churn_model.pkl",
+     "revision": "c40104b6f379f3bc7a0f5d000cdf35fa8caf9467",
+     "status": "ok",
+     "bytes": 39282889,
+     "sha256": "746ebfaca9bfb1bdee915c5a016a0f12a20a550438d41d3e889e8f3796d9b6b6",
+     "path": "hub/pinned/churn_model.pkl"
+    },
+    {
+     "model": "OKTAYBBS/DataScientst-models",
+     "rfilename": "classification/mobile_model.pkl",
+     "revision": "c40104b6f379f3bc7a0f5d000cdf35fa8caf9467",
+     "status": "ok",
+     "bytes": 4431401,
+     "sha256": "c60dd168fb9adade1ebeb863e5d041879357a368e6380e8907117763580406a5",
+     "path": "hub/pinned/mobile_model.pkl"
+    },
+    {
+     "model": "OKTAYBBS/DataScientst-models",
+     "rfilename": "classification/wine_model.pkl",
+     "revision": "c40104b6f379f3bc7a0f5d000cdf35fa8caf9467",
+     "status": "ok",
+     "bytes": 21572777,
+     "sha256": "83128a83c9ec92af5b4e162fdf5c98b6d10c900196154ebefbf199ac1c4aa388",
+     "path": "hub/pinned/wine_model.pkl"
+    }
+   ]
+  },
+  "scan_errors": {
+   "orig": "",
+   "new": ""
+  },
+  "versions": {
+   "orig": {
+    "mfs": "0.12.0",
+    "pms": "0.2.1",
+    "pms_file": "/work/orig_tree/pickle_model_scan.py",
+    "pyproject": "0.12.0"
+   },
+   "new": {
+    "mfs": "0.12.1",
+    "pms": "0.4.0",
+    "pms_file": "/work/tree/pickle_model_scan.py",
+    "pyproject": "0.12.1"
+   }
+  },
+  "max_scan_seconds_new": 0.436,
+  "written": {
+   "rf_df.joblib": {
+    "truth_n": 10,
+    "walk_n": 10,
+    "missed": [],
+    "extra": [],
+    "same_order": true,
+    "walk": {
+     "stop": 8184,
+     "length": 8185,
+     "joblib_arrays": 13,
+     "nested_pickles": 1,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "STOP",
+     "pos": 1054,
+     "length": 8185,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "rf_np.joblib": {
+    "truth_n": 7,
+    "walk_n": 7,
+    "missed": [],
+    "extra": [],
+    "same_order": true,
+    "walk": {
+     "stop": 7864,
+     "length": 7865,
+     "joblib_arrays": 13,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 912,
+     "msg": "ValueError: at position 913, opcode b'\\x0e' unknown",
+     "length": 7865,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "text.joblib": {
+    "truth_n": 8,
+    "walk_n": 8,
+    "missed": [],
+    "extra": [],
+    "same_order": true,
+    "walk": {
+     "stop": 1920,
+     "length": 1921,
+     "joblib_arrays": 5,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 755,
+     "msg": "ValueError: at position 756, opcode b'\\x0b' unknown",
+     "length": 1921,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "hgb.joblib": {
+    "truth_n": 19,
+    "walk_n": 19,
+    "missed": [],
+    "extra": [],
+    "same_order": true,
+    "walk": {
+     "stop": 15432,
+     "length": 15433,
+     "joblib_arrays": 30,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 459,
+     "msg": "ValueError: at position 460, opcode b'\\x03' unknown",
+     "length": 15433,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "frame.joblib": {
+    "truth_n": 25,
+    "walk_n": 25,
+    "missed": [],
+    "extra": [],
+    "same_order": true,
+    "walk": {
+     "stop": 2392,
+     "length": 2393,
+     "joblib_arrays": 5,
+     "nested_pickles": 3,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 353,
+     "msg": "ValueError: at position 354, opcode b'\\r' unknown",
+     "length": 2393,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "zoo.joblib": {
+    "truth_n": 11,
+    "walk_n": 11,
+    "missed": [],
+    "extra": [],
+    "same_order": true,
+    "walk": {
+     "stop": 2724,
+     "length": 2725,
+     "joblib_arrays": 17,
+     "nested_pickles": 2,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 228,
+     "msg": "ValueError: at position 229, opcode b'\\n' unknown",
+     "length": 2725,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "rf_df_z3.joblib": {
+    "truth_n": 10,
+    "walk_n": 10,
+    "missed": [],
+    "extra": [],
+    "same_order": true,
+    "walk": {
+     "stop": 8184,
+     "length": 8185,
+     "joblib_arrays": 13,
+     "nested_pickles": 1,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "STOP",
+     "pos": 1054,
+     "length": 8185,
+     "inflated": [
+      "zlib"
+     ],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "rf_df_gzip.joblib": {
+    "truth_n": 10,
+    "walk_n": 10,
+    "missed": [],
+    "extra": [],
+    "same_order": true,
+    "walk": {
+     "stop": 8184,
+     "length": 8185,
+     "joblib_arrays": 13,
+     "nested_pickles": 1,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "STOP",
+     "pos": 1054,
+     "length": 8185,
+     "inflated": [
+      "gzip"
+     ],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "rf_df_bz2.joblib": {
+    "truth_n": 10,
+    "walk_n": 10,
+    "missed": [],
+    "extra": [],
+    "same_order": true,
+    "walk": {
+     "stop": 8184,
+     "length": 8185,
+     "joblib_arrays": 13,
+     "nested_pickles": 1,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "STOP",
+     "pos": 1054,
+     "length": 8185,
+     "inflated": [
+      "bz2"
+     ],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "rf_df_xz.joblib": {
+    "truth_n": 10,
+    "walk_n": 10,
+    "missed": [],
+    "extra": [],
+    "same_order": true,
+    "walk": {
+     "stop": 8184,
+     "length": 8185,
+     "joblib_arrays": 13,
+     "nested_pickles": 1,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "STOP",
+     "pos": 1054,
+     "length": 8185,
+     "inflated": [
+      "xz"
+     ],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ]
+    ],
+    "new": []
+   },
+   "rf_df_lzma.joblib": {
+    "truth_n": 10,
+    "walk_n": 10,
+    "missed": [],
+    "extra": [],
+    "same_order": true,
+    "walk": {
+     "stop": 8184,
+     "length": 8185,
+     "joblib_arrays": 13,
+     "nested_pickles": 1,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "STOP",
+     "pos": 1054,
+     "length": 8185,
+     "inflated": [
+      "lzma"
+     ],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ]
+    ],
+    "new": []
+   },
+   "rf_df_p2.joblib": {
+    "truth_n": 11,
+    "walk_n": 11,
+    "missed": [],
+    "extra": [],
+    "same_order": true,
+    "walk": {
+     "stop": 8431,
+     "length": 8432,
+     "joblib_arrays": 13,
+     "nested_pickles": 1,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "STOP",
+     "pos": 1195,
+     "length": 8432,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "rf_df_p3.joblib": {
+    "truth_n": 10,
+    "walk_n": 10,
+    "missed": [],
+    "extra": [],
+    "same_order": true,
+    "walk": {
+     "stop": 8367,
+     "length": 8368,
+     "joblib_arrays": 13,
+     "nested_pickles": 1,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "STOP",
+     "pos": 1195,
+     "length": 8368,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "rf_df_p4.joblib": {
+    "truth_n": 10,
+    "walk_n": 10,
+    "missed": [],
+    "extra": [],
+    "same_order": true,
+    "walk": {
+     "stop": 8184,
+     "length": 8185,
+     "joblib_arrays": 13,
+     "nested_pickles": 1,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "STOP",
+     "pos": 1054,
+     "length": 8185,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "rf_df_p5.joblib": {
+    "truth_n": 10,
+    "walk_n": 10,
+    "missed": [],
+    "extra": [],
+    "same_order": true,
+    "walk": {
+     "stop": 8184,
+     "length": 8185,
+     "joblib_arrays": 13,
+     "nested_pickles": 1,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "STOP",
+     "pos": 1054,
+     "length": 8185,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "zoo_notell.joblib": {
+    "truth_n": 11,
+    "walk_n": 11,
+    "missed": [],
+    "extra": [],
+    "same_order": true,
+    "walk": {
+     "stop": 2543,
+     "length": 2544,
+     "joblib_arrays": 17,
+     "nested_pickles": 2,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 227,
+     "msg": "ValueError: at position 228, opcode b'\\x00' unknown",
+     "length": 2544,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "rf_df_plain_p5.pkl": {
+    "truth_n": 8,
+    "walk_n": 8,
+    "missed": [],
+    "extra": [],
+    "same_order": true,
+    "walk": {
+     "stop": 7586,
+     "length": 7587,
+     "joblib_arrays": 0,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": false,
+     "rules": []
+    },
+    "base": {
+     "kind": "STOP",
+     "pos": 7586,
+     "length": 7587,
+     "inflated": [],
+     "joblib_mode": false,
+     "lz4": false
+    },
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   },
+   "zoo_plain_p5.pkl": {
+    "truth_n": 6,
+    "walk_n": 6,
+    "missed": [],
+    "extra": [],
+    "same_order": true,
+    "walk": {
+     "stop": 1804,
+     "length": 1805,
+     "joblib_arrays": 0,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": false,
+     "rules": []
+    },
+    "base": {
+     "kind": "STOP",
+     "pos": 1804,
+     "length": 1805,
+     "inflated": [],
+     "joblib_mode": false,
+     "lz4": false
+    },
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": []
+   }
+  },
+  "hub_scans": {
+   "julien-c/skops-digits/sklearn_model.joblib": {
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "walk": {
+     "stop": 187501,
+     "length": 187502,
+     "joblib_arrays": 15,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 895,
+     "msg": "ValueError: at position 896, opcode b'\\x00' unknown",
+     "length": 187502,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.004
+   },
+   "julien-c/wine-quality/sklearn_model.joblib": {
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "walk": {
+     "stop": 186818,
+     "length": 186819,
+     "joblib_arrays": 14,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 458,
+     "msg": "ValueError: at position 459, opcode b'\\xf3' unknown",
+     "length": 186819,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.002
+   },
+   "nateraw/iris-svc/sklearn_model.joblib": {
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL003",
+      "MEDIUM"
+     ]
+    ],
+    "new": [
+     [
+      "PKL003",
+      "MEDIUM"
+     ]
+    ],
+    "walk": {
+     "stop": 5508,
+     "length": 5509,
+     "joblib_arrays": 11,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 614,
+     "msg": "ValueError: at position 615, opcode b'\\x00' unknown",
+     "length": 5509,
+     "inflated": [
+      "zlib"
+     ],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.002
+   },
+   "BenjaminB/plain-sklearn/sklearn_model.joblib": {
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ]
+    ],
+    "new": [],
+    "walk": {
+     "stop": 1310,
+     "length": 1311,
+     "joblib_arrays": 4,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 756,
+     "msg": "ValueError: at position 757, opcode b'^' unknown",
+     "length": 1311,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.001
+   },
+   "rawqubit/ClassicML-Prompt-Injection-Detector/sklearn_model.joblib": {
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "walk": {
+     "stop": 9251,
+     "length": 9252,
+     "joblib_arrays": 5,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 767,
+     "msg": "ValueError: at position 768, opcode b'\\x0f' unknown",
+     "length": 9252,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.002
+   },
+   "kiselyovd/cardio-risk-rf/cardio_risk_lgbm.joblib": {
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "walk": {
+     "stop": 364986,
+     "length": 364987,
+     "joblib_arrays": 2,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 364539,
+     "msg": "ValueError: at position 364540, opcode b'\\x03' unknown",
+     "length": 364987,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.004
+   },
+   "kiselyovd/cardio-risk-rf/cardio_risk_rf.joblib": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "walk": {
+     "stop": 6253094,
+     "length": 6253095,
+     "joblib_arrays": 802,
+     "nested_pickles": 1,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "STOP",
+     "pos": 707,
+     "length": 6253095,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.099
+   },
+   "danupurnomo/dummy-titanic/final_pipeline.pkl": {
+    "orig": [],
+    "new": [],
+    "walk": {
+     "stop": 3434,
+     "length": 3435,
+     "joblib_arrays": 4,
+     "nested_pickles": 4,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "STOP",
+     "pos": 1512,
+     "length": 3435,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.002
+   },
+   "danupurnomo/dummy-titanic/sklearn_model.joblib": {
+    "orig": [],
+    "new": [],
+    "walk": {
+     "stop": 4286,
+     "length": 4287,
+     "joblib_arrays": 8,
+     "nested_pickles": 4,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "STOP",
+     "pos": 1617,
+     "length": 4287,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.002
+   },
+   "scikit-learn-examples/example/sklearn_model.joblib": {
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL003",
+      "MEDIUM"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [
+     [
+      "PKL003",
+      "MEDIUM"
+     ]
+    ],
+    "walk": {
+     "stop": 15968,
+     "length": 15969,
+     "joblib_arrays": 11,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 578,
+     "msg": "ValueError: at position 579, opcode b'\\x00' unknown",
+     "length": 15969,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.001
+   },
+   "nateraw/custom-sklearn-pipe-objects/sklearn_model.joblib": {
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL003",
+      "MEDIUM"
+     ]
+    ],
+    "new": [
+     [
+      "PKL003",
+      "MEDIUM"
+     ]
+    ],
+    "walk": {
+     "stop": 291,
+     "length": 292,
+     "joblib_arrays": 1,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 264,
+     "msg": "ValueError: at position 265, opcode b'\\x00' unknown",
+     "length": 292,
+     "inflated": [
+      "zlib"
+     ],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.0
+   },
+   "nateraw/custom-sklearn-pipe-objects/sklearn_transformer.joblib": {
+    "orig": [
+     [
+      "PKL003",
+      "MEDIUM"
+     ]
+    ],
+    "new": [
+     [
+      "PKL003",
+      "MEDIUM"
+     ]
+    ],
+    "walk": {
+     "stop": 40,
+     "length": 41,
+     "joblib_arrays": 0,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": false,
+     "rules": []
+    },
+    "base": {
+     "kind": "STOP",
+     "pos": 40,
+     "length": 41,
+     "inflated": [
+      "zlib"
+     ],
+     "joblib_mode": false,
+     "lz4": false
+    },
+    "secs": 0.0
+   },
+   "risingodegua/wine-quality-model/sklearn_model.joblib": {
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "walk": {
+     "stop": 186818,
+     "length": 186819,
+     "joblib_arrays": 14,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 458,
+     "msg": "ValueError: at position 459, opcode b'\\xf3' unknown",
+     "length": 186819,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.001
+   },
+   "AWeirdDev/human-disease-prediction/sklearn_model.joblib": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "walk": {
+     "stop": 45486,
+     "length": 45487,
+     "joblib_arrays": 3,
+     "nested_pickles": 1,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "STOP",
+     "pos": 1556,
+     "length": 45487,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.001
+   },
+   "osanseviero/wine-quality/sklearn_model.joblib": {
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "walk": {
+     "stop": 186818,
+     "length": 186819,
+     "joblib_arrays": 14,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 458,
+     "msg": "ValueError: at position 459, opcode b'\\xf3' unknown",
+     "length": 186819,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.001
+   },
+   "pfizer-project-team/binary-segA-vs-segBC/sklearn_model.joblib": {
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "walk": {
+     "stop": 2678757,
+     "length": 2678758,
+     "joblib_arrays": 6496,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 820,
+     "msg": "ValueError: at position 821, opcode b'\\n' unknown",
+     "length": 2678758,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.436
+   },
+   "nwhite-systems/nwhite-ai-operations-intent-classifier/model.joblib": {
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "walk": {
+     "stop": 229339,
+     "length": 229340,
+     "joblib_arrays": 5,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 766,
+     "msg": "ValueError: at position 767, opcode b'\\x10' unknown",
+     "length": 229340,
+     "inflated": [
+      "zlib"
+     ],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.02
+   },
+   "nwhite-systems/nwhite-ai-operations-intent-classifier/sklearn_model.joblib": {
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "walk": {
+     "stop": 229339,
+     "length": 229340,
+     "joblib_arrays": 5,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 766,
+     "msg": "ValueError: at position 767, opcode b'\\x10' unknown",
+     "length": 229340,
+     "inflated": [
+      "zlib"
+     ],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.015
+   },
+   "imodels/figs-compas-recidivism/sklearn_model.joblib": {
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL003",
+      "MEDIUM"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [
+     [
+      "PKL003",
+      "MEDIUM"
+     ]
+    ],
+    "walk": {
+     "stop": 113432,
+     "length": 113433,
+     "joblib_arrays": 44,
+     "nested_pickles": 1,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 316,
+     "msg": "ValueError: at position 317, opcode b'\\x00' unknown",
+     "length": 113433,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.004
+   },
+   "mmx86/hf_heart/sklearn_model.joblib": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "walk": {
+     "stop": 14133,
+     "length": 14134,
+     "joblib_arrays": 0,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": false,
+     "rules": []
+    },
+    "base": {
+     "kind": "STOP",
+     "pos": 14133,
+     "length": 14134,
+     "inflated": [],
+     "joblib_mode": false,
+     "lz4": false
+    },
+    "secs": 0.001
+   },
+   "2gether330/diabetes-rf-regressor/sklearn_model.joblib": {
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "walk": {
+     "stop": 1469024,
+     "length": 1469025,
+     "joblib_arrays": 600,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 1127,
+     "msg": "ValueError: at position 1128, opcode b'\\x07' unknown",
+     "length": 1469025,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.058
+   },
+   "AgentsSci/EMNLP_Cost-Aware-Protocol-Routing/router_metadata_only/feature_builders.joblib": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "walk": {
+     "stop": 23856,
+     "length": 23857,
+     "joblib_arrays": 3,
+     "nested_pickles": 3,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "STOP",
+     "pos": 652,
+     "length": 23857,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.002
+   },
+   "AgentsSci/EMNLP_Cost-Aware-Protocol-Routing/router_metadata_only/model.joblib": {
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "walk": {
+     "stop": 9710,
+     "length": 9711,
+     "joblib_arrays": 4,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 525,
+     "msg": "ValueError: at position 526, opcode b'\\x01' unknown",
+     "length": 9711,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.001
+   },
+   "wlaminack/testingmodel/sklearn_model.joblib": {
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "walk": {
+     "stop": 186818,
+     "length": 186819,
+     "joblib_arrays": 14,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 458,
+     "msg": "ValueError: at position 459, opcode b'\\xf3' unknown",
+     "length": 186819,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.001
+   },
+   "emresvd/u202/sklearn_model.joblib": {
+    "orig": [
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "walk": {
+     "stop": 2032994,
+     "length": 2032995,
+     "joblib_arrays": 7,
+     "nested_pickles": 1,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "STOP",
+     "pos": 677,
+     "length": 2032995,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.002
+   },
+   "DineshKumar1329/Sentiment_Analysis/sklearn_model.joblib": {
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "walk": {
+     "stop": 21996552,
+     "length": 21996553,
+     "joblib_arrays": 15,
+     "nested_pickles": 1,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 574,
+     "msg": "ValueError: at position 575, opcode b'\\x10' unknown",
+     "length": 21996553,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.02
+   },
+   "DineshKumar1329/Sentiment_Analysis/vectorizer_model.joblib": {
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "walk": {
+     "stop": 2260441,
+     "length": 2260442,
+     "joblib_arrays": 3,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 794,
+     "msg": "ValueError: at position 795, opcode b'\\x04' unknown",
+     "length": 2260442,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.435
+   },
+   "imshriya/mlforge-test-model/sklearn_model.joblib": {
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "walk": {
+     "stop": 584,
+     "length": 585,
+     "joblib_arrays": 2,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 351,
+     "msg": "ValueError: at position 352, opcode b'\\x0f' unknown",
+     "length": 585,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.001
+   },
+   "carineRam/wine_model/sklearn_model.joblib": {
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "walk": {
+     "stop": 186818,
+     "length": 186819,
+     "joblib_arrays": 14,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 458,
+     "msg": "ValueError: at position 459, opcode b'\\xf3' unknown",
+     "length": 186819,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.002
+   },
+   "AbhishekS2005/mlforge-test-model/linear_regression.joblib": {
+    "orig": [
+     [
+      "PKL000",
+      "LOW"
+     ],
+     [
+      "PKL007",
+      "HIGH"
+     ]
+    ],
+    "new": [],
+    "walk": {
+     "stop": 584,
+     "length": 585,
+     "joblib_arrays": 2,
+     "nested_pickles": 0,
+     "unresolved": 0,
+     "symbolic_stack_lost": false,
+     "joblib_mode": true,
+     "rules": []
+    },
+    "base": {
+     "kind": "error",
+     "pos": 351,
+     "msg": "ValueError: at position 352, opcode b'\\x0f' unknown",
+     "length": 585,
+     "inflated": [],
+     "joblib_mode": true,
+     "lz4": false
+    },
+    "secs": 0.0
+   }
+  },
+  "hub_new_rules": {},
+  "hub_new_high_or_critical": [],
+  "hub_lz4": [],
+  "hub_coverage": {
+   "julien-c/skops-digits/sklearn_model.joblib": {
+    "base": 0.004779,
+    "new": 1.0
+   },
+   "julien-c/wine-quality/sklearn_model.joblib": {
+    "base": 0.002457,
+    "new": 1.0
+   },
+   "nateraw/iris-svc/sklearn_model.joblib": {
+    "base": 0.111636,
+    "new": 1.0
+   },
+   "BenjaminB/plain-sklearn/sklearn_model.joblib": {
+    "base": 0.577422,
+    "new": 1.0
+   },
+   "rawqubit/ClassicML-Prompt-Injection-Detector/sklearn_model.joblib": {
+    "base": 0.083009,
+    "new": 1.0
+   },
+   "kiselyovd/cardio-risk-rf/cardio_risk_lgbm.joblib": {
+    "base": 0.998775,
+    "new": 1.0
+   },
+   "kiselyovd/cardio-risk-rf/cardio_risk_rf.joblib": {
+    "base": 0.000113,
+    "new": 1.0
+   },
+   "danupurnomo/dummy-titanic/final_pipeline.pkl": {
+    "base": 0.440466,
+    "new": 1.0
+   },
+   "danupurnomo/dummy-titanic/sklearn_model.joblib": {
+    "base": 0.37742,
+    "new": 1.0
+   },
+   "scikit-learn-examples/example/sklearn_model.joblib": {
+    "base": 0.036258,
+    "new": 1.0
+   },
+   "nateraw/custom-sklearn-pipe-objects/sklearn_model.joblib": {
+    "base": 0.907534,
+    "new": 1.0
+   },
+   "risingodegua/wine-quality-model/sklearn_model.joblib": {
+    "base": 0.002457,
+    "new": 1.0
+   },
+   "AWeirdDev/human-disease-prediction/sklearn_model.joblib": {
+    "base": 0.03423,
+    "new": 1.0
+   },
+   "osanseviero/wine-quality/sklearn_model.joblib": {
+    "base": 0.002457,
+    "new": 1.0
+   },
+   "pfizer-project-team/binary-segA-vs-segBC/sklearn_model.joblib": {
+    "base": 0.000306,
+    "new": 1.0
+   },
+   "nwhite-systems/nwhite-ai-operations-intent-classifier/model.joblib": {
+    "base": 0.003344,
+    "new": 1.0
+   },
+   "nwhite-systems/nwhite-ai-operations-intent-classifier/sklearn_model.joblib": {
+    "base": 0.003344,
+    "new": 1.0
+   },
+   "imodels/figs-compas-recidivism/sklearn_model.joblib": {
+    "base": 0.002795,
+    "new": 1.0
+   },
+   "2gether330/diabetes-rf-regressor/sklearn_model.joblib": {
+    "base": 0.000768,
+    "new": 1.0
+   },
+   "AgentsSci/EMNLP_Cost-Aware-Protocol-Routing/router_metadata_only/feature_builders.joblib": {
+    "base": 0.027371,
+    "new": 1.0
+   },
+   "AgentsSci/EMNLP_Cost-Aware-Protocol-Routing/router_metadata_only/model.joblib": {
+    "base": 0.054165,
+    "new": 1.0
+   },
+   "wlaminack/testingmodel/sklearn_model.joblib": {
+    "base": 0.002457,
+    "new": 1.0
+   },
+   "emresvd/u202/sklearn_model.joblib": {
+    "base": 0.000333,
+    "new": 1.0
+   },
+   "DineshKumar1329/Sentiment_Analysis/sklearn_model.joblib": {
+    "base": 2.6e-05,
+    "new": 1.0
+   },
+   "DineshKumar1329/Sentiment_Analysis/vectorizer_model.joblib": {
+    "base": 0.000352,
+    "new": 1.0
+   },
+   "imshriya/mlforge-test-model/sklearn_model.joblib": {
+    "base": 0.601709,
+    "new": 1.0
+   },
+   "carineRam/wine_model/sklearn_model.joblib": {
+    "base": 0.002457,
+    "new": 1.0
+   },
+   "AbhishekS2005/mlforge-test-model/linear_regression.joblib": {
+    "base": 0.601709,
+    "new": 1.0
+   }
+  }
+ },
+ "rows": [
+  {
+   "id": "P1",
+   "case": "patch applies once, second pass no-op, nothing lost",
+   "expected": "ok",
+   "result": "PASS",
+   "got": {
+    "files": {
+     "pickle_model_scan.py": {
+      "changes": [
+       "replaced by the 0.4.0 candidate"
+      ],
+      "second_pass": [],
+      "lost": [],
+      "removed_lines": 358,
+      "lines": [
+       437,
+       903
+      ],
+      "compiles": true,
+      "ok": true
+     },
+     "test_pickle_model_scan.py": {
+      "changes": [
+       "PKL007 test uses a non-string memo slot"
+      ],
+      "second_pass": [],
+      "lost": [],
+      "removed_lines": 10,
+      "lines": [
+       229,
+       233
+      ],
+      "compiles": true,
+      "ok": true
+     },
+     "model_file_scan.py": {
+      "changes": [
+       "version 0.12.1"
+      ],
+      "second_pass": [],
+      "lost": [],
+      "removed_lines": 1,
+      "lines": [
+       526,
+       526
+      ],
+      "compiles": true,
+      "ok": true
+     },
+     "pyproject.toml": {
+      "changes": [
+       "version 0.12.1"
+      ],
+      "second_pass": [],
+      "lost": [],
+      "removed_lines": 1,
+      "lines": [
+       72,
+       72
+      ],
+      "compiles": true,
+      "ok": true
+     },
+     "PICKLE_SCAN.md": {
+      "changes": [
+       "doc sections (appended)"
+      ],
+      "second_pass": [],
+      "lost": [],
+      "removed_lines": 0,
+      "lines": [
+       81,
+       142
+      ],
+      "compiles": true,
+      "ok": true
+     }
+    },
+    "ok": true,
+    "written": [
+     "PICKLE_SCAN.md",
+     "model_file_scan.py",
+     "pickle_model_scan.py",
+     "pyproject.toml",
+     "test_pickle_model_scan.py",
+     "test_pickle_model_scan_joblib.py",
+     "test_pickle_model_scan_memo.py"
+    ]
+   }
+  },
+  {
+   "id": "S1",
+   "case": "full unit-test suite on the patched tree",
+   "expected": "0 failures, 0 errors",
+   "result": "PASS",
+   "got": {
+    "ran": 1381,
+    "failures": [],
+    "errors": [],
+    "skipped": 3,
+    "error": null
+   }
+  },
+  {
+   "id": "S2",
+   "case": "test_pickle_model_scan_joblib alone",
+   "expected": "exit 0; 16 tests",
+   "result": "PASS",
+   "got": {
+    "exit": 0,
+    "ran": 16,
+    "tail": "_pickle_model_scan_joblib.NumericArrays.test_reconstructor_form_of_protocols_0_and_1) ... ok\ntest_scikit_learn_bundled_joblib_module (test_pickle_model_scan_joblib.NumericArrays.test_scikit_learn_bundled_joblib_module) ... ok\ntest_two_arrays_sharing_a_memoized_dtype (test_pickle_model_scan_joblib.NumericArrays.test_two_arrays_sharing_a_memoized_dtype) ... ok\ntest_version (test_pickle_model_scan_joblib.NumericArrays.test_version) ... ok\ntest_nested_pickle_has_its_own_memo (test_pickle_model_scan_joblib.ObjectArrays.test_nested_pickle_has_its_own_memo) ... ok\ntest_structured_dtype_with_an_object_field (test_pickle_model_scan_joblib.ObjectArrays.test_structured_dtype_with_an_object_field) ... ok\ntest_all_protocols (test_pickle_model_scan_joblib.PlainPicklesUnchanged.test_all_protocols) ... ok\n\n----------------------------------------------------------------------\nRan 16 tests in 0.038s\n\nOK\n"
+   }
+  },
+  {
+   "id": "S3",
+   "case": "test_pickle_model_scan_memo alone",
+   "expected": "exit 0; 11 tests",
+   "result": "PASS",
+   "got": {
+    "exit": 0,
+    "ran": 11,
+    "tail": "pickle_model_scan_memo.MemoResolution.test_memoized_dangerous_import_is_critical) ... ok\ntest_python_pickler_repeated_module_resolves (test_pickle_model_scan_memo.MemoResolution.test_python_pickler_repeated_module_resolves) ... ok\ntest_version (test_pickle_model_scan_memo.MemoResolution.test_version) ... ok\ntest_memo_index_never_stored (test_pickle_model_scan_memo.StillUnresolved.test_memo_index_never_stored) ... ok\ntest_memo_slot_holding_a_tuple (test_pickle_model_scan_memo.StillUnresolved.test_memo_slot_holding_a_tuple) ... ok\ntest_memo_slot_overwritten_by_a_tuple (test_pickle_model_scan_memo.StillUnresolved.test_memo_slot_overwritten_by_a_tuple) ... ok\ntest_operands_must_be_the_last_two_pushes (test_pickle_model_scan_memo.StillUnresolved.test_operands_must_be_the_last_two_pushes) ... ok\n\n----------------------------------------------------------------------\nRan 11 tests in 0.002s\n\nOK\n"
+   }
+  },
+  {
+   "id": "W0",
+   "case": "every planned honest file written; ground truth has >= 3 distinct imports; every .joblib file uses NumpyArrayWrapper",
+   "expected": "all 18",
+   "result": "PASS",
+   "got": {
+    "planned": 18,
+    "files": {
+     "rf_df.joblib": {
+      "ok": true,
+      "kind": "joblib",
+      "bytes": 8185,
+      "magic": "8004955e0300",
+      "distinct": 8,
+      "error": ""
+     },
+     "rf_np.joblib": {
+      "ok": true,
+      "kind": "joblib",
+      "bytes": 7865,
+      "magic": "800495860300",
+      "distinct": 7,
+      "error": ""
+     },
+     "text.joblib": {
+      "ok": true,
+      "kind": "joblib",
+      "bytes": 1921,
+      "magic": "800495e90200",
+      "distinct": 8,
+      "error": ""
+     },
+     "hgb.joblib": {
+      "ok": true,
+      "kind": "joblib",
+      "bytes": 15433,
+      "magic": "800495c10100",
+      "distinct": 19,
+      "error": ""
+     },
+     "frame.joblib": {
+      "ok": true,
+      "kind": "joblib",
+      "bytes": 2393,
+      "magic": "800495570100",
+      "distinct": 17,
+      "error": ""
+     },
+     "zoo.joblib": {
+      "ok": true,
+      "kind": "joblib",
+      "bytes": 2725,
+      "magic": "800495da0000",
+      "distinct": 6,
+      "error": ""
+     },
+     "rf_df_z3.joblib": {
+      "ok": true,
+      "kind": "joblib",
+      "bytes": 2915,
+      "magic": "785edd597b74",
+      "distinct": 8,
+      "error": ""
+     },
+     "rf_df_gzip.joblib": {
+      "ok": true,
+      "kind": "joblib",
+      "bytes": 2927,
+      "magic": "1f8b08000000",
+      "distinct": 8,
+      "error": ""
+     },
+     "rf_df_bz2.joblib": {
+      "ok": true,
+      "kind": "joblib",
+      "bytes": 2976,
+      "magic": "425a68333141",
+      "distinct": 8,
+      "error": ""
+     },
+     "rf_df_xz.joblib": {
+      "ok": true,
+      "kind": "joblib",
+      "bytes": 2680,
+      "magic": "fd377a585a00",
+      "distinct": 8,
+      "error": ""
+     },
+     "rf_df_lzma.joblib": {
+      "ok": true,
+      "kind": "joblib",
+      "bytes": 2634,
+      "magic": "5d00004000ff",
+      "distinct": 8,
+      "error": ""
+     },
+     "rf_df_p2.joblib": {
+      "ok": true,
+      "kind": "joblib",
+      "bytes": 8432,
+      "magic": "800263736b6c",
+      "distinct": 9,
+      "error": ""
+     },
+     "rf_df_p3.joblib": {
+      "ok": true,
+      "kind": "joblib",
+      "bytes": 8368,
+      "magic": "800363736b6c",
+      "distinct": 8,
+      "error": ""
+     },
+     "rf_df_p4.joblib": {
+      "ok": true,
+      "kind": "joblib",
+      "bytes": 8185,
+      "magic": "8004955e0300",
+      "distinct": 8,
+      "error": ""
+     },
+     "rf_df_p5.joblib": {
+      "ok": true,
+      "kind": "joblib",
+      "bytes": 8185,
+      "magic": "8005955e0300",
+      "distinct": 8,
+      "error": ""
+     },
+     "zoo_notell.joblib": {
+      "ok": true,
+      "kind": "joblib",
+      "bytes": 2544,
+      "magic": "800495d90000",
+      "distinct": 6,
+      "error": ""
+     },
+     "rf_df_plain_p5.pkl": {
+      "ok": true,
+      "kind": "pickle",
+      "bytes": 7587,
+      "magic": "800595981d00",
+      "distinct": 8,
+      "error": ""
+     },
+     "zoo_plain_p5.pkl": {
+      "ok": true,
+      "kind": "pickle",
+      "bytes": 1805,
+      "magic": "800595020700",
+      "distinct": 6,
+      "error": ""
+     }
+    }
+   }
+  },
+  {
+   "id": "V1",
+   "case": "versions",
+   "expected": "orig pms 0.2.1 / mfs 0.12.0; new pms 0.4.0 / mfs 0.12.1 / pyproject 0.12.1",
+   "result": "PASS",
+   "got": {
+    "orig_pms": "0.2.1",
+    "orig_mfs": "0.12.0",
+    "new_pms": "0.4.0",
+    "new_mfs": "0.12.1",
+    "new_pyproject": "0.12.1"
+   }
+  },
+  {
+   "id": "C1",
+   "case": "0.4.0 walk imports equal the ground truth (as multisets) on every honest written file",
+   "expected": "equal on all",
+   "result": "PASS",
+   "got": {
+    "n": 18,
+    "bad": {},
+    "same_order": 18
+   }
+  },
+  {
+   "id": "C2",
+   "case": "0.4.0 walk reaches the last byte, nothing unresolved, stack tracking never lost, on every honest written file",
+   "expected": "all",
+   "result": "PASS",
+   "got": {
+    "bad": {}
+   }
+  },
+  {
+   "id": "N1",
+   "case": "0.4.0 (model-file-scan) on every honest written file",
+   "expected": "no PKL000/PKL007/PKL008; nothing HIGH or CRITICAL",
+   "result": "PASS",
+   "got": {
+    "bad": {},
+    "all": {
+     "rf_df.joblib": [],
+     "rf_np.joblib": [],
+     "text.joblib": [],
+     "hgb.joblib": [],
+     "frame.joblib": [],
+     "zoo.joblib": [],
+     "rf_df_z3.joblib": [],
+     "rf_df_gzip.joblib": [],
+     "rf_df_bz2.joblib": [],
+     "rf_df_xz.joblib": [],
+     "rf_df_lzma.joblib": [],
+     "rf_df_p2.joblib": [],
+     "rf_df_p3.joblib": [],
+     "rf_df_p4.joblib": [],
+     "rf_df_p5.joblib": [],
+     "zoo_notell.joblib": [],
+     "rf_df_plain_p5.pkl": [],
+     "zoo_plain_p5.pkl": []
+    }
+   }
+  },
+  {
+   "id": "G1",
+   "case": "baseline: on every written .joblib file with a numeric array, a plain pickletools walk ends before the last byte",
+   "expected": "all",
+   "result": "PASS",
+   "got": {
+    "n": 16,
+    "files": {
+     "rf_df.joblib": {
+      "base": {
+       "kind": "STOP",
+       "pos": 1054,
+       "length": 8185,
+       "inflated": [],
+       "joblib_mode": true,
+       "lz4": false
+      },
+      "before_last_byte": true
+     },
+     "rf_np.joblib": {
+      "base": {
+       "kind": "error",
+       "pos": 912,
+       "msg": "ValueError: at position 913, opcode b'\\x0e' unknown",
+       "length": 7865,
+       "inflated": [],
+       "joblib_mode": true,
+       "lz4": false
+      },
+      "before_last_byte": true
+     },
+     "text.joblib": {
+      "base": {
+       "kind": "error",
+       "pos": 755,
+       "msg": "ValueError: at position 756, opcode b'\\x0b' unknown",
+       "length": 1921,
+       "inflated": [],
+       "joblib_mode": true,
+       "lz4": false
+      },
+      "before_last_byte": true
+     },
+     "hgb.joblib": {
+      "base": {
+       "kind": "error",
+       "pos": 459,
+       "msg": "ValueError: at position 460, opcode b'\\x03' unknown",
+       "length": 15433,
+       "inflated": [],
+       "joblib_mode": true,
+       "lz4": false
+      },
+      "before_last_byte": true
+     },
+     "frame.joblib": {
+      "base": {
+       "kind": "error",
+       "pos": 353,
+       "msg": "ValueError: at position 354, opcode b'\\r' unknown",
+       "length": 2393,
+       "inflated": [],
+       "joblib_mode": true,
+       "lz4": false
+      },
+      "before_last_byte": true
+     },
+     "zoo.joblib": {
+      "base": {
+       "kind": "error",
+       "pos": 228,
+       "msg": "ValueError: at position 229, opcode b'\\n' unknown",
+       "length": 2725,
+       "inflated": [],
+       "joblib_mode": true,
+       "lz4": false
+      },
+      "before_last_byte": true
+     },
+     "rf_df_z3.joblib": {
+      "base": {
+       "kind": "STOP",
+       "pos": 1054,
+       "length": 8185,
+       "inflated": [
+        "zlib"
+       ],
+       "joblib_mode": true,
+       "lz4": false
+      },
+      "before_last_byte": true
+     },
+     "rf_df_gzip.joblib": {
+      "base": {
+       "kind": "STOP",
+       "pos": 1054,
+       "length": 8185,
+       "inflated": [
+        "gzip"
+       ],
+       "joblib_mode": true,
+       "lz4": false
+      },
+      "before_last_byte": true
+     },
+     "rf_df_bz2.joblib": {
+      "base": {
+       "kind": "STOP",
+       "pos": 1054,
+       "length": 8185,
+       "inflated": [
+        "bz2"
+       ],
+       "joblib_mode": true,
+       "lz4": false
+      },
+      "before_last_byte": true
+     },
+     "rf_df_xz.joblib": {
+      "base": {
+       "kind": "STOP",
+       "pos": 1054,
+       "length": 8185,
+       "inflated": [
+        "xz"
+       ],
+       "joblib_mode": true,
+       "lz4": false
+      },
+      "before_last_byte": true
+     },
+     "rf_df_lzma.joblib": {
+      "base": {
+       "kind": "STOP",
+       "pos": 1054,
+       "length": 8185,
+       "inflated": [
+        "lzma"
+       ],
+       "joblib_mode": true,
+       "lz4": false
+      },
+      "before_last_byte": true
+     },
+     "rf_df_p2.joblib": {
+      "base": {
+       "kind": "STOP",
+       "pos": 1195,
+       "length": 8432,
+       "inflated": [],
+       "joblib_mode": true,
+       "lz4": false
+      },
+      "before_last_byte": true
+     },
+     "rf_df_p3.joblib": {
+      "base": {
+       "kind": "STOP",
+       "pos": 1195,
+       "length": 8368,
+       "inflated": [],
+       "joblib_mode": true,
+       "lz4": false
+      },
+      "before_last_byte": true
+     },
+     "rf_df_p4.joblib": {
+      "base": {
+       "kind": "STOP",
+       "pos": 1054,
+       "length": 8185,
+       "inflated": [],
+       "joblib_mode": true,
+       "lz4": false
+      },
+      "before_last_byte": true
+     },
+     "rf_df_p5.joblib": {
+      "base": {
+       "kind": "STOP",
+       "pos": 1054,
+       "length": 8185,
+       "inflated": [],
+       "joblib_mode": true,
+       "lz4": false
+      },
+      "before_last_byte": true
+     },
+     "zoo_notell.joblib": {
+      "base": {
+       "kind": "error",
+       "pos": 227,
+       "msg": "ValueError: at position 228, opcode b'\\x00' unknown",
+       "length": 2544,
+       "inflated": [],
+       "joblib_mode": true,
+       "lz4": false
+      },
+      "before_last_byte": true
+     }
+    }
+   }
+  },
+  {
+   "id": "H1",
+   "case": "gate: published files downloaded",
+   "expected": ">= 10",
+   "result": "PASS",
+   "got": 30
+  },
+  {
+   "id": "H2",
+   "case": "0.4.0: published files with PKL007; scan errors",
+   "expected": "none; none",
+   "result": "PASS",
+   "got": {
+    "pkl007": [],
+    "scan_errors": {},
+    "orig_pkl007": [
+     "2gether330/diabetes-rf-regressor/sklearn_model.joblib",
+     "AWeirdDev/human-disease-prediction/sklearn_model.joblib",
+     "AbhishekS2005/mlforge-test-model/linear_regression.joblib",
+     "AgentsSci/EMNLP_Cost-Aware-Protocol-Routing/router_metadata_only/feature_builders.joblib",
+     "AgentsSci/EMNLP_Cost-Aware-Protocol-Routing/router_metadata_only/model.joblib",
+     "DineshKumar1329/Sentiment_Analysis/sklearn_model.joblib",
+     "DineshKumar1329/Sentiment_Analysis/vectorizer_model.joblib",
+     "carineRam/wine_model/sklearn_model.joblib",
+     "emresvd/u202/sklearn_model.joblib",
+     "imodels/figs-compas-recidivism/sklearn_model.joblib",
+     "imshriya/mlforge-test-model/sklearn_model.joblib",
+     "julien-c/skops-digits/sklearn_model.joblib",
+     "julien-c/wine-quality/sklearn_model.joblib",
+     "kiselyovd/cardio-risk-rf/cardio_risk_lgbm.joblib",
+     "kiselyovd/cardio-risk-rf/cardio_risk_rf.joblib",
+     "mmx86/hf_heart/sklearn_model.joblib",
+     "nwhite-systems/nwhite-ai-operations-intent-classifier/model.joblib",
+     "nwhite-systems/nwhite-ai-operations-intent-classifier/sklearn_model.joblib",
+     "osanseviero/wine-quality/sklearn_model.joblib",
+     "pfizer-project-team/binary-segA-vs-segBC/sklearn_model.joblib",
+     "rawqubit/ClassicML-Prompt-Injection-Detector/sklearn_model.joblib",
+     "risingodegua/wine-quality-model/sklearn_model.joblib",
+     "scikit-learn-examples/example/sklearn_model.joblib",
+     "wlaminack/testingmodel/sklearn_model.joblib"
+    ]
+   }
+  },
+  {
+   "id": "H3",
+   "case": "fail-closed: every Hub file whose stream uses NumpyArrayWrapper is walked to its last byte or carries PKL000/PKL008",
+   "expected": "no silent partial walk",
+   "result": "PASS",
+   "got": {
+    "joblib_files": 28,
+    "complete": 28,
+    "silent": {}
+   }
+  },
+  {
+   "id": "H4",
+   "case": "0.4.0 keeps every 0.2.1 rule except PKL000 and PKL007",
+   "expected": "no rule lost on any file",
+   "result": "PASS",
+   "got": {
+    "lost": {}
+   }
+  },
+  {
+   "id": "H5",
+   "case": "descriptive: share of Hub joblib files walked to the last byte",
+   "expected": ">= 0.90",
+   "result": "PASS",
+   "got": {
+    "share": 1.0,
+    "complete": 28,
+    "of": 28
+   }
+  },
+  {
+   "id": "D1",
+   "case": "OKTAYBBS churn/mobile/wine: 0.4.0 gives no PKL007 and walks each to its last byte",
+   "expected": "all three",
+   "result": "PASS",
+   "got": {
+    "churn_model.pkl": {
+     "new": [],
+     "orig": [
+      [
+       "PKL007",
+       "HIGH"
+      ]
+     ],
+     "walk": {
+      "stop": 39282888,
+      "length": 39282889,
+      "joblib_arrays": 801,
+      "nested_pickles": 1,
+      "unresolved": 0,
+      "symbolic_stack_lost": false,
+      "joblib_mode": true,
+      "rules": []
+     }
+    },
+    "mobile_model.pkl": {
+     "new": [],
+     "orig": [
+      [
+       "PKL007",
+       "HIGH"
+      ]
+     ],
+     "walk": {
+      "stop": 4431400,
+      "length": 4431401,
+      "joblib_arrays": 401,
+      "nested_pickles": 1,
+      "unresolved": 0,
+      "symbolic_stack_lost": false,
+      "joblib_mode": true,
+      "rules": []
+     }
+    },
+    "wine_model.pkl": {
+     "new": [],
+     "orig": [
+      [
+       "PKL007",
+       "HIGH"
+      ]
+     ],
+     "walk": {
+      "stop": 21572776,
+      "length": 21572777,
+      "joblib_arrays": 1201,
+      "nested_pickles": 1,
+      "unresolved": 0,
+      "symbolic_stack_lost": false,
+      "joblib_mode": true,
+      "rules": []
+     }
+    }
+   }
+  }
+ ]
+}

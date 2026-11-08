@@ -1,0 +1,550 @@
+{
+ "versions": {
+  "joblib": "1.6.0",
+  "numpy": "2.5.4",
+  "pandas": "3.1.1",
+  "scipy": "1.18.1",
+  "sklearn": "1.9.1",
+  "python": "3.12.15",
+  "pickle_default_protocol": 4
+ },
+ "files": {
+  "rf_df.joblib": {
+   "kind": "joblib",
+   "bytes": 8185,
+   "magic": "8004955e0300",
+   "imports": [
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray _reconstruct",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray scalar",
+    "sklearn.tree._tree Tree"
+   ],
+   "distinct_imports": [
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy dtype",
+    "numpy ndarray",
+    "numpy._core.multiarray _reconstruct",
+    "numpy._core.multiarray scalar",
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "sklearn.tree._tree Tree"
+   ]
+  },
+  "rf_np.joblib": {
+   "kind": "joblib",
+   "bytes": 7865,
+   "magic": "800495860300",
+   "imports": [
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray scalar",
+    "sklearn.tree._tree Tree"
+   ],
+   "distinct_imports": [
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy dtype",
+    "numpy ndarray",
+    "numpy._core.multiarray scalar",
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "sklearn.tree._tree Tree"
+   ]
+  },
+  "text.joblib": {
+   "kind": "joblib",
+   "bytes": 1921,
+   "magic": "800495e90200",
+   "imports": [
+    "sklearn.pipeline Pipeline",
+    "sklearn.feature_extraction.text TfidfVectorizer",
+    "numpy float64",
+    "sklearn.feature_extraction.text TfidfTransformer",
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy ndarray",
+    "numpy dtype",
+    "sklearn.linear_model._logistic LogisticRegression"
+   ],
+   "distinct_imports": [
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy dtype",
+    "numpy float64",
+    "numpy ndarray",
+    "sklearn.feature_extraction.text TfidfTransformer",
+    "sklearn.feature_extraction.text TfidfVectorizer",
+    "sklearn.linear_model._logistic LogisticRegression",
+    "sklearn.pipeline Pipeline"
+   ]
+  },
+  "hgb.joblib": {
+   "kind": "joblib",
+   "bytes": 15433,
+   "magic": "800495c10100",
+   "imports": [
+    "sklearn.pipeline Pipeline",
+    "sklearn.preprocessing._data StandardScaler",
+    "numpy._core.multiarray scalar",
+    "numpy dtype",
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy ndarray",
+    "sklearn.ensemble._hist_gradient_boosting.gradient_boosting HistGradientBoostingClassifier",
+    "sklearn.preprocessing._label LabelEncoder",
+    "numpy.random._pickle __generator_ctor",
+    "numpy.random._pickle __bit_generator_ctor",
+    "numpy.random._pcg64 PCG64",
+    "numpy.random.bit_generator __pyx_unpickle_SeedSequence",
+    "numpy.random.bit_generator SeedSequence",
+    "sklearn._loss.loss HalfBinomialLoss",
+    "sklearn._loss._loss CyHalfBinomialLoss",
+    "sklearn._loss.link LogitLink",
+    "sklearn._loss.link Interval",
+    "sklearn.ensemble._hist_gradient_boosting.binning _BinMapper",
+    "sklearn.ensemble._hist_gradient_boosting.predictor TreePredictor"
+   ],
+   "distinct_imports": [
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy dtype",
+    "numpy ndarray",
+    "numpy._core.multiarray scalar",
+    "numpy.random._pcg64 PCG64",
+    "numpy.random._pickle __bit_generator_ctor",
+    "numpy.random._pickle __generator_ctor",
+    "numpy.random.bit_generator SeedSequence",
+    "numpy.random.bit_generator __pyx_unpickle_SeedSequence",
+    "sklearn._loss._loss CyHalfBinomialLoss",
+    "sklearn._loss.link Interval",
+    "sklearn._loss.link LogitLink",
+    "sklearn._loss.loss HalfBinomialLoss",
+    "sklearn.ensemble._hist_gradient_boosting.binning _BinMapper",
+    "sklearn.ensemble._hist_gradient_boosting.gradient_boosting HistGradientBoostingClassifier",
+    "sklearn.ensemble._hist_gradient_boosting.predictor TreePredictor",
+    "sklearn.pipeline Pipeline",
+    "sklearn.preprocessing._data StandardScaler",
+    "sklearn.preprocessing._label LabelEncoder"
+   ]
+  },
+  "frame.joblib": {
+   "kind": "joblib",
+   "bytes": 2393,
+   "magic": "800495570100",
+   "imports": [
+    "pandas DataFrame",
+    "pandas.core.internals.managers BlockManager",
+    "pandas._libs.internals _unpickle_block",
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy ndarray",
+    "numpy dtype",
+    "builtins slice",
+    "pandas._libs.arrays __pyx_unpickle_NDArrayBacked",
+    "pandas.arrays StringArray",
+    "pandas StringDtype",
+    "numpy._core.multiarray _reconstruct",
+    "numpy ndarray",
+    "numpy dtype",
+    "pandas.arrays DatetimeArray",
+    "pandas Categorical",
+    "pandas CategoricalDtype",
+    "pandas.core.indexes.base _new_Index",
+    "pandas Index",
+    "numpy._core.multiarray _reconstruct",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray _reconstruct",
+    "numpy ndarray",
+    "numpy dtype",
+    "pandas RangeIndex"
+   ],
+   "distinct_imports": [
+    "builtins slice",
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy dtype",
+    "numpy ndarray",
+    "numpy._core.multiarray _reconstruct",
+    "pandas Categorical",
+    "pandas CategoricalDtype",
+    "pandas DataFrame",
+    "pandas Index",
+    "pandas RangeIndex",
+    "pandas StringDtype",
+    "pandas._libs.arrays __pyx_unpickle_NDArrayBacked",
+    "pandas._libs.internals _unpickle_block",
+    "pandas.arrays DatetimeArray",
+    "pandas.arrays StringArray",
+    "pandas.core.indexes.base _new_Index",
+    "pandas.core.internals.managers BlockManager"
+   ]
+  },
+  "zoo.joblib": {
+   "kind": "joblib",
+   "bytes": 2725,
+   "magic": "800495da0000",
+   "imports": [
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray _reconstruct",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray _reconstruct",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy matrix",
+    "scipy.sparse._csr csr_matrix"
+   ],
+   "distinct_imports": [
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy dtype",
+    "numpy matrix",
+    "numpy ndarray",
+    "numpy._core.multiarray _reconstruct",
+    "scipy.sparse._csr csr_matrix"
+   ]
+  },
+  "rf_df_z3.joblib": {
+   "kind": "joblib",
+   "bytes": 2915,
+   "magic": "785edd597b74",
+   "imports": [
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray _reconstruct",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray scalar",
+    "sklearn.tree._tree Tree"
+   ],
+   "distinct_imports": [
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy dtype",
+    "numpy ndarray",
+    "numpy._core.multiarray _reconstruct",
+    "numpy._core.multiarray scalar",
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "sklearn.tree._tree Tree"
+   ]
+  },
+  "rf_df_gzip.joblib": {
+   "kind": "joblib",
+   "bytes": 2927,
+   "magic": "1f8b08000000",
+   "imports": [
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray _reconstruct",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray scalar",
+    "sklearn.tree._tree Tree"
+   ],
+   "distinct_imports": [
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy dtype",
+    "numpy ndarray",
+    "numpy._core.multiarray _reconstruct",
+    "numpy._core.multiarray scalar",
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "sklearn.tree._tree Tree"
+   ]
+  },
+  "rf_df_bz2.joblib": {
+   "kind": "joblib",
+   "bytes": 2976,
+   "magic": "425a68333141",
+   "imports": [
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray _reconstruct",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray scalar",
+    "sklearn.tree._tree Tree"
+   ],
+   "distinct_imports": [
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy dtype",
+    "numpy ndarray",
+    "numpy._core.multiarray _reconstruct",
+    "numpy._core.multiarray scalar",
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "sklearn.tree._tree Tree"
+   ]
+  },
+  "rf_df_xz.joblib": {
+   "kind": "joblib",
+   "bytes": 2680,
+   "magic": "fd377a585a00",
+   "imports": [
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray _reconstruct",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray scalar",
+    "sklearn.tree._tree Tree"
+   ],
+   "distinct_imports": [
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy dtype",
+    "numpy ndarray",
+    "numpy._core.multiarray _reconstruct",
+    "numpy._core.multiarray scalar",
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "sklearn.tree._tree Tree"
+   ]
+  },
+  "rf_df_lzma.joblib": {
+   "kind": "joblib",
+   "bytes": 2634,
+   "magic": "5d00004000ff",
+   "imports": [
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray _reconstruct",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray scalar",
+    "sklearn.tree._tree Tree"
+   ],
+   "distinct_imports": [
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy dtype",
+    "numpy ndarray",
+    "numpy._core.multiarray _reconstruct",
+    "numpy._core.multiarray scalar",
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "sklearn.tree._tree Tree"
+   ]
+  },
+  "rf_df_p2.joblib": {
+   "kind": "joblib",
+   "bytes": 8432,
+   "magic": "800263736b6c",
+   "imports": [
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray _reconstruct",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray scalar",
+    "_codecs encode",
+    "sklearn.tree._tree Tree"
+   ],
+   "distinct_imports": [
+    "_codecs encode",
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy dtype",
+    "numpy ndarray",
+    "numpy._core.multiarray _reconstruct",
+    "numpy._core.multiarray scalar",
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "sklearn.tree._tree Tree"
+   ]
+  },
+  "rf_df_p3.joblib": {
+   "kind": "joblib",
+   "bytes": 8368,
+   "magic": "800363736b6c",
+   "imports": [
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray _reconstruct",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray scalar",
+    "sklearn.tree._tree Tree"
+   ],
+   "distinct_imports": [
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy dtype",
+    "numpy ndarray",
+    "numpy._core.multiarray _reconstruct",
+    "numpy._core.multiarray scalar",
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "sklearn.tree._tree Tree"
+   ]
+  },
+  "rf_df_p4.joblib": {
+   "kind": "joblib",
+   "bytes": 8185,
+   "magic": "8004955e0300",
+   "imports": [
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray _reconstruct",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray scalar",
+    "sklearn.tree._tree Tree"
+   ],
+   "distinct_imports": [
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy dtype",
+    "numpy ndarray",
+    "numpy._core.multiarray _reconstruct",
+    "numpy._core.multiarray scalar",
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "sklearn.tree._tree Tree"
+   ]
+  },
+  "rf_df_p5.joblib": {
+   "kind": "joblib",
+   "bytes": 8185,
+   "magic": "8005955e0300",
+   "imports": [
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray _reconstruct",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray scalar",
+    "sklearn.tree._tree Tree"
+   ],
+   "distinct_imports": [
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy dtype",
+    "numpy ndarray",
+    "numpy._core.multiarray _reconstruct",
+    "numpy._core.multiarray scalar",
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "sklearn.tree._tree Tree"
+   ]
+  },
+  "zoo_notell.joblib": {
+   "kind": "joblib",
+   "bytes": 2544,
+   "magic": "800495d90000",
+   "imports": [
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray _reconstruct",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.multiarray _reconstruct",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy matrix",
+    "scipy.sparse._csr csr_matrix"
+   ],
+   "distinct_imports": [
+    "joblib.numpy_pickle NumpyArrayWrapper",
+    "numpy dtype",
+    "numpy matrix",
+    "numpy ndarray",
+    "numpy._core.multiarray _reconstruct",
+    "scipy.sparse._csr csr_matrix"
+   ]
+  },
+  "rf_df_plain_p5.pkl": {
+   "kind": "pickle",
+   "bytes": 7587,
+   "magic": "800595981d00",
+   "imports": [
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "numpy._core.multiarray _reconstruct",
+    "numpy ndarray",
+    "numpy dtype",
+    "numpy._core.numeric _frombuffer",
+    "numpy._core.multiarray scalar",
+    "sklearn.tree._tree Tree"
+   ],
+   "distinct_imports": [
+    "numpy dtype",
+    "numpy ndarray",
+    "numpy._core.multiarray _reconstruct",
+    "numpy._core.multiarray scalar",
+    "numpy._core.numeric _frombuffer",
+    "sklearn.ensemble._forest RandomForestClassifier",
+    "sklearn.tree._classes DecisionTreeClassifier",
+    "sklearn.tree._tree Tree"
+   ]
+  },
+  "zoo_plain_p5.pkl": {
+   "kind": "pickle",
+   "bytes": 1805,
+   "magic": "800595020700",
+   "imports": [
+    "numpy._core.numeric _frombuffer",
+    "numpy dtype",
+    "numpy._core.multiarray _reconstruct",
+    "numpy ndarray",
+    "numpy matrix",
+    "scipy.sparse._csr csr_matrix"
+   ],
+   "distinct_imports": [
+    "numpy dtype",
+    "numpy matrix",
+    "numpy ndarray",
+    "numpy._core.multiarray _reconstruct",
+    "numpy._core.numeric _frombuffer",
+    "scipy.sparse._csr csr_matrix"
+   ]
+  }
+ },
+ "errors": [],
+ "planned": [
+  "rf_df.joblib",
+  "rf_np.joblib",
+  "text.joblib",
+  "hgb.joblib",
+  "frame.joblib",
+  "zoo.joblib",
+  "rf_df_z3.joblib",
+  "rf_df_gzip.joblib",
+  "rf_df_bz2.joblib",
+  "rf_df_xz.joblib",
+  "rf_df_lzma.joblib",
+  "rf_df_p2.joblib",
+  "rf_df_p3.joblib",
+  "rf_df_p4.joblib",
+  "rf_df_p5.joblib",
+  "zoo_notell.joblib",
+  "rf_df_plain_p5.pkl",
+  "zoo_plain_p5.pkl"
+ ]
+}
