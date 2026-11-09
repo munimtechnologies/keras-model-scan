@@ -1,0 +1,110 @@
+[
+ {
+  "path": "hub/zip/001/pytorch_model.bin",
+  "members": 246,
+  "pickle_records": [
+   "archive/data.pkl"
+  ],
+  "storages": 244,
+  "storages_0x80": [
+   "archive/data/161"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "archive/data/161",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "803637c0a99a2740",
+    "member_size": 576,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'7' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "archive/data/161"
+  ]
+ },
+ {
+  "path": "hub/zip/002/pytorch_model.bin",
+  "members": 49,
+  "pickle_records": [
+   "archive/data.pkl"
+  ],
+  "storages": 47,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ {
+  "path": "hub/zip/003/pytorch_model.bin",
+  "members": 43,
+  "pickle_records": [
+   "pytorch_model/data.pkl"
+  ],
+  "storages": 39,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ {
+  "path": "hub/zip/004/pytorch_model.bin",
+  "members": 87,
+  "pickle_records": [
+   "pytorch_model/data.pkl"
+  ],
+  "storages": 85,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ {
+  "path": "hub/zip/005/pytorch_model.bin",
+  "members": 362,
+  "pickle_records": [
+   "archive/data.pkl"
+  ],
+  "storages": 360,
+  "storages_0x80": [
+   "archive/data/173",
+   "archive/data/339"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "archive/data/173",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "806e46befebd39be",
+    "member_size": 320,
+    "detail": "pickletools stopped reading at an opcode: could not convert string to float: b'\\xbe\\xfe\\xbd9\\xbeH\\x8a\\x92\\xbe\\x0c\\x8f\\x01\\xbeV\\xc9\\xf8<\\xb0\\x04\\x16>;\\x06\\x83\\xbd\\xb4\\xd5\\xbd=\\x10\\xb8\\x1b\\xbe\\xc0\\x9c\\x"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "archive/data/339",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "8024edbd2dc11cbe",
+    "member_size": 4608,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xed' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "archive/data/173",
+   "archive/data/339"
+  ]
+ },
+ {
+  "path": "hub/zip/006/pytorch_model.bin",
+  "members": 44,
+  "pickle_records": [
+   "archive/data.pkl"
+  ],
+  "storages": 42,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ }
+]

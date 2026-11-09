@@ -1,0 +1,2450 @@
+{
+ "rows": {
+  "P0": {
+   "status": "held",
+   "observed": {
+    "pickle_model_scan": "0.4.0",
+    "model_file_scan": "0.12.1"
+   }
+  },
+  "R1": {
+   "status": "held",
+   "observed": {
+    "bn_128.pt": {
+     "nbt_member": [
+      "bn_128/data/6"
+     ],
+     "loaded_value": 128,
+     "findings_on_it": [
+      {
+       "rule": "PKL000",
+       "severity": "LOW",
+       "member": "bn_128/data/6",
+       "where": "storage",
+       "member_first": "80",
+       "member_head8": "8000000000000000",
+       "member_size": 8,
+       "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x00' unknown. Part of the stream was not analysed; treat the file with caution."
+      }
+     ],
+     "ok": true
+    },
+    "bn_384.pt": {
+     "nbt_member": [
+      "bn_384/data/6"
+     ],
+     "loaded_value": 384,
+     "findings_on_it": [
+      {
+       "rule": "PKL000",
+       "severity": "LOW",
+       "member": "bn_384/data/6",
+       "where": "storage",
+       "member_first": "80",
+       "member_head8": "8001000000000000",
+       "member_size": 8,
+       "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x00' unknown. Part of the stream was not analysed; treat the file with caution."
+      }
+     ],
+     "ok": true
+    }
+   }
+  },
+  "R2": {
+   "status": "held",
+   "observed": {
+    "bn_127.pt": {
+     "nbt_member": [
+      "bn_127/data/6"
+     ],
+     "loaded_value": 127,
+     "findings_on_it": [],
+     "ok": true
+    },
+    "bn_129.pt": {
+     "nbt_member": [
+      "bn_129/data/6"
+     ],
+     "loaded_value": 129,
+     "findings_on_it": [],
+     "ok": true
+    }
+   }
+  },
+  "R3": {
+   "status": "held",
+   "observed": {
+    "findings_on_storages": 103,
+    "not_starting_0x80": []
+   }
+  },
+  "R4": {
+   "status": "held",
+   "observed": {
+    "files": 204,
+    "on_data_pkl": []
+   }
+  },
+  "R5": {
+   "status": "held",
+   "observed": {
+    "bn_128.pt": 0,
+    "bn_384.pt": 0
+   }
+  },
+  "S1": {
+   "status": "failed",
+   "observed": {
+    "files": 200,
+    "storages": 3200,
+    "starting_0x80": 98
+   }
+  },
+  "S2": {
+   "status": "held",
+   "observed": {
+    "starting_0x80": 98,
+    "with_finding": 98
+   }
+  },
+  "S3": {
+   "status": "held",
+   "observed": {
+    "medium_or_higher": []
+   }
+  },
+  "H1": {
+   "status": "failed",
+   "observed": {
+    "scanned": 6,
+    "errors": 0
+   }
+  },
+  "H2": {
+   "status": "held",
+   "observed": {
+    "files_with_0x80_storage": 2,
+    "share": 0.3333333333333333
+   }
+  },
+  "H3": {
+   "status": "held",
+   "observed": {
+    "findings_on_storages": 3,
+    "not_low": []
+   }
+  }
+ },
+ "reported": {
+  "cli_bn": {
+   "bn_128.pt": {
+    "rc": 0,
+    "stdout_tail": "{\n  \"tool\": \"model-file-scan\",\n  \"version\": \"0.12.1\",\n  \"files\": [\n    {\n      \"path\": \"local/bn_128.pt\",\n      \"findings\": [\n        {\n          \"rule\": \"PKL000\",\n          \"severity\": \"LOW\",\n          \"title\": \"Pickle stream could not be fully parsed\",\n          \"detail\": \"pickletools stopped reading at an opcode: at position 2, opcode b'\\\\x00' unknown. Part of the stream was not analysed; treat the file with caution.\",\n          \"location\": \"local/bn_128.pt!bn_128/data/6\",\n          \"cve\": null\n        }\n      ]\n    }\n  ]\n}\n",
+    "stderr_tail": ""
+   },
+   "bn_384.pt": {
+    "rc": 0,
+    "stdout_tail": "{\n  \"tool\": \"model-file-scan\",\n  \"version\": \"0.12.1\",\n  \"files\": [\n    {\n      \"path\": \"local/bn_384.pt\",\n      \"findings\": [\n        {\n          \"rule\": \"PKL000\",\n          \"severity\": \"LOW\",\n          \"title\": \"Pickle stream could not be fully parsed\",\n          \"detail\": \"pickletools stopped reading at an opcode: at position 2, opcode b'\\\\x00' unknown. Part of the stream was not analysed; treat the file with caution.\",\n          \"location\": \"local/bn_384.pt!bn_384/data/6\",\n          \"cve\": null\n        }\n      ]\n    }\n  ]\n}\n",
+    "stderr_tail": ""
+   }
+  },
+  "mlp_rules": {
+   "PKL000 LOW @storage": 98
+  },
+  "hub_rules_by_where": {
+   "PKL000 LOW @storage": 3
+  },
+  "hub_files_with_any_finding": 2,
+  "hub_storages_total": 817,
+  "hub_storages_0x80": 3,
+  "torchscript_and_export": {
+   "ts_mlp.pt": {
+    "path": "local/ts_mlp.pt",
+    "members": 25,
+    "pickle_records": [
+     "ts_mlp/data.pkl"
+    ],
+    "storages": 16,
+    "storages_0x80": [],
+    "findings": [
+     {
+      "rule": "PKL003",
+      "severity": "MEDIUM",
+      "member": "ts_mlp/data.pkl",
+      "where": "pickle_record",
+      "member_first": null,
+      "member_head8": null,
+      "member_size": null,
+      "detail": "Pickle imports __torch__.torch.nn.modules.container.Sequential, which is not a recognised safe model reconstructor. Confirm this module belongs in a model file."
+     },
+     {
+      "rule": "PKL003",
+      "severity": "MEDIUM",
+      "member": "ts_mlp/data.pkl",
+      "where": "pickle_record",
+      "member_first": null,
+      "member_head8": null,
+      "member_size": null,
+      "detail": "Pickle imports __torch__.torch.nn.modules.linear.Linear, which is not a recognised safe model reconstructor. Confirm this module belongs in a model file."
+     }
+    ],
+    "storage_0x80_with_finding": []
+   },
+   "ep_mlp.pt2": {
+    "path": "local/ep_mlp.pt2",
+    "members": 25,
+    "pickle_records": [],
+    "storages": 0,
+    "storages_0x80": [],
+    "findings": [
+     {
+      "rule": "PKL000",
+      "severity": "LOW",
+      "member": "ep_mlp/data/sample_inputs/model.pt",
+      "where": "other",
+      "member_first": null,
+      "member_head8": null,
+      "member_size": null,
+      "detail": "pickletools stopped reading at an opcode: 'utf-8' codec can't decode byte 0x80 in position 63: invalid start byte. Part of the stream was not analysed; treat the file with caution."
+     }
+    ],
+    "storage_0x80_with_finding": []
+   }
+  },
+  "hub_examples": [
+   {
+    "path": "hub/zip/001/pytorch_model.bin",
+    "findings": [
+     {
+      "rule": "PKL000",
+      "severity": "LOW",
+      "member": "archive/data/161",
+      "where": "storage",
+      "member_first": "80",
+      "member_head8": "803637c0a99a2740",
+      "member_size": 576,
+      "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'7' unknown. Part of the stream was not analysed; treat the file with caution."
+     }
+    ]
+   },
+   {
+    "path": "hub/zip/005/pytorch_model.bin",
+    "findings": [
+     {
+      "rule": "PKL000",
+      "severity": "LOW",
+      "member": "archive/data/173",
+      "where": "storage",
+      "member_first": "80",
+      "member_head8": "806e46befebd39be",
+      "member_size": 320,
+      "detail": "pickletools stopped reading at an opcode: could not convert string to float: b'\\xbe\\xfe\\xbd9\\xbeH\\x8a\\x92\\xbe\\x0c\\x8f\\x01\\xbeV\\xc9\\xf8<\\xb0\\x04\\x16>;\\x06\\x83\\xbd\\xb4\\xd5\\xbd=\\x10\\xb8\\x1b\\xbe\\xc0\\x9c\\x"
+     },
+     {
+      "rule": "PKL000",
+      "severity": "LOW",
+      "member": "archive/data/339",
+      "where": "storage",
+      "member_first": "80",
+      "member_head8": "8024edbd2dc11cbe",
+      "member_size": 4608,
+      "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xed' unknown. Part of the stream was not analysed; treat the file with caution."
+     }
+    ]
+   }
+  ]
+ },
+ "versions": {
+  "pickle_model_scan": "0.4.0",
+  "model_file_scan": "0.12.1"
+ },
+ "local_manifest": {
+  "torch": "2.15.0+cpu",
+  "errors": [],
+  "not_loaded": []
+ },
+ "gating_rows_all_held": false,
+ "inputs": {
+  "fetch_report.json": {
+   "tag": "v0.54.0",
+   "model_file_scan.py": "0.12.1",
+   "pickle_model_scan.py": "0.4.0",
+   "ok": true
+  },
+  "setup_report.json": {
+   "torch_ok": true,
+   "torch_tail": "6 kB)\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 536.2/536.2 kB 22.7 MB/s eta 0:00:00\nInstalling collected packages: mpmath, typing-extensions, sympy, setuptools, networkx, MarkupSafe, fsspec, filelock, jinja2, torch\nSuccessfully installed MarkupSafe-3.0.3 filelock-4.2.4 fsspec-2026.9.0 jinja2-3.1.6 mpmath-1.3.0 networkx-3.7 setuptools-78.1.0 sympy-1.14.0 torch-2.15.0+cpu typing-extensions-4.16.0",
+   "versions": {
+    "torch": "2.15.0+cpu",
+    "numpy": "missing: No package metadata was found for numpy"
+   }
+  },
+  "hub/zip_census.json": {
+   "started": "2026-11-09T17:10:05Z",
+   "lists": {
+    "A": {
+     "models": 0,
+     "with_target": 0
+    },
+    "B": {
+     "models": 1000,
+     "with_target": 853
+    }
+   },
+   "heads": [
+    {
+     "list": "B",
+     "rank": 1,
+     "model": "sentence-transformers/all-MiniLM-L6-v2",
+     "zip": true,
+     "size": 90888945
+    },
+    {
+     "list": "B",
+     "rank": 2,
+     "model": "cross-encoder/ms-marco-MiniLM-L6-v2",
+     "zip": true,
+     "size": 90903017
+    },
+    {
+     "list": "B",
+     "rank": 3,
+     "model": "BAAI/bge-small-en-v1.5",
+     "zip": true,
+     "size": 133508397
+    },
+    {
+     "list": "B",
+     "rank": 4,
+     "model": "openai-community/gpt2",
+     "zip": false,
+     "size": 548118077
+    },
+    {
+     "list": "B",
+     "rank": 5,
+     "model": "google-bert/bert-base-uncased",
+     "zip": false,
+     "size": 440473133
+    },
+    {
+     "list": "B",
+     "rank": 6,
+     "model": "BAAI/bge-m3",
+     "zip": true,
+     "size": 2271145830
+    },
+    {
+     "list": "B",
+     "rank": 7,
+     "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+     "zip": true,
+     "size": 470693617
+    },
+    {
+     "list": "B",
+     "rank": 8,
+     "model": "google-t5/t5-small",
+     "zip": false,
+     "size": 242065649
+    },
+    {
+     "list": "B",
+     "rank": 9,
+     "model": "sentence-transformers/all-mpnet-base-v2",
+     "zip": true,
+     "size": 438011953
+    },
+    {
+     "list": "B",
+     "rank": 10,
+     "model": "openai/clip-vit-base-patch32",
+     "zip": true,
+     "size": 605247071
+    },
+    {
+     "list": "B",
+     "rank": 11,
+     "model": "jonatasgrosman/wav2vec2-large-xlsr-53-japanese",
+     "zip": true,
+     "size": 1271531927
+    },
+    {
+     "list": "B",
+     "rank": 12,
+     "model": "google/vit-base-patch16-224",
+     "zip": true,
+     "size": 346351599
+    },
+    {
+     "list": "B",
+     "rank": 13,
+     "model": "timm/mobilenetv3_small_100.lamb_in1k",
+     "zip": true,
+     "size": 10299673
+    },
+    {
+     "list": "B",
+     "rank": 14,
+     "model": "microsoft/Florence-2-base",
+     "zip": true,
+     "size": 464421827
+    },
+    {
+     "list": "B",
+     "rank": 15,
+     "model": "intfloat/multilingual-e5-small",
+     "zip": true,
+     "size": 470681649
+    },
+    {
+     "list": "B",
+     "rank": 16,
+     "model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+     "zip": true,
+     "size": 1112253233
+    },
+    {
+     "list": "B",
+     "rank": 17,
+     "model": "FacebookAI/xlm-roberta-base",
+     "zip": false,
+     "size": 1115590446
+    },
+    {
+     "list": "B",
+     "rank": 19,
+     "model": "facebook/contriever",
+     "zip": true,
+     "size": 438007537
+    },
+    {
+     "list": "B",
+     "rank": 20,
+     "model": "BAAI/bge-base-en-v1.5",
+     "zip": true,
+     "size": 437997357
+    },
+    {
+     "list": "B",
+     "rank": 21,
+     "model": "BAAI/bge-large-en-v1.5",
+     "zip": true,
+     "size": 1340698349
+    },
+    {
+     "list": "B",
+     "rank": 22,
+     "model": "laion/clap-htsat-fused",
+     "zip": true,
+     "size": 614596545
+    },
+    {
+     "list": "B",
+     "rank": 23,
+     "model": "intfloat/multilingual-e5-large",
+     "zip": true,
+     "size": 2239689649
+    },
+    {
+     "list": "B",
+     "rank": 24,
+     "model": "ibm-granite/granite-embedding-small-english-r2",
+     "zip": true,
+     "size": 95334202
+    },
+    {
+     "list": "B",
+     "rank": 25,
+     "model": "FacebookAI/roberta-large",
+     "zip": false,
+     "size": 1425941629
+    },
+    {
+     "list": "B",
+     "rank": 26,
+     "model": "openai/clip-vit-large-patch14",
+     "zip": true,
+     "size": 1710671599
+    },
+    {
+     "list": "B",
+     "rank": 27,
+     "model": "FacebookAI/roberta-base",
+     "zip": false,
+     "size": 501200538
+    },
+    {
+     "list": "B",
+     "rank": 28,
+     "model": "pyannote/wespeaker-voxceleb-resnet34-LM",
+     "zip": true,
+     "size": 26645418
+    },
+    {
+     "list": "B",
+     "rank": 29,
+     "model": "distilbert/distilbert-base-uncased",
+     "zip": false,
+     "size": 267967963
+    },
+    {
+     "list": "B",
+     "rank": 30,
+     "model": "microsoft/mdeberta-v3-base",
+     "zip": true,
+     "size": 1332809049
+    },
+    {
+     "list": "B",
+     "rank": 32,
+     "model": "intfloat/multilingual-e5-base",
+     "zip": true,
+     "size": 1112242989
+    },
+    {
+     "list": "B",
+     "rank": 33,
+     "model": "laion/CLIP-ViT-B-32-laion2B-s34B-b79K",
+     "zip": true,
+     "size": 605239073
+    },
+    {
+     "list": "B",
+     "rank": 34,
+     "model": "facebook/opt-125m",
+     "zip": true,
+     "size": 250540281
+    },
+    {
+     "list": "B",
+     "rank": 35,
+     "model": "SamLowe/roberta-base-go_emotions",
+     "zip": true,
+     "size": 498740269
+    },
+    {
+     "list": "B",
+     "rank": 36,
+     "model": "openai/whisper-base",
+     "zip": true,
+     "size": 290453207
+    },
+    {
+     "list": "B",
+     "rank": 38,
+     "model": "openai/whisper-small",
+     "zip": true,
+     "size": 967092419
+    },
+    {
+     "list": "B",
+     "rank": 39,
+     "model": "facebook/esm2_t33_650M_UR50D",
+     "zip": true,
+     "size": 2609621831
+    },
+    {
+     "list": "B",
+     "rank": 40,
+     "model": "google/electra-base-discriminator",
+     "zip": false,
+     "size": 440343552
+    },
+    {
+     "list": "B",
+     "rank": 42,
+     "model": "jonatasgrosman/wav2vec2-large-xlsr-53-russian",
+     "zip": true,
+     "size": 1262093719
+    },
+    {
+     "list": "B",
+     "rank": 43,
+     "model": "facebook/wav2vec2-base",
+     "zip": true,
+     "size": 380267417
+    },
+    {
+     "list": "B",
+     "rank": 44,
+     "model": "cross-encoder/ms-marco-MiniLM-L4-v2",
+     "zip": true,
+     "size": 76693769
+    },
+    {
+     "list": "B",
+     "rank": 45,
+     "model": "timm/tf_efficientnetv2_s.in21k_ft_in1k",
+     "zip": true,
+     "size": 86711973
+    },
+    {
+     "list": "B",
+     "rank": 46,
+     "model": "jonatasgrosman/wav2vec2-large-xlsr-53-portuguese",
+     "zip": true,
+     "size": 1262122456
+    },
+    {
+     "list": "B",
+     "rank": 47,
+     "model": "w11wo/indonesian-roberta-base-posp-tagger",
+     "zip": true,
+     "size": 496382065
+    },
+    {
+     "list": "B",
+     "rank": 48,
+     "model": "openai/whisper-large-v3",
+     "zip": true,
+     "size": 3087394553
+    },
+    {
+     "list": "B",
+     "rank": 49,
+     "model": "EleutherAI/pythia-160m",
+     "zip": true,
+     "size": 375036845
+    },
+    {
+     "list": "B",
+     "rank": 50,
+     "model": "facebook/dinov2-base",
+     "zip": true,
+     "size": 346392713
+    },
+    {
+     "list": "B",
+     "rank": 51,
+     "model": "charactr/vocos-mel-24khz",
+     "zip": true,
+     "size": 54365991
+    },
+    {
+     "list": "B",
+     "rank": 52,
+     "model": "Arunavaonly/Bangla-twoclass-Sentiment-Analyzer",
+     "zip": true,
+     "size": 1112249713
+    },
+    {
+     "list": "B",
+     "rank": 53,
+     "model": "google-bert/bert-base-cased",
+     "zip": false,
+     "size": 435779157
+    },
+    {
+     "list": "B",
+     "rank": 54,
+     "model": "ProsusAI/finbert",
+     "zip": false,
+     "size": 437992753
+    },
+    {
+     "list": "B",
+     "rank": 55,
+     "model": "BAAI/bge-small-zh-v1.5",
+     "zip": true,
+     "size": 95842633
+    },
+    {
+     "list": "B",
+     "rank": 56,
+     "model": "answerdotai/ModernBERT-base",
+     "zip": true,
+     "size": 598664046
+    },
+    {
+     "list": "B",
+     "rank": 57,
+     "model": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+     "zip": false,
+     "size": 267844284
+    },
+    {
+     "list": "B",
+     "rank": 58,
+     "model": "facebook/bart-large-mnli",
+     "zip": false,
+     "size": 1629486723
+    },
+    {
+     "list": "B",
+     "rank": 59,
+     "model": "google-t5/t5-base",
+     "zip": false,
+     "size": 891691430
+    },
+    {
+     "list": "B",
+     "rank": 60,
+     "model": "BAAI/bge-base-en",
+     "zip": true,
+     "size": 437997357
+    },
+    {
+     "list": "B",
+     "rank": 61,
+     "model": "facebook/dinov2-small",
+     "zip": true,
+     "size": 88297097
+    },
+    {
+     "list": "B",
+     "rank": 62,
+     "model": "jonatasgrosman/wav2vec2-large-xlsr-53-polish",
+     "zip": true,
+     "size": 1262097815
+    },
+    {
+     "list": "B",
+     "rank": 63,
+     "model": "sentence-transformers/all-distilroberta-v1",
+     "zip": true,
+     "size": 328509745
+    },
+    {
+     "list": "B",
+     "rank": 64,
+     "model": "sentence-transformers/all-MiniLM-L12-v2",
+     "zip": true,
+     "size": 133506609
+    },
+    {
+     "list": "B",
+     "rank": 65,
+     "model": "microsoft/deberta-v3-base",
+     "zip": true,
+     "size": 371146213
+    },
+    {
+     "list": "B",
+     "rank": 66,
+     "model": "emilyalsentzer/Bio_ClinicalBERT",
+     "zip": false,
+     "size": 435778770
+    },
+    {
+     "list": "B",
+     "rank": 67,
+     "model": "cardiffnlp/twitter-roberta-base-sentiment-latest",
+     "zip": true,
+     "size": 501045531
+    },
+    {
+     "list": "B",
+     "rank": 68,
+     "model": "MahmoudAshraf/mms-300m-1130-forced-aligner",
+     "zip": true,
+     "size": 1262019174
+    },
+    {
+     "list": "B",
+     "rank": 69,
+     "model": "BAAI/bge-reranker-base",
+     "zip": true,
+     "size": 1112251061
+    },
+    {
+     "list": "B",
+     "rank": 70,
+     "model": "audeering/wav2vec2-large-robust-24-ft-age-gender",
+     "zip": true,
+     "size": 1270310981
+    },
+    {
+     "list": "B",
+     "rank": 71,
+     "model": "thenlper/gte-small",
+     "zip": true,
+     "size": 66751231
+    },
+    {
+     "list": "B",
+     "rank": 72,
+     "model": "jonatasgrosman/wav2vec2-large-xlsr-53-dutch",
+     "zip": true,
+     "size": 1262093720
+    },
+    {
+     "list": "B",
+     "rank": 73,
+     "model": "FacebookAI/xlm-roberta-large",
+     "zip": false,
+     "size": 2244861551
+    },
+    {
+     "list": "B",
+     "rank": 74,
+     "model": "jonatasgrosman/wav2vec2-large-xlsr-53-arabic",
+     "zip": true,
+     "size": 1262142936
+    },
+    {
+     "list": "B",
+     "rank": 75,
+     "model": "E-MIMIC/inclusively-reformulation-it5",
+     "zip": true,
+     "size": 3132651557
+    },
+    {
+     "list": "B",
+     "rank": 76,
+     "model": "jonatasgrosman/wav2vec2-large-xlsr-53-greek",
+     "zip": true,
+     "size": 1262101912
+    },
+    {
+     "list": "B",
+     "rank": 77,
+     "model": "BAAI/bge-reranker-large",
+     "zip": true,
+     "size": 2239705845
+    },
+    {
+     "list": "B",
+     "rank": 78,
+     "model": "facebook/musicgen-medium",
+     "zip": true,
+     "size": 8042351585
+    },
+    {
+     "list": "B",
+     "rank": 79,
+     "model": "timm/resnet18.a1_in1k",
+     "zip": true,
+     "size": 46836469
+    },
+    {
+     "list": "B",
+     "rank": 80,
+     "model": "google-bert/bert-base-multilingual-uncased",
+     "zip": false,
+     "size": 672271273
+    },
+    {
+     "list": "B",
+     "rank": 81,
+     "model": "MIT/ast-finetuned-audioset-10-10-0.4593",
+     "zip": true,
+     "size": 346445675
+    },
+    {
+     "list": "B",
+     "rank": 83,
+     "model": "openai/clip-vit-large-patch14-336",
+     "zip": true,
+     "size": 1711974081
+    },
+    {
+     "list": "B",
+     "rank": 84,
+     "model": "jonatasgrosman/wav2vec2-large-xlsr-53-chinese-zh-cn",
+     "zip": true,
+     "size": 1276296151
+    },
+    {
+     "list": "B",
+     "rank": 85,
+     "model": "sentence-transformers/paraphrase-mpnet-base-v2",
+     "zip": true,
+     "size": 438022897
+    },
+    {
+     "list": "B",
+     "rank": 87,
+     "model": "facebook/wav2vec2-base-960h",
+     "zip": true,
+     "size": 377667514
+    },
+    {
+     "list": "B",
+     "rank": 88,
+     "model": "indonesian-nlp/wav2vec2-indonesian-javanese-sundanese",
+     "zip": true,
+     "size": 1262046641
+    },
+    {
+     "list": "B",
+     "rank": 89,
+     "model": "jonatasgrosman/wav2vec2-large-xlsr-53-hungarian",
+     "zip": true,
+     "size": 1262101911
+    },
+    {
+     "list": "B",
+     "rank": 91,
+     "model": "sentence-transformers/distiluse-base-multilingual-cased-v1",
+     "zip": true,
+     "size": 538971577
+    },
+    {
+     "list": "B",
+     "rank": 92,
+     "model": "timm/resnet50.a1_in1k",
+     "zip": true,
+     "size": 102545229
+    },
+    {
+     "list": "B",
+     "rank": 93,
+     "model": "Falconsai/nsfw_image_detection",
+     "zip": true,
+     "size": 343268717
+    },
+    {
+     "list": "B",
+     "rank": 94,
+     "model": "laion/CLIP-ViT-L-14-laion2B-s32B-b82K",
+     "zip": true,
+     "size": 1710660257
+    },
+    {
+     "list": "B",
+     "rank": 95,
+     "model": "jinaai/jina-reranker-v2-base-multilingual",
+     "zip": true,
+     "size": 561622266
+    },
+    {
+     "list": "B",
+     "rank": 96,
+     "model": "colbert-ir/colbertv2.0",
+     "zip": true,
+     "size": 438405935
+    },
+    {
+     "list": "B",
+     "rank": 98,
+     "model": "timm/vit_small_patch14_dinov2.lvd142m",
+     "zip": true,
+     "size": 88287813
+    },
+    {
+     "list": "B",
+     "rank": 99,
+     "model": "IDEA-Research/grounding-dino-base",
+     "zip": true,
+     "size": 936002005
+    },
+    {
+     "list": "B",
+     "rank": 100,
+     "model": "microsoft/BiomedNLP-BiomedBERT-base-uncased-abstract-fulltext",
+     "zip": false,
+     "size": 440474434
+    },
+    {
+     "list": "B",
+     "rank": 101,
+     "model": "sentence-transformers/paraphrase-MiniLM-L6-v2",
+     "zip": true,
+     "size": 90895153
+    },
+    {
+     "list": "B",
+     "rank": 102,
+     "model": "openai/clip-vit-base-patch16",
+     "zip": true,
+     "size": 598641023
+    },
+    {
+     "list": "B",
+     "rank": 103,
+     "model": "distilbert/distilgpt2",
+     "zip": false,
+     "size": 352833716
+    },
+    {
+     "list": "B",
+     "rank": 104,
+     "model": "StanfordAIMI/stanford-deidentifier-base",
+     "zip": true,
+     "size": 438039735
+    },
+    {
+     "list": "B",
+     "rank": 105,
+     "model": "jinaai/jina-embeddings-v3",
+     "zip": true,
+     "size": 1144846522
+    },
+    {
+     "list": "B",
+     "rank": 106,
+     "model": "sentence-transformers/multi-qa-mpnet-base-dot-v1",
+     "zip": true,
+     "size": 438011953
+    },
+    {
+     "list": "B",
+     "rank": 107,
+     "model": "google-bert/bert-base-multilingual-cased",
+     "zip": false,
+     "size": 714314041
+    },
+    {
+     "list": "B",
+     "rank": 109,
+     "model": "cambridgeltl/SapBERT-from-PubMedBERT-fulltext",
+     "zip": true,
+     "size": 438012727
+    },
+    {
+     "list": "B",
+     "rank": 110,
+     "model": "google/owlv2-base-patch16-ensemble",
+     "zip": true,
+     "size": 620006741
+    },
+    {
+     "list": "B",
+     "rank": 111,
+     "model": "comodoro/wav2vec2-xls-r-300m-cs-250",
+     "zip": true,
+     "size": 1262112241
+    },
+    {
+     "list": "B",
+     "rank": 112,
+     "model": "microsoft/wavlm-large",
+     "zip": true,
+     "size": 1261990257
+    },
+    {
+     "list": "B",
+     "rank": 113,
+     "model": "rizvandwiki/gender-classification",
+     "zip": true,
+     "size": 343264177
+    },
+    {
+     "list": "B",
+     "rank": 114,
+     "model": "airesearch/wav2vec2-large-xlsr-53-th",
+     "zip": true,
+     "size": 1262210673
+    },
+    {
+     "list": "B",
+     "rank": 116,
+     "model": "jhgan/ko-sroberta-multitask",
+     "zip": true,
+     "size": 442558967
+    },
+    {
+     "list": "B",
+     "rank": 117,
+     "model": "KBLab/wav2vec2-large-voxrex-swedish",
+     "zip": true,
+     "size": 1262106353
+    },
+    {
+     "list": "B",
+     "rank": 118,
+     "model": "microsoft/table-transformer-structure-recognition",
+     "zip": true,
+     "size": 115509981
+    },
+    {
+     "list": "B",
+     "rank": 119,
+     "model": "distilbert/distilroberta-base",
+     "zip": false,
+     "size": 331070498
+    },
+    {
+     "list": "B",
+     "rank": 120,
+     "model": "jinaai/jina-embeddings-v2-small-en",
+     "zip": true,
+     "size": 65394301
+    },
+    {
+     "list": "B",
+     "rank": 121,
+     "model": "timm/efficientvit_l2.r288_in1k",
+     "zip": true,
+     "size": 255127950
+    },
+    {
+     "list": "B",
+     "rank": 122,
+     "model": "Salesforce/blip-image-captioning-base",
+     "zip": true,
+     "size": 989820849
+    },
+    {
+     "list": "B",
+     "rank": 123,
+     "model": "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+     "zip": true,
+     "size": 470633197
+    },
+    {
+     "list": "B",
+     "rank": 124,
+     "model": "jonatasgrosman/wav2vec2-large-xlsr-53-finnish",
+     "zip": true,
+     "size": 1262073239
+    },
+    {
+     "list": "B",
+     "rank": 125,
+     "model": "gigant/romanian-wav2vec2",
+     "zip": true,
+     "size": 1262071281
+    },
+    {
+     "list": "B",
+     "rank": 126,
+     "model": "kresnik/wav2vec2-large-xlsr-korean",
+     "zip": true,
+     "size": 1266864241
+    },
+    {
+     "list": "B",
+     "rank": 127,
+     "model": "nguyenvulebinh/wav2vec2-base-vi-vlsp2020",
+     "zip": true,
+     "size": 384987309
+    },
+    {
+     "list": "B",
+     "rank": 128,
+     "model": "microsoft/deberta-v3-large",
+     "zip": true,
+     "size": 873673253
+    },
+    {
+     "list": "B",
+     "rank": 129,
+     "model": "mesolitica/wav2vec2-xls-r-300m-mixed",
+     "zip": true,
+     "size": 1262062705
+    },
+    {
+     "list": "B",
+     "rank": 130,
+     "model": "nlpaueb/legal-bert-base-uncased",
+     "zip": false,
+     "size": 440474526
+    },
+    {
+     "list": "B",
+     "rank": 131,
+     "model": "Khalsuu/filipino-wav2vec2-l-xls-r-300m-official",
+     "zip": true,
+     "size": 1262050737
+    },
+    {
+     "list": "B",
+     "rank": 134,
+     "model": "facebook/bart-large-cnn",
+     "zip": false,
+     "size": 1625270765
+    },
+    {
+     "list": "B",
+     "rank": 135,
+     "model": "dslim/bert-base-NER",
+     "zip": false,
+     "size": 433316646
+    },
+    {
+     "list": "B",
+     "rank": 137,
+     "model": "classla/wav2vec2-xls-r-parlaspeech-hr",
+     "zip": true,
+     "size": 1262131313
+    },
+    {
+     "list": "B",
+     "rank": 138,
+     "model": "sshleifer/tiny-gpt2",
+     "zip": false,
+     "size": 2514146
+    },
+    {
+     "list": "B",
+     "rank": 139,
+     "model": "anuragshas/wav2vec2-large-xlsr-53-telugu",
+     "zip": true,
+     "size": 1262204439
+    },
+    {
+     "list": "B",
+     "rank": 140,
+     "model": "intfloat/e5-base-v2",
+     "zip": true,
+     "size": 437997357
+    },
+    {
+     "list": "B",
+     "rank": 142,
+     "model": "imvladikon/wav2vec2-xls-r-300m-hebrew",
+     "zip": true,
+     "size": 1262054897
+    },
+    {
+     "list": "B",
+     "rank": 143,
+     "model": "mpoyraz/wav2vec2-xls-r-300m-cv7-turkish",
+     "zip": true,
+     "size": 1262079473
+    },
+    {
+     "list": "B",
+     "rank": 144,
+     "model": "intfloat/e5-small-v2",
+     "zip": true,
+     "size": 133508397
+    },
+    {
+     "list": "B",
+     "rank": 145,
+     "model": "VoVanPhuc/sup-SimCSE-VietNamese-phobert-base",
+     "zip": true,
+     "size": 542443775
+    },
+    {
+     "list": "B",
+     "rank": 146,
+     "model": "prithivida/parrot_paraphraser_on_T5",
+     "zip": true,
+     "size": 891737400
+    },
+    {
+     "list": "B",
+     "rank": 147,
+     "model": "bkai-foundation-models/vietnamese-bi-encoder",
+     "zip": true,
+     "size": 540057065
+    },
+    {
+     "list": "B",
+     "rank": 148,
+     "model": "facebook/esmfold_v1",
+     "zip": true,
+     "size": 8442062570
+    },
+    {
+     "list": "B",
+     "rank": 149,
+     "model": "sentence-transformers/LaBSE",
+     "zip": true,
+     "size": 1883785969
+    },
+    {
+     "list": "B",
+     "rank": 150,
+     "model": "laion/clap-htsat-unfused",
+     "zip": true,
+     "size": 614525833
+    },
+    {
+     "list": "B",
+     "rank": 151,
+     "model": "intfloat/e5-base",
+     "zip": true,
+     "size": 438007537
+    },
+    {
+     "list": "B",
+     "rank": 152,
+     "model": "cross-encoder/ms-marco-MiniLM-L12-v2",
+     "zip": true,
+     "size": 133530889
+    },
+    {
+     "list": "B",
+     "rank": 153,
+     "model": "NbAiLab/nb-wav2vec2-1b-bokmaal-v2",
+     "zip": true,
+     "size": 3850475057
+    },
+    {
+     "list": "B",
+     "rank": 154,
+     "model": "apple/DFN5B-CLIP-ViT-H-14-378",
+     "zip": true,
+     "size": 3947171725
+    },
+    {
+     "list": "B",
+     "rank": 155,
+     "model": "theainerd/Wav2Vec2-large-xlsr-hindi",
+     "zip": true,
+     "size": 1262196247
+    },
+    {
+     "list": "B",
+     "rank": 156,
+     "model": "facebook/nllb-200-distilled-600M",
+     "zip": true,
+     "size": 2460457927
+    },
+    {
+     "list": "B",
+     "rank": 157,
+     "model": "sentence-transformers/paraphrase-MiniLM-L3-v2",
+     "zip": true,
+     "size": 69583549
+    },
+    {
+     "list": "B",
+     "rank": 158,
+     "model": "openai-community/gpt2-large",
+     "zip": false,
+     "size": 3247202234
+    },
+    {
+     "list": "B",
+     "rank": 159,
+     "model": "jonatasgrosman/wav2vec2-large-xlsr-53-persian",
+     "zip": true,
+     "size": 1262208535
+    },
+    {
+     "list": "B",
+     "rank": 160,
+     "model": "saattrupdan/wav2vec2-xls-r-300m-ftspeech",
+     "zip": true,
+     "size": 1262067185
+    },
+    {
+     "list": "B",
+     "rank": 161,
+     "model": "sentence-transformers/distiluse-base-multilingual-cased-v2",
+     "zip": true,
+     "size": 538971577
+    },
+    {
+     "list": "B",
+     "rank": 162,
+     "model": "prajjwal1/bert-tiny",
+     "zip": true,
+     "size": 17756393
+    },
+    {
+     "list": "B",
+     "rank": 163,
+     "model": "almanach/camembert-base",
+     "zip": false,
+     "size": 445032417
+    },
+    {
+     "list": "B",
+     "rank": 165,
+     "model": "google/siglip-base-patch16-224",
+     "zip": true,
+     "size": 812762989
+    },
+    {
+     "list": "B",
+     "rank": 166,
+     "model": "sentence-transformers-testing/stsb-bert-tiny-safetensors",
+     "zip": true,
+     "size": 17556771
+    },
+    {
+     "list": "B",
+     "rank": 167,
+     "model": "shibing624/text2vec-base-chinese",
+     "zip": true,
+     "size": 409154033
+    },
+    {
+     "list": "B",
+     "rank": 168,
+     "model": "NeuML/pubmedbert-base-embeddings",
+     "zip": true,
+     "size": 437995689
+    },
+    {
+     "list": "B",
+     "rank": 169,
+     "model": "allenai/longformer-base-4096",
+     "zip": false,
+     "size": 597257159
+    },
+    {
+     "list": "B",
+     "rank": 170,
+     "model": "nomic-ai/nomic-embed-text-v1",
+     "zip": true,
+     "size": 546961866
+    },
+    {
+     "list": "B",
+     "rank": 171,
+     "model": "google/vit-base-patch16-224-in21k",
+     "zip": true,
+     "size": 345636463
+    },
+    {
+     "list": "B",
+     "rank": 172,
+     "model": "alefiury/wav2vec2-large-xlsr-53-gender-recognition-librispeech",
+     "zip": true,
+     "size": 1262954165
+    },
+    {
+     "list": "B",
+     "rank": 173,
+     "model": "MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7",
+     "zip": true,
+     "size": 557692715
+    },
+    {
+     "list": "B",
+     "rank": 174,
+     "model": "microsoft/deberta-v3-small",
+     "zip": true,
+     "size": 286059269
+    },
+    {
+     "list": "B",
+     "rank": 175,
+     "model": "Harveenchadha/vakyansh-wav2vec2-tamil-tam-250",
+     "zip": true,
+     "size": 377731607
+    },
+    {
+     "list": "B",
+     "rank": 176,
+     "model": "lxyuan/distilbert-base-multilingual-cased-sentiments-student",
+     "zip": true,
+     "size": 541343405
+    },
+    {
+     "list": "B",
+     "rank": 177,
+     "model": "timm/wide_resnet50_2.racm_in1k",
+     "zip": true,
+     "size": 275910605
+    },
+    {
+     "list": "B",
+     "rank": 178,
+     "model": "comodoro/wav2vec2-xls-r-300m-sk-cv8",
+     "zip": true,
+     "size": 1262124593
+    },
+    {
+     "list": "B",
+     "rank": 179,
+     "model": "NbAiLab/nb-wav2vec2-1b-nynorsk",
+     "zip": true,
+     "size": 3850486961
+    },
+    {
+     "list": "B",
+     "rank": 180,
+     "model": "peft-internal-testing/tiny-clip-text-2",
+     "zip": true,
+     "size": 305200
+    },
+    {
+     "list": "B",
+     "rank": 181,
+     "model": "flair/ner-german-large",
+     "zip": true,
+     "size": 2239866697
+    },
+    {
+     "list": "B",
+     "rank": 182,
+     "model": "albert/albert-base-v2",
+     "zip": false,
+     "size": 47376696
+    },
+    {
+     "list": "B",
+     "rank": 183,
+     "model": "hustvl/yolos-small",
+     "zip": true,
+     "size": 122806169
+    },
+    {
+     "list": "B",
+     "rank": 184,
+     "model": "Musixmatch/umberto-commoncrawl-cased-v1",
+     "zip": false,
+     "size": 445031664
+    },
+    {
+     "list": "B",
+     "rank": 185,
+     "model": "softcatala/wav2vec2-large-xlsr-catala",
+     "zip": true,
+     "size": 1262106007
+    },
+    {
+     "list": "B",
+     "rank": 186,
+     "model": "neuralmind/bert-large-portuguese-cased",
+     "zip": false,
+     "size": 1342014951
+    },
+    {
+     "list": "B",
+     "rank": 187,
+     "model": "intfloat/e5-large-v2",
+     "zip": true,
+     "size": 1340698349
+    },
+    {
+     "list": "B",
+     "rank": 189,
+     "model": "EleutherAI/pythia-70m-deduped",
+     "zip": true,
+     "size": 166049099
+    },
+    {
+     "list": "B",
+     "rank": 191,
+     "model": "dbmdz/bert-large-cased-finetuned-conll03-english",
+     "zip": false,
+     "size": 1334448817
+    },
+    {
+     "list": "B",
+     "rank": 192,
+     "model": "facebook/wav2vec2-xlsr-53-espeak-cv-ft",
+     "zip": true,
+     "size": 1263535127
+    },
+    {
+     "list": "B",
+     "rank": 193,
+     "model": "timm/resnet34.a1_in1k",
+     "zip": true,
+     "size": 87330485
+    },
+    {
+     "list": "B",
+     "rank": 194,
+     "model": "circulus/canvers-ko2en-v1",
+     "zip": true,
+     "size": 495644701
+    },
+    {
+     "list": "B",
+     "rank": 195,
+     "model": "circulus/canvers-en2ko-v1",
+     "zip": true,
+     "size": 495644701
+    },
+    {
+     "list": "B",
+     "rank": 196,
+     "model": "google/flan-t5-base",
+     "zip": true,
+     "size": 990402637
+    },
+    {
+     "list": "B",
+     "rank": 197,
+     "model": "microsoft/layoutlmv3-base",
+     "zip": true,
+     "size": 501380823
+    },
+    {
+     "list": "B",
+     "rank": 198,
+     "model": "Helsinki-NLP/opus-mt-zh-en",
+     "zip": false,
+     "size": 312087009
+    },
+    {
+     "list": "B",
+     "rank": 199,
+     "model": "google/mobilebert-uncased",
+     "zip": true,
+     "size": 146863759
+    },
+    {
+     "list": "B",
+     "rank": 200,
+     "model": "arijitx/wav2vec2-xls-r-300m-bengali",
+     "zip": true,
+     "size": 1262382897
+    },
+    {
+     "list": "B",
+     "rank": 201,
+     "model": "allenai/specter2_base",
+     "zip": true,
+     "size": 439740465
+    },
+    {
+     "list": "B",
+     "rank": 202,
+     "model": "sentence-transformers/multi-qa-MiniLM-L6-cos-v1",
+     "zip": true,
+     "size": 90888945
+    },
+    {
+     "list": "B",
+     "rank": 203,
+     "model": "hubertsiuzdak/snac_24khz",
+     "zip": true,
+     "size": 79488254
+    },
+    {
+     "list": "B",
+     "rank": 204,
+     "model": "facebook/dinov2-large",
+     "zip": true,
+     "size": 1217614569
+    },
+    {
+     "list": "B",
+     "rank": 205,
+     "model": "timm/convnext_tiny.in12k_ft_in1k",
+     "zip": true,
+     "size": 114420885
+    },
+    {
+     "list": "B",
+     "rank": 206,
+     "model": "openai/whisper-tiny",
+     "zip": true,
+     "size": 151095027
+    },
+    {
+     "list": "B",
+     "rank": 207,
+     "model": "Babelscape/wikineural-multilingual-ner",
+     "zip": true,
+     "size": 709167607
+    },
+    {
+     "list": "B",
+     "rank": 208,
+     "model": "facebook/hubert-large-ls960-ft",
+     "zip": true,
+     "size": 1262057559
+    },
+    {
+     "list": "B",
+     "rank": 209,
+     "model": "AxelPCG/splade-pt-br",
+     "zip": true,
+     "size": 435884875
+    },
+    {
+     "list": "B",
+     "rank": 210,
+     "model": "timm/vit_base_patch14_dinov2.lvd142m",
+     "zip": true,
+     "size": 346381893
+    },
+    {
+     "list": "B",
+     "rank": 211,
+     "model": "cardiffnlp/twitter-xlm-roberta-base-sentiment",
+     "zip": true,
+     "size": 1112271561
+    },
+    {
+     "list": "B",
+     "rank": 212,
+     "model": "sentence-transformers/all-roberta-large-v1",
+     "zip": true,
+     "size": 1421566897
+    },
+    {
+     "list": "B",
+     "rank": 213,
+     "model": "lpiccinelli/unidepth-v2-vitl14",
+     "zip": true,
+     "size": 1415494210
+    },
+    {
+     "list": "B",
+     "rank": 214,
+     "model": "timm/repvgg_a0.rvgg_in1k",
+     "zip": true,
+     "size": 36655561
+    },
+    {
+     "list": "B",
+     "rank": 215,
+     "model": "timm/vit_base_patch14_reg4_dinov2.lvd142m",
+     "zip": true,
+     "size": 346391878
+    },
+    {
+     "list": "B",
+     "rank": 216,
+     "model": "bigscience/bloomz-560m",
+     "zip": true,
+     "size": 1118530423
+    },
+    {
+     "list": "B",
+     "rank": 217,
+     "model": "answerdotai/ModernBERT-large",
+     "zip": true,
+     "size": 1583581182
+    },
+    {
+     "list": "B",
+     "rank": 218,
+     "model": "infinitejoy/wav2vec2-large-xls-r-300m-welsh",
+     "zip": true,
+     "size": 1262124593
+    },
+    {
+     "list": "B",
+     "rank": 219,
+     "model": "IDEA-Research/grounding-dino-tiny",
+     "zip": true,
+     "size": 691914602
+    },
+    {
+     "list": "B",
+     "rank": 220,
+     "model": "timm/efficientnet_b0.ra_in1k",
+     "zip": true,
+     "size": 21441905
+    },
+    {
+     "list": "B",
+     "rank": 221,
+     "model": "nlptown/bert-base-multilingual-uncased-sentiment",
+     "zip": false,
+     "size": 669491321
+    },
+    {
+     "list": "B",
+     "rank": 222,
+     "model": "kredor/punctuate-all",
+     "zip": true,
+     "size": 1109901745
+    },
+    {
+     "list": "B",
+     "rank": 223,
+     "model": "thenlper/gte-large",
+     "zip": true,
+     "size": 670341183
+    },
+    {
+     "list": "B",
+     "rank": 224,
+     "model": "microsoft/wavlm-base-plus-sv",
+     "zip": true,
+     "size": 404547053
+    },
+    {
+     "list": "B",
+     "rank": 225,
+     "model": "Helsinki-NLP/opus-mt-en-ru",
+     "zip": false,
+     "size": 306991893
+    },
+    {
+     "list": "B",
+     "rank": 227,
+     "model": "yiyanghkust/finbert-tone",
+     "zip": true,
+     "size": 439101405
+    },
+    {
+     "list": "B",
+     "rank": 229,
+     "model": "facebook/esm2_t6_8M_UR50D",
+     "zip": true,
+     "size": 31406877
+    },
+    {
+     "list": "B",
+     "rank": 230,
+     "model": "aubmindlab/bert-base-arabertv02",
+     "zip": true,
+     "size": 543490667
+    },
+    {
+     "list": "B",
+     "rank": 233,
+     "model": "Salesforce/blip-vqa-base",
+     "zip": true,
+     "size": 1538966629
+    },
+    {
+     "list": "B",
+     "rank": 234,
+     "model": "laion/CLIP-ViT-H-14-laion2B-s32B-b79K",
+     "zip": true,
+     "size": 3944736097
+    },
+    {
+     "list": "B",
+     "rank": 235,
+     "model": "gvs/wav2vec2-large-xlsr-malayalam",
+     "zip": true,
+     "size": 1262245399
+    },
+    {
+     "list": "B",
+     "rank": 236,
+     "model": "sentence-transformers/msmarco-bert-base-dot-v5",
+     "zip": true,
+     "size": 438015479
+    },
+    {
+     "list": "B",
+     "rank": 237,
+     "model": "emrecan/bert-base-turkish-cased-mean-nli-stsb-tr",
+     "zip": true,
+     "size": 442547953
+    },
+    {
+     "list": "B",
+     "rank": 238,
+     "model": "google/fnet-base",
+     "zip": true,
+     "size": 333994783
+    },
+    {
+     "list": "B",
+     "rank": 239,
+     "model": "YituTech/conv-bert-base",
+     "zip": true,
+     "size": 422840281
+    },
+    {
+     "list": "B",
+     "rank": 240,
+     "model": "rinna/japanese-gpt-neox-small",
+     "zip": true,
+     "size": 663506641
+    },
+    {
+     "list": "B",
+     "rank": 241,
+     "model": "ncbi/MedCPT-Cross-Encoder",
+     "zip": true,
+     "size": 437998062
+    },
+    {
+     "list": "B",
+     "rank": 242,
+     "model": "distilbert/distilbert-base-multilingual-cased",
+     "zip": false,
+     "size": 541808922
+    },
+    {
+     "list": "B",
+     "rank": 243,
+     "model": "facebook/wav2vec2-large-960h-lv60-self",
+     "zip": true,
+     "size": 1262055246
+    },
+    {
+     "list": "B",
+     "rank": 245,
+     "model": "cross-encoder/ms-marco-TinyBERT-L2-v2",
+     "zip": true,
+     "size": 17565609
+    },
+    {
+     "list": "B",
+     "rank": 246,
+     "model": "yikuan8/Clinical-Longformer",
+     "zip": true,
+     "size": 594988059
+    },
+    {
+     "list": "B",
+     "rank": 247,
+     "model": "facebook/sam-vit-base",
+     "zip": true,
+     "size": 375050165
+    },
+    {
+     "list": "B",
+     "rank": 248,
+     "model": "gagan3012/wav2vec2-xlsr-nepali",
+     "zip": true,
+     "size": 1262200343
+    },
+    {
+     "list": "B",
+     "rank": 249,
+     "model": "MilaNLProc/xlm-emo-t",
+     "zip": true,
+     "size": 1112272301
+    },
+    {
+     "list": "B",
+     "rank": 253,
+     "model": "sentence-transformers/nli-mpnet-base-v2",
+     "zip": true,
+     "size": 438022897
+    },
+    {
+     "list": "B",
+     "rank": 254,
+     "model": "unsloth/bge-small-en-v1.5",
+     "zip": true,
+     "size": 133508397
+    },
+    {
+     "list": "B",
+     "rank": 255,
+     "model": "TencentBAC/Conan-embedding-v1",
+     "zip": true,
+     "size": 1302216550
+    },
+    {
+     "list": "B",
+     "rank": 256,
+     "model": "aismlv/wav2vec2-large-xlsr-kazakh",
+     "zip": true,
+     "size": 1262118359
+    },
+    {
+     "list": "B",
+     "rank": 258,
+     "model": "timm/vit_small_patch14_reg4_dinov2.lvd142m",
+     "zip": true,
+     "size": 88293190
+    },
+    {
+     "list": "B",
+     "rank": 259,
+     "model": "cointegrated/rubert-tiny2",
+     "zip": true,
+     "size": 117546024
+    },
+    {
+     "list": "B",
+     "rank": 261,
+     "model": "pysentimiento/robertuito-sentiment-analysis",
+     "zip": true,
+     "size": 435234485
+    },
+    {
+     "list": "B",
+     "rank": 262,
+     "model": "EleutherAI/gpt-neo-125m",
+     "zip": true,
+     "size": 526017373
+    },
+    {
+     "list": "B",
+     "rank": 264,
+     "model": "circulus/koelectra-polite-v1",
+     "zip": true,
+     "size": 451763117
+    },
+    {
+     "list": "B",
+     "rank": 265,
+     "model": "facebook/dino-vitb16",
+     "zip": true,
+     "size": 343268597
+    },
+    {
+     "list": "B",
+     "rank": 266,
+     "model": "tohoku-nlp/bert-base-japanese-whole-word-masking",
+     "zip": false,
+     "size": 445021143
+    },
+    {
+     "list": "B",
+     "rank": 268,
+     "model": "facebook/nllb-200-distilled-1.3B",
+     "zip": true,
+     "size": 5482882236
+    },
+    {
+     "list": "B",
+     "rank": 269,
+     "model": "TimKond/S-PubMedBert-MedQuAD",
+     "zip": true,
+     "size": 438007537
+    },
+    {
+     "list": "B",
+     "rank": 270,
+     "model": "CompVis/stable-diffusion-safety-checker",
+     "zip": true,
+     "size": 1216067303
+    },
+    {
+     "list": "B",
+     "rank": 271,
+     "model": "CIDAS/clipseg-rd64-refined",
+     "zip": true,
+     "size": 603143713
+    },
+    {
+     "list": "B",
+     "rank": 272,
+     "model": "mattmdjaga/segformer_b2_clothes",
+     "zip": true,
+     "size": 109579005
+    },
+    {
+     "list": "B",
+     "rank": 273,
+     "model": "dccuchile/bert-base-spanish-wwm-uncased",
+     "zip": true,
+     "size": 439621341
+    },
+    {
+     "list": "B",
+     "rank": 274,
+     "model": "naver/efficient-splade-VI-BT-large-doc",
+     "zip": true,
+     "size": 267982639
+    },
+    {
+     "list": "B",
+     "rank": 275,
+     "model": "timm/vit_base_patch16_224.dino",
+     "zip": true,
+     "size": 343248933
+    },
+    {
+     "list": "B",
+     "rank": 276,
+     "model": "kha-white/manga-ocr-base",
+     "zip": true,
+     "size": 444135475
+    },
+    {
+     "list": "B",
+     "rank": 277,
+     "model": "google-bert/bert-base-german-cased",
+     "zip": false,
+     "size": 438869143
+    },
+    {
+     "list": "B",
+     "rank": 278,
+     "model": "oliverguhr/german-sentiment-bert",
+     "zip": false,
+     "size": 436382967
+    },
+    {
+     "list": "B",
+     "rank": 279,
+     "model": "m3hrdadfi/wav2vec2-large-xlsr-lithuanian",
+     "zip": true,
+     "size": 1262097815
+    },
+    {
+     "list": "B",
+     "rank": 280,
+     "model": "deepset/roberta-base-squad2",
+     "zip": true,
+     "size": 496313727
+    },
+    {
+     "list": "B",
+     "rank": 281,
+     "model": "anton-l/wav2vec2-large-xlsr-53-estonian",
+     "zip": true,
+     "size": 1262081431
+    },
+    {
+     "list": "B",
+     "rank": 284,
+     "model": "timm/vit_base_patch16_224.augreg2_in21k_ft_in1k",
+     "zip": true,
+     "size": 346325485
+    },
+    {
+     "list": "B",
+     "rank": 286,
+     "model": "FremyCompany/BioLORD-2023",
+     "zip": true,
+     "size": 438016493
+    },
+    {
+     "list": "B",
+     "rank": 287,
+     "model": "Salesforce/blip-image-captioning-large",
+     "zip": true,
+     "size": 1879143921
+    },
+    {
+     "list": "B",
+     "rank": 288,
+     "model": "microsoft/Florence-2-large",
+     "zip": true,
+     "size": 1555689792
+    },
+    {
+     "list": "B",
+     "rank": 289,
+     "model": "Intel/dpt-hybrid-midas",
+     "zip": true,
+     "size": 489648389
+    },
+    {
+     "list": "B",
+     "rank": 290,
+     "model": "timm/vit_base_patch32_clip_224.laion400m_e32",
+     "zip": true,
+     "size": 351456110
+    },
+    {
+     "list": "B",
+     "rank": 291,
+     "model": "microsoft/wavlm-base-plus",
+     "zip": true,
+     "size": 377617425
+    },
+    {
+     "list": "B",
+     "rank": 292,
+     "model": "facebook/wav2vec2-lv-60-espeak-cv-ft",
+     "zip": true,
+     "size": 1263535127
+    },
+    {
+     "list": "B",
+     "rank": 293,
+     "model": "cross-encoder/nli-deberta-v3-small",
+     "zip": true,
+     "size": 567639154
+    },
+    {
+     "list": "B",
+     "rank": 294,
+     "model": "microsoft/swinv2-tiny-patch4-window16-256",
+     "zip": true,
+     "size": 113469463
+    },
+    {
+     "list": "B",
+     "rank": 296,
+     "model": "julien-c/dummy-unknown",
+     "zip": false,
+     "size": 65074
+    },
+    {
+     "list": "B",
+     "rank": 297,
+     "model": "Helsinki-NLP/opus-mt-mul-en",
+     "zip": false,
+     "size": 310385901
+    },
+    {
+     "list": "B",
+     "rank": 298,
+     "model": "j-hartmann/emotion-english-distilroberta-base",
+     "zip": true,
+     "size": 328544361
+    },
+    {
+     "list": "B",
+     "rank": 299,
+     "model": "jhu-clsp/mmBERT-base",
+     "zip": true,
+     "size": 1231188142
+    },
+    {
+     "list": "B",
+     "rank": 300,
+     "model": "emilyalsentzer/Bio_Discharge_Summary_BERT",
+     "zip": false,
+     "size": 435778770
+    },
+    {
+     "list": "B",
+     "rank": 301,
+     "model": "BVRA/MegaDescriptor-T-224",
+     "zip": true,
+     "size": 204267588
+    },
+    {
+     "list": "B",
+     "rank": 302,
+     "model": "bigscience/bloom-560m",
+     "zip": true,
+     "size": 1118531895
+    },
+    {
+     "list": "B",
+     "rank": 303,
+     "model": "patrickjohncyh/fashion-clip",
+     "zip": true,
+     "size": 605239073
+    },
+    {
+     "list": "B",
+     "rank": 304,
+     "model": "obi/deid_roberta_i2b2",
+     "zip": true,
+     "size": 1417588465
+    },
+    {
+     "list": "B",
+     "rank": 305,
+     "model": "circulus/koelectra-emotion-v1",
+     "zip": true,
+     "size": 449412785
+    },
+    {
+     "list": "B",
+     "rank": 306,
+     "model": "oliverguhr/fullstop-punctuation-multilang-large",
+     "zip": true,
+     "size": 2235557303
+    },
+    {
+     "list": "B",
+     "rank": 307,
+     "model": "joeddav/xlm-roberta-large-xnli",
+     "zip": true,
+     "size": 2243942751
+    },
+    {
+     "list": "B",
+     "rank": 308,
+     "model": "impira/layoutlm-document-qa",
+     "zip": true,
+     "size": 511244837
+    },
+    {
+     "list": "B",
+     "rank": 309,
+     "model": "jinaai/jina-embeddings-v2-base-en",
+     "zip": true,
+     "size": 274773117
+    },
+    {
+     "list": "B",
+     "rank": 310,
+     "model": "google-bert/bert-base-chinese",
+     "zip": false,
+     "size": 411577189
+    },
+    {
+     "list": "B",
+     "rank": 311,
+     "model": "neuralmind/bert-base-portuguese-cased",
+     "zip": false,
+     "size": 438235074
+    },
+    {
+     "list": "B",
+     "rank": 312,
+     "model": "laion/larger_clap_general",
+     "zip": true,
+     "size": 776444665
+    },
+    {
+     "list": "B",
+     "rank": 313,
+     "model": "openai/whisper-medium",
+     "zip": true,
+     "size": 3055735323
+    },
+    {
+     "list": "B",
+     "rank": 314,
+     "model": "tarteel-ai/whisper-base-ar-quran",
+     "zip": true,
+     "size": 290458721
+    },
+    {
+     "list": "B",
+     "rank": 315,
+     "model": "openai-community/roberta-base-openai-detector",
+     "zip": false,
+     "size": 501000585
+    },
+    {
+     "list": "B",
+     "rank": 318,
+     "model": "timm/convnext_base.fb_in22k_ft_in1k",
+     "zip": true,
+     "size": 354488977
+    },
+    {
+     "list": "B",
+     "rank": 319,
+     "model": "timm/wide_resnet101_2.tv_in1k",
+     "zip": true,
+     "size": 508303701
+    },
+    {
+     "list": "B",
+     "rank": 320,
+     "model": "google-bert/bert-large-cased",
+     "zip": false,
+     "size": 1338740706
+    },
+    {
+     "list": "B",
+     "rank": 321,
+     "model": "nvidia/llama-nemotron-rerank-1b-v2",
+     "zip": true,
+     "size": 2471653050
+    },
+    {
+     "list": "B",
+     "rank": 322,
+     "model": "nvidia/llama-nemotron-embed-1b-v2",
+     "zip": true,
+     "size": 2471647930
+    },
+    {
+     "list": "B",
+     "rank": 323,
+     "model": "apple/DFN2B-CLIP-ViT-L-14",
+     "zip": true,
+     "size": 1710667341
+    },
+    {
+     "list": "B",
+     "rank": 324,
+     "model": "sentence-transformers/paraphrase-albert-small-v2",
+     "zip": true,
+     "size": 46747799
+    },
+    {
+     "list": "B",
+     "rank": 327,
+     "model": "timm/vit_base_patch16_dinov3.lvd1689m",
+     "zip": true,
+     "size": 342624338
+    },
+    {
+     "list": "B",
+     "rank": 328,
+     "model": "facebook/mask2former-swin-large-ade-semantic",
+     "zip": true,
+     "size": 866216517
+    },
+    {
+     "list": "B",
+     "rank": 329,
+     "model": "BAAI/bge-large-zh-v1.5",
+     "zip": true,
+     "size": 1302220525
+    },
+    {
+     "list": "B",
+     "rank": 330,
+     "model": "naver/splade-cocondenser-ensembledistil",
+     "zip": true,
+     "size": 438141995
+    },
+    {
+     "list": "B",
+     "rank": 331,
+     "model": "microsoft/resnet-18",
+     "zip": true,
+     "size": 46844813
+    },
+    {
+     "list": "B",
+     "rank": 332,
+     "model": "apple/DFN2B-CLIP-ViT-L-14-39B",
+     "zip": true,
+     "size": 1710664269
+    },
+    {
+     "list": "B",
+     "rank": 333,
+     "model": "ElnaggarLab/ankh-base",
+     "zip": true,
+     "size": 2946066741
+    },
+    {
+     "list": "B",
+     "rank": 334,
+     "model": "amoghsgopadi/wav2vec2-large-xlsr-kn",
+     "zip": true,
+     "size": 1262347927
+    },
+    {
+     "list": "B",
+     "rank": 335,
+     "model": "BVRA/MegaDescriptor-B-224",
+     "zip": true,
+     "size": 472692594
+    },
+    {
+     "list": "B",
+     "rank": 336,
+     "model": "timm/convnextv2_large.fcmae_ft_in22k_in1k_384",
+     "zip": true,
+     "size": 791966461
+    },
+    {
+     "list": "B",
+     "rank": 338,
+     "model": "shi-labs/oneformer_cityscapes_swin_large",
+     "zip": true,
+     "size": 879382349
+    }
+   ],
+   "downloads": [
+    {
+     "n": 1,
+     "list": "B",
+     "model": "timm/mobilenetv3_small_100.lamb_in1k",
+     "status": "ok",
+     "bytes": 10299673,
+     "path": "hub/zip/001/pytorch_model.bin"
+    },
+    {
+     "n": 2,
+     "list": "B",
+     "model": "prajjwal1/bert-tiny",
+     "status": "ok",
+     "bytes": 17756393,
+     "path": "hub/zip/002/pytorch_model.bin"
+    },
+    {
+     "n": 3,
+     "list": "B",
+     "model": "sentence-transformers-testing/stsb-bert-tiny-safetensors",
+     "status": "ok",
+     "bytes": 17556771,
+     "path": "hub/zip/003/pytorch_model.bin"
+    },
+    {
+     "n": 4,
+     "list": "B",
+     "model": "peft-internal-testing/tiny-clip-text-2",
+     "status": "ok",
+     "bytes": 305200,
+     "path": "hub/zip/004/pytorch_model.bin"
+    },
+    {
+     "n": 5,
+     "list": "B",
+     "model": "timm/efficientnet_b0.ra_in1k",
+     "status": "ok",
+     "bytes": 21441905,
+     "path": "hub/zip/005/pytorch_model.bin"
+    },
+    {
+     "n": 6,
+     "list": "B",
+     "model": "cross-encoder/ms-marco-TinyBERT-L2-v2",
+     "status": "ok",
+     "bytes": 17565609,
+     "path": "hub/zip/006/pytorch_model.bin"
+    }
+   ],
+   "total_bytes": 84925551,
+   "finished": "2026-11-09T17:13:00Z"
+  }
+ }
+}

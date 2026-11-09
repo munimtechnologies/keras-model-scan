@@ -1,0 +1,3732 @@
+{
+ "bn_127.pt": {
+  "path": "local/bn_127.pt",
+  "members": 15,
+  "pickle_records": [
+   "bn_127/data.pkl"
+  ],
+  "storages": 9,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "bn_128.pt": {
+  "path": "local/bn_128.pt",
+  "members": 15,
+  "pickle_records": [
+   "bn_128/data.pkl"
+  ],
+  "storages": 9,
+  "storages_0x80": [
+   "bn_128/data/6"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "bn_128/data/6",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "8000000000000000",
+    "member_size": 8,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x00' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "bn_128/data/6"
+  ]
+ },
+ "bn_129.pt": {
+  "path": "local/bn_129.pt",
+  "members": 15,
+  "pickle_records": [
+   "bn_129/data.pkl"
+  ],
+  "storages": 9,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "bn_384.pt": {
+  "path": "local/bn_384.pt",
+  "members": 15,
+  "pickle_records": [
+   "bn_384/data.pkl"
+  ],
+  "storages": 9,
+  "storages_0x80": [
+   "bn_384/data/6"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "bn_384/data/6",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "8001000000000000",
+    "member_size": 8,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x00' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "bn_384/data/6"
+  ]
+ },
+ "ep_mlp.pt2": {
+  "path": "local/ep_mlp.pt2",
+  "members": 25,
+  "pickle_records": [],
+  "storages": 0,
+  "storages_0x80": [],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "ep_mlp/data/sample_inputs/model.pt",
+    "where": "other",
+    "member_first": null,
+    "member_head8": null,
+    "member_size": null,
+    "detail": "pickletools stopped reading at an opcode: 'utf-8' codec can't decode byte 0x80 in position 63: invalid start byte. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_000.pt": {
+  "path": "local/mlp_000.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_000/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_001.pt": {
+  "path": "local/mlp_001.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_001/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_002.pt": {
+  "path": "local/mlp_002.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_002/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_003.pt": {
+  "path": "local/mlp_003.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_003/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_003/data/9"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_003/data/9",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "8017d63c50c5ebbd",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xd6' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_003/data/9"
+  ]
+ },
+ "mlp_004.pt": {
+  "path": "local/mlp_004.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_004/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_004/data/3"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_004/data/3",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "804607bc60faba3d",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x07' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_004/data/3"
+  ]
+ },
+ "mlp_005.pt": {
+  "path": "local/mlp_005.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_005/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_005/data/4"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_005/data/4",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80ec7a3efaa054be",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'z' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_005/data/4"
+  ]
+ },
+ "mlp_006.pt": {
+  "path": "local/mlp_006.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_006/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_007.pt": {
+  "path": "local/mlp_007.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_007/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_008.pt": {
+  "path": "local/mlp_008.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_008/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_008/data/1"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_008/data/1",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80d8d9bdc0231bbc",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xd9' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_008/data/1"
+  ]
+ },
+ "mlp_009.pt": {
+  "path": "local/mlp_009.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_009/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_009/data/3",
+   "mlp_009/data/9"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_009/data/3",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80c732bbc8da72be",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 3, opcode b'\\xbb' unknown. Part of the stream was not analysed; treat the file with caution."
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_009/data/9",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "8099453c50c3eebc",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'E' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_009/data/3",
+   "mlp_009/data/9"
+  ]
+ },
+ "mlp_010.pt": {
+  "path": "local/mlp_010.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_010/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_011.pt": {
+  "path": "local/mlp_011.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_011/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_012.pt": {
+  "path": "local/mlp_012.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_012/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_012/data/13"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_012/data/13",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "809522bb824b783e",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\"' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_012/data/13"
+  ]
+ },
+ "mlp_013.pt": {
+  "path": "local/mlp_013.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_013/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_014.pt": {
+  "path": "local/mlp_014.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_014/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_015.pt": {
+  "path": "local/mlp_015.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_015/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_016.pt": {
+  "path": "local/mlp_016.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_016/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_016/data/12",
+   "mlp_016/data/13",
+   "mlp_016/data/4"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_016/data/4",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80e61bbb740599bd",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x1b' unknown. Part of the stream was not analysed; treat the file with caution."
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_016/data/12",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80d9dc3d08d6863d",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xdc' unknown. Part of the stream was not analysed; treat the file with caution."
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_016/data/13",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "8043e5bd6444183e",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xe5' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_016/data/12",
+   "mlp_016/data/13",
+   "mlp_016/data/4"
+  ]
+ },
+ "mlp_017.pt": {
+  "path": "local/mlp_017.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_017/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_017/data/7"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_017/data/7",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "806d97bd0a2e69be",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 3, opcode b'\\xbd' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_017/data/7"
+  ]
+ },
+ "mlp_018.pt": {
+  "path": "local/mlp_018.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_018/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_018/data/3"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_018/data/3",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "8037c73d0ac0113e",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xc7' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_018/data/3"
+  ]
+ },
+ "mlp_019.pt": {
+  "path": "local/mlp_019.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_019/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_020.pt": {
+  "path": "local/mlp_020.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_020/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_020/data/13"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_020/data/13",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80e858bb5cd8d4bd",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: expected 3570949307 bytes in a unicodestring4, but only 57 remain. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_020/data/13"
+  ]
+ },
+ "mlp_021.pt": {
+  "path": "local/mlp_021.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_021/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_021/data/10"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_021/data/10",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "8072d13c1e657bbe",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xd1' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_021/data/10"
+  ]
+ },
+ "mlp_022.pt": {
+  "path": "local/mlp_022.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_022/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_022/data/13"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_022/data/13",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80bdc53d48dda13d",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xc5' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_022/data/13"
+  ]
+ },
+ "mlp_023.pt": {
+  "path": "local/mlp_023.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_023/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_024.pt": {
+  "path": "local/mlp_024.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_024/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_024/data/5"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_024/data/5",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80fa053ccc4455be",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x05' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_024/data/5"
+  ]
+ },
+ "mlp_025.pt": {
+  "path": "local/mlp_025.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_025/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_025/data/15"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_025/data/15",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "803c8c3c18cd053d",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: 'utf-8' codec can't decode byte 0xcd in position 1: invalid continuation byte. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_025/data/15"
+  ]
+ },
+ "mlp_026.pt": {
+  "path": "local/mlp_026.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_026/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_026/data/5"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_026/data/5",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "804ddb3ba6b95cbe",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xdb' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_026/data/5"
+  ]
+ },
+ "mlp_027.pt": {
+  "path": "local/mlp_027.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_027/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_027/data/5"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_027/data/5",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80db5b3b98403ebd",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'[' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_027/data/5"
+  ]
+ },
+ "mlp_028.pt": {
+  "path": "local/mlp_028.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_028/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_029.pt": {
+  "path": "local/mlp_029.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_029/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_030.pt": {
+  "path": "local/mlp_030.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_030/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_031.pt": {
+  "path": "local/mlp_031.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_031/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_031/data/15",
+   "mlp_031/data/5"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_031/data/5",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "800374be060c2b3e",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 3, opcode b'\\xbe' unknown. Part of the stream was not analysed; treat the file with caution."
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_031/data/15",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "807acc3d861e7e3e",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xcc' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_031/data/15",
+   "mlp_031/data/5"
+  ]
+ },
+ "mlp_032.pt": {
+  "path": "local/mlp_032.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_032/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_033.pt": {
+  "path": "local/mlp_033.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_033/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_033/data/6"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_033/data/6",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80fec2bb98c98ebd",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xc2' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_033/data/6"
+  ]
+ },
+ "mlp_034.pt": {
+  "path": "local/mlp_034.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_034/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_034/data/5"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_034/data/5",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "803d573d480af2bd",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'W' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_034/data/5"
+  ]
+ },
+ "mlp_035.pt": {
+  "path": "local/mlp_035.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_035/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_035/data/8"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_035/data/8",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "809938bb644682bd",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'8' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_035/data/8"
+  ]
+ },
+ "mlp_036.pt": {
+  "path": "local/mlp_036.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_036/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_036/data/10",
+   "mlp_036/data/5"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_036/data/5",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "8049723e801d343d",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 7, opcode b'=' unknown. Part of the stream was not analysed; treat the file with caution."
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_036/data/10",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "800161bbc49d273e",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 3, opcode b'\\xbb' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_036/data/10",
+   "mlp_036/data/5"
+  ]
+ },
+ "mlp_037.pt": {
+  "path": "local/mlp_037.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_037/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_037/data/3"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_037/data/3",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "8098fe3cfc28e0bd",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xfe' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_037/data/3"
+  ]
+ },
+ "mlp_038.pt": {
+  "path": "local/mlp_038.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_038/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_039.pt": {
+  "path": "local/mlp_039.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_039/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_039/data/13"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_039/data/13",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "8082c23d54d5c33d",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xc2' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_039/data/13"
+  ]
+ },
+ "mlp_040.pt": {
+  "path": "local/mlp_040.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_040/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_041.pt": {
+  "path": "local/mlp_041.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_041/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_041/data/0"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_041/data/0",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80f006bebaf80bbe",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x06' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_041/data/0"
+  ]
+ },
+ "mlp_042.pt": {
+  "path": "local/mlp_042.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_042/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_043.pt": {
+  "path": "local/mlp_043.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_043/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_044.pt": {
+  "path": "local/mlp_044.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_044/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_045.pt": {
+  "path": "local/mlp_045.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_045/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_046.pt": {
+  "path": "local/mlp_046.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_046/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_047.pt": {
+  "path": "local/mlp_047.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_047/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_048.pt": {
+  "path": "local/mlp_048.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_048/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_049.pt": {
+  "path": "local/mlp_049.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_049/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_050.pt": {
+  "path": "local/mlp_050.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_050/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_050/data/0",
+   "mlp_050/data/5"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_050/data/0",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80b5713d40d45cbe",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'@' unknown. Part of the stream was not analysed; treat the file with caution."
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_050/data/5",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80e0e8bdf4e4963d",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xe8' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_050/data/0",
+   "mlp_050/data/5"
+  ]
+ },
+ "mlp_051.pt": {
+  "path": "local/mlp_051.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_051/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_052.pt": {
+  "path": "local/mlp_052.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_052/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_052/data/4"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_052/data/4",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "803ee1bb10504cbe",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xe1' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_052/data/4"
+  ]
+ },
+ "mlp_053.pt": {
+  "path": "local/mlp_053.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_053/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_054.pt": {
+  "path": "local/mlp_054.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_054/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_054/data/9"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_054/data/9",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80a317beba5c4fbe",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x17' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_054/data/9"
+  ]
+ },
+ "mlp_055.pt": {
+  "path": "local/mlp_055.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_055/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_056.pt": {
+  "path": "local/mlp_056.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_056/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_057.pt": {
+  "path": "local/mlp_057.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_057/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_058.pt": {
+  "path": "local/mlp_058.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_058/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_059.pt": {
+  "path": "local/mlp_059.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_059/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_059/data/11",
+   "mlp_059/data/4",
+   "mlp_059/data/5",
+   "mlp_059/data/7"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_059/data/4",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80254ebda06a68bd",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 3, opcode b'\\xbd' unknown. Part of the stream was not analysed; treat the file with caution."
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_059/data/5",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80203cbc9cfb463e",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'<' unknown. Part of the stream was not analysed; treat the file with caution."
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_059/data/7",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "808308bd1806393d",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x08' unknown. Part of the stream was not analysed; treat the file with caution."
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_059/data/11",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80bdba3c744f65be",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xba' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_059/data/11",
+   "mlp_059/data/4",
+   "mlp_059/data/5",
+   "mlp_059/data/7"
+  ]
+ },
+ "mlp_060.pt": {
+  "path": "local/mlp_060.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_060/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_061.pt": {
+  "path": "local/mlp_061.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_061/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_061/data/9"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_061/data/9",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "801eadbc8875373e",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xad' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_061/data/9"
+  ]
+ },
+ "mlp_062.pt": {
+  "path": "local/mlp_062.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_062/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_063.pt": {
+  "path": "local/mlp_063.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_063/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_064.pt": {
+  "path": "local/mlp_064.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_064/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_064/data/15"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_064/data/15",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "807de53c58ec3bbe",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xe5' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_064/data/15"
+  ]
+ },
+ "mlp_065.pt": {
+  "path": "local/mlp_065.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_065/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_066.pt": {
+  "path": "local/mlp_066.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_066/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_067.pt": {
+  "path": "local/mlp_067.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_067/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_067/data/2",
+   "mlp_067/data/7"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_067/data/2",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "8044093d80f261bd",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\t' unknown. Part of the stream was not analysed; treat the file with caution."
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_067/data/7",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80d5323cc0db4abd",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 3, opcode b'<' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_067/data/2",
+   "mlp_067/data/7"
+  ]
+ },
+ "mlp_068.pt": {
+  "path": "local/mlp_068.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_068/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_069.pt": {
+  "path": "local/mlp_069.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_069/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_070.pt": {
+  "path": "local/mlp_070.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_070/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_070/data/13"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_070/data/13",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80637abcec3db7bd",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'z' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_070/data/13"
+  ]
+ },
+ "mlp_071.pt": {
+  "path": "local/mlp_071.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_071/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_071/data/0"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_071/data/0",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80356e3b4c41a9bd",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'n' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_071/data/0"
+  ]
+ },
+ "mlp_072.pt": {
+  "path": "local/mlp_072.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_072/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_072/data/9"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_072/data/9",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80d3b4bb60eea3bd",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xb4' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_072/data/9"
+  ]
+ },
+ "mlp_073.pt": {
+  "path": "local/mlp_073.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_073/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_074.pt": {
+  "path": "local/mlp_074.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_074/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_075.pt": {
+  "path": "local/mlp_075.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_075/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_076.pt": {
+  "path": "local/mlp_076.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_076/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_076/data/11",
+   "mlp_076/data/14"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_076/data/11",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "808f563e04a8d93d",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: no newline found when trying to read unicodestringnl. Part of the stream was not analysed; treat the file with caution."
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_076/data/14",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80cee43c4465183e",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xe4' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_076/data/11",
+   "mlp_076/data/14"
+  ]
+ },
+ "mlp_077.pt": {
+  "path": "local/mlp_077.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_077/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_078.pt": {
+  "path": "local/mlp_078.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_078/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_078/data/9"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_078/data/9",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "8023873dda6572be",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 3, opcode b'=' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_078/data/9"
+  ]
+ },
+ "mlp_079.pt": {
+  "path": "local/mlp_079.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_079/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_079/data/8"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_079/data/8",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80b69e3c70ed0dbe",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x9e' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_079/data/8"
+  ]
+ },
+ "mlp_080.pt": {
+  "path": "local/mlp_080.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_080/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_081.pt": {
+  "path": "local/mlp_081.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_081/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_082.pt": {
+  "path": "local/mlp_082.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_082/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_083.pt": {
+  "path": "local/mlp_083.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_083/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_084.pt": {
+  "path": "local/mlp_084.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_084/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_085.pt": {
+  "path": "local/mlp_085.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_085/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_086.pt": {
+  "path": "local/mlp_086.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_086/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_087.pt": {
+  "path": "local/mlp_087.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_087/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_088.pt": {
+  "path": "local/mlp_088.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_088/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_089.pt": {
+  "path": "local/mlp_089.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_089/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_090.pt": {
+  "path": "local/mlp_090.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_090/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_090/data/15"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_090/data/15",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "800604bc00cbc0ba",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x04' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_090/data/15"
+  ]
+ },
+ "mlp_091.pt": {
+  "path": "local/mlp_091.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_091/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_092.pt": {
+  "path": "local/mlp_092.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_092/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_092/data/7"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_092/data/7",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80df0fbb98902dbd",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x0f' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_092/data/7"
+  ]
+ },
+ "mlp_093.pt": {
+  "path": "local/mlp_093.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_093/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_094.pt": {
+  "path": "local/mlp_094.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_094/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_095.pt": {
+  "path": "local/mlp_095.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_095/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_096.pt": {
+  "path": "local/mlp_096.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_096/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_096/data/12"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_096/data/12",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "801daebd6885363e",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xae' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_096/data/12"
+  ]
+ },
+ "mlp_097.pt": {
+  "path": "local/mlp_097.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_097/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_098.pt": {
+  "path": "local/mlp_098.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_098/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_099.pt": {
+  "path": "local/mlp_099.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_099/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_100.pt": {
+  "path": "local/mlp_100.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_100/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_101.pt": {
+  "path": "local/mlp_101.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_101/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_101/data/12"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_101/data/12",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "801f473ba0b973bd",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 11, opcode b'=' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_101/data/12"
+  ]
+ },
+ "mlp_102.pt": {
+  "path": "local/mlp_102.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_102/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_102/data/12"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_102/data/12",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "8001e23baa887abe",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xe2' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_102/data/12"
+  ]
+ },
+ "mlp_103.pt": {
+  "path": "local/mlp_103.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_103/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_103/data/8"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_103/data/8",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80a874be243158be",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 3, opcode b'\\xbe' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_103/data/8"
+  ]
+ },
+ "mlp_104.pt": {
+  "path": "local/mlp_104.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_104/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_105.pt": {
+  "path": "local/mlp_105.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_105/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_106.pt": {
+  "path": "local/mlp_106.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_106/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_106/data/1",
+   "mlp_106/data/11"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_106/data/1",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "8015253cdc617bbe",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'%' unknown. Part of the stream was not analysed; treat the file with caution."
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_106/data/11",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "8017f3bcfc50d53d",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xf3' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_106/data/1",
+   "mlp_106/data/11"
+  ]
+ },
+ "mlp_107.pt": {
+  "path": "local/mlp_107.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_107/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_108.pt": {
+  "path": "local/mlp_108.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_108/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_109.pt": {
+  "path": "local/mlp_109.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_109/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_110.pt": {
+  "path": "local/mlp_110.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_110/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_111.pt": {
+  "path": "local/mlp_111.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_111/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_112.pt": {
+  "path": "local/mlp_112.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_112/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_113.pt": {
+  "path": "local/mlp_113.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_113/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_114.pt": {
+  "path": "local/mlp_114.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_114/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_115.pt": {
+  "path": "local/mlp_115.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_115/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_115/data/14"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_115/data/14",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80409abbf2561d3e",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x9a' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_115/data/14"
+  ]
+ },
+ "mlp_116.pt": {
+  "path": "local/mlp_116.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_116/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_117.pt": {
+  "path": "local/mlp_117.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_117/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_117/data/8"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_117/data/8",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "804eecbce04d393e",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xec' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_117/data/8"
+  ]
+ },
+ "mlp_118.pt": {
+  "path": "local/mlp_118.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_118/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_119.pt": {
+  "path": "local/mlp_119.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_119/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_120.pt": {
+  "path": "local/mlp_120.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_120/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_121.pt": {
+  "path": "local/mlp_121.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_121/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_122.pt": {
+  "path": "local/mlp_122.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_122/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_123.pt": {
+  "path": "local/mlp_123.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_123/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_123/data/12"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_123/data/12",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "806a673b006925be",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: invalid literal for int() with base 10: b';\\x00i%\\xbe\\xd4q\\xf8\\xbd\\xf4.\\xc5\\xbdRDK\\xbe\\x08\\t\\xa0\\xbd\\x88\\xc4u\\xbe\\x08V\\xad=\\x18\\xc0\\xa6\\xbd(\\xdcx=\\x00\\xc6\\xfa"
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_123/data/12"
+  ]
+ },
+ "mlp_124.pt": {
+  "path": "local/mlp_124.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_124/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_125.pt": {
+  "path": "local/mlp_125.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_125/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_125/data/4"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_125/data/4",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80017bbcf040d83c",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'{' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_125/data/4"
+  ]
+ },
+ "mlp_126.pt": {
+  "path": "local/mlp_126.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_126/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_127.pt": {
+  "path": "local/mlp_127.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_127/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_127/data/6"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_127/data/6",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80bb2cbbaa14643e",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b',' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_127/data/6"
+  ]
+ },
+ "mlp_128.pt": {
+  "path": "local/mlp_128.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_128/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_128/data/6"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_128/data/6",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "8018553bec4060be",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 63, opcode b'=' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_128/data/6"
+  ]
+ },
+ "mlp_129.pt": {
+  "path": "local/mlp_129.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_129/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_130.pt": {
+  "path": "local/mlp_130.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_130/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_130/data/3"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_130/data/3",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "807313bb007e363d",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x13' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_130/data/3"
+  ]
+ },
+ "mlp_131.pt": {
+  "path": "local/mlp_131.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_131/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_131/data/4"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_131/data/4",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "805cf73dccfa3bbe",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xf7' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_131/data/4"
+  ]
+ },
+ "mlp_132.pt": {
+  "path": "local/mlp_132.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_132/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_133.pt": {
+  "path": "local/mlp_133.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_133/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_134.pt": {
+  "path": "local/mlp_134.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_134/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_134/data/3"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_134/data/3",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "805725bd0e225e3e",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'%' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_134/data/3"
+  ]
+ },
+ "mlp_135.pt": {
+  "path": "local/mlp_135.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_135/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_136.pt": {
+  "path": "local/mlp_136.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_136/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_137.pt": {
+  "path": "local/mlp_137.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_137/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_138.pt": {
+  "path": "local/mlp_138.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_138/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_138/data/14"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_138/data/14",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "805b6abcd8227f3d",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 7, opcode b'=' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_138/data/14"
+  ]
+ },
+ "mlp_139.pt": {
+  "path": "local/mlp_139.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_139/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_140.pt": {
+  "path": "local/mlp_140.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_140/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_140/data/0",
+   "mlp_140/data/11",
+   "mlp_140/data/8"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_140/data/0",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "803994bc4ce5183e",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 3, opcode b'\\xbc' unknown. Part of the stream was not analysed; treat the file with caution."
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_140/data/8",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80e31e3d484ad1bd",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x1e' unknown. Part of the stream was not analysed; treat the file with caution."
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_140/data/11",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80c3f53bc8dc7ebe",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xf5' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_140/data/0",
+   "mlp_140/data/11",
+   "mlp_140/data/8"
+  ]
+ },
+ "mlp_141.pt": {
+  "path": "local/mlp_141.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_141/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_142.pt": {
+  "path": "local/mlp_142.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_142/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_143.pt": {
+  "path": "local/mlp_143.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_143/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_144.pt": {
+  "path": "local/mlp_144.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_144/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_145.pt": {
+  "path": "local/mlp_145.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_145/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_146.pt": {
+  "path": "local/mlp_146.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_146/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_146/data/6"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_146/data/6",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80c0b7bda883333e",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xb7' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_146/data/6"
+  ]
+ },
+ "mlp_147.pt": {
+  "path": "local/mlp_147.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_147/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_147/data/8"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_147/data/8",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "806d2c3cb40decbd",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b',' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_147/data/8"
+  ]
+ },
+ "mlp_148.pt": {
+  "path": "local/mlp_148.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_148/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_149.pt": {
+  "path": "local/mlp_149.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_149/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_149/data/13"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_149/data/13",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80f1dc3b320d613e",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xdc' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_149/data/13"
+  ]
+ },
+ "mlp_150.pt": {
+  "path": "local/mlp_150.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_150/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_151.pt": {
+  "path": "local/mlp_151.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_151/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_151/data/15"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_151/data/15",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80a213bb78e33f3d",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x13' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_151/data/15"
+  ]
+ },
+ "mlp_152.pt": {
+  "path": "local/mlp_152.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_152/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_152/data/4"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_152/data/4",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "801b503df894083e",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: 'utf-8' codec can't decode byte 0xf8 in position 1: invalid start byte. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_152/data/4"
+  ]
+ },
+ "mlp_153.pt": {
+  "path": "local/mlp_153.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_153/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_153/data/9"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_153/data/9",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80da833b90e7efbc",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 5, opcode b'\\xe7' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_153/data/9"
+  ]
+ },
+ "mlp_154.pt": {
+  "path": "local/mlp_154.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_154/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_154/data/1",
+   "mlp_154/data/3"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_154/data/1",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80040d3d343d13be",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\r' unknown. Part of the stream was not analysed; treat the file with caution."
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_154/data/3",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "8085543e5447ad3d",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: string4 byte count < 0: -1387834306. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_154/data/1",
+   "mlp_154/data/3"
+  ]
+ },
+ "mlp_155.pt": {
+  "path": "local/mlp_155.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_155/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_155/data/3"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_155/data/3",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80f6313ee28c4dbe",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 3, opcode b'>' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_155/data/3"
+  ]
+ },
+ "mlp_156.pt": {
+  "path": "local/mlp_156.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_156/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_156/data/12",
+   "mlp_156/data/14",
+   "mlp_156/data/5"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_156/data/5",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "802c083d98e36d3e",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x08' unknown. Part of the stream was not analysed; treat the file with caution."
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_156/data/12",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "803f263c88e97bbe",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'&' unknown. Part of the stream was not analysed; treat the file with caution."
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_156/data/14",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80cb24bd6080673d",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'$' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_156/data/12",
+   "mlp_156/data/14",
+   "mlp_156/data/5"
+  ]
+ },
+ "mlp_157.pt": {
+  "path": "local/mlp_157.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_157/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_158.pt": {
+  "path": "local/mlp_158.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_158/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_159.pt": {
+  "path": "local/mlp_159.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_159/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_160.pt": {
+  "path": "local/mlp_160.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_160/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_161.pt": {
+  "path": "local/mlp_161.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_161/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_161/data/5"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_161/data/5",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80b4a6bc3889d53d",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xa6' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_161/data/5"
+  ]
+ },
+ "mlp_162.pt": {
+  "path": "local/mlp_162.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_162/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_162/data/15",
+   "mlp_162/data/4"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_162/data/4",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "800019bc042781bd",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x19' unknown. Part of the stream was not analysed; treat the file with caution."
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_162/data/15",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "803228be001a7bba",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 3, opcode b'\\xbe' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_162/data/15",
+   "mlp_162/data/4"
+  ]
+ },
+ "mlp_163.pt": {
+  "path": "local/mlp_163.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_163/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_163/data/11",
+   "mlp_163/data/15"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_163/data/11",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "809123bc0072bcba",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'#' unknown. Part of the stream was not analysed; treat the file with caution."
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_163/data/15",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "8005dcbc001a07ba",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xdc' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_163/data/11",
+   "mlp_163/data/15"
+  ]
+ },
+ "mlp_164.pt": {
+  "path": "local/mlp_164.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_164/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_165.pt": {
+  "path": "local/mlp_165.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_165/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_165/data/13"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_165/data/13",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80a2dcbd52644ebe",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xdc' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_165/data/13"
+  ]
+ },
+ "mlp_166.pt": {
+  "path": "local/mlp_166.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_166/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_166/data/8"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_166/data/8",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80dda2bd80e5e03d",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xa2' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_166/data/8"
+  ]
+ },
+ "mlp_167.pt": {
+  "path": "local/mlp_167.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_167/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_168.pt": {
+  "path": "local/mlp_168.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_168/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_169.pt": {
+  "path": "local/mlp_169.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_169/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_170.pt": {
+  "path": "local/mlp_170.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_170/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_171.pt": {
+  "path": "local/mlp_171.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_171/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_172.pt": {
+  "path": "local/mlp_172.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_172/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_172/data/3",
+   "mlp_172/data/4"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_172/data/3",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "8060b83d96b7063e",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xb8' unknown. Part of the stream was not analysed; treat the file with caution."
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_172/data/4",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80d839bd94a30abe",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'9' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_172/data/3",
+   "mlp_172/data/4"
+  ]
+ },
+ "mlp_173.pt": {
+  "path": "local/mlp_173.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_173/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_173/data/12",
+   "mlp_173/data/4",
+   "mlp_173/data/7"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_173/data/4",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80024ebe0c50b43d",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 3, opcode b'\\xbe' unknown. Part of the stream was not analysed; treat the file with caution."
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_173/data/7",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80d35cbd20cf87bc",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\\\' unknown. Part of the stream was not analysed; treat the file with caution."
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_173/data/12",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "802c03beb01eeb3d",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x03' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_173/data/12",
+   "mlp_173/data/4",
+   "mlp_173/data/7"
+  ]
+ },
+ "mlp_174.pt": {
+  "path": "local/mlp_174.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_174/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_175.pt": {
+  "path": "local/mlp_175.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_175/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_176.pt": {
+  "path": "local/mlp_176.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_176/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_176/data/12"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_176/data/12",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80e42cbc383d4abe",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b',' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_176/data/12"
+  ]
+ },
+ "mlp_177.pt": {
+  "path": "local/mlp_177.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_177/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_178.pt": {
+  "path": "local/mlp_178.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_178/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_179.pt": {
+  "path": "local/mlp_179.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_179/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_180.pt": {
+  "path": "local/mlp_180.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_180/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_180/data/1"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_180/data/1",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "8050f13dd09ca3bd",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xf1' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_180/data/1"
+  ]
+ },
+ "mlp_181.pt": {
+  "path": "local/mlp_181.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_181/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_182.pt": {
+  "path": "local/mlp_182.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_182/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_183.pt": {
+  "path": "local/mlp_183.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_183/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_184.pt": {
+  "path": "local/mlp_184.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_184/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_185.pt": {
+  "path": "local/mlp_185.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_185/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_186.pt": {
+  "path": "local/mlp_186.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_186/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_186/data/3"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_186/data/3",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "80ffce3d509205bd",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xce' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_186/data/3"
+  ]
+ },
+ "mlp_187.pt": {
+  "path": "local/mlp_187.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_187/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_188.pt": {
+  "path": "local/mlp_188.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_188/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_188/data/14"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_188/data/14",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "802e0c3d607f34bd",
+    "member_size": 1024,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x0c' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_188/data/14"
+  ]
+ },
+ "mlp_189.pt": {
+  "path": "local/mlp_189.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_189/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_190.pt": {
+  "path": "local/mlp_190.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_190/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [
+   "mlp_190/data/1"
+  ],
+  "findings": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "member": "mlp_190/data/1",
+    "where": "storage",
+    "member_first": "80",
+    "member_head8": "8022db3c3024babd",
+    "member_size": 64,
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\xdb' unknown. Part of the stream was not analysed; treat the file with caution."
+   }
+  ],
+  "storage_0x80_with_finding": [
+   "mlp_190/data/1"
+  ]
+ },
+ "mlp_191.pt": {
+  "path": "local/mlp_191.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_191/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_192.pt": {
+  "path": "local/mlp_192.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_192/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_193.pt": {
+  "path": "local/mlp_193.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_193/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_194.pt": {
+  "path": "local/mlp_194.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_194/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_195.pt": {
+  "path": "local/mlp_195.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_195/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_196.pt": {
+  "path": "local/mlp_196.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_196/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_197.pt": {
+  "path": "local/mlp_197.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_197/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_198.pt": {
+  "path": "local/mlp_198.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_198/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "mlp_199.pt": {
+  "path": "local/mlp_199.pt",
+  "members": 22,
+  "pickle_records": [
+   "mlp_199/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [],
+  "storage_0x80_with_finding": []
+ },
+ "ts_mlp.pt": {
+  "path": "local/ts_mlp.pt",
+  "members": 25,
+  "pickle_records": [
+   "ts_mlp/data.pkl"
+  ],
+  "storages": 16,
+  "storages_0x80": [],
+  "findings": [
+   {
+    "rule": "PKL003",
+    "severity": "MEDIUM",
+    "member": "ts_mlp/data.pkl",
+    "where": "pickle_record",
+    "member_first": null,
+    "member_head8": null,
+    "member_size": null,
+    "detail": "Pickle imports __torch__.torch.nn.modules.container.Sequential, which is not a recognised safe model reconstructor. Confirm this module belongs in a model file."
+   },
+   {
+    "rule": "PKL003",
+    "severity": "MEDIUM",
+    "member": "ts_mlp/data.pkl",
+    "where": "pickle_record",
+    "member_first": null,
+    "member_head8": null,
+    "member_size": null,
+    "detail": "Pickle imports __torch__.torch.nn.modules.linear.Linear, which is not a recognised safe model reconstructor. Confirm this module belongs in a model file."
+   }
+  ],
+  "storage_0x80_with_finding": []
+ }
+}
