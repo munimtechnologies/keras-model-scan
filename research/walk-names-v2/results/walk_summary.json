@@ -1,0 +1,565 @@
+{
+ "check_version": 2,
+ "held": 15,
+ "graded": 15,
+ "not_run": [],
+ "release_rows_all_pass": true,
+ "rows": [
+  {
+   "id": "P1",
+   "case": "patch applies once, second pass no-op, nothing lost",
+   "expected": "ok",
+   "result": "PASS",
+   "got": {
+    "files": {
+     "model_file_scan.py": {
+      "changes": [
+       "helper",
+       "walk keeps pickle names",
+       "version 0.13.0"
+      ],
+      "second_pass": [],
+      "lost": [],
+      "lines": [
+       527,
+       548
+      ],
+      "ok": true
+     },
+     "pyproject.toml": {
+      "changes": [
+       "version = \"0.13.0\""
+      ],
+      "ok": true
+     },
+     "test_attribution.py": {
+      "changes": [
+       "(model_file_scan, (0, 13, 0))"
+      ],
+      "optional": true
+     },
+     "MODEL_FILE_SCAN.md": {
+      "changes": [
+       "row",
+       "heading",
+       "pin x1"
+      ],
+      "skipped": [],
+      "optional": true
+     }
+    },
+    "ok": true,
+    "written": [
+     "MODEL_FILE_SCAN.md",
+     "model_file_scan.py",
+     "pyproject.toml",
+     "test_attribution.py",
+     "test_model_file_scan_walk_names.py"
+    ]
+   }
+  },
+  {
+   "id": "V1",
+   "case": "versions",
+   "expected": "base mfs 0.12.1 + pms 0.4.0; patched 0.13.0; pyproject 0.13.0",
+   "result": "PASS",
+   "got": {
+    "base_mfs": "0.12.1",
+    "base_pms": "0.4.0",
+    "tree_mfs": "0.13.0",
+    "tree_pyproject": "0.13.0"
+   }
+  },
+  {
+   "id": "S1",
+   "case": "full unit-test suite on the patched tree",
+   "expected": "0 failures, 0 errors, ran >= 1390",
+   "result": "PASS",
+   "got": {
+    "ran": 1390,
+    "failures": [],
+    "errors": [],
+    "skipped": 3,
+    "ok": true,
+    "error": null
+   }
+  },
+  {
+   "id": "S2",
+   "case": "new test module alone",
+   "expected": "exit 0; exactly 9 tests",
+   "result": "PASS",
+   "got": {
+    "exit": 0,
+    "ran": 9,
+    "tail": "me) ... ok\ntest_plain_archives_still_skipped (test_model_file_scan_walk_names.WalkNames.test_plain_archives_still_skipped) ... ok\ntest_route_is_pickle (test_model_file_scan_walk_names.WalkNames.test_route_is_pickle) ... ok\ntest_version (test_model_file_scan_walk_names.WalkNames.test_version) ... ok\ntest_walk_keeps_names (test_model_file_scan_walk_names.WalkNames.test_walk_keeps_names) ... ok\ntest_walk_skips_other_names (test_model_file_scan_walk_names.WalkNames.test_walk_skips_other_names) ... ok\n\n----------------------------------------------------------------------\nRan 9 tests in 0.074s\n\nOK\n"
+   }
+  },
+  {
+   "id": "W0",
+   "case": "writers wrote and re-loaded every file",
+   "expected": "all ok",
+   "result": "PASS",
+   "got": {
+    "tv_pth_tar": {
+     "files": [
+      "checkpoint.pth.tar",
+      "model_best.pth.tar"
+     ],
+     "loaded": 2,
+     "error": null,
+     "ok": true
+    },
+    "legacy_pth_tar": {
+     "files": [
+      "checkpoint.pth.tar"
+     ],
+     "loaded": 1,
+     "error": null,
+     "ok": true
+    },
+    "pd_params": {
+     "files": [
+      "model.pdopt",
+      "model.pdparams"
+     ],
+     "loaded": 2,
+     "error": null,
+     "ok": true
+    },
+    "joblib_c": {
+     "files": [
+      "model.joblib.bz2",
+      "model.joblib.gz",
+      "model.joblib.lz4",
+      "model.joblib.lzma",
+      "model.joblib.xz",
+      "model.joblib.z",
+      "model.pkl.gz"
+     ],
+     "loaded": 7,
+     "error": null,
+     "ok": true
+    }
+   }
+  },
+  {
+   "id": "G1",
+   "case": "0.12.1 folder walk of the writer folders",
+   "expected": "keeps nothing",
+   "result": "PASS",
+   "got": {
+    "tv_pth_tar": [],
+    "legacy_pth_tar": [],
+    "pd_params": [],
+    "joblib_c": []
+   }
+  },
+  {
+   "id": "F1",
+   "case": "0.13.0 folder walk of the writer folders",
+   "expected": "keeps exactly the written files",
+   "result": "PASS",
+   "got": {
+    "tv_pth_tar": [
+     "checkpoint.pth.tar",
+     "model_best.pth.tar"
+    ],
+    "legacy_pth_tar": [
+     "checkpoint.pth.tar"
+    ],
+    "pd_params": [
+     "model.pdopt",
+     "model.pdparams"
+    ],
+    "joblib_c": [
+     "model.joblib.bz2",
+     "model.joblib.gz",
+     "model.joblib.lz4",
+     "model.joblib.lzma",
+     "model.joblib.xz",
+     "model.joblib.z",
+     "model.pkl.gz"
+    ]
+   }
+  },
+  {
+   "id": "F2",
+   "case": "0.13.0 on honest torch and joblib files",
+   "expected": "nothing at or above MEDIUM; folder exit 0",
+   "result": "PASS",
+   "got": {
+    "tv_pth_tar": {
+     "scan": {
+      "model_best.pth.tar": [],
+      "checkpoint.pth.tar": []
+     },
+     "folder_exit": 0
+    },
+    "legacy_pth_tar": {
+     "scan": {
+      "checkpoint.pth.tar": []
+     },
+     "folder_exit": 0
+    },
+    "joblib_c": {
+     "scan": {
+      "model.joblib.bz2": [],
+      "model.joblib.lz4": [
+       "PKL006 LOW"
+      ],
+      "model.joblib.lzma": [],
+      "model.joblib.z": [],
+      "model.joblib.gz": [],
+      "model.pkl.gz": [],
+      "model.joblib.xz": []
+     },
+     "folder_exit": 0
+    }
+   }
+  },
+  {
+   "id": "F3",
+   "case": "0.13.0 on honest paddle.save files",
+   "expected": "no HIGH or CRITICAL; no PKL007 (MEDIUM recorded)",
+   "result": "PASS",
+   "got": {
+    "scan": {
+     "model.pdparams": [],
+     "model.pdopt": []
+    },
+    "folder_exit": 0
+   }
+  },
+  {
+   "id": "C1",
+   "case": "plain tar / tar.gz / txt.gz / tar.xz",
+   "expected": "neither version keeps them; 0.13.0 exits 0",
+   "result": "PASS",
+   "got": {
+    "base": {},
+    "tree": {},
+    "tree_exit": 0
+   }
+  },
+  {
+   "id": "H1",
+   "case": "gate: models listed",
+   "expected": ">= 1000",
+   "result": "PASS",
+   "got": {
+    "lists": {
+     "pytorch": 1000,
+     "paddlepaddle": 263,
+     "sklearn": 500
+    },
+    "models": 1763
+   }
+  },
+  {
+   "id": "H2",
+   "case": "census: a .pdparams/.pdopt name among the listed models",
+   "expected": ">= 1",
+   "result": "PASS",
+   "got": {
+    "name_counts": {
+     "torch_tar": 0,
+     "paddle": 1476,
+     "compressed_pickle": 0
+    },
+    "ok_by_class": {
+     "torch_tar": 0,
+     "paddle": 25,
+     "compressed_pickle": 0
+    },
+    "skipped_gated": 9
+   }
+  },
+  {
+   "id": "H3",
+   "case": "0.13.0 on published files of these names",
+   "expected": "no HIGH or CRITICAL (n >= 5)",
+   "result": "PASS",
+   "got": {
+    "n": 25,
+    "high_or_critical": {},
+    "medium": {}
+   }
+  },
+  {
+   "id": "H4",
+   "case": "folder walks of published files",
+   "expected": "0.12.1 keeps none; 0.13.0 keeps each",
+   "result": "PASS",
+   "got": {
+    "n": 25,
+    "bad": {}
+   }
+  },
+  {
+   "id": "E1",
+   "case": "explicit-file scans identical in 0.12.1 and 0.13.0",
+   "expected": "no difference",
+   "result": "PASS",
+   "got": {
+    "n": 38,
+    "diffs": {}
+   }
+  }
+ ],
+ "reported": {
+  "fetch": {
+   "tag": "v0.54.0",
+   "tarball_bytes": 924173,
+   "missing": [],
+   "versions": {
+    "model_file_scan.py": "0.12.1",
+    "pickle_model_scan.py": "0.4.0"
+   },
+   "test_attribution_mfs_lines": [
+    "for mod in (model_file_scan, pickle_model_scan):",
+    "floors = ((model_file_scan, (0, 12, 0)),"
+   ],
+   "files": 258
+  },
+  "setup": {
+   "torch_ok": true,
+   "joblib_ok": true,
+   "lz4_ok": true,
+   "paddle_ok": true,
+   "versions": {
+    "torch": "2.15.0+cpu",
+    "paddlepaddle": "3.3.1",
+    "numpy": "2.5.4",
+    "joblib": "1.6.0",
+    "lz4": "4.4.5"
+   }
+  },
+  "writers": {
+   "tv_pth_tar": {
+    "files": [
+     "checkpoint.pth.tar",
+     "model_best.pth.tar"
+    ],
+    "loaded": {
+     "checkpoint.pth.tar": "torch.load(weights_only=True) ok",
+     "model_best.pth.tar": "torch.load(weights_only=True) ok"
+    },
+    "error": null,
+    "magic": {
+     "checkpoint.pth.tar": "504b0304",
+     "model_best.pth.tar": "504b0304"
+    },
+    "exit": 0,
+    "dir": "/work/w/tv_pth_tar"
+   },
+   "legacy_pth_tar": {
+    "files": [
+     "checkpoint.pth.tar"
+    ],
+    "loaded": {
+     "checkpoint.pth.tar": "torch.load(weights_only=True) ok"
+    },
+    "error": null,
+    "magic": {
+     "checkpoint.pth.tar": "80028a0a"
+    },
+    "exit": 0,
+    "dir": "/work/w/legacy_pth_tar"
+   },
+   "pd_params": {
+    "files": [
+     "model.pdopt",
+     "model.pdparams"
+    ],
+    "loaded": {
+     "model.pdparams": "paddle.load ok",
+     "model.pdopt": "paddle.load ok"
+    },
+    "error": null,
+    "magic": {
+     "model.pdopt": "800495b5",
+     "model.pdparams": "80049529"
+    },
+    "exit": 0,
+    "dir": "/work/w/pd_params"
+   },
+   "joblib_c": {
+    "files": [
+     "model.joblib.bz2",
+     "model.joblib.gz",
+     "model.joblib.lz4",
+     "model.joblib.lzma",
+     "model.joblib.xz",
+     "model.joblib.z",
+     "model.pkl.gz"
+    ],
+    "loaded": {
+     "model.joblib.z": "joblib.load ok",
+     "model.joblib.gz": "joblib.load ok",
+     "model.joblib.bz2": "joblib.load ok",
+     "model.joblib.xz": "joblib.load ok",
+     "model.joblib.lzma": "joblib.load ok",
+     "model.pkl.gz": "joblib.load ok",
+     "model.joblib.lz4": "joblib.load ok"
+    },
+    "error": null,
+    "magic": {
+     "model.joblib.bz2": "425a6839",
+     "model.joblib.gz": "1f8b0800",
+     "model.joblib.lz4": "04224d18",
+     "model.joblib.lzma": "5d000080",
+     "model.joblib.xz": "fd377a58",
+     "model.joblib.z": "785e6591",
+     "model.pkl.gz": "1f8b0800"
+    },
+    "exit": 0,
+    "dir": "/work/w/joblib_c"
+   },
+   "limits": {
+    "files": [
+     "model.gz"
+    ],
+    "loaded": {
+     "model.gz": "joblib.load ok"
+    },
+    "error": null,
+    "magic": {
+     "model.gz": "1f8b0800"
+    },
+    "exit": 0,
+    "dir": "/work/w/limits"
+   },
+   "controls": {
+    "files": [
+     "archive.tar.xz",
+     "data.tar",
+     "logs.tar.gz",
+     "notes.txt.gz"
+    ],
+    "loaded": {},
+    "error": null,
+    "magic": {
+     "archive.tar.xz": "fd377a58",
+     "data.tar": "64617461",
+     "logs.tar.gz": "1f8b0808",
+     "notes.txt.gz": "1f8b0800"
+    },
+    "exit": 0,
+    "dir": "/work/w/controls"
+   }
+  },
+  "L1_bare_gz_limit": {
+   "base_walk": [],
+   "tree_walk": [],
+   "explicit_file": {
+    "exit": 0,
+    "rules": {
+     "model.gz": []
+    }
+   }
+  },
+  "hub_scans": {
+   "Kellenok/PP-OCRv6_manga/det/manga_det.pdparams": {
+    "class": "paddle",
+    "rules": []
+   },
+   "meister1378/VLLORA_OCRPUBLIC_v2/scheduler.pdparams": {
+    "class": "paddle",
+    "rules": []
+   },
+   "PaddleCI/tiny-random-bert/model_state.pdparams": {
+    "class": "paddle",
+    "rules": []
+   },
+   "PaddleCI/tiny-random-plato-mini/model_state.pdparams": {
+    "class": "paddle",
+    "rules": []
+   },
+   "sijunhe/test_unet1d/model_state.pdparams": {
+    "class": "paddle",
+    "rules": []
+   },
+   "PaddleCI/tiny-random-unimo-text-1.0/model_state.pdparams": {
+    "class": "paddle",
+    "rules": []
+   },
+   "sijunhe/ci-test-ernie-model-test/model_state.pdparams": {
+    "class": "paddle",
+    "rules": []
+   },
+   "osanseviero/test-ernie-paddle/model_state.pdparams": {
+    "class": "paddle",
+    "rules": []
+   },
+   "sijunhe/ci-test-ernie-model/model_state.pdparams": {
+    "class": "paddle",
+    "rules": []
+   },
+   "PaddleCI/tiny-random-ernie/model_state.pdparams": {
+    "class": "paddle",
+    "rules": []
+   },
+   "PaddleCI/tiny-random-ernie-m/model_state.pdparams": {
+    "class": "paddle",
+    "rules": []
+   },
+   "Pengjin/UsonicSimple/mymodel.pdparams": {
+    "class": "paddle",
+    "rules": []
+   },
+   "Pengjin/UsonicSimple/optimizer.pdopt": {
+    "class": "paddle",
+    "rules": []
+   },
+   "sijunhe/tiny-random-stable-diffusion-pipe-1/safety_checker/model_state.pdparams": {
+    "class": "paddle",
+    "rules": []
+   },
+   "sijunhe/tiny-random-stable-diffusion-pipe-1/text_encoder/model_state.pdparams": {
+    "class": "paddle",
+    "rules": []
+   },
+   "junnyu/lora_dreambooth_dog_example/checkpoint-100/paddle_lora_weights.pdparams": {
+    "class": "paddle",
+    "rules": []
+   },
+   "junnyu/lora_dreambooth_dog_example/checkpoint-200/paddle_lora_weights.pdparams": {
+    "class": "paddle",
+    "rules": []
+   },
+   "sijunhe/test_lora/paddle_lora_weights.pdparams": {
+    "class": "paddle",
+    "rules": []
+   },
+   "junnyu/sd-model-finetuned-lora-a100/checkpoint-1000/paddle_lora_weights.pdparams": {
+    "class": "paddle",
+    "rules": []
+   },
+   "junnyu/sd-model-finetuned-lora-a100/checkpoint-10000/paddle_lora_weights.pdparams": {
+    "class": "paddle",
+    "rules": []
+   },
+   "junnyu/demo_test/paddle_lora_weights.pdparams": {
+    "class": "paddle",
+    "rules": []
+   },
+   "tianxingxia/sd-dreambooth-lora-test/checkpoint-100/paddle_lora_weights.pdparams": {
+    "class": "paddle",
+    "rules": []
+   },
+   "tianxingxia/sd-dreambooth-lora-test/checkpoint-200/paddle_lora_weights.pdparams": {
+    "class": "paddle",
+    "rules": []
+   },
+   "xianbao/demo_test/paddle_lora_weights.pdparams": {
+    "class": "paddle",
+    "rules": []
+   },
+   "xiaozeng/demo_test/paddle_lora_weights.pdparams": {
+    "class": "paddle",
+    "rules": []
+   }
+  }
+ }
+}

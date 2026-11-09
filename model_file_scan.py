@@ -58,7 +58,7 @@ import json
 import os
 import sys
 
-__version__ = "0.12.1"
+__version__ = "0.13.0"
 
 REPO_URL = "https://github.com/munimtechnologies/keras-model-scan"
 
@@ -141,6 +141,26 @@ _SHARD_INDEX_NAME = _shard_re.compile(
 def _is_shard_index(name):
     """True for ``*.index.json`` and ``*.index.<variant>.json`` names."""
     return bool(_SHARD_INDEX_NAME.search(str(name)))
+
+
+# Pickle-bearing files whose last extension is not in _MODEL_EXTS:
+# pytorch/examples saves torch.save checkpoints as checkpoint.pth.tar,
+# paddle.save writes .pdparams / .pdopt (pickle), and joblib.dump compresses
+# a file named *.pkl.gz, *.joblib.xz, ... with the codec its ending names.
+# route() already sends them to the pickle scanner; directory walks keep them
+# through this helper (REALFILE_CHECK_WALK_NAMES_2026-11.md).
+import re as _name_re  # noqa: E402
+
+_PICKLE_NAME = _name_re.compile(
+    r"\.(?:pt|pth|ckpt)\.tar$|\.(?:pdparams|pdopt)$"
+    r"|\.(?:pkl|pickle|joblib)\.(?:z|gz|bz2|xz|lzma|lz4)$",
+    _name_re.IGNORECASE)
+
+
+def _is_pickle_name(name):
+    """True for torch / paddle / compressed-joblib names the extension
+    table misses."""
+    return bool(_PICKLE_NAME.search(str(name)))
 
 
 def route(path):
@@ -286,7 +306,8 @@ def _walk_keeps(root, name):
     """Whether a directory walk scans the file ``name`` in ``root``."""
     low = name.lower()
     ext = os.path.splitext(low)[1]
-    if ext in _MODEL_EXTS or low == "config.json" or _is_shard_index(low):
+    if (ext in _MODEL_EXTS or low == "config.json" or _is_shard_index(low)
+            or _is_pickle_name(low)):
         return True
     if ext == ".xml":
         return os.path.isfile(

@@ -1,0 +1,47 @@
+{
+ "files": {
+  "model_file_scan.py": {
+   "changes": [
+    "helper",
+    "walk keeps pickle names",
+    "version 0.13.0"
+   ],
+   "second_pass": [],
+   "lost": [],
+   "lines": [
+    527,
+    548
+   ],
+   "ok": true
+  },
+  "pyproject.toml": {
+   "changes": [
+    "version = \"0.13.0\""
+   ],
+   "ok": true
+  },
+  "test_attribution.py": {
+   "changes": [
+    "(model_file_scan, (0, 13, 0))"
+   ],
+   "optional": true
+  },
+  "MODEL_FILE_SCAN.md": {
+   "changes": [
+    "row",
+    "heading",
+    "pin x1"
+   ],
+   "skipped": [],
+   "optional": true
+  }
+ },
+ "ok": true,
+ "written": [
+  "MODEL_FILE_SCAN.md",
+  "model_file_scan.py",
+  "pyproject.toml",
+  "test_attribution.py",
+  "test_model_file_scan_walk_names.py"
+ ]
+}

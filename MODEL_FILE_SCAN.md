@@ -1,7 +1,7 @@
 # model-file-scan
 
 <!-- routes-0.11.1 -->
-## Formats routed in 0.12.0 (release v0.52.0)
+## Formats routed in 0.13.0 (release v0.55.0)
 
 This page grew one scanner at a time; this table is the current routing.
 Everything is static: nothing is loaded, imported, unpickled or executed.
@@ -24,7 +24,7 @@ Everything is static: nothing is loaded, imported, unpickled or executed.
 | `.ubj`; `.json` whose top level has an XGBoost `learner` object; `.model` / `.bst` starting with `{` | `xgboost_model_scan` | [8 of 8](REALFILE_CHECK_XGB_2026-10.md) |
 | `.txt` / `.lgb` / `.lightgbm` / `.model` / `.bst` whose first line is `tree` | `lightgbm_model_scan` | [10 of 10](REALFILE_CHECK_LGB_2026-10.md) |
 | `.skops` (scikit-learn via skops) | `skops_scan` and `pickle_model_scan` | [10 of 10](REALFILE_CHECK_SKOPS_2026-11.md) |
-| everything else (`.pkl` `.pickle` `.joblib` `.pt` `.pth` `.bin` `.npy` `.npz` `.ckpt`, and a `.model` that is neither of the above) | `pickle_model_scan` | |
+| everything else (`.pkl` `.pickle` `.joblib` `.pt` `.pth` `.bin` `.npy` `.npz` `.ckpt`, and a `.model` that is neither of the above; directory walks also pick up `*.pth.tar`, `*.pt.tar`, `*.ckpt.tar`, `.pdparams`, `.pdopt`, and `*.pkl` / `*.pickle` / `*.joblib` ending in `.z`, `.gz`, `.bz2`, `.xz`, `.lzma` or `.lz4`) | `pickle_model_scan` | [folder-walk names, 15 of 15](REALFILE_CHECK_WALK_NAMES_V2_2026-11.md) |
 
 The routing itself was checked on files written by XGBoost 3.4.1 and
 LightGBM 4.7.0: [7 of 7 predictions held](REALFILE_CHECK_MFS_ROUTING_2026-11.md).
@@ -157,6 +157,12 @@ model-file-scan downloaded.gguf --fail-on high || echo "do not load"
 Exit codes: `0` clean (below threshold), `1` findings at/above `--fail-on`
 (default `medium`), `2` a path was missing or a file errored.
 
+A directory walk keeps files by name. Since 0.13.0 it also keeps
+`checkpoint.pth.tar`-style names, paddle.save's `.pdparams` / `.pdopt` and
+joblib's compressed names (`model.joblib.gz`, `model.pkl.xz`, ...). A bare
+`model.gz` is still skipped by a walk (a bare `.gz` is too broad); name such a
+file explicitly to scan it.
+
 ## GitHub Action
 
 This repository is itself a composite Action. Add a workflow like:
@@ -177,7 +183,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-      - uses: munimtechnologies/keras-model-scan@v0.52.0
+      - uses: munimtechnologies/keras-model-scan@v0.54.0
         with:
           paths: "."
           fail-on: "high"
