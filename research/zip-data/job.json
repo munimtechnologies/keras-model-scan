@@ -1,0 +1,24 @@
+{
+  "name": "zip-data-v1",
+  "kind": "poc",
+  "workdir": "E:/MV2-Pursuit/work/20261109T194811Z-security/compete/zip-data",
+  "image": "python:3.12",
+  "setup": [
+    "python fetch_tree.py",
+    "python setup_install.py",
+    "python fetch_hub_zip.py"
+  ],
+  "run": [
+    "python patch_pms.py tree /out",
+    "python run_tests.py tree /out",
+    "python run_tests.py base /out tests_base.json",
+    "python make_local.py",
+    "python zip_data_check.py --out /out --tree tree --base base"
+  ],
+  "network": true,
+  "data_urls": [],
+  "data_key": "mpk-arc-realfile",
+  "cpu": 1,
+  "memory_gb": 2,
+  "timeout_minutes": 240
+}
