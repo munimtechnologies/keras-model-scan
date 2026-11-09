@@ -1,0 +1,111 @@
+{
+  "rows": {
+    "A1_frontmatter": true,
+    "A2_install_lines_in_skill": true,
+    "A3_version": true,
+    "A4_plain_pickle_clean": true,
+    "A5_safetensors_clean": true,
+    "A6_folder_walk": true,
+    "A7_json_schema": true,
+    "A8_missing_exit_2": true,
+    "A9_step2_literal": true,
+    "A10_coll_p4_no_pkl007": true,
+    "A11_joblib_numeric_clean": true,
+    "A12_table_rules_exist": true
+  },
+  "all_pass": true,
+  "observations": {
+    "name": "model-file-scan",
+    "description_chars": 718,
+    "version_output": "model-file-scan 0.12.1",
+    "joblib_version": "1.6.0",
+    "numpy_version": "2.5.4",
+    "scans": {
+      "plain_p2": {
+        "exit": 0,
+        "schema_ok": true,
+        "schema_why": "",
+        "worst": -1,
+        "findings": [],
+        "stderr_tail": ""
+      },
+      "safetensors": {
+        "exit": 0,
+        "schema_ok": true,
+        "schema_why": "",
+        "worst": 0,
+        "findings": [
+          {
+            "path": "tiny.safetensors",
+            "rule": "SFT000",
+            "severity": "INFO",
+            "title": "Well-formed safetensors header"
+          }
+        ],
+        "stderr_tail": ""
+      },
+      "folder": {
+        "exit": 0,
+        "schema_ok": true,
+        "schema_why": "",
+        "worst": 0,
+        "findings": [
+          {
+            "path": "tiny.safetensors",
+            "rule": "SFT000",
+            "severity": "INFO",
+            "title": "Well-formed safetensors header"
+          }
+        ],
+        "stderr_tail": ""
+      },
+      "coll_p4": {
+        "exit": 0,
+        "schema_ok": true,
+        "schema_why": "",
+        "worst": -1,
+        "findings": [],
+        "stderr_tail": ""
+      },
+      "joblib_num": {
+        "exit": 0,
+        "schema_ok": true,
+        "schema_why": "",
+        "worst": -1,
+        "findings": [],
+        "stderr_tail": ""
+      },
+      "joblib_obj": {
+        "exit": 0,
+        "schema_ok": true,
+        "schema_why": "",
+        "worst": -1,
+        "findings": [],
+        "stderr_tail": ""
+      }
+    },
+    "missing_exit": 2,
+    "step2_literal": {
+      "found": true,
+      "cmd": "model-file-scan /tmp/smoke --json > scan.json; echo \"exit=$?\"",
+      "stdout": "exit=0"
+    },
+    "coll_p4_rules": [],
+    "coll_p4_exit": 0,
+    "joblib_obj_rules": [],
+    "joblib_obj_exit": 0,
+    "table_rules": [
+      "PKL000",
+      "PKL001",
+      "PKL002",
+      "PKL003",
+      "PKL004",
+      "PKL006",
+      "PKL007",
+      "PKL008",
+      "PKL010",
+      "PKL030"
+    ],
+    "table_rules_missing_in_source": []
+  }
+}
