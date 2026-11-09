@@ -1,0 +1,21 @@
+{
+  "name": "zip-storage-v1",
+  "kind": "poc",
+  "workdir": "E:/MV2-Pursuit/work/20261109T083324Z-security/compete/zip-storage",
+  "image": "python:3.12",
+  "setup": [
+    "python fetch_tree.py",
+    "python setup_install.py",
+    "python fetch_hub_zip.py"
+  ],
+  "run": [
+    "python make_local.py",
+    "python zip_check.py --out /out --base base"
+  ],
+  "network": true,
+  "data_urls": [],
+  "data_key": "mpk-arc-realfile",
+  "cpu": 1,
+  "memory_gb": 1.5,
+  "timeout_minutes": 120
+}
