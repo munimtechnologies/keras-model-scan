@@ -1,0 +1,1344 @@
+{
+ "rows": {
+  "P1": {
+   "pass": true,
+   "detail": {
+    "pickle_model_scan.py": {
+     "changes": [
+      "docstring",
+      "version 0.5.0",
+      "_walk_pickle",
+      "pickle_walk keys"
+     ],
+     "second_pass": [],
+     "lost": [],
+     "lines": [
+      904,
+      978
+     ],
+     "ok": true
+    }
+   }
+  },
+  "V1": {
+   "pass": true,
+   "detail": {
+    "base_pms": "0.4.0",
+    "tree_pms": "0.5.0",
+    "base_mfs": "0.12.1",
+    "tree_mfs": "0.12.1"
+   }
+  },
+  "S1": {
+   "pass": true,
+   "detail": {
+    "ran": 1396,
+    "failures": [],
+    "errors": [],
+    "skipped": 3,
+    "error": null
+   }
+  },
+  "S2": {
+   "pass": true,
+   "detail": {
+    "exit": 0,
+    "ran": 15,
+    "tail": "eralDumps.test_import_in_a_later_dump_is_classified) ... ok\ntest_single_pickle_unchanged (test_pickle_model_scan_streams.SeveralDumps.test_single_pickle_unchanged) ... ok\ntest_stream_cap (test_pickle_model_scan_streams.SeveralDumps.test_stream_cap) ... ok\ntest_three_dumps_are_walked (test_pickle_model_scan_streams.SeveralDumps.test_three_dumps_are_walked) ... ok\ntest_trailing_bytes_that_are_not_a_pickle (test_pickle_model_scan_streams.SeveralDumps.test_trailing_bytes_that_are_not_a_pickle) ... ok\n\n----------------------------------------------------------------------\nRan 15 tests in 0.045s\n\nOK"
+   }
+  },
+  "W1": {
+   "pass": true,
+   "detail": {
+    "torch": "2.15.0+cpu",
+    "T1": "ok",
+    "T3": "ok",
+    "Z1": "ok",
+    "T2": "ok",
+    "T4": "ok",
+    "M1": "ok",
+    "M2": "ok",
+    "S1": "ok",
+    "joblib": "1.6.0",
+    "numpy": "2.5.4",
+    "J1": "ok"
+   }
+  },
+  "G1": {
+   "pass": true,
+   "detail": {
+    "T1": {
+     "error": null,
+     "pickles_read": 5,
+     "header": true,
+     "rebuild": true,
+     "ordered_dict": true
+    },
+    "T2": {
+     "error": null,
+     "pickles_read": 5,
+     "header": true,
+     "rebuild": true,
+     "ordered_dict": true
+    },
+    "T3": {
+     "error": null,
+     "pickles_read": 5,
+     "header": true,
+     "rebuild": true,
+     "ordered_dict": true
+    },
+    "T4": {
+     "error": null,
+     "pickles_read": 5,
+     "header": true,
+     "rebuild": true,
+     "ordered_dict": true
+    }
+   }
+  },
+  "B1": {
+   "pass": true,
+   "detail": {
+    "T1": {
+     "old_read_is_first_pickle": true,
+     "old_resolves_none": true,
+     "old_clean": true
+    },
+    "T2": {
+     "old_read_is_first_pickle": true,
+     "old_resolves_none": true,
+     "old_clean": true
+    },
+    "T3": {
+     "old_read_is_first_pickle": true,
+     "old_resolves_none": true,
+     "old_clean": true
+    },
+    "T4": {
+     "old_read_is_first_pickle": true,
+     "old_resolves_none": true,
+     "old_clean": true
+    }
+   }
+  },
+  "B2": {
+   "pass": true,
+   "detail": {
+    "M1": {
+     "old_read_is_first_pickle": true,
+     "missed_imports": [
+      "collections OrderedDict",
+      "datetime date",
+      "decimal Decimal"
+     ]
+    },
+    "M2": {
+     "old_read_is_first_pickle": true,
+     "missed_imports": [
+      "_codecs encode",
+      "collections OrderedDict",
+      "datetime date",
+      "decimal Decimal"
+     ]
+    }
+   }
+  },
+  "F1": {
+   "pass": true,
+   "detail": {
+    "T1": {
+     "torch_legacy": true,
+     "streams": 5,
+     "reaches_loader_end": true
+    },
+    "T2": {
+     "torch_legacy": true,
+     "streams": 5,
+     "reaches_loader_end": true
+    },
+    "T3": {
+     "torch_legacy": true,
+     "streams": 5,
+     "reaches_loader_end": true
+    },
+    "T4": {
+     "torch_legacy": true,
+     "streams": 5,
+     "reaches_loader_end": true
+    }
+   }
+  },
+  "F2": {
+   "pass": true,
+   "detail": {
+    "T1": {
+     "missing": [],
+     "loader_imports": [
+      "collections OrderedDict",
+      "torch._utils _rebuild_tensor_v2"
+     ]
+    },
+    "T2": {
+     "missing": [],
+     "loader_imports": [
+      "collections OrderedDict",
+      "torch._utils _rebuild_tensor_v2"
+     ]
+    },
+    "T3": {
+     "missing": [],
+     "loader_imports": [
+      "collections OrderedDict",
+      "torch._utils _rebuild_tensor_v2"
+     ]
+    },
+    "T4": {
+     "missing": [],
+     "loader_imports": [
+      "collections OrderedDict",
+      "torch._utils _rebuild_tensor_v2"
+     ]
+    },
+    "Z1": {
+     "missing": [],
+     "loader_imports": [
+      "collections OrderedDict",
+      "torch._utils _rebuild_tensor_v2"
+     ]
+    },
+    "M1": {
+     "missing": [],
+     "loader_imports": [
+      "collections OrderedDict",
+      "datetime date",
+      "decimal Decimal"
+     ]
+    },
+    "M2": {
+     "missing": [],
+     "loader_imports": [
+      "_codecs encode",
+      "collections OrderedDict",
+      "datetime date",
+      "decimal Decimal"
+     ]
+    },
+    "S1": {
+     "missing": [],
+     "loader_imports": [
+      "datetime datetime"
+     ]
+    }
+   }
+  },
+  "F3": {
+   "pass": true,
+   "detail": {
+    "M1": {
+     "streams": 3,
+     "reaches_loader_end": true
+    },
+    "M2": {
+     "streams": 3,
+     "reaches_loader_end": true
+    }
+   }
+  },
+  "F4": {
+   "pass": true,
+   "detail": {
+    "T1": {
+     "worst_new": -1,
+     "rules_new": [],
+     "mfs_exit": 0
+    },
+    "T2": {
+     "worst_new": -1,
+     "rules_new": [],
+     "mfs_exit": 0
+    },
+    "T3": {
+     "worst_new": -1,
+     "rules_new": [],
+     "mfs_exit": 0
+    },
+    "T4": {
+     "worst_new": -1,
+     "rules_new": [],
+     "mfs_exit": 0
+    },
+    "Z1": {
+     "worst_new": -1,
+     "rules_new": [],
+     "mfs_exit": 0
+    },
+    "M1": {
+     "worst_new": -1,
+     "rules_new": [],
+     "mfs_exit": 0
+    },
+    "M2": {
+     "worst_new": -1,
+     "rules_new": [],
+     "mfs_exit": 0
+    },
+    "S1": {
+     "worst_new": -1,
+     "rules_new": [],
+     "mfs_exit": 0
+    },
+    "J1": {
+     "worst_new": -1,
+     "rules_new": [],
+     "mfs_exit": 0
+    }
+   }
+  },
+  "C1": {
+   "pass": true,
+   "detail": {
+    "Z1": {
+     "same_findings": true,
+     "same_walk": true
+    },
+    "S1": {
+     "same_findings": true,
+     "same_walk": true
+    },
+    "J1": {
+     "same_findings": true,
+     "same_walk": true
+    }
+   }
+  },
+  "E1": {
+   "pass": true,
+   "detail": {
+    "exit": 0,
+    "files": 9,
+    "stderr": ""
+   }
+  },
+  "H1": {
+   "pass": true,
+   "detail": {
+    "pytorch_model_bin_headers": 500
+   }
+  },
+  "H2": {
+   "pass": true,
+   "detail": {
+    "legacy_pct": 15.8,
+    "legacy": 79,
+    "of": 500
+   }
+  },
+  "H3": {
+   "pass": true,
+   "detail": {
+    "hub/legacy/01/pytorch_model.bin": {
+     "torch_legacy": true,
+     "streams": 5,
+     "pkl000": false,
+     "old_read": 15,
+     "new_read": 5874,
+     "length": 2514146
+    },
+    "hub/legacy/02/pytorch_model.bin": {
+     "torch_legacy": true,
+     "streams": 5,
+     "pkl000": false,
+     "old_read": 15,
+     "new_read": 5530,
+     "length": 65074
+    },
+    "hub/legacy/03/pytorch_model.bin": {
+     "torch_legacy": true,
+     "streams": 5,
+     "pkl000": false,
+     "old_read": 15,
+     "new_read": 9569,
+     "length": 17743809
+    },
+    "hub/legacy/04/pytorch_model.bin": {
+     "torch_legacy": true,
+     "streams": 5,
+     "pkl000": false,
+     "old_read": 15,
+     "new_read": 14292,
+     "length": 13734116
+    }
+   }
+  },
+  "H4": {
+   "pass": true,
+   "detail": {
+    "hub/legacy/01/pytorch_model.bin": {
+     "old_imports": 0,
+     "old_clean": true,
+     "new_imports": 4
+    },
+    "hub/legacy/02/pytorch_model.bin": {
+     "old_imports": 0,
+     "old_clean": true,
+     "new_imports": 3
+    },
+    "hub/legacy/03/pytorch_model.bin": {
+     "old_imports": 0,
+     "old_clean": true,
+     "new_imports": 3
+    },
+    "hub/legacy/04/pytorch_model.bin": {
+     "old_imports": 0,
+     "old_clean": true,
+     "new_imports": 4
+    }
+   }
+  },
+  "H5": {
+   "pass": true,
+   "detail": {
+    "hub/legacy/01/pytorch_model.bin": {
+     "worst_new": -1,
+     "rules_new": []
+    },
+    "hub/legacy/02/pytorch_model.bin": {
+     "worst_new": -1,
+     "rules_new": []
+    },
+    "hub/legacy/03/pytorch_model.bin": {
+     "worst_new": -1,
+     "rules_new": []
+    },
+    "hub/legacy/04/pytorch_model.bin": {
+     "worst_new": -1,
+     "rules_new": []
+    }
+   }
+  }
+ },
+ "graded": {
+  "P1": true,
+  "V1": true,
+  "S1": true,
+  "S2": true,
+  "W1": true,
+  "G1": true,
+  "B1": true,
+  "B2": true,
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "C1": true,
+  "E1": true,
+  "H1": true,
+  "H2": true,
+  "H3": true,
+  "H4": true,
+  "H5": true
+ },
+ "held": [
+  "B1",
+  "B2",
+  "C1",
+  "E1",
+  "F1",
+  "F2",
+  "F3",
+  "F4",
+  "G1",
+  "H1",
+  "H2",
+  "H3",
+  "H4",
+  "H5",
+  "P1",
+  "S1",
+  "S2",
+  "V1",
+  "W1"
+ ],
+ "failed": [],
+ "not_run": [],
+ "release_rows": [
+  "P1",
+  "V1",
+  "S1",
+  "S2",
+  "W1",
+  "G1",
+  "F1",
+  "F2",
+  "F3",
+  "F4",
+  "C1",
+  "E1"
+ ],
+ "release_rows_all_pass": true,
+ "summary": {
+  "S0_base_suite": {
+   "ran": 1381,
+   "failures": [],
+   "errors": [],
+   "skipped": 3,
+   "ok": true,
+   "error": null
+  },
+  "writers": {
+   "torch": "2.15.0+cpu",
+   "T1": "ok",
+   "T3": "ok",
+   "Z1": "ok",
+   "T2": "ok",
+   "T4": "ok",
+   "M1": "ok",
+   "M2": "ok",
+   "S1": "ok",
+   "joblib": "1.6.0",
+   "numpy": "2.5.4",
+   "J1": "ok"
+  },
+  "ground_truth": {
+   "T1": {
+    "finds": [
+     "collections OrderedDict",
+     "torch._utils _rebuild_tensor_v2"
+    ],
+    "ends": [
+     15,
+     21,
+     137,
+     666,
+     758
+    ],
+    "error": null
+   },
+   "T2": {
+    "finds": [
+     "collections OrderedDict",
+     "torch._utils _rebuild_tensor_v2"
+    ],
+    "ends": [
+     15,
+     21,
+     137,
+     1366,
+     1563
+    ],
+    "error": null
+   },
+   "T3": {
+    "finds": [
+     "collections OrderedDict",
+     "torch._utils _rebuild_tensor_v2"
+    ],
+    "ends": [
+     24,
+     39,
+     138,
+     590,
+     674
+    ],
+    "error": null
+   },
+   "T4": {
+    "finds": [
+     "torch._utils _rebuild_tensor_v2",
+     "collections OrderedDict"
+    ],
+    "ends": [
+     15,
+     21,
+     137,
+     853,
+     987
+    ],
+    "error": null
+   },
+   "Z1": {
+    "finds": [
+     "collections OrderedDict",
+     "torch._utils _rebuild_tensor_v2"
+    ],
+    "ends": [
+     473
+    ],
+    "error": null
+   },
+   "M1": {
+    "finds": [
+     "collections OrderedDict",
+     "datetime date",
+     "decimal Decimal"
+    ],
+    "ends": [
+     41,
+     110,
+     190
+    ],
+    "error": null
+   },
+   "M2": {
+    "finds": [
+     "collections OrderedDict",
+     "datetime date",
+     "_codecs encode",
+     "decimal Decimal"
+    ],
+    "ends": [
+     45,
+     112,
+     228
+    ],
+    "error": null
+   },
+   "S1": {
+    "finds": [
+     "datetime datetime"
+    ],
+    "ends": [
+     90
+    ],
+    "error": null
+   },
+   "J1": null
+  },
+  "heads_hex": {
+   "T1": "80028a0a6cfc9c46f9206aa850192e80",
+   "T2": "80028a0a6cfc9c46f9206aa850192e80",
+   "T3": "8004950d000000000000008a0a6cfc9c",
+   "T4": "80028a0a6cfc9c46f9206aa850192e80",
+   "Z1": "504b0304000008080000000000000000",
+   "M1": "8004951e000000000000007d94288c06",
+   "M2": "80027d7100285806000000666f726d61",
+   "S1": "8004954f000000000000007d94288c01",
+   "J1": "800495d8000000000000007d94288c01"
+  },
+  "probe_versions": [
+   "0.4.0",
+   "0.5.0"
+  ],
+  "coverage": {
+   "T1": {
+    "loader_pickle_bytes": 758,
+    "file_bytes": 882,
+    "old_read": 15,
+    "new_read": 758,
+    "old_pct": 1.98,
+    "loader_imports": 2,
+    "old_imports_resolved": 0,
+    "new_imports_resolved": 2
+   },
+   "T2": {
+    "loader_pickle_bytes": 1563,
+    "file_bytes": 1823,
+    "old_read": 15,
+    "new_read": 1563,
+    "old_pct": 0.96,
+    "loader_imports": 2,
+    "old_imports_resolved": 0,
+    "new_imports_resolved": 2
+   },
+   "T3": {
+    "loader_pickle_bytes": 674,
+    "file_bytes": 798,
+    "old_read": 24,
+    "new_read": 674,
+    "old_pct": 3.56,
+    "loader_imports": 2,
+    "old_imports_resolved": 0,
+    "new_imports_resolved": 2
+   },
+   "T4": {
+    "loader_pickle_bytes": 987,
+    "file_bytes": 1129,
+    "old_read": 15,
+    "new_read": 987,
+    "old_pct": 1.52,
+    "loader_imports": 2,
+    "old_imports_resolved": 0,
+    "new_imports_resolved": 2
+   },
+   "M1": {
+    "loader_pickle_bytes": 190,
+    "file_bytes": 190,
+    "old_read": 41,
+    "new_read": 190,
+    "old_pct": 21.58,
+    "loader_imports": 3,
+    "old_imports_resolved": 0,
+    "new_imports_resolved": 3
+   },
+   "M2": {
+    "loader_pickle_bytes": 228,
+    "file_bytes": 228,
+    "old_read": 45,
+    "new_read": 228,
+    "old_pct": 19.74,
+    "loader_imports": 4,
+    "old_imports_resolved": 0,
+    "new_imports_resolved": 4
+   },
+   "S1": {
+    "loader_pickle_bytes": 90,
+    "file_bytes": 90,
+    "old_read": 90,
+    "new_read": 90,
+    "old_pct": 100.0,
+    "loader_imports": 1,
+    "old_imports_resolved": 1,
+    "new_imports_resolved": 1
+   }
+  },
+  "hub": {
+   "list": 1000,
+   "open_models": 960,
+   "with_pytorch_model_bin": 853,
+   "kinds": {
+    "pytorch_model.bin:zip": 421,
+    "pytorch_model.bin:legacy": 79
+   },
+   "pytorch_model_bin_kinds": {
+    "zip": 421,
+    "legacy": 79
+   },
+   "errors": 0,
+   "legacy_files": [
+    {
+     "rank": 4,
+     "model": "openai-community/gpt2",
+     "rfilename": "pytorch_model.bin",
+     "size": 548118077,
+     "last_modified": "2024-02-19T10:57:45.000Z",
+     "downloads": 31775505
+    },
+    {
+     "rank": 5,
+     "model": "google-bert/bert-base-uncased",
+     "rfilename": "pytorch_model.bin",
+     "size": 440473133,
+     "last_modified": "2024-02-19T11:06:12.000Z",
+     "downloads": 30996824
+    },
+    {
+     "rank": 8,
+     "model": "google-t5/t5-small",
+     "rfilename": "pytorch_model.bin",
+     "size": 242065649,
+     "last_modified": "2023-06-30T02:31:26.000Z",
+     "downloads": 21647788
+    },
+    {
+     "rank": 17,
+     "model": "FacebookAI/xlm-roberta-base",
+     "rfilename": "pytorch_model.bin",
+     "size": 1115590446,
+     "last_modified": "2024-02-19T12:48:21.000Z",
+     "downloads": 8893926
+    },
+    {
+     "rank": 25,
+     "model": "FacebookAI/roberta-large",
+     "rfilename": "pytorch_model.bin",
+     "size": 1425941629,
+     "last_modified": "2024-02-19T12:47:04.000Z",
+     "downloads": 6390703
+    },
+    {
+     "rank": 27,
+     "model": "FacebookAI/roberta-base",
+     "rfilename": "pytorch_model.bin",
+     "size": 501200538,
+     "last_modified": "2024-02-19T12:39:28.000Z",
+     "downloads": 5910480
+    },
+    {
+     "rank": 29,
+     "model": "distilbert/distilbert-base-uncased",
+     "rfilename": "pytorch_model.bin",
+     "size": 267967963,
+     "last_modified": "2024-05-06T13:44:53.000Z",
+     "downloads": 5545623
+    },
+    {
+     "rank": 40,
+     "model": "google/electra-base-discriminator",
+     "rfilename": "pytorch_model.bin",
+     "size": 440343552,
+     "last_modified": "2024-02-29T10:20:20.000Z",
+     "downloads": 4045925
+    },
+    {
+     "rank": 53,
+     "model": "google-bert/bert-base-cased",
+     "rfilename": "pytorch_model.bin",
+     "size": 435779157,
+     "last_modified": "2024-02-19T11:02:26.000Z",
+     "downloads": 3277157
+    },
+    {
+     "rank": 54,
+     "model": "ProsusAI/finbert",
+     "rfilename": "pytorch_model.bin",
+     "size": 437992753,
+     "last_modified": "2026-10-12T09:04:17.000Z",
+     "downloads": 3256194
+    },
+    {
+     "rank": 57,
+     "model": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+     "rfilename": "pytorch_model.bin",
+     "size": 267844284,
+     "last_modified": "2023-12-19T16:29:37.000Z",
+     "downloads": 2924671
+    },
+    {
+     "rank": 58,
+     "model": "facebook/bart-large-mnli",
+     "rfilename": "pytorch_model.bin",
+     "size": 1629486723,
+     "last_modified": "2023-09-05T14:49:34.000Z",
+     "downloads": 2839971
+    },
+    {
+     "rank": 59,
+     "model": "google-t5/t5-base",
+     "rfilename": "pytorch_model.bin",
+     "size": 891691430,
+     "last_modified": "2024-02-14T17:21:55.000Z",
+     "downloads": 2761654
+    },
+    {
+     "rank": 66,
+     "model": "emilyalsentzer/Bio_ClinicalBERT",
+     "rfilename": "pytorch_model.bin",
+     "size": 435778770,
+     "last_modified": "2024-12-03T20:22:45.000Z",
+     "downloads": 2442243
+    },
+    {
+     "rank": 73,
+     "model": "FacebookAI/xlm-roberta-large",
+     "rfilename": "pytorch_model.bin",
+     "size": 2244861551,
+     "last_modified": "2024-02-19T12:48:30.000Z",
+     "downloads": 2272543
+    },
+    {
+     "rank": 80,
+     "model": "google-bert/bert-base-multilingual-uncased",
+     "rfilename": "pytorch_model.bin",
+     "size": 672271273,
+     "last_modified": "2024-02-19T11:06:00.000Z",
+     "downloads": 1920716
+    },
+    {
+     "rank": 100,
+     "model": "microsoft/BiomedNLP-BiomedBERT-base-uncased-abstract-fulltext",
+     "rfilename": "pytorch_model.bin",
+     "size": 440474434,
+     "last_modified": "2023-11-06T18:03:43.000Z",
+     "downloads": 1531612
+    },
+    {
+     "rank": 103,
+     "model": "distilbert/distilgpt2",
+     "rfilename": "pytorch_model.bin",
+     "size": 352833716,
+     "last_modified": "2024-02-19T11:09:53.000Z",
+     "downloads": 1481788
+    },
+    {
+     "rank": 107,
+     "model": "google-bert/bert-base-multilingual-cased",
+     "rfilename": "pytorch_model.bin",
+     "size": 714314041,
+     "last_modified": "2024-02-19T11:05:41.000Z",
+     "downloads": 1472726
+    },
+    {
+     "rank": 119,
+     "model": "distilbert/distilroberta-base",
+     "rfilename": "pytorch_model.bin",
+     "size": 331070498,
+     "last_modified": "2024-02-19T11:09:58.000Z",
+     "downloads": 1309018
+    },
+    {
+     "rank": 130,
+     "model": "nlpaueb/legal-bert-base-uncased",
+     "rfilename": "pytorch_model.bin",
+     "size": 440474526,
+     "last_modified": "2022-04-28T14:42:50.000Z",
+     "downloads": 1097538
+    },
+    {
+     "rank": 134,
+     "model": "facebook/bart-large-cnn",
+     "rfilename": "pytorch_model.bin",
+     "size": 1625270765,
+     "last_modified": "2024-02-13T18:02:05.000Z",
+     "downloads": 1065295
+    },
+    {
+     "rank": 135,
+     "model": "dslim/bert-base-NER",
+     "rfilename": "pytorch_model.bin",
+     "size": 433316646,
+     "last_modified": "2024-10-08T07:51:39.000Z",
+     "downloads": 1055640
+    },
+    {
+     "rank": 138,
+     "model": "sshleifer/tiny-gpt2",
+     "rfilename": "pytorch_model.bin",
+     "size": 2514146,
+     "last_modified": "2021-05-23T12:55:11.000Z",
+     "downloads": 1025183
+    },
+    {
+     "rank": 158,
+     "model": "openai-community/gpt2-large",
+     "rfilename": "pytorch_model.bin",
+     "size": 3247202234,
+     "last_modified": "2024-02-19T11:11:02.000Z",
+     "downloads": 907711
+    },
+    {
+     "rank": 163,
+     "model": "almanach/camembert-base",
+     "rfilename": "pytorch_model.bin",
+     "size": 445032417,
+     "last_modified": "2025-06-23T14:02:30.000Z",
+     "downloads": 877165
+    },
+    {
+     "rank": 169,
+     "model": "allenai/longformer-base-4096",
+     "rfilename": "pytorch_model.bin",
+     "size": 597257159,
+     "last_modified": "2023-04-05T18:24:00.000Z",
+     "downloads": 837456
+    },
+    {
+     "rank": 182,
+     "model": "albert/albert-base-v2",
+     "rfilename": "pytorch_model.bin",
+     "size": 47376696,
+     "last_modified": "2024-02-19T10:58:14.000Z",
+     "downloads": 752469
+    },
+    {
+     "rank": 184,
+     "model": "Musixmatch/umberto-commoncrawl-cased-v1",
+     "rfilename": "pytorch_model.bin",
+     "size": 445031664,
+     "last_modified": "2021-02-12T11:31:59.000Z",
+     "downloads": 747752
+    },
+    {
+     "rank": 186,
+     "model": "neuralmind/bert-large-portuguese-cased",
+     "rfilename": "pytorch_model.bin",
+     "size": 1342014951,
+     "last_modified": "2021-05-20T01:31:09.000Z",
+     "downloads": 737096
+    },
+    {
+     "rank": 191,
+     "model": "dbmdz/bert-large-cased-finetuned-conll03-english",
+     "rfilename": "pytorch_model.bin",
+     "size": 1334448817,
+     "last_modified": "2023-09-06T22:17:56.000Z",
+     "downloads": 718986
+    },
+    {
+     "rank": 198,
+     "model": "Helsinki-NLP/opus-mt-zh-en",
+     "rfilename": "pytorch_model.bin",
+     "size": 312087009,
+     "last_modified": "2023-08-16T12:09:10.000Z",
+     "downloads": 693691
+    },
+    {
+     "rank": 221,
+     "model": "nlptown/bert-base-multilingual-uncased-sentiment",
+     "rfilename": "pytorch_model.bin",
+     "size": 669491321,
+     "last_modified": "2025-01-02T20:13:01.000Z",
+     "downloads": 570734
+    },
+    {
+     "rank": 225,
+     "model": "Helsinki-NLP/opus-mt-en-ru",
+     "rfilename": "pytorch_model.bin",
+     "size": 306991893,
+     "last_modified": "2023-08-16T11:30:58.000Z",
+     "downloads": 565369
+    },
+    {
+     "rank": 242,
+     "model": "distilbert/distilbert-base-multilingual-cased",
+     "rfilename": "pytorch_model.bin",
+     "size": 541808922,
+     "last_modified": "2024-05-06T13:46:54.000Z",
+     "downloads": 513546
+    },
+    {
+     "rank": 266,
+     "model": "tohoku-nlp/bert-base-japanese-whole-word-masking",
+     "rfilename": "pytorch_model.bin",
+     "size": 445021143,
+     "last_modified": "2024-02-22T00:57:37.000Z",
+     "downloads": 446130
+    },
+    {
+     "rank": 277,
+     "model": "google-bert/bert-base-german-cased",
+     "rfilename": "pytorch_model.bin",
+     "size": 438869143,
+     "last_modified": "2024-02-19T11:03:41.000Z",
+     "downloads": 419646
+    },
+    {
+     "rank": 278,
+     "model": "oliverguhr/german-sentiment-bert",
+     "rfilename": "pytorch_model.bin",
+     "size": 436382967,
+     "last_modified": "2025-03-03T16:52:02.000Z",
+     "downloads": 418749
+    },
+    {
+     "rank": 296,
+     "model": "julien-c/dummy-unknown",
+     "rfilename": "pytorch_model.bin",
+     "size": 65074,
+     "last_modified": "2021-05-20T17:31:14.000Z",
+     "downloads": 383280
+    },
+    {
+     "rank": 297,
+     "model": "Helsinki-NLP/opus-mt-mul-en",
+     "rfilename": "pytorch_model.bin",
+     "size": 310385901,
+     "last_modified": "2023-08-16T12:01:25.000Z",
+     "downloads": 381669
+    },
+    {
+     "rank": 300,
+     "model": "emilyalsentzer/Bio_Discharge_Summary_BERT",
+     "rfilename": "pytorch_model.bin",
+     "size": 435778770,
+     "last_modified": "2022-02-27T13:59:50.000Z",
+     "downloads": 381102
+    },
+    {
+     "rank": 310,
+     "model": "google-bert/bert-base-chinese",
+     "rfilename": "pytorch_model.bin",
+     "size": 411577189,
+     "last_modified": "2025-07-03T11:58:48.000Z",
+     "downloads": 356552
+    },
+    {
+     "rank": 311,
+     "model": "neuralmind/bert-base-portuguese-cased",
+     "rfilename": "pytorch_model.bin",
+     "size": 438235074,
+     "last_modified": "2022-06-14T14:37:09.000Z",
+     "downloads": 356358
+    },
+    {
+     "rank": 315,
+     "model": "openai-community/roberta-base-openai-detector",
+     "rfilename": "pytorch_model.bin",
+     "size": 501000585,
+     "last_modified": "2024-02-19T12:46:55.000Z",
+     "downloads": 353172
+    },
+    {
+     "rank": 320,
+     "model": "google-bert/bert-large-cased",
+     "rfilename": "pytorch_model.bin",
+     "size": 1338740706,
+     "last_modified": "2024-02-19T11:06:20.000Z",
+     "downloads": 349612
+    },
+    {
+     "rank": 339,
+     "model": "distilbert/distilbert-base-cased",
+     "rfilename": "pytorch_model.bin",
+     "size": 263273408,
+     "last_modified": "2024-05-06T13:46:22.000Z",
+     "downloads": 323836
+    },
+    {
+     "rank": 345,
+     "model": "sshleifer/distilbart-cnn-12-6",
+     "rfilename": "pytorch_model.bin",
+     "size": 1222317369,
+     "last_modified": "2021-06-14T07:51:12.000Z",
+     "downloads": 316696
+    },
+    {
+     "rank": 349,
+     "model": "Helsinki-NLP/opus-mt-fr-en",
+     "rfilename": "pytorch_model.bin",
+     "size": 300827685,
+     "last_modified": "2025-11-15T22:57:50.000Z",
+     "downloads": 312333
+    },
+    {
+     "rank": 353,
+     "model": "microsoft/BiomedNLP-BiomedBERT-base-uncased-abstract",
+     "rfilename": "pytorch_model.bin",
+     "size": 440474434,
+     "last_modified": "2023-11-06T18:04:15.000Z",
+     "downloads": 308520
+    },
+    {
+     "rank": 363,
+     "model": "Helsinki-NLP/opus-mt-de-en",
+     "rfilename": "pytorch_model.bin",
+     "size": 297928209,
+     "last_modified": "2023-08-16T11:27:46.000Z",
+     "downloads": 288850
+    },
+    {
+     "rank": 368,
+     "model": "google/bert_uncased_L-2_H-128_A-2",
+     "rfilename": "pytorch_model.bin",
+     "size": 17743809,
+     "last_modified": "2023-09-05T15:25:24.000Z",
+     "downloads": 285934
+    },
+    {
+     "rank": 375,
+     "model": "google-bert/bert-large-uncased",
+     "rfilename": "pytorch_model.bin",
+     "size": 1344997306,
+     "last_modified": "2024-02-19T11:06:54.000Z",
+     "downloads": 273166
+    },
+    {
+     "rank": 380,
+     "model": "iarfmoose/t5-base-question-generator",
+     "rfilename": "pytorch_model.bin",
+     "size": 891612736,
+     "last_modified": "2022-02-24T08:41:19.000Z",
+     "downloads": 268437
+    },
+    {
+     "rank": 381,
+     "model": "indobenchmark/indobert-base-p1",
+     "rfilename": "pytorch_model.bin",
+     "size": 497810400,
+     "last_modified": "2021-05-19T20:22:23.000Z",
+     "downloads": 265438
+    },
+    {
+     "rank": 390,
+     "model": "Rostlab/prot_bert",
+     "rfilename": "pytorch_model.bin",
+     "size": 1684058277,
+     "last_modified": "2023-11-16T15:07:57.000Z",
+     "downloads": 252241
+    },
+    {
+     "rank": 409,
+     "model": "FacebookAI/roberta-large-mnli",
+     "rfilename": "pytorch_model.bin",
+     "size": 1425744429,
+     "last_modified": "2024-02-19T12:47:11.000Z",
+     "downloads": 233817
+    },
+    {
+     "rank": 414,
+     "model": "Helsinki-NLP/opus-mt-en-de",
+     "rfilename": "pytorch_model.bin",
+     "size": 297928209,
+     "last_modified": "2023-08-16T11:29:21.000Z",
+     "downloads": 232608
+    },
+    {
+     "rank": 419,
+     "model": "google-t5/t5-3b",
+     "rfilename": "pytorch_model.bin",
+     "size": 11406547936,
+     "last_modified": "2024-01-29T15:44:49.000Z",
+     "downloads": 230440
+    },
+    {
+     "rank": 420,
+     "model": "google-t5/t5-large",
+     "rfilename": "pytorch_model.bin",
+     "size": 2950825948,
+     "last_modified": "2023-04-06T13:42:27.000Z",
+     "downloads": 230289
+    },
+    {
+     "rank": 424,
+     "model": "microsoft/codebert-base",
+     "rfilename": "pytorch_model.bin",
+     "size": 498627950,
+     "last_modified": "2022-02-11T19:59:44.000Z",
+     "downloads": 229233
+    },
+    {
+     "rank": 444,
+     "model": "deepset/bert-large-uncased-whole-word-masking-squad2",
+     "rfilename": "pytorch_model.bin",
+     "size": 1340669807,
+     "last_modified": "2024-09-24T15:54:10.000Z",
+     "downloads": 208540
+    },
+    {
+     "rank": 453,
+     "model": "huawei-noah/TinyBERT_General_4L_312D",
+     "rfilename": "pytorch_model.bin",
+     "size": 62747391,
+     "last_modified": "2021-05-19T20:03:32.000Z",
+     "downloads": 202105
+    },
+    {
+     "rank": 456,
+     "model": "kykim/albert-kor-base",
+     "rfilename": "pytorch_model.bin",
+     "size": 53325832,
+     "last_modified": "2021-01-22T00:27:49.000Z",
+     "downloads": 201586
+    },
+    {
+     "rank": 466,
+     "model": "Helsinki-NLP/opus-mt-en-fr",
+     "rfilename": "pytorch_model.bin",
+     "size": 300827685,
+     "last_modified": "2024-02-14T17:18:11.000Z",
+     "downloads": 192334
+    },
+    {
+     "rank": 473,
+     "model": "DeepChem/ChemBERTa-77M-MLM",
+     "rfilename": "pytorch_model.bin",
+     "size": 13734116,
+     "last_modified": "2022-01-20T18:02:38.000Z",
+     "downloads": 186145
+    },
+    {
+     "rank": 474,
+     "model": "allenai/scibert_scivocab_uncased",
+     "rfilename": "pytorch_model.bin",
+     "size": 442221694,
+     "last_modified": "2022-10-03T22:06:12.000Z",
+     "downloads": 185730
+    },
+    {
+     "rank": 500,
+     "model": "microsoft/deberta-large-mnli",
+     "rfilename": "pytorch_model.bin",
+     "size": 1624928186,
+     "last_modified": "2021-05-21T20:07:51.000Z",
+     "downloads": 170364
+    },
+    {
+     "rank": 504,
+     "model": "Helsinki-NLP/opus-mt-nl-en",
+     "rfilename": "pytorch_model.bin",
+     "size": 316246425,
+     "last_modified": "2023-08-16T12:01:39.000Z",
+     "downloads": 167608
+    },
+    {
+     "rank": 507,
+     "model": "openai-community/gpt2-medium",
+     "rfilename": "pytorch_model.bin",
+     "size": 1520013706,
+     "last_modified": "2024-02-19T12:39:04.000Z",
+     "downloads": 165931
+    },
+    {
+     "rank": 508,
+     "model": "monologg/koelectra-small-v2-distilled-korquad-384",
+     "rfilename": "pytorch_model.bin",
+     "size": 54844630,
+     "last_modified": "2023-06-12T12:30:35.000Z",
+     "downloads": 165912
+    },
+    {
+     "rank": 511,
+     "model": "nreimers/TinyBERT_L-4_H-312_v2",
+     "rfilename": "pytorch_model.bin",
+     "size": 62747391,
+     "last_modified": "2021-05-28T11:02:32.000Z",
+     "downloads": 165323
+    },
+    {
+     "rank": 515,
+     "model": "dslim/bert-large-NER",
+     "rfilename": "pytorch_model.bin",
+     "size": 1334453533,
+     "last_modified": "2024-10-08T07:52:08.000Z",
+     "downloads": 161007
+    },
+    {
+     "rank": 524,
+     "model": "iarfmoose/bert-base-cased-qa-evaluator",
+     "rfilename": "pytorch_model.bin",
+     "size": 433295505,
+     "last_modified": "2021-05-19T20:15:52.000Z",
+     "downloads": 155042
+    },
+    {
+     "rank": 531,
+     "model": "hfl/chinese-bert-wwm",
+     "rfilename": "pytorch_model.bin",
+     "size": 411578458,
+     "last_modified": "2021-05-19T19:07:49.000Z",
+     "downloads": 149512
+    },
+    {
+     "rank": 533,
+     "model": "distilbert/distilbert-base-cased-distilled-squad",
+     "rfilename": "pytorch_model.bin",
+     "size": 260793700,
+     "last_modified": "2024-05-06T13:46:31.000Z",
+     "downloads": 149060
+    },
+    {
+     "rank": 539,
+     "model": "google/electra-small-discriminator",
+     "rfilename": "pytorch_model.bin",
+     "size": 54245363,
+     "last_modified": "2024-02-29T10:20:20.000Z",
+     "downloads": 146011
+    },
+    {
+     "rank": 550,
+     "model": "cahya/bert-base-indonesian-NER",
+     "rfilename": "pytorch_model.bin",
+     "size": 442643905,
+     "last_modified": "2023-11-03T16:02:19.000Z",
+     "downloads": 139945
+    },
+    {
+     "rank": 554,
+     "model": "Helsinki-NLP/opus-mt-es-en",
+     "rfilename": "pytorch_model.bin",
+     "size": 312087523,
+     "last_modified": "2023-08-16T11:32:34.000Z",
+     "downloads": 137904
+    },
+    {
+     "rank": 555,
+     "model": "vinai/phobert-base",
+     "rfilename": "pytorch_model.bin",
+     "size": 542923308,
+     "last_modified": "2026-08-03T15:03:30.000Z",
+     "downloads": 137375
+    }
+   ]
+  }
+ }
+}

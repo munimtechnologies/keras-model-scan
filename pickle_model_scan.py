@@ -23,6 +23,16 @@ the wrapper's pickled shape and dtype give, walks each nested pickle with its
 own memo, and carries on to the end of the file. Up to 0.3.0 it stopped at the
 first array and never saw the rest of the file.
 
+Since 0.5.0 it walks every pickle in the file that the loader reads, not
+only the first. torch.save(..., _use_new_zipfile_serialization=False) -- the
+legacy format torch.load still reads -- writes five pickles back to back
+(magic number, protocol version, sys_info, the object, the storage keys) and
+then raw tensor bytes; torch.load unpickles all five. Up to 0.4.0 the walk
+stopped after the 15-byte magic-number pickle and never saw the object's
+imports. Files written with several pickle.dump calls are walked the same
+way, one stream after another while the next bytes open a protocol 2-5
+pickle.
+
 A flag means a pattern worth human review, not proof of malice. A clean result is
 not a guarantee of safety: this is a static heuristic, not a sandbox.
 
@@ -49,7 +59,7 @@ import zipfile
 import zlib
 from dataclasses import dataclass
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"
 
 # Modules whose presence in a pickle is a direct code-execution concern.
 DANGEROUS_MODULES = frozenset({
@@ -573,11 +583,73 @@ def _walk_stream(buf, walk, joblib_mode, nested=False):
     return True
 
 
+# torch.save(..., _use_new_zipfile_serialization=False), the legacy format
+# torch.load still reads, writes five pickles back to back and then the raw
+# tensor storage (torch/serialization.py, _legacy_save / _legacy_load): the
+# magic number, the protocol version 1001, a sys_info dict, the object itself
+# and the sorted storage keys. torch.load unpickles all five, each with a
+# fresh unpickler. Up to 0.4.0 the walk stopped after the first.
+_TORCH_LEGACY_MAGIC = 0x1950A86A20F9469CFC6C
+_TORCH_LEGACY_STREAMS = 5
+# Python's pickler opens every protocol 2-5 pickle with PROTO <n>. Another
+# pickle.dump into the same file starts the same way; pickle.load reads them
+# one after another, each with its own memo.
+_MAX_STREAMS = 4096
+
+
+def _first_int(data):
+    """The integer a pickle holds when its first real opcode pushes one,
+    else None (the legacy torch magic number is the whole first pickle)."""
+    try:
+        for opcode, arg, _pos in pickletools.genops(io.BytesIO(data)):
+            if opcode.name in ("PROTO", "FRAME"):
+                continue
+            if opcode.name in INT_OPCODES and isinstance(arg, int):
+                return arg
+            return None
+    except Exception:
+        return None
+    return None
+
+
+def _opens_pickle(data, pos):
+    """True when data[pos:] starts with a PROTO 2-5 header."""
+    head = bytes(data[pos:pos + 2])
+    return len(head) == 2 and head[0] == 0x80 and 2 <= head[1] <= 5
+
+
 def _walk_pickle(data, source):
     walk = _Walk(data, source)
+    walk.streams = 0
+    walk.torch_legacy = _first_int(data) == _TORCH_LEGACY_MAGIC
     joblib_mode = _JOBLIB_MARKER in data
-    _walk_stream(io.BytesIO(data), walk, joblib_mode)
-    return walk
+    buf = io.BytesIO(data)
+    while True:
+        if not _walk_stream(buf, walk, joblib_mode):
+            return walk
+        walk.streams += 1
+        pos = buf.tell()
+        if walk.torch_legacy:
+            if walk.streams >= _TORCH_LEGACY_STREAMS:
+                return walk  # raw storage bytes follow; torch reads them raw
+            if pos >= walk.end:
+                walk.findings.append(Finding(
+                    "PKL000", "LOW", "Pickle stream could not be fully parsed",
+                    "This is a legacy-format torch.save file (it starts with "
+                    "torch's magic number), but it ends after %d of the %d "
+                    "pickles torch.load reads, so it is truncated."
+                    % (walk.streams, _TORCH_LEGACY_STREAMS), source))
+                return walk
+            continue
+        if pos >= walk.end or not _opens_pickle(data, pos):
+            return walk
+        if walk.streams >= _MAX_STREAMS:
+            walk.findings.append(Finding(
+                "PKL000", "LOW", "Pickle stream could not be fully parsed",
+                "The file holds more than %d pickles one after another; the "
+                "rest (from byte %d) was not analysed." % (_MAX_STREAMS, pos),
+                source))
+            return walk
 
 
 def pickle_walk(data, source="<bytes>"):
@@ -598,6 +670,8 @@ def pickle_walk(data, source="<bytes>"):
         "joblib_mode": _JOBLIB_MARKER in data,
         "symbolic_stack_lost": walk.symbolic_lost,
         "rules": sorted({f.rule for f in walk.findings}),
+        "streams": walk.streams,
+        "torch_legacy": walk.torch_legacy,
     }
 
 

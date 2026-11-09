@@ -1,0 +1,24 @@
+{
+ "files": {
+  "pickle_model_scan.py": {
+   "changes": [
+    "docstring",
+    "version 0.5.0",
+    "_walk_pickle",
+    "pickle_walk keys"
+   ],
+   "second_pass": [],
+   "lost": [],
+   "lines": [
+    904,
+    978
+   ],
+   "ok": true
+  }
+ },
+ "ok": true,
+ "written": [
+  "pickle_model_scan.py",
+  "test_pickle_model_scan_streams.py"
+ ]
+}

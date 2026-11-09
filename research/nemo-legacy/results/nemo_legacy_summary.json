@@ -1,0 +1,559 @@
+{
+ "rows": {
+  "P1": {
+   "pass": true,
+   "detail": {
+    "nemo_container_scan.py": {
+     "changes": [
+      "docstring",
+      "version 0.3.0",
+      "_scan_pickle_ops",
+      "bare branch"
+     ],
+     "second_pass": [],
+     "lost": [],
+     "lines": [
+      479,
+      606
+     ],
+     "ok": true
+    }
+   }
+  },
+  "V1": {
+   "pass": true,
+   "detail": {
+    "base_nemo": "0.2.0",
+    "tree_nemo": "0.3.0",
+    "base_mfs": "0.12.1",
+    "tree_mfs": "0.12.1"
+   }
+  },
+  "S1": {
+   "pass": true,
+   "detail": {
+    "tree": {
+     "ran": 1397,
+     "failures": [],
+     "errors": [],
+     "skipped": 3,
+     "error": null
+    },
+    "base_ran": 1381,
+    "base_ok": true
+   }
+  },
+  "S2": {
+   "pass": true,
+   "detail": {
+    "exit": 0,
+    "ran": 16,
+    "tail": "class_is_named) ... ok\ntest_version (test_nemo_container_scan_streams.LegacyCheckpoint.test_version) ... ok\ntest_memo_module_name_is_resolved (test_nemo_container_scan_streams.OtherMembers.test_memo_module_name_is_resolved) ... ok\ntest_several_dumps_are_walked (test_nemo_container_scan_streams.OtherMembers.test_several_dumps_are_walked) ... ok\ntest_single_pickle_evidence_unchanged (test_nemo_container_scan_streams.OtherMembers.test_single_pickle_evidence_unchanged) ... ok\ntest_stream_cap (test_nemo_container_scan_streams.OtherMembers.test_stream_cap) ... ok\ntest_trailing_text_is_not_walked (test_nemo_container_scan_streams.OtherMembers.test_trailing_text_is_not_walked) ... ok\ntest_zip_data_pkl_is_read_once (test_nemo_container_scan_streams.OtherMembers.test_zip_data_pkl_is_read_once) ... ok\n\n----------------------------------------------------------------------\nRan 16 tests in 0.044s\n\nOK"
+   }
+  },
+  "W1": {
+   "pass": true,
+   "detail": {
+    "torch": "2.15.0+cpu",
+    "L1": "ok",
+    "L2": "ok",
+    "L3": "ok",
+    "L4": "ok",
+    "Z1": "ok",
+    "Z2": "ok",
+    "C1": "ok"
+   }
+  },
+  "G1": {
+   "pass": true,
+   "detail": {
+    "L1": {
+     "error": null,
+     "pickles_read": 5,
+     "ordered_dict": true,
+     "rebuild": true
+    },
+    "L2": {
+     "error": null,
+     "pickles_read": 5,
+     "ordered_dict": true,
+     "rebuild": true
+    },
+    "L3": {
+     "error": null,
+     "pickles_read": 5,
+     "ordered_dict": true,
+     "rebuild": true
+    },
+    "L4": {
+     "error": null,
+     "pickles_read": 5,
+     "ordered_dict": true,
+     "rebuild": true
+    },
+    "Z1": {
+     "error": null,
+     "pickles_read": 1,
+     "ordered_dict": true,
+     "rebuild": true
+    },
+    "Z2": {
+     "error": null,
+     "pickles_read": 1,
+     "ordered_dict": true,
+     "rebuild": true
+    }
+   }
+  },
+  "B1": {
+   "pass": true,
+   "detail": {
+    "L1": {
+     "base_findings": []
+    },
+    "L2": {
+     "base_findings": []
+    },
+    "L3": {
+     "base_findings": []
+    },
+    "L4": {
+     "base_findings": []
+    }
+   }
+  },
+  "F1": {
+   "pass": true,
+   "detail": {
+    "L1": {
+     "rules": [
+      "NEMO010"
+     ],
+     "evidence": [
+      "tar:./model_weights.ckpt (legacy torch.save, 5 of 5 pickles); imports=collections.OrderedDict, torch._utils._rebuild_tensor_v2, torch.FloatStorage"
+     ]
+    },
+    "L2": {
+     "rules": [
+      "NEMO010"
+     ],
+     "evidence": [
+      "tar:./model_weights.ckpt (legacy torch.save, 5 of 5 pickles); imports=collections.OrderedDict, torch._utils._rebuild_tensor_v2, torch.FloatStorage"
+     ]
+    },
+    "L3": {
+     "rules": [
+      "NEMO010"
+     ],
+     "evidence": [
+      "tar:./model_weights.ckpt (legacy torch.save, 5 of 5 pickles); imports=collections.OrderedDict, torch._utils._rebuild_tensor_v2, torch.FloatStorage"
+     ]
+    },
+    "L4": {
+     "rules": [
+      "NEMO010"
+     ],
+     "evidence": [
+      "tar:./model_weights.ckpt (legacy torch.save, 5 of 5 pickles); imports=collections.OrderedDict, torch._utils._rebuild_tensor_v2, torch.FloatStorage"
+     ]
+    }
+   }
+  },
+  "F2": {
+   "pass": true,
+   "detail": {
+    "L1": {
+     "loader": [
+      "collections OrderedDict",
+      "torch._utils _rebuild_tensor_v2"
+     ],
+     "missing_new": [],
+     "missing_old": [
+      "collections OrderedDict",
+      "torch._utils _rebuild_tensor_v2"
+     ]
+    },
+    "L2": {
+     "loader": [
+      "collections OrderedDict",
+      "torch._utils _rebuild_tensor_v2"
+     ],
+     "missing_new": [],
+     "missing_old": [
+      "collections OrderedDict",
+      "torch._utils _rebuild_tensor_v2"
+     ]
+    },
+    "L3": {
+     "loader": [
+      "collections OrderedDict",
+      "torch._utils _rebuild_tensor_v2"
+     ],
+     "missing_new": [],
+     "missing_old": [
+      "collections OrderedDict",
+      "torch._utils _rebuild_tensor_v2"
+     ]
+    },
+    "L4": {
+     "loader": [
+      "collections OrderedDict",
+      "torch._utils _rebuild_tensor_v2"
+     ],
+     "missing_new": [],
+     "missing_old": [
+      "collections OrderedDict",
+      "torch._utils _rebuild_tensor_v2"
+     ]
+    },
+    "Z1": {
+     "loader": [
+      "collections OrderedDict",
+      "torch._utils _rebuild_tensor_v2"
+     ],
+     "missing_new": [],
+     "missing_old": []
+    },
+    "Z2": {
+     "loader": [
+      "collections OrderedDict",
+      "torch._utils _rebuild_tensor_v2"
+     ],
+     "missing_new": [],
+     "missing_old": []
+    }
+   }
+  },
+  "F3": {
+   "pass": true,
+   "detail": {
+    "Z1": {
+     "identical": true,
+     "same_rules": true,
+     "base": [
+      {
+       "rule": "NEMO010",
+       "severity": "medium",
+       "cve": "",
+       "cwe": "CWE-502",
+       "message": "The .nemo container holds a pickle-bearing checkpoint with no dangerous import found. It is still a pickle that a non-unpacking scanner skips and that restore_from unpickles; prefer a non-executable weights format.",
+       "evidence": "tar:./model_weights.ckpt>zip:model_weights/data.pkl; imports=collections.OrderedDict, torch._utils._rebuild_tensor_v2, torch.FloatStorage"
+      }
+     ],
+     "tree": [
+      {
+       "rule": "NEMO010",
+       "severity": "medium",
+       "cve": "",
+       "cwe": "CWE-502",
+       "message": "The .nemo container holds a pickle-bearing checkpoint with no dangerous import found. It is still a pickle that a non-unpacking scanner skips and that restore_from unpickles; prefer a non-executable weights format.",
+       "evidence": "tar:./model_weights.ckpt>zip:model_weights/data.pkl; imports=collections.OrderedDict, torch._utils._rebuild_tensor_v2, torch.FloatStorage"
+      }
+     ]
+    },
+    "Z2": {
+     "identical": true,
+     "same_rules": true,
+     "base": [
+      {
+       "rule": "NEMO010",
+       "severity": "medium",
+       "cve": "",
+       "cwe": "CWE-502",
+       "message": "The .nemo container holds a pickle-bearing checkpoint with no dangerous import found. It is still a pickle that a non-unpacking scanner skips and that restore_from unpickles; prefer a non-executable weights format.",
+       "evidence": "tar:./model_weights.ckpt>zip:model_weights/data.pkl; imports=collections.OrderedDict, torch._utils._rebuild_tensor_v2, torch.FloatStorage"
+      }
+     ],
+     "tree": [
+      {
+       "rule": "NEMO010",
+       "severity": "medium",
+       "cve": "",
+       "cwe": "CWE-502",
+       "message": "The .nemo container holds a pickle-bearing checkpoint with no dangerous import found. It is still a pickle that a non-unpacking scanner skips and that restore_from unpickles; prefer a non-executable weights format.",
+       "evidence": "tar:./model_weights.ckpt>zip:model_weights/data.pkl; imports=collections.OrderedDict, torch._utils._rebuild_tensor_v2, torch.FloatStorage"
+      }
+     ]
+    },
+    "C1": {
+     "identical": true,
+     "same_rules": true,
+     "base": [],
+     "tree": []
+    }
+   }
+  },
+  "F4": {
+   "pass": true,
+   "detail": {
+    "L1": {
+     "tree_exit": 1,
+     "base_exit": 0
+    },
+    "L2": {
+     "tree_exit": 1,
+     "base_exit": 0
+    },
+    "L3": {
+     "tree_exit": 1,
+     "base_exit": 0
+    },
+    "L4": {
+     "tree_exit": 1,
+     "base_exit": 0
+    },
+    "Z1": {
+     "tree_exit": 1,
+     "base_exit": 1
+    },
+    "Z2": {
+     "tree_exit": 1,
+     "base_exit": 1
+    },
+    "C1": {
+     "tree_exit": 0,
+     "base_exit": 0
+    }
+   }
+  },
+  "E1": {
+   "pass": true,
+   "detail": {
+    "exit": 1,
+    "files": 7,
+    "stderr": ""
+   }
+  },
+  "H1": {
+   "pass": false,
+   "detail": {
+    "walked_with_weights": 55
+   }
+  },
+  "H2": {
+   "pass": true,
+   "detail": {
+    "legacy_pct": 0.0,
+    "legacy": 0,
+    "of": 280
+   }
+  },
+  "H3": {
+   "pass": null,
+   "detail": "not run: no legacy .nemo of 100 MB or less"
+  }
+ },
+ "graded": {
+  "P1": true,
+  "V1": true,
+  "S1": true,
+  "S2": true,
+  "W1": true,
+  "G1": true,
+  "B1": true,
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "E1": true,
+  "H1": false,
+  "H2": true,
+  "H3": null
+ },
+ "held": [
+  "B1",
+  "E1",
+  "F1",
+  "F2",
+  "F3",
+  "F4",
+  "G1",
+  "H2",
+  "P1",
+  "S1",
+  "S2",
+  "V1",
+  "W1"
+ ],
+ "failed": [
+  "H1"
+ ],
+ "not_run": [
+  "H3"
+ ],
+ "release_rows": [
+  "P1",
+  "V1",
+  "S1",
+  "S2",
+  "W1",
+  "G1",
+  "B1",
+  "F1",
+  "F2",
+  "F3",
+  "F4",
+  "E1"
+ ],
+ "release_rows_all_pass": true,
+ "summary": {
+  "S0_base_suite": {
+   "ran": 1381,
+   "failures": [],
+   "errors": [],
+   "skipped": 3,
+   "ok": true,
+   "error": null
+  },
+  "writers": {
+   "torch": "2.15.0+cpu",
+   "L1": "ok",
+   "L2": "ok",
+   "L3": "ok",
+   "L4": "ok",
+   "Z1": "ok",
+   "Z2": "ok",
+   "C1": "ok"
+  },
+  "ckpt_heads_hex": {
+   "L1": "80028a0a6cfc9c46f9206aa850192e80",
+   "L2": "8004950d000000000000008a0a6cfc9c",
+   "L3": "80028a0a6cfc9c46f9206aa850192e80",
+   "L4": "80028a0a6cfc9c46f9206aa850192e80",
+   "Z1": "504b0304000008080000000000000000",
+   "Z2": "504b0304000008080000000000000000"
+  },
+  "ground_truth": {
+   "L1": {
+    "finds": [
+     "collections OrderedDict",
+     "torch._utils _rebuild_tensor_v2"
+    ],
+    "ends": [
+     15,
+     21,
+     137,
+     666,
+     758
+    ],
+    "error": null
+   },
+   "L2": {
+    "finds": [
+     "collections OrderedDict",
+     "torch._utils _rebuild_tensor_v2"
+    ],
+    "ends": [
+     24,
+     39,
+     138,
+     590,
+     674
+    ],
+    "error": null
+   },
+   "L3": {
+    "finds": [
+     "collections OrderedDict",
+     "torch._utils _rebuild_tensor_v2"
+    ],
+    "ends": [
+     15,
+     21,
+     137,
+     1269,
+     1445
+    ],
+    "error": null
+   },
+   "L4": {
+    "finds": [
+     "collections OrderedDict",
+     "torch._utils _rebuild_tensor_v2"
+    ],
+    "ends": [
+     15,
+     21,
+     137,
+     666,
+     758
+    ],
+    "error": null
+   },
+   "Z1": {
+    "finds": [
+     "collections OrderedDict",
+     "torch._utils _rebuild_tensor_v2"
+    ],
+    "ends": [
+     473
+    ],
+    "error": null
+   },
+   "Z2": {
+    "finds": [
+     "collections OrderedDict",
+     "torch._utils _rebuild_tensor_v2"
+    ],
+    "ends": [
+     396
+    ],
+    "error": null
+   }
+  },
+  "probe_versions": [
+   "0.2.0",
+   "0.3.0"
+  ],
+  "hub": {
+   "list": 100,
+   "planned": 65,
+   "files": 58,
+   "requests": 2500,
+   "containers": {
+    "gzip": 3,
+    "plain": 55
+   },
+   "walked_with_weights": 55,
+   "weights_kinds": {
+    "zip": 280
+   },
+   "member_kinds": {
+    "dir": 82,
+    "other": 491,
+    "zip": 280
+   },
+   "pickle_or_zip_member_names": {
+    "model_weights.ckpt": 48,
+    "common.pt": 7,
+    "shard_0_32.pt": 4,
+    "shard_10_32.pt": 4,
+    "shard_11_32.pt": 4,
+    "shard_12_32.pt": 4,
+    "shard_13_32.pt": 4,
+    "shard_14_32.pt": 4,
+    "shard_15_32.pt": 4,
+    "shard_16_32.pt": 4,
+    "shard_17_32.pt": 4,
+    "shard_18_32.pt": 4,
+    "shard_19_32.pt": 4,
+    "shard_1_32.pt": 4,
+    "shard_20_32.pt": 4,
+    "shard_21_32.pt": 4,
+    "shard_22_32.pt": 4,
+    "shard_23_32.pt": 4,
+    "shard_24_32.pt": 4,
+    "shard_25_32.pt": 4,
+    "shard_26_32.pt": 4,
+    "shard_27_32.pt": 4,
+    "shard_28_32.pt": 4,
+    "shard_29_32.pt": 4,
+    "shard_2_32.pt": 4
+   },
+   "capped": 0,
+   "walk_errors": 1,
+   "errors": 0,
+   "legacy_files": []
+  }
+ }
+}

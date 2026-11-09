@@ -1,0 +1,24 @@
+{
+ "files": {
+  "nemo_container_scan.py": {
+   "changes": [
+    "docstring",
+    "version 0.3.0",
+    "_scan_pickle_ops",
+    "bare branch"
+   ],
+   "second_pass": [],
+   "lost": [],
+   "lines": [
+    479,
+    606
+   ],
+   "ok": true
+  }
+ },
+ "ok": true,
+ "written": [
+  "nemo_container_scan.py",
+  "test_nemo_container_scan_streams.py"
+ ]
+}
