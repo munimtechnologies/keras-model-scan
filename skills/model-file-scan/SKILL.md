@@ -120,6 +120,11 @@ and [PICKLE_SCAN.md](https://github.com/munimtechnologies/keras-model-scan/blob/
   start with `PK`. Files written with several `pickle.dump` calls are read only to the end
   of the first pickle. A fix is being checked
   ([research/PREREG_LEGACY_TORCH.md](https://github.com/munimtechnologies/keras-model-scan/blob/main/research/PREREG_LEGACY_TORCH.md)).
+- The same applies inside a `.nemo` file: if its `model_weights.ckpt` is in the legacy format
+  and 256 MiB or smaller, v0.54.0 reports nothing for it, while a zip-format checkpoint gets
+  `NEMO010`. So a `.nemo` that holds a checkpoint but gets no finding at all was not really
+  checked; do not call it clean. A fix is being checked
+  ([research/PREREG_NEMO_LEGACY.md](https://github.com/munimtechnologies/keras-model-scan/blob/main/research/PREREG_NEMO_LEGACY.md)).
 - Other known gaps in v0.54.0: lz4/zstd containers are not opened; GGUF checks cover the
   header, metadata and tensor table, not the weights; sub-byte safetensors dtypes (`F4`,
   `F6_*`) are not size-checked.
