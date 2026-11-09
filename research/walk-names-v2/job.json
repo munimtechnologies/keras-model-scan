@@ -1,0 +1,22 @@
+{
+  "name": "walk-names-v2",
+  "kind": "poc",
+  "workdir": "E:/MV2-Pursuit/work/20261109T010520Z-security/compete/walk-names",
+  "image": "python:3.12",
+  "setup": [
+    "python fetch_tree.py",
+    "python setup_install.py",
+    "python fetch_hub_names.py"
+  ],
+  "run": [
+    "python patch_walk.py tree /out",
+    "python run_tests.py tree /out",
+    "python walk_check.py --out /out --tree tree --base base"
+  ],
+  "network": true,
+  "data_urls": [],
+  "data_key": "mpk-arc-realfile",
+  "cpu": 1,
+  "memory_gb": 2,
+  "timeout_minutes": 150
+}
