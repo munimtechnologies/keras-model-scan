@@ -100,8 +100,9 @@ and [PICKLE_SCAN.md](https://github.com/munimtechnologies/keras-model-scan/blob/
 ## Safer loading, whatever the scan says
 
 - Prefer `.safetensors` (or GGUF / ONNX) weights over pickle-based `.bin`, `.pt`, `.pkl`.
-- `torch.load(path, weights_only=True)` (the default since PyTorch 2.6). Do not pass
-  `weights_only=False` for files from elsewhere.
+- `torch.load(path, weights_only=True)` (the default since PyTorch 2.6), on PyTorch 2.6.0 or
+  later: before 2.6.0, `weights_only=True` did not protect legacy-format files
+  (CVE-2025-32434). Do not pass `weights_only=False` for files from elsewhere.
 - Keras 3: keep `safe_mode=True` (the default) in `load_model`.
 - `pickle`, `joblib` and `np.load(allow_pickle=True)` have no safe mode: only load files from
   sources the user trusts.
@@ -110,9 +111,18 @@ and [PICKLE_SCAN.md](https://github.com/munimtechnologies/keras-model-scan/blob/
 
 - Static heuristics, not a sandbox. A flag means "worth human review", not proof of malice,
   and a clean result is not a guarantee of safety.
-- Known gaps in v0.54.0: lz4/zstd containers are not opened; GGUF checks cover the header,
-  metadata and tensor table, not the weights; sub-byte safetensors dtypes (`F4`, `F6_*`) are
-  not size-checked.
+- **Legacy-format PyTorch files are not really checked in v0.54.0.** A file written by
+  `torch.save(..., _use_new_zipfile_serialization=False)` (the default before PyTorch 1.6,
+  and common in older Hugging Face `pytorch_model.bin` files) holds five pickles back to
+  back, and v0.54.0 reads only the first one, torch's 15-byte magic number. It never sees the
+  model's imports, so a clean result on such a file means "not checked". You can tell such a
+  file by its first bytes, `80 02 8a 0a 6c fc 9c 46` (protocol 2), while zip-format files
+  start with `PK`. Files written with several `pickle.dump` calls are read only to the end
+  of the first pickle. A fix is being checked
+  ([research/PREREG_LEGACY_TORCH.md](https://github.com/munimtechnologies/keras-model-scan/blob/main/research/PREREG_LEGACY_TORCH.md)).
+- Other known gaps in v0.54.0: lz4/zstd containers are not opened; GGUF checks cover the
+  header, metadata and tensor table, not the weights; sub-byte safetensors dtypes (`F4`,
+  `F6_*`) are not size-checked.
 - It checks only the files given. Code that a model repository runs itself
   (`trust_remote_code=True`, custom `*.py`) is a separate risk: read that code.
 
