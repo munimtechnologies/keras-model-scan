@@ -1,0 +1,25 @@
+{
+  "name": "ts-fix-v1",
+  "kind": "poc",
+  "workdir": "E:/MV2-Pursuit/work/20261110T121806Z-security/compete/ts-fix",
+  "image": "python:3.12",
+  "setup": [
+    "python fetch_tree.py",
+    "python setup_install.py"
+  ],
+  "run": [
+    "python make_fixtures.py",
+    "python patch_ts.py tree /out",
+    "python run_tests.py tree /out tests_summary.json",
+    "python run_tests.py base /out tests_base.json",
+    "python scan_dump.py base fx base_dump.json",
+    "python scan_dump.py tree fx patched_dump.json",
+    "python ts_fix_check.py --out /out"
+  ],
+  "network": true,
+  "data_urls": [],
+  "data_key": "mpk-arc-realfile",
+  "cpu": 1,
+  "memory_gb": 2,
+  "timeout_minutes": 120
+}
