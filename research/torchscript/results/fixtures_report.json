@@ -1,0 +1,69 @@
+{
+ "fixtures": {
+  "F1": {
+   "path": "/work/fx/model.pt",
+   "bytes": 12841
+  },
+  "F2": {
+   "path": "/work/fx/model.torchscript",
+   "bytes": 9697
+  },
+  "F3": {
+   "path": "/work/fx/model.ptl",
+   "bytes": 14761
+  },
+  "F4": {
+   "path": "/work/fx/model.pt2",
+   "bytes": 17732
+  },
+  "F5": {
+   "path": "/work/fx/weights.pth",
+   "bytes": 4425
+  }
+ },
+ "loaders": {
+  "jit_load_F1": {
+   "ok": true,
+   "type": "RecursiveScriptModule",
+   "warnings": [
+    "`torch.jit.load` is deprecated. Please switch to `torch.export`."
+   ]
+  },
+  "jit_load_F2": {
+   "ok": true,
+   "type": "RecursiveScriptModule",
+   "warnings": [
+    "`torch.jit.load` is deprecated. Please switch to `torch.export`."
+   ]
+  },
+  "torch_load_F1_weights_only_true": {
+   "ok": false,
+   "error": "RuntimeError: Cannot use ``weights_only=True`` with TorchScript archives passed to ``torch.load``. In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result i"
+  },
+  "torch_load_F1_weights_only_false": {
+   "ok": true,
+   "type": "RecursiveScriptModule",
+   "warnings": [
+    "'torch.load' received a zip file that looks like a TorchScript archive dispatching to 'torch.jit.load' (call 'torch.jit.load' directly to silence this warning)",
+    "`torch.jit.load` is deprecated. Please switch to `torch.export`."
+   ]
+  },
+  "lite_load_F3": {
+   "ok": true,
+   "type": "LiteScriptModule",
+   "warnings": []
+  },
+  "export_load_F4": {
+   "ok": true,
+   "type": "ExportedProgram",
+   "warnings": []
+  },
+  "torch_load_F5_weights_only_true": {
+   "ok": true,
+   "type": "OrderedDict",
+   "warnings": []
+  }
+ },
+ "errors": {},
+ "torch": "2.15.0+cpu"
+}

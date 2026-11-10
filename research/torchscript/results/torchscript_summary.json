@@ -1,0 +1,294 @@
+{
+ "versions": {
+  "model_file_scan": "0.13.2",
+  "pickle_model_scan": "0.6.0",
+  "torch": "2.15.0+cpu"
+ },
+ "have": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true
+ },
+ "rows": {
+  "P1": {
+   "result": "held",
+   "why": "written: ['F1', 'F2', 'F3', 'F4', 'F5']"
+  },
+  "W1": {
+   "result": "held",
+   "why": "kept=['model.pt', 'weights.pth']"
+  },
+  "W2": {
+   "result": "held",
+   "why": "predicted skipped=['model.torchscript', 'model.ptl', 'model.pt2']"
+  },
+  "D1": {
+   "result": "held",
+   "why": "PKL003 per file={'F1': 4, 'F2': 4, 'F3': 4}"
+  },
+  "D2": {
+   "result": "held",
+   "why": "high+={'F1': [], 'F2': [], 'F3': [], 'F4': [], 'F5': []}"
+  },
+  "D3": {
+   "result": "held",
+   "why": "F5 medium+=[]"
+  },
+  "G1": {
+   "result": "held",
+   "why": "unknown=12 non-__torch__=[]"
+  },
+  "L1": {
+   "result": "held",
+   "why": "rows=[True, True, False, True] type=RecursiveScriptModule"
+  },
+  "L2": {
+   "result": "held",
+   "why": "{\"ok\": true, \"type\": \"LiteScriptModule\", \"warnings\": []}"
+  },
+  "C1": {
+   "result": "held",
+   "why": "exit=1"
+  }
+ },
+ "detail": {
+  "walk_kept": [
+   "model.pt",
+   "weights.pth"
+  ],
+  "direct": {
+   "F1": [
+    {
+     "rule": "PKL003",
+     "severity": "MEDIUM",
+     "title": "Import outside the known-safe allowlist",
+     "detail": "Pickle imports __torch__.Net, which is not a recognised safe model reconstructor. Confirm this module belongs in a model file.",
+     "location": "/work/fx/model.pt!model/data.pkl @ byte 2"
+    },
+    {
+     "rule": "PKL003",
+     "severity": "MEDIUM",
+     "title": "Import outside the known-safe allowlist",
+     "detail": "Pickle imports __torch__.torch.nn.modules.linear.Linear, which is not a recognised safe model reconstructor. Confirm this module belongs in a model file.",
+     "location": "/work/fx/model.pt!model/data.pkl @ byte 79"
+    },
+    {
+     "rule": "PKL003",
+     "severity": "MEDIUM",
+     "title": "Import outside the known-safe allowlist",
+     "detail": "Pickle imports __torch__.torch.nn.modules.batchnorm.BatchNorm1d, which is not a recognised safe model reconstructor. Confirm this module belongs in a model file.",
+     "location": "/work/fx/model.pt!model/data.pkl @ byte 358"
+    },
+    {
+     "rule": "PKL003",
+     "severity": "MEDIUM",
+     "title": "Import outside the known-safe allowlist",
+     "detail": "Pickle imports __torch__.torch.nn.modules.linear.___torch_mangle_0.Linear, which is not a recognised safe model reconstructor. Confirm this module belongs in a model file.",
+     "location": "/work/fx/model.pt!model/data.pkl @ byte 731"
+    }
+   ],
+   "F2": [
+    {
+     "rule": "PKL003",
+     "severity": "MEDIUM",
+     "title": "Import outside the known-safe allowlist",
+     "detail": "Pickle imports __torch__.___torch_mangle_4.Net, which is not a recognised safe model reconstructor. Confirm this module belongs in a model file.",
+     "location": "/work/fx/model.torchscript!model/data.pkl @ byte 2"
+    },
+    {
+     "rule": "PKL003",
+     "severity": "MEDIUM",
+     "title": "Import outside the known-safe allowlist",
+     "detail": "Pickle imports __torch__.torch.nn.modules.linear.___torch_mangle_1.Linear, which is not a recognised safe model reconstructor. Confirm this module belongs in a model file.",
+     "location": "/work/fx/model.torchscript!model/data.pkl @ byte 97"
+    },
+    {
+     "rule": "PKL003",
+     "severity": "MEDIUM",
+     "title": "Import outside the known-safe allowlist",
+     "detail": "Pickle imports __torch__.torch.nn.modules.batchnorm.___torch_mangle_2.BatchNorm1d, which is not a recognised safe model reconstructor. Confirm this module belongs in a model file.",
+     "location": "/work/fx/model.torchscript!model/data.pkl @ byte 394"
+    },
+    {
+     "rule": "PKL003",
+     "severity": "MEDIUM",
+     "title": "Import outside the known-safe allowlist",
+     "detail": "Pickle imports __torch__.torch.nn.modules.linear.___torch_mangle_3.Linear, which is not a recognised safe model reconstructor. Confirm this module belongs in a model file.",
+     "location": "/work/fx/model.torchscript!model/data.pkl @ byte 785"
+    }
+   ],
+   "F3": [
+    {
+     "rule": "PKL003",
+     "severity": "MEDIUM",
+     "title": "Import outside the known-safe allowlist",
+     "detail": "Pickle imports __torch__.Net, which is not a recognised safe model reconstructor. Confirm this module belongs in a model file.",
+     "location": "/work/fx/model.ptl!model/data.pkl @ byte 2"
+    },
+    {
+     "rule": "PKL003",
+     "severity": "MEDIUM",
+     "title": "Import outside the known-safe allowlist",
+     "detail": "Pickle imports __torch__.torch.nn.modules.linear.Linear, which is not a recognised safe model reconstructor. Confirm this module belongs in a model file.",
+     "location": "/work/fx/model.ptl!model/data.pkl @ byte 79"
+    },
+    {
+     "rule": "PKL003",
+     "severity": "MEDIUM",
+     "title": "Import outside the known-safe allowlist",
+     "detail": "Pickle imports __torch__.torch.nn.modules.batchnorm.BatchNorm1d, which is not a recognised safe model reconstructor. Confirm this module belongs in a model file.",
+     "location": "/work/fx/model.ptl!model/data.pkl @ byte 358"
+    },
+    {
+     "rule": "PKL003",
+     "severity": "MEDIUM",
+     "title": "Import outside the known-safe allowlist",
+     "detail": "Pickle imports __torch__.torch.nn.modules.linear.___torch_mangle_0.Linear, which is not a recognised safe model reconstructor. Confirm this module belongs in a model file.",
+     "location": "/work/fx/model.ptl!model/data.pkl @ byte 731"
+    }
+   ],
+   "F4": [
+    {
+     "rule": "PKL000",
+     "severity": "LOW",
+     "title": "Pickle stream could not be fully parsed",
+     "detail": "pickletools stopped reading at an opcode: 'utf-8' codec can't decode byte 0x80 in position 63: invalid start byte. Part of the stream was not analysed; treat the file with caution.",
+     "location": "/work/fx/model.pt2!model/data/sample_inputs/model.pt"
+    }
+   ],
+   "F5": []
+  },
+  "direct_counts": {
+   "F1": {
+    "PKL003:MEDIUM": 4
+   },
+   "F2": {
+    "PKL003:MEDIUM": 4
+   },
+   "F3": {
+    "PKL003:MEDIUM": 4
+   },
+   "F4": {
+    "PKL000:LOW": 1
+   },
+   "F5": {}
+  },
+  "global_census": {
+   "F1": {
+    "model/data.pkl": [
+     "__torch__.Net",
+     "__torch__.torch.nn.modules.batchnorm.BatchNorm1d",
+     "__torch__.torch.nn.modules.linear.Linear",
+     "__torch__.torch.nn.modules.linear.___torch_mangle_0.Linear",
+     "collections.OrderedDict",
+     "torch.FloatStorage",
+     "torch.LongStorage",
+     "torch._utils._rebuild_tensor_v2"
+    ],
+    "model/constants.pkl": []
+   },
+   "F2": {
+    "model/data.pkl": [
+     "__torch__.___torch_mangle_4.Net",
+     "__torch__.torch.nn.modules.batchnorm.___torch_mangle_2.BatchNorm1d",
+     "__torch__.torch.nn.modules.linear.___torch_mangle_1.Linear",
+     "__torch__.torch.nn.modules.linear.___torch_mangle_3.Linear",
+     "collections.OrderedDict",
+     "torch.FloatStorage",
+     "torch.LongStorage",
+     "torch._utils._rebuild_tensor_v2"
+    ],
+    "model/constants.pkl": [],
+    "model/traced_inputs.pkl": [
+     "collections.OrderedDict",
+     "torch.FloatStorage",
+     "torch._utils._rebuild_tensor_v2",
+     "torch.jit._pickle.restore_type_tag"
+    ]
+   },
+   "F3": {
+    "model/data.pkl": [
+     "__torch__.Net",
+     "__torch__.torch.nn.modules.batchnorm.BatchNorm1d",
+     "__torch__.torch.nn.modules.linear.Linear",
+     "__torch__.torch.nn.modules.linear.___torch_mangle_0.Linear",
+     "collections.OrderedDict",
+     "torch.FloatStorage",
+     "torch.LongStorage",
+     "torch._utils._rebuild_tensor_v2"
+    ],
+    "model/constants.pkl": [],
+    "model/bytecode.pkl": []
+   }
+  },
+  "loaders": {
+   "jit_load_F1": {
+    "ok": true,
+    "type": "RecursiveScriptModule",
+    "warnings": [
+     "`torch.jit.load` is deprecated. Please switch to `torch.export`."
+    ]
+   },
+   "jit_load_F2": {
+    "ok": true,
+    "type": "RecursiveScriptModule",
+    "warnings": [
+     "`torch.jit.load` is deprecated. Please switch to `torch.export`."
+    ]
+   },
+   "torch_load_F1_weights_only_true": {
+    "ok": false,
+    "error": "RuntimeError: Cannot use ``weights_only=True`` with TorchScript archives passed to ``torch.load``. In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result i"
+   },
+   "torch_load_F1_weights_only_false": {
+    "ok": true,
+    "type": "RecursiveScriptModule",
+    "warnings": [
+     "'torch.load' received a zip file that looks like a TorchScript archive dispatching to 'torch.jit.load' (call 'torch.jit.load' directly to silence this warning)",
+     "`torch.jit.load` is deprecated. Please switch to `torch.export`."
+    ]
+   },
+   "lite_load_F3": {
+    "ok": true,
+    "type": "LiteScriptModule",
+    "warnings": []
+   },
+   "export_load_F4": {
+    "ok": true,
+    "type": "ExportedProgram",
+    "warnings": []
+   },
+   "torch_load_F5_weights_only_true": {
+    "ok": true,
+    "type": "OrderedDict",
+    "warnings": []
+   }
+  },
+  "cli": {
+   "F1": {
+    "exit": 1,
+    "stderr_tail": ""
+   },
+   "dir": {
+    "exit": 1,
+    "stderr_tail": ""
+   }
+  }
+ },
+ "held": [
+  "C1",
+  "D1",
+  "D2",
+  "D3",
+  "G1",
+  "L1",
+  "L2",
+  "P1",
+  "W1",
+  "W2"
+ ],
+ "failed": [],
+ "not_run": []
+}

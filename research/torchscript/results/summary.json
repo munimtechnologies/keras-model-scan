@@ -1,0 +1,67 @@
+{
+ "contract": "mv2-compete-result-v1",
+ "name": "torchscript-v1",
+ "id": "38d2507277f4",
+ "field": "security",
+ "run": "20261110T062321Z-security",
+ "kind": "poc",
+ "status": "ok",
+ "reason": "",
+ "host": "blade",
+ "image": "python:3.12",
+ "started_at": "2026-11-10T06:32:58.293745+00:00",
+ "finished_at": "2026-11-10T06:37:43.000003+00:00",
+ "duration_seconds": 284,
+ "limits": {
+  "cpu": 1.0,
+  "memory_gb": 2.0,
+  "timeout_minutes": 90.0
+ },
+ "peak_memory_gb": null,
+ "network": {
+  "setup": true,
+  "run": false
+ },
+ "steps": [
+  {
+   "step": "setup-01-python",
+   "cmd": "python fetch_tree.py",
+   "exit": 0,
+   "seconds": 1
+  },
+  {
+   "step": "setup-02-python",
+   "cmd": "python setup_install.py",
+   "exit": 0,
+   "seconds": 45
+  },
+  {
+   "step": "run-01-python",
+   "cmd": "python make_fixtures.py",
+   "exit": 0,
+   "seconds": 6
+  },
+  {
+   "step": "run-02-python",
+   "cmd": "python ts_check.py --out /out",
+   "exit": 0,
+   "seconds": 1
+  }
+ ],
+ "out_files": [
+  "fetch_report.json",
+  "fixtures_report.json",
+  "setup_report.json",
+  "torchscript_summary.json"
+ ],
+ "out_files_total": 4,
+ "out_skipped": [],
+ "upload_skipped": [],
+ "summary_tail": "[run-02-python stdout] {\n \"held\": [\n  \"C1\",\n  \"D1\",\n  \"D2\",\n  \"D3\",\n  \"G1\",\n  \"L1\",\n  \"L2\",\n  \"P1\",\n  \"W1\",\n  \"W2\"\n ],\n \"failed\": [],\n \"not_run\": []\n}\n",
+ "paths": {
+  "workdir": "/work (copy of E:\\MV2-Pursuit\\work\\20261110T062321Z-security\\compete\\torchscript)",
+  "out": "/out -> out/",
+  "data": "/data (docker volume mv2c-data-mpk-arc-realfile, kept for later jobs)"
+ },
+ "note": ""
+}
