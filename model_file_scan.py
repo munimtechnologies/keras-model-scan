@@ -58,7 +58,7 @@ import json
 import os
 import sys
 
-__version__ = "0.13.2"
+__version__ = "0.14.0"
 
 REPO_URL = "https://github.com/munimtechnologies/keras-model-scan"
 
@@ -118,6 +118,7 @@ _LGB_TEXT_EXTS = {".txt", ".lgb", ".lightgbm"}
 # added only when their content is a LightGBM or XGBoost model.
 _MODEL_EXTS = _KERAS_EXTS | {
     ".pkl", ".pickle", ".joblib", ".pt", ".pth", ".bin",
+    ".ptl", ".torchscript", ".pt2",  # TorchScript, PyTorch mobile, torch.export (0.14.0)
     ".npy", ".npz", ".safetensors", ".gguf", ".ckpt", ".model",
 } | (set(_EXT_ROUTES) - {".xml", ".mlpackage"})
 

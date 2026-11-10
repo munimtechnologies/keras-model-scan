@@ -26,6 +26,9 @@ without running them, and flags the opcodes behind those attacks.
 - scikit-learn / joblib dumps: `.joblib` (incl. zlib/gzip/bz2/xz/lzma-compressed),
   walked to the end since 0.4.0 (see below)
 - PyTorch archives: `.pt`, `.pth`, `.bin` (the pickle inside the ZIP, e.g. `data.pkl`)
+- TorchScript, PyTorch mobile and `torch.export` archives (`.torchscript`, `.ptl`,
+  `.pt2`, or a `.pt` written by `torch.jit.save`); since 0.7.0 a TorchScript
+  archive gets one PKL040 finding (see below)
 - NumPy: `.npy` / `.npz` — flags **object-dtype** arrays whose data is a pickle
 - Recognises and reports the **safe** formats — `safetensors` and `GGUF` have no
   code-execution surface — so you can confirm a file is the safe kind. For a full
@@ -47,6 +50,7 @@ without running them, and flags the opcodes behind those attacks.
 | PKL022 | INFO | GGUF — data-only format, no code surface |
 | PKL021 / PKL006 / PKL000 | LOW | Malformed safetensors header / unscannable compression (lz4, zstd) / truncated pickle stream |
 | PKL030 | HIGH | Archive member escapes the extraction directory (Zip Slip) |
+| PKL040 | MEDIUM | TorchScript archive: treat as executable code (0.7.0+; one per archive, in place of one PKL003 per `__torch__` class) |
 
 **Correction (v0.5.0):** earlier versions cited the STACK_GLOBAL bypass under a
 mistyped CVE number and tagged PKL001 with CVE-2025-1550. The bypass advisory
@@ -80,6 +84,34 @@ Exit codes: `0` clean (below threshold), `1` findings at/above `--fail-on`
   suspicious-but-unclassified. When in doubt, don't load it; prefer `safetensors`.
 - lz4/zstd-compressed containers are reported as unscanned (no stdlib codec);
   decompress them first.
+- PKL040 says a file is a TorchScript program to be trusted like code. It does
+  not read or judge the TorchScript source stored in the archive.
+
+<!-- pkl-torchscript -->
+## TorchScript archives (0.7.0, November 2026)
+
+`torch.jit.save` (and the PyTorch mobile lite-interpreter writer) stores a
+model as a zip with `<prefix>/data.pkl`, a `<prefix>/code/` folder of
+TorchScript source and, for mobile files, `<prefix>/bytecode.pkl`. The pickles
+name classes such as `__torch__.MyNet`. Those are not Python imports:
+`torch.jit.load` compiles the stored code and builds every `__torch__.*` class
+from it. PyTorch's own security policy (SECURITY.md) says TorchScript models
+should be treated like locally executable code from an unknown source.
+
+Up to 0.6.0 each such class got its own PKL003 MEDIUM ("not a recognised safe
+model reconstructor"), four per file on a small network. Since 0.7.0 a prefix
+with `data.pkl` plus a `code/` folder or a `bytecode.pkl` is recognised as a
+TorchScript archive and gets **one PKL040 MEDIUM "TorchScript archive: treat
+as executable code"**. Only the PKL003 findings that name a `__torch__.` class
+and sit in that archive's own `data.pkl`, `constants.pkl` or `bytecode.pkl`
+are folded in. Every other finding stays: any non-`__torch__` import, any
+other rule, any other member. The severity is the same, so the default
+`--fail-on medium` gate still stops every TorchScript file.
+
+Pre-registered in [research/PREREG_TS_FIX.md](research/PREREG_TS_FIX.md) and
+**graded 9 of 9** in
+[REALFILE_CHECK_TS_FIX_2026-11.md](REALFILE_CHECK_TS_FIX_2026-11.md) on files
+written by torch 2.15's own writers and loaded by its own loaders.
 
 <!-- pkl-memo -->
 ## STACK_GLOBAL operands from the memo (0.4.0, November 2026)

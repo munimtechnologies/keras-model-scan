@@ -39,6 +39,15 @@ unpickles only data.pkl and copies each storage as raw bytes; up to 0.5.0
 a storage whose first byte happened to be 0x80 was walked as a pickle and
 reported as a damaged stream (PKL000) on honest files.
 
+Since 0.7.0, a TorchScript archive (torch.jit.save or the PyTorch mobile
+lite-interpreter writer: <prefix>/data.pkl next to a <prefix>/code/ folder
+or a <prefix>/bytecode.pkl) gets ONE finding, PKL040 MEDIUM "TorchScript
+archive: treat as executable code", instead of one PKL003 per __torch__
+class. torch.jit.load builds those classes from the code stored in the
+archive; they are not Python imports. PyTorch's SECURITY.md says to treat
+TorchScript models like locally executable code from an unknown source, so
+the severity stays MEDIUM. Any other import keeps its usual rule.
+
 A flag means a pattern worth human review, not proof of malice. A clean result is
 not a guarantee of safety: this is a static heuristic, not a sandbox.
 
@@ -65,7 +74,7 @@ import zipfile
 import zlib
 from dataclasses import dataclass
 
-__version__ = "0.6.0"
+__version__ = "0.7.0"
 
 # Modules whose presence in a pickle is a direct code-execution concern.
 DANGEROUS_MODULES = frozenset({
@@ -848,6 +857,82 @@ def _torch_storage_members(names):
     return storages
 
 
+_TS_IMPORT = "Pickle imports __torch__."
+_TS_MEMBERS = frozenset({"data.pkl", "constants.pkl", "bytecode.pkl"})
+
+
+def _torchscript_prefixes(names):
+    """Prefixes of the TorchScript archives inside a zip.
+
+    torch.jit.save writes <prefix>/data.pkl next to a <prefix>/code/ folder
+    of TorchScript source; the lite-interpreter writer also adds
+    <prefix>/bytecode.pkl. torch.jit.load compiles that stored code and
+    builds every __torch__.* class from it; it never imports a Python module
+    of that name. Returns the prefixes (e.g. "model/") that have a data.pkl
+    and either a code/ folder or a bytecode.pkl."""
+    data_prefixes, marked = set(), set()
+    for name in names:
+        parts = name.split("/")
+        last = parts[-1]
+        if last == "data.pkl":
+            data_prefixes.add(name[:-len(last)])
+        elif last == "bytecode.pkl":
+            marked.add(name[:-len(last)])
+        acc = ""
+        for part in parts[:-1]:
+            if part == "code":
+                marked.add(acc)
+            acc += part + "/"
+    return data_prefixes & marked
+
+
+def _collapse_torchscript(findings, prefixes, source):
+    """One PKL040 per TorchScript archive instead of one PKL003 per class.
+
+    Only a PKL003 that names a __torch__ class AND sits in the archive's own
+    data.pkl, constants.pkl or bytecode.pkl is folded in. Every other finding
+    (any other rule, any non-__torch__ import, any other member) is kept
+    unchanged, so the highest severity of a file never goes down."""
+    head = f"{source}!"
+    kept, classes = [], {}
+    for f in findings:
+        prefix = None
+        if (f.rule == "PKL003" and f.detail.startswith(_TS_IMPORT)
+                and f.location.startswith(head)):
+            member = f.location[len(head):].rsplit(" @ byte ", 1)[0]
+            folder, _sep, base = member.rpartition("/")
+            folder = folder + "/" if _sep else ""
+            if base in _TS_MEMBERS and folder in prefixes:
+                prefix = folder
+        if prefix is None:
+            kept.append(f)
+        else:
+            ref = f.detail[len("Pickle imports "):].split(",", 1)[0]
+            classes.setdefault(prefix, set()).add(ref)
+    out = []
+    for prefix in sorted(prefixes):
+        refs = sorted(classes.get(prefix, ()))
+        if refs:
+            shown = ", ".join(refs[:3])
+            if len(refs) > 3:
+                shown += f" and {len(refs) - 3} more"
+            what = (f"Its {len(refs)} TorchScript class name(s) ({shown}) are "
+                    "built by torch.jit.load from the code stored in the "
+                    "archive, not imported from Python.")
+        else:
+            what = ("Its TorchScript code is stored in the archive and is "
+                    "compiled by torch.jit.load.")
+        out.append(Finding(
+            "PKL040", "MEDIUM", "TorchScript archive: treat as executable code",
+            "This zip is a TorchScript program (torch.jit.save, or the PyTorch "
+            f"mobile lite-interpreter writer). {what} PyTorch's security "
+            "policy (SECURITY.md) says to treat TorchScript models like "
+            "locally executable code from an unknown source: load it only "
+            "from a provider you trust. Other imports in the archive are "
+            "reported by their usual rules.", f"{head}{prefix}data.pkl"))
+    return out + kept
+
+
 def scan_zip(data, source):
     findings = []
     try:
@@ -874,6 +959,9 @@ def scan_zip(data, source):
         elif (ext in PICKLE_EXTS or base == "data.pkl"
               or (member[:1] == b"\x80" and name not in raw_storage)):
             findings += scan_pickle_bytes(member, member_src)
+    ts_prefixes = _torchscript_prefixes(zf.namelist())
+    if ts_prefixes:
+        findings = _collapse_torchscript(findings, ts_prefixes, source)
     return findings
 
 

@@ -1,0 +1,240 @@
+{
+ "versions": {
+  "base": {
+   "model_file_scan": "0.13.2",
+   "pickle_model_scan": "0.6.0"
+  },
+  "patched": {
+   "model_file_scan": "0.14.0",
+   "pickle_model_scan": "0.7.0"
+  },
+  "torch": "2.15.0+cpu"
+ },
+ "have": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true
+ },
+ "rows": {
+  "P1": {
+   "result": "held",
+   "why": "patch ok=True error=None base={'model_file_scan': '0.13.2', 'pickle_model_scan': '0.6.0'} patched={'model_file_scan': '0.14.0', 'pickle_model_scan': '0.7.0'}"
+  },
+  "S1": {
+   "result": "held",
+   "why": "patched ran=1444 ok=True failures=[] errors=[]; base ran=1431 ok=True"
+  },
+  "W3": {
+   "result": "held",
+   "why": "patched=['model.pt', 'model.pt2', 'model.ptl', 'model.torchscript', 'weights.pth'] base=['model.pt', 'weights.pth']"
+  },
+  "T1": {
+   "result": "held",
+   "why": "{\"F1\": {\"pkl040\": 1, \"pkl040_medium\": true, \"torch_pkl003_patched\": 0, \"torch_pkl003_base\": 4}, \"F2\": {\"pkl040\": 1, \"pkl040_medium\": true, \"torch_pkl003_patched\": 0, \"torch_pkl003_base\": 4}, \"F3\": {\"pkl040\": 1, \"pkl040_medium\": true, \"torch_pkl003_patched\": 0, \"torch_pkl003_base\": 4}}"
+  },
+  "T2": {
+   "result": "held",
+   "why": "high+={'F1': [], 'F2': [], 'F3': [], 'F4': [], 'F5': []}"
+  },
+  "T3": {
+   "result": "held",
+   "why": "{\"F4\": true, \"F5\": true}"
+  },
+  "T4": {
+   "result": "held",
+   "why": "{\"F1\": [2, 2], \"F2\": [2, 2], \"F3\": [2, 2], \"F4\": [1, 1], \"F5\": [-1, -1]}"
+  },
+  "C2": {
+   "result": "held",
+   "why": "{\"F1\": 1, \"dir\": 1, \"F5\": 0, \"F5_base\": 0}"
+  },
+  "L0": {
+   "result": "held",
+   "why": "ok=[True, True, True]"
+  }
+ },
+ "recorded": {
+  "F4_patched": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: 'utf-8' codec can't decode byte 0x80 in position 63: invalid start byte. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model.pt2!model/data/sample_inputs/model.pt"
+   }
+  ],
+  "F4_base": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: 'utf-8' codec can't decode byte 0x80 in position 63: invalid start byte. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model.pt2!model/data/sample_inputs/model.pt"
+   }
+  ],
+  "members": {
+   "F1": [
+    "model/data/0",
+    "model/data/1",
+    "model/data/2",
+    "model/data/3",
+    "model/data/4",
+    "model/data/5",
+    "model/data/6",
+    "model/data/7",
+    "model/data/8",
+    "model/data.pkl",
+    "model/code/__torch__.py",
+    "model/code/__torch__.py.debug_pkl",
+    "model/code/__torch__/torch/nn/modules/linear.py",
+    "model/code/__torch__/torch/nn/modules/linear.py.debug_pkl",
+    "model/code/__torch__/torch/nn/modules/batchnorm.py",
+    "model/code/__torch__/torch/nn/modules/batchnorm.py.debug_pkl",
+    "model/code/__torch__/torch/nn/modules/linear/___torch_mangle_0.py",
+    "model/code/__torch__/torch/nn/modules/linear/___torch_mangle_0.py.debug_pkl",
+    "model/code/__torch__/torch/nn/functional.py",
+    "model/code/__torch__/torch/nn/functional.py.debug_pkl",
+    "model/constants.pkl",
+    "model/version",
+    "model/byteorder",
+    "model/.data/serialization_id"
+   ],
+   "F2": [
+    "model/data/0",
+    "model/data/1",
+    "model/data/2",
+    "model/data/3",
+    "model/data/4",
+    "model/data/5",
+    "model/data/6",
+    "model/data/7",
+    "model/data/8",
+    "model/data.pkl",
+    "model/code/__torch__/___torch_mangle_4.py",
+    "model/code/__torch__/___torch_mangle_4.py.debug_pkl",
+    "model/code/__torch__/torch/nn/modules/linear/___torch_mangle_1.py",
+    "model/code/__torch__/torch/nn/modules/linear/___torch_mangle_1.py.debug_pkl",
+    "model/code/__torch__/torch/nn/modules/batchnorm/___torch_mangle_2.py",
+    "model/code/__torch__/torch/nn/modules/batchnorm/___torch_mangle_2.py.debug_pkl",
+    "model/code/__torch__/torch/nn/modules/linear/___torch_mangle_3.py",
+    "model/code/__torch__/torch/nn/modules/linear/___torch_mangle_3.py.debug_pkl",
+    "model/constants.pkl",
+    "model/traced_inputs/0",
+    "model/traced_inputs.pkl",
+    "model/version",
+    "model/byteorder",
+    "model/.data/serialization_id"
+   ],
+   "F3": [
+    "model/data/0",
+    "model/data/1",
+    "model/data/2",
+    "model/data/3",
+    "model/data/4",
+    "model/data/5",
+    "model/data/6",
+    "model/data/7",
+    "model/data/8",
+    "model/data.pkl",
+    "model/code/__torch__.py",
+    "model/code/__torch__.py.debug_pkl",
+    "model/code/__torch__/torch/nn/modules/linear.py",
+    "model/code/__torch__/torch/nn/modules/linear.py.debug_pkl",
+    "model/code/__torch__/torch/nn/modules/batchnorm.py",
+    "model/code/__torch__/torch/nn/modules/batchnorm.py.debug_pkl",
+    "model/code/__torch__/torch/nn/modules/linear/___torch_mangle_0.py",
+    "model/code/__torch__/torch/nn/modules/linear/___torch_mangle_0.py.debug_pkl",
+    "model/code/__torch__/torch/nn/functional.py",
+    "model/code/__torch__/torch/nn/functional.py.debug_pkl",
+    "model/constants.pkl",
+    "model/bytecode.pkl",
+    "model/version",
+    "model/byteorder",
+    "model/.data/serialization_id"
+   ],
+   "F4": [
+    "model/data/weights/weight_0",
+    "model/data/weights/weight_1",
+    "model/data/weights/weight_2",
+    "model/data/weights/weight_3",
+    "model/data/weights/weight_4",
+    "model/data/weights/weight_5",
+    "model/data/weights/weight_6",
+    "model/data/weights/weight_7",
+    "model/data/weights/weight_8",
+    "model/data/weights/model_weights_config.json",
+    "model/data/constants/model_constants_config.json",
+    "model/models/model.json",
+    "model/data/sample_inputs/model.pt",
+    "model/archive_format",
+    "model/archive_version",
+    "model/.data/version",
+    "model/byteorder",
+    "model/.data/serialization_id"
+   ],
+   "F5": [
+    "weights/data.pkl",
+    "weights/.format_version",
+    "weights/.storage_alignment",
+    "weights/byteorder",
+    "weights/data/0",
+    "weights/data/1",
+    "weights/data/2",
+    "weights/data/3",
+    "weights/data/4",
+    "weights/data/5",
+    "weights/data/6",
+    "weights/data/7",
+    "weights/data/8",
+    "weights/version",
+    "weights/.data/serialization_id"
+   ]
+  },
+  "loaders": {
+   "jit_load_F1": {
+    "ok": true,
+    "type": "RecursiveScriptModule",
+    "warnings": [
+     "`torch.jit.load` is deprecated. Please switch to `torch.export`."
+    ]
+   },
+   "jit_load_F2": {
+    "ok": true,
+    "type": "RecursiveScriptModule",
+    "warnings": [
+     "`torch.jit.load` is deprecated. Please switch to `torch.export`."
+    ]
+   },
+   "lite_load_F3": {
+    "ok": true,
+    "type": "LiteScriptModule",
+    "warnings": []
+   },
+   "export_load_F4": {
+    "ok": true,
+    "type": "ExportedProgram",
+    "warnings": []
+   },
+   "torch_load_F5_weights_only_true": {
+    "ok": true,
+    "type": "OrderedDict",
+    "warnings": []
+   }
+  }
+ },
+ "held": [
+  "C2",
+  "L0",
+  "P1",
+  "S1",
+  "T1",
+  "T2",
+  "T3",
+  "T4",
+  "W3"
+ ],
+ "failed": [],
+ "not_run": []
+}

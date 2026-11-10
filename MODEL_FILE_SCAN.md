@@ -1,7 +1,7 @@
 # model-file-scan
 
 <!-- routes-0.11.1 -->
-## Formats routed in 0.13.2 (release v0.57.0)
+## Formats routed in 0.14.0 (release v0.58.0)
 
 This page grew one scanner at a time; this table is the current routing.
 Everything is static: nothing is loaded, imported, unpickled or executed.
@@ -24,7 +24,7 @@ Everything is static: nothing is loaded, imported, unpickled or executed.
 | `.ubj`; `.json` whose top level has an XGBoost `learner` object; `.model` / `.bst` starting with `{` | `xgboost_model_scan` | [8 of 8](REALFILE_CHECK_XGB_2026-10.md) |
 | `.txt` / `.lgb` / `.lightgbm` / `.model` / `.bst` whose first line is `tree` | `lightgbm_model_scan` | [10 of 10](REALFILE_CHECK_LGB_2026-10.md) |
 | `.skops` (scikit-learn via skops) | `skops_scan` and `pickle_model_scan` | [10 of 10](REALFILE_CHECK_SKOPS_2026-11.md) |
-| everything else (`.pkl` `.pickle` `.joblib` `.pt` `.pth` `.bin` `.npy` `.npz` `.ckpt`, and a `.model` that is neither of the above; directory walks also pick up `*.pth.tar`, `*.pt.tar`, `*.ckpt.tar`, `.pdparams`, `.pdopt`, and `*.pkl` / `*.pickle` / `*.joblib` ending in `.z`, `.gz`, `.bz2`, `.xz`, `.lzma` or `.lz4`) | `pickle_model_scan` | [folder-walk names, 15 of 15](REALFILE_CHECK_WALK_NAMES_V2_2026-11.md); [legacy-format torch files, 19 of 19](REALFILE_CHECK_LEGACY_TORCH_2026-11.md); [tensor storages in torch zips, 11 of 11 release rows](REALFILE_CHECK_ZIP_DATA_2026-11.md) |
+| everything else (`.pkl` `.pickle` `.joblib` `.pt` `.pth` `.bin` `.npy` `.npz` `.ckpt`, TorchScript `.torchscript`, PyTorch mobile `.ptl`, `torch.export` `.pt2`, and a `.model` that is neither of the above; directory walks also pick up `*.pth.tar`, `*.pt.tar`, `*.ckpt.tar`, `.pdparams`, `.pdopt`, and `*.pkl` / `*.pickle` / `*.joblib` ending in `.z`, `.gz`, `.bz2`, `.xz`, `.lzma` or `.lz4`) | `pickle_model_scan` | [folder-walk names, 15 of 15](REALFILE_CHECK_WALK_NAMES_V2_2026-11.md); [legacy-format torch files, 19 of 19](REALFILE_CHECK_LEGACY_TORCH_2026-11.md); [tensor storages in torch zips, 11 of 11 release rows](REALFILE_CHECK_ZIP_DATA_2026-11.md); [TorchScript, 9 of 9](REALFILE_CHECK_TS_FIX_2026-11.md) |
 
 The routing itself was checked on files written by XGBoost 3.4.1 and
 LightGBM 4.7.0: [7 of 7 predictions held](REALFILE_CHECK_MFS_ROUTING_2026-11.md).
@@ -39,7 +39,10 @@ every pickle of a file written with several `pickle.dump` calls. Since 0.6.0
 (release v0.57.0) the raw tensor storages `<prefix>/data/<key>` of a
 zip-format PyTorch file that holds `<prefix>/data.pkl` are treated as data,
 as `torch.load` treats them, instead of being walked as a pickle whenever
-their first byte is 0x80.
+their first byte is 0x80. Since 0.7.0 (release v0.58.0) a TorchScript
+archive (`torch.jit.save` or the PyTorch mobile writer) gets one **PKL040
+MEDIUM "TorchScript archive: treat as executable code"** instead of one PKL003
+per `__torch__` class; see [PICKLE_SCAN.md](PICKLE_SCAN.md).
 
 One command for a **static, no-execution** security scan of machine-learning
 model files. It unifies the scanners in this repository and adds **SARIF
@@ -57,7 +60,7 @@ opcode/JSON structure.
 |------|---------|-----------|
 | `.keras` `.h5` `.hdf5` `config.json` | `keras_model_scan` | non-allowlist Lambda/class deserialization, `enable_unsafe_deserialization`, `TFSMLayer`, Zip/Tar Slip, legacy `.h5` (CVE-2025-1550, 2025-9905/9906, 2026-1462, 2026-9257) |
 | `*.index.json` (e.g. `model.safetensors.index.json`, `pytorch_model.bin.index.json`; also variant names such as `model.safetensors.index.fp16.json`) | `safetensors_index_scan` | **path safety of the shard `weight_map`**: absolute shard paths, `..` traversal, backslash separators, URL/fsspec schemes, NUL bytes — a shard path that escapes the model directory (CWE-22) |
-| `.pkl` `.pickle` `.joblib` `.pt` `.pth` `.bin` `.npy` `.npz` `.ckpt` `.model` | `pickle_model_scan` | dangerous import + REDUCE/BUILD (CWE-502), deferred-call gadgets, unresolvable `STACK_GLOBAL` (the GHSA-9gvj-pp9x-gcfr / CVE-2025-71325 scanner-bypass class), object-dtype NumPy, Zip Slip |
+| `.pkl` `.pickle` `.joblib` `.pt` `.pth` `.bin` `.npy` `.npz` `.ckpt` `.model` `.torchscript` `.ptl` `.pt2` | `pickle_model_scan` | dangerous import + REDUCE/BUILD (CWE-502), deferred-call gadgets, unresolvable `STACK_GLOBAL` (the GHSA-9gvj-pp9x-gcfr / CVE-2025-71325 scanner-bypass class), object-dtype NumPy, Zip Slip, TorchScript archives (PKL040) |
 | `.safetensors` | `safetensors_scan` | header/offset integrity: oversized or over-cap header length, out-of-bounds or size-mismatched `data_offsets`, overlaps and gaps, deeply nested header JSON, trailing bytes after the last tensor |
 | `.gguf` | `gguf_scan` | **header/tensor-info integrity**: counts and string/array lengths that cannot fit the file, array lengths whose byte size overflows, tensor dimensions whose product overflows a 64-bit element count, out-of-range type ids, unaligned offsets — the integer-overflow class behind the ggml/llama.cpp heap overflows (CVE-2024-21825, CVE-2025-53630, CVE-2026-27940, CVE-2026-33298). New in 0.8.0 |
 
@@ -167,9 +170,11 @@ Exit codes: `0` clean (below threshold), `1` findings at/above `--fail-on`
 
 A directory walk keeps files by name. Since 0.13.0 it also keeps
 `checkpoint.pth.tar`-style names, paddle.save's `.pdparams` / `.pdopt` and
-joblib's compressed names (`model.joblib.gz`, `model.pkl.xz`, ...). A bare
-`model.gz` is still skipped by a walk (a bare `.gz` is too broad); name such a
-file explicitly to scan it.
+joblib's compressed names (`model.joblib.gz`, `model.pkl.xz`, ...). Since
+0.14.0 it also keeps TorchScript (`.torchscript`), PyTorch mobile (`.ptl`)
+and `torch.export` (`.pt2`) files; up to 0.13.2 a folder scan skipped them
+silently. A bare `model.gz` is still skipped by a walk (a bare `.gz` is too
+broad); name such a file explicitly to scan it.
 
 ## GitHub Action
 
@@ -191,7 +196,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-      - uses: munimtechnologies/keras-model-scan@v0.56.0
+      - uses: munimtechnologies/keras-model-scan@v0.57.0
         with:
           paths: "."
           fail-on: "high"
@@ -240,9 +245,10 @@ truncated structures, plus a clean control) in `test_gguf_scan.py`.
   counts) is flagged as legacy and not deep-parsed. Other GGUF static auditors
   exist (e.g. ModelAudit, gguf-sentinel); this adds the same integrity class to
   the unified, dependency-free `model-file-scan` entry point.
-- An honest TorchScript (`torch.jit.save`) file gets `PKL003` MEDIUM for its
-  own `__torch__.…` class names, which fails the default `--fail-on medium`
-  gate. Inside a zip, members that are themselves archives or compressed files
-  are not opened, and a `torch.export` `.pt2` can get a `PKL000` LOW note on
-  non-pickle members. Each is queued for its own pre-registered check.
+- An honest TorchScript file gets one PKL040 MEDIUM (since 0.7.0), which fails
+  the default `--fail-on medium` gate by design: PyTorch says to trust such a
+  file like code. Inside a zip, members that are themselves archives or
+  compressed files are not opened, and a `torch.export` `.pt2` gets a `PKL000`
+  LOW note on its non-pickle member `data/sample_inputs/model.pt`. Each is
+  queued for its own pre-registered check.
 - This tool and this document were made with AI.
