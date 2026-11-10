@@ -29,22 +29,25 @@ scanner for executables.
 ## Steps
 
 1. Tell the user what you will install and run, and that it only reads the files. Install
-   the pinned release (pipx keeps it isolated; plain pip works too):
+   the v0.58.0 release, pinned to its full commit SHA so the code cannot change after the
+   fact (pipx keeps it isolated; plain pip works too):
 
    ```bash
-   pipx install "git+https://github.com/munimtechnologies/keras-model-scan@v0.58.0"
+   pipx install "git+https://github.com/munimtechnologies/keras-model-scan@f9b3f70e46c15e6728086199cd6f875f26fc0020"
    ```
 
    ```bash
-   python -m pip install "git+https://github.com/munimtechnologies/keras-model-scan@v0.58.0"
+   python -m pip install "git+https://github.com/munimtechnologies/keras-model-scan@f9b3f70e46c15e6728086199cd6f875f26fc0020"
    ```
 
    `model-file-scan --version` should print `model-file-scan 0.14.0`.
 
-   About this install: it comes from the tool's own repository, pinned to a release tag,
-   and pulls in no other packages (standard library only). The tool is not on PyPI yet. If
-   the user's policy forbids installing from a Git URL, show them the tag's source on GitHub
-   first, or skip the scan and say the file was not checked.
+   About this install: it comes from the tool's own repository, pinned to the commit that
+   the `v0.58.0` release tag points to (`f9b3f70e46c15e6728086199cd6f875f26fc0020`; anyone can
+   check it on the [release page](https://github.com/munimtechnologies/keras-model-scan/releases/tag/v0.58.0)),
+   and it pulls in no other packages (standard library only). The tool is not on PyPI yet.
+   If the user's policy forbids installing from a Git URL, show them that commit's source on
+   GitHub first, or skip the scan and say the file was not checked.
 
 2. Scan the file or folder **before** anything loads it, with JSON output:
 
@@ -138,7 +141,8 @@ and [PICKLE_SCAN.md](https://github.com/munimtechnologies/keras-model-scan/blob/
 
 ## In CI
 
-The same repository is a GitHub Action that uploads SARIF to code scanning:
+The same repository is a GitHub Action that uploads SARIF to code scanning. Pin it to the
+release's full commit SHA, as GitHub recommends for third-party actions:
 
 ```yaml
 permissions:
@@ -146,7 +150,7 @@ permissions:
   security-events: write
 steps:
   - uses: actions/checkout@v4
-  - uses: munimtechnologies/keras-model-scan@v0.58.0
+  - uses: munimtechnologies/keras-model-scan@f9b3f70e46c15e6728086199cd6f875f26fc0020 # v0.58.0
     with:
       paths: models/
       fail-on: high
