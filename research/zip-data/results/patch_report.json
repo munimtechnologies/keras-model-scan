@@ -1,0 +1,24 @@
+{
+ "files": {
+  "pickle_model_scan.py": {
+   "changes": [
+    "docstring",
+    "version 0.6.0",
+    "helper",
+    "scan_zip"
+   ],
+   "second_pass": [],
+   "lost": [],
+   "lines": [
+    978,
+    1014
+   ],
+   "ok": true
+  }
+ },
+ "ok": true,
+ "written": [
+  "pickle_model_scan.py",
+  "test_pickle_model_scan_zip_storage.py"
+ ]
+}

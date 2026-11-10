@@ -1,7 +1,7 @@
 # model-file-scan
 
 <!-- routes-0.11.1 -->
-## Formats routed in 0.13.0 (release v0.55.0)
+## Formats routed in 0.13.2 (release v0.57.0)
 
 This page grew one scanner at a time; this table is the current routing.
 Everything is static: nothing is loaded, imported, unpickled or executed.
@@ -18,13 +18,13 @@ Everything is static: nothing is loaded, imported, unpickled or executed.
 | `.pdmodel` (PaddlePaddle) | `paddle_program_scan` | [every prediction that ran held](REALFILE_CHECK_PADDLE_2026-10.md) |
 | `.rds` / `.rda` / `.RData` (R) | `r_serialized_scan` | [15 of 15](REALFILE_CHECK_RDS_2026-10.md) |
 | `.msgpack` (Flax / msgpack-numpy) | `msgpack_weights_scan` | [MessagePack + archives, 13 of 13](REALFILE_CHECK_2026-10.md) |
-| `.nemo` (NeMo archive) | `nemo_container_scan` | |
+| `.nemo` (NeMo archive) | `nemo_container_scan` | [legacy checkpoints, 12 of 12 release rows](REALFILE_CHECK_NEMO_LEGACY_2026-11.md) |
 | `.onnx` (external-data references) | `onnx_external_data_scan` | |
 | `.xml` + same-named `.bin` (OpenVINO IR) | `openvino_ir_scan` | [14 of 14](REALFILE_CHECK_OVI_2026-11.md) |
 | `.ubj`; `.json` whose top level has an XGBoost `learner` object; `.model` / `.bst` starting with `{` | `xgboost_model_scan` | [8 of 8](REALFILE_CHECK_XGB_2026-10.md) |
 | `.txt` / `.lgb` / `.lightgbm` / `.model` / `.bst` whose first line is `tree` | `lightgbm_model_scan` | [10 of 10](REALFILE_CHECK_LGB_2026-10.md) |
 | `.skops` (scikit-learn via skops) | `skops_scan` and `pickle_model_scan` | [10 of 10](REALFILE_CHECK_SKOPS_2026-11.md) |
-| everything else (`.pkl` `.pickle` `.joblib` `.pt` `.pth` `.bin` `.npy` `.npz` `.ckpt`, and a `.model` that is neither of the above; directory walks also pick up `*.pth.tar`, `*.pt.tar`, `*.ckpt.tar`, `.pdparams`, `.pdopt`, and `*.pkl` / `*.pickle` / `*.joblib` ending in `.z`, `.gz`, `.bz2`, `.xz`, `.lzma` or `.lz4`) | `pickle_model_scan` | [folder-walk names, 15 of 15](REALFILE_CHECK_WALK_NAMES_V2_2026-11.md) |
+| everything else (`.pkl` `.pickle` `.joblib` `.pt` `.pth` `.bin` `.npy` `.npz` `.ckpt`, and a `.model` that is neither of the above; directory walks also pick up `*.pth.tar`, `*.pt.tar`, `*.ckpt.tar`, `.pdparams`, `.pdopt`, and `*.pkl` / `*.pickle` / `*.joblib` ending in `.z`, `.gz`, `.bz2`, `.xz`, `.lzma` or `.lz4`) | `pickle_model_scan` | [folder-walk names, 15 of 15](REALFILE_CHECK_WALK_NAMES_V2_2026-11.md); [legacy-format torch files, 19 of 19](REALFILE_CHECK_LEGACY_TORCH_2026-11.md); [tensor storages in torch zips, 11 of 11 release rows](REALFILE_CHECK_ZIP_DATA_2026-11.md) |
 
 The routing itself was checked on files written by XGBoost 3.4.1 and
 LightGBM 4.7.0: [7 of 7 predictions held](REALFILE_CHECK_MFS_ROUTING_2026-11.md).
@@ -32,6 +32,14 @@ A `.json` that has a `learner` object next to other top-level keys gets both
 the XGBoost and the Keras scanner. A pickle named `.model` or `.bst` stays on
 the pickle scanner. The sections below describe the original scanners in
 detail; the newer ones each have their own `*.md` page in this repository.
+
+Since `pickle_model_scan` 0.5.0 (release v0.56.0) every pickle the loader
+reads is walked: the five pickles of a legacy-format `torch.save` file and
+every pickle of a file written with several `pickle.dump` calls. Since 0.6.0
+(release v0.57.0) the raw tensor storages `<prefix>/data/<key>` of a
+zip-format PyTorch file that holds `<prefix>/data.pkl` are treated as data,
+as `torch.load` treats them, instead of being walked as a pickle whenever
+their first byte is 0x80.
 
 One command for a **static, no-execution** security scan of machine-learning
 model files. It unifies the scanners in this repository and adds **SARIF
@@ -183,7 +191,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-      - uses: munimtechnologies/keras-model-scan@v0.54.0
+      - uses: munimtechnologies/keras-model-scan@v0.56.0
         with:
           paths: "."
           fail-on: "high"
@@ -232,4 +240,9 @@ truncated structures, plus a clean control) in `test_gguf_scan.py`.
   counts) is flagged as legacy and not deep-parsed. Other GGUF static auditors
   exist (e.g. ModelAudit, gguf-sentinel); this adds the same integrity class to
   the unified, dependency-free `model-file-scan` entry point.
+- An honest TorchScript (`torch.jit.save`) file gets `PKL003` MEDIUM for its
+  own `__torch__.…` class names, which fails the default `--fail-on medium`
+  gate. Inside a zip, members that are themselves archives or compressed files
+  are not opened, and a `torch.export` `.pt2` can get a `PKL000` LOW note on
+  non-pickle members. Each is queued for its own pre-registered check.
 - This tool and this document were made with AI.

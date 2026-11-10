@@ -33,6 +33,12 @@ imports. Files written with several pickle.dump calls are walked the same
 way, one stream after another while the next bytes open a protocol 2-5
 pickle.
 
+Since 0.6.0, in a torch.save zip that holds <prefix>/data.pkl, the raw
+tensor storages <prefix>/data/<key> are not sniffed as pickles. torch.load
+unpickles only data.pkl and copies each storage as raw bytes; up to 0.5.0
+a storage whose first byte happened to be 0x80 was walked as a pickle and
+reported as a damaged stream (PKL000) on honest files.
+
 A flag means a pattern worth human review, not proof of malice. A clean result is
 not a guarantee of safety: this is a static heuristic, not a sandbox.
 
@@ -59,7 +65,7 @@ import zipfile
 import zlib
 from dataclasses import dataclass
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"
 
 # Modules whose presence in a pickle is a direct code-execution concern.
 DANGEROUS_MODULES = frozenset({
@@ -814,6 +820,34 @@ def _is_traversal(name):
     return any(part == ".." for part in norm.split("/"))
 
 
+def _torch_storage_members(names):
+    """The raw tensor-storage members of a torch.save zip.
+
+    torch.load unpickles only <prefix>/data.pkl and copies each storage
+    <prefix>/data/<key> as raw bytes (torch/serialization.py, _load and
+    load_tensor); those bytes never reach an unpickler. Returns the names
+    <prefix>/data/<key> (exactly one path part after data/) for every
+    prefix that has a data.pkl."""
+    prefixes = set()
+    for name in names:
+        if name == "data.pkl" or name.endswith("/data.pkl"):
+            prefixes.add(name[:-len("data.pkl")])
+    storages = set()
+    for name in names:
+        head, _sep, rest = name.rpartition("/")
+        if not rest:
+            continue
+        if head == "data":
+            prefix = ""
+        elif head.endswith("/data"):
+            prefix = head[:-len("data")]
+        else:
+            continue
+        if prefix in prefixes:
+            storages.add(name)
+    return storages
+
+
 def scan_zip(data, source):
     findings = []
     try:
@@ -821,6 +855,7 @@ def scan_zip(data, source):
     except Exception as exc:
         return [Finding("PKL098", "LOW", "Archive could not be opened",
                         f"zipfile could not read the archive: {exc}", source)]
+    raw_storage = _torch_storage_members(zf.namelist())
     for name in zf.namelist():
         member_src = f"{source}!{name}"
         if _is_traversal(name):
@@ -836,7 +871,8 @@ def scan_zip(data, source):
             continue
         if ext == ".npy":
             findings += scan_npy(member, member_src)
-        elif ext in PICKLE_EXTS or base == "data.pkl" or member[:1] == b"\x80":
+        elif (ext in PICKLE_EXTS or base == "data.pkl"
+              or (member[:1] == b"\x80" and name not in raw_storage)):
             findings += scan_pickle_bytes(member, member_src)
     return findings
 
