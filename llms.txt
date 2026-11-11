@@ -1,0 +1,43 @@
+# keras-model-scan / model-file-scan
+
+> Static, no-execution security scanners for machine-learning model files (Keras, pickle and PyTorch archives, safetensors, GGUF, ONNX, TFLite, ExecuTorch .pte, Core ML, PaddlePaddle, OpenVINO, R, MessagePack, NeMo, XGBoost, LightGBM, skops). One command, `model-file-scan`, sends each file to the right scanner and reports text, JSON or SARIF. It reads bytes only. It never imports, unpickles, loads or executes a model, and it sends nothing anywhere. Python 3.8+ standard library only. Apache-2.0. By MV2 of Munim, Inc., made with AI agents.
+
+Use it before code calls `torch.load`, `pickle.load`, `joblib.load`, `keras.models.load_model` or a similar loader on a model file from outside the project, or when someone asks whether a downloaded model file is safe to open. A finding means "review this file". A clean result is not a guarantee of safety.
+
+Current release: v0.60.0 (model-file-scan 0.14.0), commit 32b12c2593d095726f0b6c849b8788fda2055ea7. Pin installs and the GitHub Action to that full SHA:
+
+- Install: `pip install "git+https://github.com/munimtechnologies/keras-model-scan@32b12c2593d095726f0b6c849b8788fda2055ea7"`
+- Scan: `model-file-scan path/to/models --fail-on high` (exit 2 if a path is missing or a scanner errored, otherwise 1 if a finding is at or above the threshold, otherwise 0)
+- SARIF for GitHub code scanning: `model-file-scan path/to/models --sarif > results.sarif`
+
+## Start here
+
+- [README](https://github.com/munimtechnologies/keras-model-scan/blob/main/README.md): what the tool is, the routing table by file type, install
+- [MODEL_FILE_SCAN.md](https://github.com/munimtechnologies/keras-model-scan/blob/main/MODEL_FILE_SCAN.md): every option, exit code, rule, GitHub Action workflow and limitation of `model-file-scan`
+- [Agent skill](https://github.com/munimtechnologies/keras-model-scan/blob/main/skills/model-file-scan/SKILL.md): instructions for coding agents (`npx skills add munimtechnologies/keras-model-scan --skill model-file-scan`)
+- [Releases](https://github.com/munimtechnologies/keras-model-scan/releases): release notes with the commit behind each tag
+
+## Per-format scanner notes
+
+- [PICKLE_SCAN.md](https://github.com/munimtechnologies/keras-model-scan/blob/main/PICKLE_SCAN.md): pickle, joblib and PyTorch zip archives (torch.save, TorchScript, torch.export .pt2)
+- [SAFETENSORS_SCAN.md](https://github.com/munimtechnologies/keras-model-scan/blob/main/SAFETENSORS_SCAN.md): safetensors header and offset integrity
+- [EXECUTORCH_PTE_SCAN.md](https://github.com/munimtechnologies/keras-model-scan/blob/main/EXECUTORCH_PTE_SCAN.md): ExecuTorch .pte programs
+- [ONNX_EXTERNAL_DATA_SCAN.md](https://github.com/munimtechnologies/keras-model-scan/blob/main/ONNX_EXTERNAL_DATA_SCAN.md): ONNX external-data paths
+- [OPENVINO_IR_SCAN.md](https://github.com/munimtechnologies/keras-model-scan/blob/main/OPENVINO_IR_SCAN.md): OpenVINO IR .xml/.bin
+- [COREML_MODEL_SCAN.md](https://github.com/munimtechnologies/keras-model-scan/blob/main/COREML_MODEL_SCAN.md): Core ML .mlmodel/.mlpackage
+- [PADDLE_PROGRAM_SCAN.md](https://github.com/munimtechnologies/keras-model-scan/blob/main/PADDLE_PROGRAM_SCAN.md): PaddlePaddle .pdmodel
+- [R_SERIALIZED_SCAN.md](https://github.com/munimtechnologies/keras-model-scan/blob/main/R_SERIALIZED_SCAN.md): R .rds/.rda/.RData
+- [MSGPACK_WEIGHTS_SCAN.md](https://github.com/munimtechnologies/keras-model-scan/blob/main/MSGPACK_WEIGHTS_SCAN.md): Flax / msgpack-numpy weights
+- [NEMO_CONTAINER_SCAN.md](https://github.com/munimtechnologies/keras-model-scan/blob/main/NEMO_CONTAINER_SCAN.md): NVIDIA NeMo archives
+- [LIGHTGBM_MODEL_SCAN.md](https://github.com/munimtechnologies/keras-model-scan/blob/main/LIGHTGBM_MODEL_SCAN.md): LightGBM text models
+
+## Evidence
+
+- [SCANNER_COVERAGE_MATRIX.md](https://github.com/munimtechnologies/keras-model-scan/blob/main/SCANNER_COVERAGE_MATRIX.md): which scanner covers which format and rule
+- [MODEL_FILE_CVE_MAP.md](https://github.com/munimtechnologies/keras-model-scan/blob/main/MODEL_FILE_CVE_MAP.md): published CVEs and advisories mapped to rules
+- [REALFILE_CHECK_PT2_WEIGHTS_2026-11.md](https://github.com/munimtechnologies/keras-model-scan/blob/main/REALFILE_CHECK_PT2_WEIGHTS_2026-11.md): example of a pre-registered check against files the real library wrote and loaded (14 of 14 rows held)
+- [RESULTS_PT2_CENSUS_2026-11.md](https://github.com/munimtechnologies/keras-model-scan/blob/main/RESULTS_PT2_CENSUS_2026-11.md): which PyTorch file formats the most downloaded Hugging Face models actually publish
+
+## Optional
+
+- [Contact](mailto:mv2@munimtech.com): MV2, Munim, Inc. Report a false positive or a missed format as a GitHub issue.

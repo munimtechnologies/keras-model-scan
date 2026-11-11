@@ -1,6 +1,8 @@
 # keras-model-scan
 
-A static, **no-execution** safety scanner for `.keras` model files.
+A static, **no-execution** safety scanner for `.keras` model files, and
+`model-file-scan`, one command that statically checks many other machine-learning
+model formats.
 
 A `.keras` model is a ZIP archive whose `config.json` is turned back into a live
 model when you call `keras.models.load_model()`. That rebuild step decides, from
@@ -16,12 +18,14 @@ of remote-code-execution and path-traversal CVEs.
 
 The repository also ships `model-file-scan`, which sends each file to the right
 static scanner and reports everything in one place (text, `--json`, or `--sarif`
-for GitHub code scanning). Version 0.10.0 routes:
+for GitHub code scanning). Version 0.14.0 (release
+[v0.60.0](https://github.com/munimtechnologies/keras-model-scan/releases/tag/v0.60.0))
+routes:
 
 | Files | Scanner | What it checks |
 |-------|---------|----------------|
 | `.keras` `.h5` `.hdf5` `config.json` | `keras_model_scan` | the Keras load-time CVE patterns below |
-| `*.index.json` | `safetensors_index_scan` | shard paths that leave the model directory |
+| `*.index.json`, `*.index.<variant>.json` | `safetensors_index_scan` | shard paths that leave the model directory |
 | `.safetensors` | `safetensors_scan` | header and offset integrity |
 | `.gguf` | `gguf_scan` | header and tensor-info integrity |
 | `.tflite` | `tflite_model_scan` | Flex ops that touch files or call Python, custom ops, index and buffer bounds |
@@ -35,25 +39,48 @@ for GitHub code scanning). Version 0.10.0 routes:
 | `.xml` beside a `.bin` | `openvino_ir_scan` | DOCTYPE/entities, weight ranges against the `.bin`, external-code layers |
 | `.ubj`, and by content: a `.json` with an XGBoost `learner` object, a `.model`/`.bst` that starts with `{` | `xgboost_model_scan` | child, parent, feature and category indices, loops, the right child the predictor really takes, repeated keys, UBJSON lengths |
 | by content: a `.txt`/`.lgb`/`.lightgbm`/`.model`/`.bst` whose first line is `tree` | `lightgbm_model_scan` | child nodes and leaves, feature indices, loops, categorical sets, `tree_sizes` offsets, repeated keys, short arrays the loader pads |
-| everything else (`.pkl` `.pt` `.pth` `.bin` `.joblib` `.npy` `.npz` `.ckpt` ...) | `pickle_model_scan` | dangerous imports and opcodes |
+| `.skops` | `skops_scan` **and** `pickle_model_scan` | the types named in `schema.json`, plus the archive and pickle checks |
+| `.pt` `.pth` `.ptl` `.torchscript` `.pt2` (PyTorch zip archives: `torch.save`, TorchScript, PyTorch mobile, `torch.export`) | `pickle_model_scan` | every pickle stored in the archive, including a `torch.save` archive nested inside a `.pt2`; raw `.pt2` weights are read as data, the way `torch.export.load` reads them |
+| everything else (`.pkl` `.pickle` `.joblib` `.bin` `.npy` `.npz` `.ckpt` `.model` ...) | `pickle_model_scan` | dangerous imports and opcodes |
 
 A `.json` that holds an XGBoost `learner` object next to other top-level keys is
 checked by both the XGBoost and the Keras scanner. A `.model` or `.bst` file that
 is a pickle still goes to the pickle scanner. In a directory walk, `.txt`, `.lgb`,
 `.lightgbm` and other `.json` files are picked up only when their content is a
-LightGBM or XGBoost model.
+LightGBM or XGBoost model, and pickle-bearing names such as `checkpoint.pth.tar`,
+`.pdparams`/`.pdopt` and compressed joblib files (`model.pkl.gz`) are kept.
+[MODEL_FILE_SCAN.md](MODEL_FILE_SCAN.md) has every rule, option and limitation.
+
+Install, pinned to the full commit SHA of release v0.60.0:
 
 ```bash
-pip install git+https://github.com/munimtechnologies/keras-model-scan
+pip install "git+https://github.com/munimtechnologies/keras-model-scan@32b12c2593d095726f0b6c849b8788fda2055ea7"  # v0.60.0
 model-file-scan path/to/models --fail-on high
 model-file-scan model.tflite fit.rds Model.mlpackage booster.ubj model.txt --sarif > results.sarif
 ```
 
+The repository is also a composite GitHub Action that uploads SARIF to the
+Security tab (pin it to the same commit SHA):
+
+```yaml
+      - uses: munimtechnologies/keras-model-scan@32b12c2593d095726f0b6c849b8788fda2055ea7  # v0.60.0
+        with:
+          paths: "."
+          fail-on: "high"
+```
+
+The full workflow, with the permissions it needs, is in
+[MODEL_FILE_SCAN.md](MODEL_FILE_SCAN.md#github-action). Coding agents can use the
+agent skill in [skills/model-file-scan/SKILL.md](skills/model-file-scan/SKILL.md)
+(`npx skills add munimtechnologies/keras-model-scan --skill model-file-scan`), and
+[llms.txt](llms.txt) gives agents a short map of this repository.
+
 Each standalone scanner also runs on its own (`python r_serialized_scan.py fit.rds`)
 and has its own notes file in this repository. The TFLite, ExecuTorch, Core ML,
-PaddlePaddle, R, MessagePack, archive, XGBoost and LightGBM scanners have each been
-checked against files written by the real libraries, with the predictions written
-down before the check ran (`REALFILE_CHECK_*.md`).
+PaddlePaddle, R, MessagePack, archive, XGBoost, LightGBM, skops, sharded-index,
+GGUF and PyTorch (TorchScript and `torch.export`) checks have each been compared
+with files written by the real libraries, with the predictions written down before
+the check ran (`REALFILE_CHECK_*.md`).
 
 ## It never runs the model
 
