@@ -1,0 +1,221 @@
+{
+ "job": "pt2-census-v1",
+ "prereg": "research/PREREG_PT2_CENSUS.md",
+ "versions": {
+  "model_file_scan": "0.14.0",
+  "pickle_model_scan": "0.7.0"
+ },
+ "lists": {
+  "pytorch": {
+   "pages": 10,
+   "models": 10000,
+   "open": 9865,
+   "error": null,
+   "ext_models": {
+    ".bin": 7718,
+    ".safetensors": 4328,
+    ".onnx": 381,
+    ".tflite": 13,
+    ".pt": 452,
+    ".ckpt": 36,
+    ".pth": 228,
+    ".gguf": 1052,
+    ".pte": 4
+   }
+  },
+  "executorch": {
+   "pages": 1,
+   "models": 914,
+   "open": 862,
+   "error": null,
+   "ext_models": {
+    ".pte": 851,
+    ".pth": 8,
+    ".bin": 88,
+    ".safetensors": 34,
+    ".onnx": 38,
+    ".gguf": 8,
+    ".tflite": 17,
+    ".pt": 28,
+    ".ptl": 2,
+    "torchscript|ptl": 2,
+    "any-target": 2,
+    ".ckpt": 3
+   }
+  },
+  "all": {
+   "pages": 2,
+   "models": 2000,
+   "open": 1941,
+   "error": null,
+   "ext_models": {
+    ".bin": 625,
+    ".safetensors": 1265,
+    ".onnx": 188,
+    ".tflite": 7,
+    ".pt": 54,
+    ".pth": 34,
+    ".gguf": 419,
+    ".ckpt": 14,
+    ".pte": 1,
+    ".ptl": 1,
+    "torchscript|ptl": 1,
+    "any-target": 1
+   }
+  }
+ },
+ "targets_found": 7,
+ "target_kinds": {
+  ".ptl:zip": 7
+ },
+ "rows": {
+  "R1": {
+   "verdict": "held",
+   "open": 9865,
+   "pt2_models": 0,
+   "pt2_share": 0.0,
+   "torchscript_or_ptl_models": 0,
+   "torchscript_or_ptl_share": 0.0
+  },
+  "R2": {
+   "verdict": "held",
+   "open": 862,
+   "pte_share": 0.987239,
+   "pt2_share": 0.0
+  },
+  "R3": {
+   "verdict": "untestable",
+   "files": 1
+  },
+  "R4": {
+   "verdict": "untestable",
+   "files": 0
+  },
+  "R5": {
+   "verdict": "untestable",
+   "files": 0
+  }
+ },
+ "recorded": {
+  "downloaded": {
+   "pt2": 0,
+   "torchscript_family": 1,
+   "all": 1
+  },
+  "pkl000_by_role": {},
+  "pkl000_on_weights_starting_0x80": [],
+  "native_members_downloaded": [],
+  "remote": [
+   {
+    "file": "richarrrddd/lama_testing.ptl/colorful_v1.ptl",
+    "size": 220230443,
+    "status": "ok",
+    "members": 417,
+    "roles": {
+     "pickle:data.pkl": 1,
+     "torchscript-code": 2,
+     "other": 410,
+     "pickle:constants.pkl": 1,
+     "pickle:bytecode.pkl": 1,
+     "marker:version": 1,
+     "marker:byteorder": 1
+    },
+    "native": []
+   },
+   {
+    "file": "richarrrddd/lama_testing.ptl/kouxiang_v1.ptl",
+    "size": 176136127,
+    "status": "ok",
+    "members": 239,
+    "roles": {
+     "pickle:data.pkl": 1,
+     "torchscript-code": 4,
+     "other": 230,
+     "pickle:constants.pkl": 1,
+     "pickle:bytecode.pkl": 1,
+     "marker:version": 1,
+     "marker:byteorder": 1
+    },
+    "native": []
+   },
+   {
+    "file": "richarrrddd/lama_testing.ptl/testing_v1.ptl",
+    "size": 204199790,
+    "status": "ok",
+    "members": 561,
+    "roles": {
+     "pickle:data.pkl": 1,
+     "torchscript-code": 4,
+     "other": 552,
+     "pickle:constants.pkl": 1,
+     "pickle:bytecode.pkl": 1,
+     "marker:version": 1,
+     "marker:byteorder": 1
+    },
+    "native": []
+   },
+   {
+    "file": "richarrrddd/lama_testing.ptl/testing_v2.ptl",
+    "size": 205925363,
+    "status": "ok",
+    "members": 2653,
+    "roles": {
+     "tensor-storage": 989,
+     "pickle:data.pkl": 1,
+     "torchscript-code": 1656,
+     "other": 3,
+     "pickle:constants.pkl": 1,
+     "pickle:bytecode.pkl": 1,
+     "marker:version": 1,
+     "marker:byteorder": 1
+    },
+    "native": []
+   },
+   {
+    "file": "tarat122/lumi-mobile/lumi_mobile.ptl",
+    "size": 2835742401,
+    "status": "ok",
+    "members": 254,
+    "roles": {
+     "pickle:data.pkl": 1,
+     "torchscript-code": 2,
+     "other": 247,
+     "pickle:constants.pkl": 1,
+     "pickle:bytecode.pkl": 1,
+     "marker:version": 1,
+     "marker:byteorder": 1
+    },
+    "native": []
+   },
+   {
+    "file": "DogManTC/def-not-gpt2/gpt2_open_instruct.ptl",
+    "size": 498921716,
+    "status": "ok",
+    "members": 163,
+    "roles": {
+     "pickle:data.pkl": 1,
+     "torchscript-code": 4,
+     "other": 155,
+     "pickle:constants.pkl": 1,
+     "pickle:bytecode.pkl": 1,
+     "marker:version": 1
+    },
+    "native": []
+   }
+  ]
+ },
+ "files": [
+  {
+   "model": "richarrrddd/lama_testing.ptl",
+   "rfilename": "gaoqing_v1.ptl",
+   "ext": ".ptl",
+   "bytes": 4993566,
+   "rules": {
+    "PKL040": 1
+   },
+   "max_severity": 2,
+   "error": null,
+   "pkl000": []
+  }
+ ]
+}

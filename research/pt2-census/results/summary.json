@@ -1,0 +1,72 @@
+{
+ "contract": "mv2-compete-result-v1",
+ "name": "pt2-census-v1",
+ "id": "be455f837022",
+ "field": "security",
+ "run": "20261110T164800Z-security",
+ "kind": "poc",
+ "status": "ok",
+ "reason": "",
+ "host": "blade",
+ "image": "python:3.12",
+ "started_at": "2026-11-11T00:26:13.335911+00:00",
+ "finished_at": "2026-11-11T00:29:22.692835+00:00",
+ "duration_seconds": 189,
+ "limits": {
+  "cpu": 1.0,
+  "memory_gb": 2.0,
+  "timeout_minutes": 150.0
+ },
+ "peak_memory_gb": null,
+ "network": {
+  "setup": true,
+  "run": false
+ },
+ "steps": [
+  {
+   "step": "setup-01-python",
+   "cmd": "python -m unittest -v test_census_helpers",
+   "exit": 0,
+   "seconds": 1
+  },
+  {
+   "step": "setup-02-python",
+   "cmd": "python fetch_tree.py",
+   "exit": 0,
+   "seconds": 1
+  },
+  {
+   "step": "setup-03-python",
+   "cmd": "python fetch_hub_archives.py",
+   "exit": 0,
+   "seconds": 33
+  },
+  {
+   "step": "run-01-python",
+   "cmd": "python -m unittest -v test_census_helpers",
+   "exit": 0,
+   "seconds": 1
+  },
+  {
+   "step": "run-02-python",
+   "cmd": "python census_scan.py --out /out",
+   "exit": 0,
+   "seconds": 0
+  }
+ ],
+ "out_files": [
+  "archive_census.json",
+  "census_files.json",
+  "census_summary.json"
+ ],
+ "out_files_total": 3,
+ "out_skipped": [],
+ "upload_skipped": [],
+ "summary_tail": "[run-02-python stdout] {\"rows\": {\"R1\": \"held\", \"R2\": \"held\", \"R3\": \"untestable\", \"R4\": \"untestable\", \"R5\": \"untestable\"}, \"downloaded\": {\"pt2\": 0, \"torchscript_family\": 1, \"all\": 1}}\n",
+ "paths": {
+  "workdir": "/work (copy of E:\\MV2-Pursuit\\work\\20261110T164800Z-security\\compete\\pt2-census)",
+  "out": "/out -> out/",
+  "data": "/data (docker volume mv2c-data-mpk-arc-realfile, kept for later jobs)"
+ },
+ "note": ""
+}
