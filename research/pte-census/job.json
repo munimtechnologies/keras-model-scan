@@ -1,0 +1,22 @@
+{
+  "name": "pte-census-v1",
+  "kind": "poc",
+  "workdir": "E:/MV2-Pursuit/work/20261111T034440Z-security/compete/pte-census",
+  "image": "python:3.12",
+  "setup": [
+    "python -m unittest -v test_pte_lib",
+    "python fetch_tree.py",
+    "python fetch_hub_pte.py"
+  ],
+  "run": [
+    "python -m unittest -v test_pte_lib",
+    "python -m unittest discover -s tree -p test_executorch_pte_scan.py",
+    "python pte_census.py --out /out"
+  ],
+  "network": true,
+  "data_urls": [],
+  "data_key": "mpk-arc-realfile",
+  "cpu": 1,
+  "memory_gb": 2,
+  "timeout_minutes": 150
+}
