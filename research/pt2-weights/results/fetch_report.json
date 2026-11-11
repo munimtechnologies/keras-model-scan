@@ -1,0 +1,11 @@
+{
+ "tag": "v0.59.0",
+ "attempts": 1,
+ "tarball_bytes": 1120075,
+ "missing": [],
+ "versions": {
+  "model_file_scan.py": "0.14.0",
+  "pickle_model_scan.py": "0.8.0"
+ },
+ "files": 272
+}

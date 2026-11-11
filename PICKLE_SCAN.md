@@ -28,9 +28,11 @@ without running them, and flags the opcodes behind those attacks.
 - PyTorch archives: `.pt`, `.pth`, `.bin` (the pickle inside the ZIP, e.g. `data.pkl`)
 - TorchScript, PyTorch mobile and `torch.export` archives (`.torchscript`, `.ptl`,
   `.pt2`, or a `.pt` written by `torch.jit.save`); since 0.7.0 a TorchScript
-  archive gets one PKL040 finding, and since 0.8.0 a zip stored inside an
+  archive gets one PKL040 finding, since 0.8.0 a zip stored inside an
   archive (such as the `torch.save` file a `.pt2` keeps as
-  `data/sample_inputs/model.pt`) is opened and scanned as a zip (see below)
+  `data/sample_inputs/model.pt`) is opened and scanned as a zip, and since
+  0.9.0 the raw weights and constants of a `.pt2` are read as data when the
+  archive's own config declares them raw (see below)
 - NumPy: `.npy` / `.npz` — flags **object-dtype** arrays whose data is a pickle
 - Recognises and reports the **safe** formats — `safetensors` and `GGUF` have no
   code-execution surface — so you can confirm a file is the safe kind. For a full
@@ -90,11 +92,14 @@ Exit codes: `0` clean (below threshold), `1` findings at/above `--fail-on`
   not read or judge the TorchScript source stored in the archive.
 - A zip nested more than two levels below the outer file is not opened; it is
   read the way 0.7.0 read every member.
-- A `torch.export` `.pt2` stores most weights as raw tensor bytes under
-  `data/weights/`. A raw weight whose first byte is 0x80 is still read as a
-  pickle and gets a PKL000 LOW note (one per such weight). A fix that follows
-  the archive's own weights config is pre-registered in
-  [research/PREREG_PT2_WEIGHTS.md](research/PREREG_PT2_WEIGHTS.md).
+- In a `torch.export` `.pt2`, only payloads that the archive's own weights or
+  constants config declares with `use_pickle` false are read as data (0.9.0).
+  Payloads declared `use_pickle` true (tensor subclasses), payloads no config
+  names, and every payload of an archive that holds AOTInductor files
+  (`data/aotinductor/`) are still read as pickles, so a raw one among them
+  whose first byte is 0x80 can still get a PKL000 LOW note. The fix was
+  checked on one torch version (2.15) and fixtures without tensor subclasses
+  or AOTInductor files.
 
 <!-- pkl-torchscript -->
 ## TorchScript archives (0.7.0, November 2026)
@@ -144,6 +149,35 @@ and **graded 11 of 11 release rows** in
 [REALFILE_CHECK_PT2_NEST_2026-11.md](REALFILE_CHECK_PT2_NEST_2026-11.md), on
 files written by torch 2.15's own writers and loaded by its own loaders: the
 false note is gone from an honest `.pt2`, the inner `data.pkl` is now walked,
+and the findings on TorchScript, mobile and `torch.save` files are unchanged.
+
+<!-- pkl-pt2-weights -->
+## Raw weights in torch.export files (0.9.0, November 2026)
+
+A `.pt2` written by `torch.export.save` keeps each model's parameters and
+buffers under `<prefix>/data/weights/` and its lifted tensor constants under
+`<prefix>/data/constants/`. Next to them sit `<model>_weights_config.json`
+and `<model>_constants_config.json`, which map every tensor to a payload:
+a bare file name (`weight_0`, `tensor_0`) and a `use_pickle` flag.
+`torch.export.load` reads a payload with `use_pickle` false as raw storage
+bytes and never unpickles it (PyTorch source,
+`torch/export/pt2_archive/_package.py`). Up to 0.8.0 the scanner did not know
+that, so a raw weight whose first byte happened to be 0x80 (for example a
+float32 tensor whose first value is 1.0000153, stored `80 00 80 3f`) was
+handed to the pickle walker and got a PKL000 LOW "could not be fully parsed"
+note: nine of them on a small honest network.
+
+Since 0.9.0, a member is read as data only when **all** of these hold: its
+prefix has an `archive_format` member whose text is `pt2`; that prefix holds
+no `data/aotinductor/` files; a weights or constants config in the same folder
+names it by a bare name with `use_pickle` exactly `false`; and the member
+exists. Everything else is read exactly as before.
+
+Pre-registered in [research/PREREG_PT2_WEIGHTS.md](research/PREREG_PT2_WEIGHTS.md)
+and **graded 12 of 12 release rows, plus both diagnostic rows**, in
+[REALFILE_CHECK_PT2_WEIGHTS_2026-11.md](REALFILE_CHECK_PT2_WEIGHTS_2026-11.md),
+on files written by torch 2.15's own writers and loaded by its own loaders:
+the nine false notes on the weights and the one on a lifted constant are gone,
 and the findings on TorchScript, mobile and `torch.save` files are unchanged.
 
 <!-- pkl-memo -->

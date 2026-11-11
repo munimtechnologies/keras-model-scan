@@ -56,6 +56,15 @@ Up to 0.7.0 such a member got a PKL000 LOW "could not be fully parsed"
 note and the pickles inside it were never read. Raw tensor storages are
 never opened this way.
 
+Since 0.9.0, in a torch.export (.pt2) archive, the raw tensor payloads
+that the archive's own weights or constants config declares with
+use_pickle false (members such as <prefix>/data/weights/weight_0) are
+treated as data, as torch.export.load reads them. Up to 0.8.0 such a
+payload whose first byte was 0x80 was walked as a pickle and got a
+PKL000 LOW note on honest files. Payloads declared with use_pickle true,
+payloads no config names, and archives that hold AOTInductor files are
+read as before.
+
 A flag means a pattern worth human review, not proof of malice. A clean result is
 not a guarantee of safety: this is a static heuristic, not a sandbox.
 
@@ -82,7 +91,7 @@ import zipfile
 import zlib
 from dataclasses import dataclass
 
-__version__ = "0.8.0"
+__version__ = "0.9.0"
 
 # Modules whose presence in a pickle is a direct code-execution concern.
 DANGEROUS_MODULES = frozenset({
@@ -941,6 +950,66 @@ def _collapse_torchscript(findings, prefixes, source):
     return out + kept
 
 
+_PT2_PAYLOAD_DIRS = (("data/weights/", "_weights_config.json"),
+                     ("data/constants/", "_constants_config.json"))
+_PT2_CONFIG_MAX = 16 * 1024 * 1024
+
+
+def _pt2_raw_payloads(zf, names):
+    """The raw tensor payloads of a torch.export (.pt2) archive.
+
+    torch.export.save writes <prefix>/archive_format ("pt2") and, per model,
+    <prefix>/data/weights/<model>_weights_config.json and
+    <prefix>/data/constants/<model>_constants_config.json. Each config maps a
+    tensor to a PayloadMeta: path_name (a bare file name such as weight_0)
+    and use_pickle. torch.export.load reads a payload with use_pickle false
+    as raw storage bytes (torch/export/pt2_archive/_package.py,
+    _build_file_map -> get_storage_from_record) and never unpickles it.
+    Returns those member names. Payloads with use_pickle true or missing,
+    payloads no config names, and every payload of a prefix that also holds
+    data/aotinductor/ files are not returned, so they are read as before."""
+    nameset = set(names)
+    prefixes = set()
+    for name in names:
+        if name == "archive_format" or name.endswith("/archive_format"):
+            prefix = name[:-len("archive_format")]
+            try:
+                if zf.read(name)[:16].strip() == b"pt2":
+                    prefixes.add(prefix)
+            except Exception:
+                continue
+    raw = set()
+    for prefix in prefixes:
+        if any(n.startswith(prefix + "data/aotinductor/") for n in names):
+            continue
+        for sub, suffix in _PT2_PAYLOAD_DIRS:
+            folder = prefix + sub
+            for cfg in names:
+                if not (cfg.startswith(folder) and cfg.endswith(suffix)
+                        and "/" not in cfg[len(folder):]):
+                    continue
+                try:
+                    if zf.getinfo(cfg).file_size > _PT2_CONFIG_MAX:
+                        continue
+                    doc = json.loads(zf.read(cfg).decode("utf-8"))
+                except Exception:
+                    continue
+                entries = doc.get("config") if isinstance(doc, dict) else None
+                if not isinstance(entries, dict):
+                    continue
+                for meta in entries.values():
+                    if (not isinstance(meta, dict)
+                            or meta.get("use_pickle") is not False):
+                        continue
+                    path = meta.get("path_name")
+                    if (isinstance(path, str) and path
+                            and "/" not in path and "\\" not in path
+                            and path not in (".", "..")
+                            and folder + path in nameset):
+                        raw.add(folder + path)
+    return raw
+
+
 _ZIP_MAGIC = b"PK\x03\x04"
 _ZIP_NEST_MAX = 2
 
@@ -968,7 +1037,8 @@ def scan_zip(data, source, _depth=0):
     except Exception as exc:
         return [Finding("PKL098", "LOW", "Archive could not be opened",
                         f"zipfile could not read the archive: {exc}", source)]
-    raw_storage = _torch_storage_members(zf.namelist())
+    raw_storage = (_torch_storage_members(zf.namelist())
+                   | _pt2_raw_payloads(zf, zf.namelist()))
     for name in zf.namelist():
         member_src = f"{source}!{name}"
         if _is_traversal(name):

@@ -1,0 +1,154 @@
+{
+ "tree": "/work/base",
+ "versions": {
+  "model_file_scan": "0.14.0",
+  "pickle_model_scan": "0.8.0"
+ },
+ "direct": {
+  "F1": [
+   {
+    "rule": "PKL040",
+    "severity": "MEDIUM",
+    "title": "TorchScript archive: treat as executable code",
+    "detail": "This zip is a TorchScript program (torch.jit.save, or the PyTorch mobile lite-interpreter writer). Its 4 TorchScript class name(s) (__torch__.Net, __torch__.torch.nn.modules.batchnorm.BatchNorm1d, __torch__.torch.nn.modules.linear.Linear and 1 more) are built by torch.jit.load from the code stored in the archive, not imported from Python. PyTorch's security policy (SECURITY.md) says to treat TorchScript models like locally executable code from an unknown source: load it only from a provider you trust. Other imports in the archive are reported by their usual rules.",
+    "location": "FX/model.pt!model/data.pkl"
+   }
+  ],
+  "F3": [
+   {
+    "rule": "PKL040",
+    "severity": "MEDIUM",
+    "title": "TorchScript archive: treat as executable code",
+    "detail": "This zip is a TorchScript program (torch.jit.save, or the PyTorch mobile lite-interpreter writer). Its 4 TorchScript class name(s) (__torch__.Net, __torch__.torch.nn.modules.batchnorm.BatchNorm1d, __torch__.torch.nn.modules.linear.Linear and 1 more) are built by torch.jit.load from the code stored in the archive, not imported from Python. PyTorch's security policy (SECURITY.md) says to treat TorchScript models like locally executable code from an unknown source: load it only from a provider you trust. Other imports in the archive are reported by their usual rules.",
+    "location": "FX/model.ptl!model/data.pkl"
+   }
+  ],
+  "F4": [],
+  "F5": [],
+  "F6": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\x14' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_0"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\n' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_1"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\x00' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_2"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\x00' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_3"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'8' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_4"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: no newline found when trying to read stringnl. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_5"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\x00' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_6"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\x00' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_7"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x00' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_8"
+   }
+  ],
+  "F7": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\xad' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_c.pt2!model_c/data/weights/weight_0"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: pickle exhausted before seeing STOP. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_c.pt2!model_c/data/constants/tensor_0"
+   }
+  ]
+ },
+ "walked": {
+  "F4": [
+   "F4!model/data/sample_inputs/model.pt!archive/data.pkl"
+  ],
+  "F6": [
+   "F6!model_b/data/weights/weight_0",
+   "F6!model_b/data/weights/weight_1",
+   "F6!model_b/data/weights/weight_2",
+   "F6!model_b/data/weights/weight_3",
+   "F6!model_b/data/weights/weight_4",
+   "F6!model_b/data/weights/weight_5",
+   "F6!model_b/data/weights/weight_6",
+   "F6!model_b/data/weights/weight_7",
+   "F6!model_b/data/weights/weight_8",
+   "F6!model_b/data/sample_inputs/model.pt!archive/data.pkl"
+  ],
+  "F7": [
+   "F7!model_c/data/weights/weight_0",
+   "F7!model_c/data/constants/tensor_0",
+   "F7!model_c/data/sample_inputs/model.pt!archive/data.pkl"
+  ]
+ },
+ "cli": {
+  "F1": {
+   "exit": 1,
+   "stderr_tail": ""
+  },
+  "F4": {
+   "exit": 0,
+   "stderr_tail": ""
+  },
+  "F5": {
+   "exit": 0,
+   "stderr_tail": ""
+  },
+  "F6": {
+   "exit": 0,
+   "stderr_tail": ""
+  },
+  "dir": {
+   "exit": 1,
+   "stderr_tail": ""
+  }
+ }
+}

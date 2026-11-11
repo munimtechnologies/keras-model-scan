@@ -1,0 +1,401 @@
+{
+ "rows": {
+  "P1": {
+   "result": "held",
+   "why": "patch ok=True error=None changes=['docstring', 'version 0.9.0', 'helper', 'scan_zip raw_storage'] base={'model_file_scan': '0.14.0', 'pickle_model_scan': '0.8.0'} patched={'model_file_scan': '0.14.0', 'pickle_model_scan': '0.9.0'}"
+  },
+  "S1": {
+   "result": "held",
+   "why": "patched ran=1468 ok=True failures=[] errors=[]; base ran=1452 ok=True"
+  },
+  "W1": {
+   "result": "held",
+   "why": "{\"weights\": [\"model_b/data/weights/weight_0\", \"model_b/data/weights/weight_1\", \"model_b/data/weights/weight_2\", \"model_b/data/weights/weight_3\", \"model_b/data/weights/weight_4\", \"model_b/data/weights/weight_5\", \"model_b/data/weights/weight_6\", \"model_b/data/weights/weight_7\", \"model_b/data/weights/weight_8\"], \"declared\": {\"model_b/data/weights/weight_0\": false, \"model_b/data/weights/weight_1\": false, \"model_b/data/weights/weight_2\": false, \"model_b/data/weights/weight_3\": false, \"model_b/data/weights/weight_4\": false, \"model_b/data/weights/weight_5\": false, \"model_b/data/weights/weight_6\": false, \"model_b/data/weights/weight_7\": false, \"model_b/data/weights/weight_8\": false}}"
+  },
+  "L0": {
+   "result": "held",
+   "why": "{\"jit_load_F1\": true, \"export_load_F4\": true, \"export_load_F6\": true}"
+  },
+  "L1": {
+   "result": "held",
+   "why": "{\"fc1.weight\": 1.0000152587890625, \"fc1.bias\": 1.0000152587890625, \"bn.weight\": 1.0000152587890625, \"bn.bias\": 1.0000152587890625, \"fc2.weight\": 1.0000152587890625, \"fc2.bias\": 1.0000152587890625, \"bn.running_mean\": 1.0000152587890625, \"bn.running_var\": 1.0000152587890625, \"bn.num_batches_tracked\": 128.0}"
+  },
+  "B1": {
+   "result": "held",
+   "why": "9 PKL000 LOW on weights"
+  },
+  "N1": {
+   "result": "held",
+   "why": "[]"
+  },
+  "N2": {
+   "result": "held",
+   "why": "{\"F4\": -1, \"F6\": -1}"
+  },
+  "N3": {
+   "result": "held",
+   "why": "base weights walked=9 patched=0"
+  },
+  "T3": {
+   "result": "held",
+   "why": "{\"F1\": true, \"F3\": true, \"F5\": true}"
+  },
+  "T5": {
+   "result": "held",
+   "why": "base-minus-weight-notes=[] patched=[]"
+  },
+  "C2": {
+   "result": "held",
+   "why": "base={'F1': 1, 'F4': 0, 'F5': 0, 'F6': 0, 'dir': 1} patched={'F1': 1, 'F4': 0, 'F5': 0, 'F6': 0, 'dir': 1}"
+  },
+  "D2": {
+   "result": "held",
+   "why": "base=1 patched=0"
+  },
+  "D3": {
+   "result": "held",
+   "why": "{\"ok\": true, \"type\": \"ExportedProgram\", \"warnings\": []}"
+  }
+ },
+ "held": [
+  "B1",
+  "C2",
+  "D2",
+  "D3",
+  "L0",
+  "L1",
+  "N1",
+  "N2",
+  "N3",
+  "P1",
+  "S1",
+  "T3",
+  "T5",
+  "W1"
+ ],
+ "failed": [],
+ "not_run": [],
+ "release_rows_all_held": true,
+ "recorded": {
+  "torch": "2.15.0+cpu",
+  "F6_base": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\x14' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_0"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\n' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_1"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\x00' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_2"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\x00' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_3"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'8' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_4"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: no newline found when trying to read stringnl. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_5"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\x00' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_6"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\x00' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_7"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x00' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_8"
+   }
+  ],
+  "F6_patched": [],
+  "F7_base": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\xad' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_c.pt2!model_c/data/weights/weight_0"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: pickle exhausted before seeing STOP. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_c.pt2!model_c/data/constants/tensor_0"
+   }
+  ],
+  "F7_patched": [],
+  "F4_base": [],
+  "F4_patched": [],
+  "walked_base": {
+   "F4": [
+    "F4!model/data/sample_inputs/model.pt!archive/data.pkl"
+   ],
+   "F6": [
+    "F6!model_b/data/weights/weight_0",
+    "F6!model_b/data/weights/weight_1",
+    "F6!model_b/data/weights/weight_2",
+    "F6!model_b/data/weights/weight_3",
+    "F6!model_b/data/weights/weight_4",
+    "F6!model_b/data/weights/weight_5",
+    "F6!model_b/data/weights/weight_6",
+    "F6!model_b/data/weights/weight_7",
+    "F6!model_b/data/weights/weight_8",
+    "F6!model_b/data/sample_inputs/model.pt!archive/data.pkl"
+   ],
+   "F7": [
+    "F7!model_c/data/weights/weight_0",
+    "F7!model_c/data/constants/tensor_0",
+    "F7!model_c/data/sample_inputs/model.pt!archive/data.pkl"
+   ]
+  },
+  "walked_patched": {
+   "F4": [
+    "F4!model/data/sample_inputs/model.pt!archive/data.pkl"
+   ],
+   "F6": [
+    "F6!model_b/data/sample_inputs/model.pt!archive/data.pkl"
+   ],
+   "F7": [
+    "F7!model_c/data/sample_inputs/model.pt!archive/data.pkl"
+   ]
+  },
+  "configs": {
+   "F4": {
+    "model/data/weights/model_weights_config.json": {
+     "text_head": "{\"config\": {\"fc1.weight\": {\"path_name\": \"weight_0\", \"is_param\": true, \"use_pickle\": false, \"tensor_meta\": {\"dtype\": 7, \"sizes\": [{\"as_int\": 16}, {\"as_int\": 8}], \"requires_grad\": true, \"device\": {\"type\": \"cpu\", \"index\": null}, \"strides\": [{\"as_int\": 8}, {\"as_int\": 1}], \"storage_offset\": {\"as_int\": 0}, \"layout\": 7}}, \"fc1.bias\": {\"path_name\": \"weight_1\", \"is_param\": true, \"use_pickle\": false, \"tensor_meta\": {\"dtype\": 7, \"sizes\": [{\"as_int\": 16}], \"requires_grad\": true, \"device\": {\"type\": \"cpu\", \"index\": null}, \"strides\": [{\"as_int\": 1}], \"storage_offset\": {\"as_int\": 0}, \"layout\": 7}}, \"bn.weight\": {\"path_name\": \"weight_2\", \"is_param\": true, \"use_pickle\": false, \"tensor_meta\": {\"dtype\": 7, \"sizes\": [{\"as_int\": 16}], \"requires_grad\": true, \"device\": {\"type\": \"cpu\", \"index\": null}, \"strides\": [",
+     "top_keys": [
+      "config"
+     ],
+     "entries": [
+      {
+       "fqn": "fc1.weight",
+       "path_name": "weight_0",
+       "use_pickle": false
+      },
+      {
+       "fqn": "fc1.bias",
+       "path_name": "weight_1",
+       "use_pickle": false
+      },
+      {
+       "fqn": "bn.weight",
+       "path_name": "weight_2",
+       "use_pickle": false
+      },
+      {
+       "fqn": "bn.bias",
+       "path_name": "weight_3",
+       "use_pickle": false
+      },
+      {
+       "fqn": "fc2.weight",
+       "path_name": "weight_4",
+       "use_pickle": false
+      },
+      {
+       "fqn": "fc2.bias",
+       "path_name": "weight_5",
+       "use_pickle": false
+      },
+      {
+       "fqn": "bn.running_mean",
+       "path_name": "weight_6",
+       "use_pickle": false
+      },
+      {
+       "fqn": "bn.running_var",
+       "path_name": "weight_7",
+       "use_pickle": false
+      },
+      {
+       "fqn": "bn.num_batches_tracked",
+       "path_name": "weight_8",
+       "use_pickle": false
+      }
+     ]
+    },
+    "model/data/constants/model_constants_config.json": {
+     "text_head": "{\"config\": {}}",
+     "top_keys": [
+      "config"
+     ],
+     "entries": []
+    }
+   },
+   "F6": {
+    "model_b/data/weights/model_weights_config.json": {
+     "text_head": "{\"config\": {\"fc1.weight\": {\"path_name\": \"weight_0\", \"is_param\": true, \"use_pickle\": false, \"tensor_meta\": {\"dtype\": 7, \"sizes\": [{\"as_int\": 16}, {\"as_int\": 8}], \"requires_grad\": true, \"device\": {\"type\": \"cpu\", \"index\": null}, \"strides\": [{\"as_int\": 8}, {\"as_int\": 1}], \"storage_offset\": {\"as_int\": 0}, \"layout\": 7}}, \"fc1.bias\": {\"path_name\": \"weight_1\", \"is_param\": true, \"use_pickle\": false, \"tensor_meta\": {\"dtype\": 7, \"sizes\": [{\"as_int\": 16}], \"requires_grad\": true, \"device\": {\"type\": \"cpu\", \"index\": null}, \"strides\": [{\"as_int\": 1}], \"storage_offset\": {\"as_int\": 0}, \"layout\": 7}}, \"bn.weight\": {\"path_name\": \"weight_2\", \"is_param\": true, \"use_pickle\": false, \"tensor_meta\": {\"dtype\": 7, \"sizes\": [{\"as_int\": 16}], \"requires_grad\": true, \"device\": {\"type\": \"cpu\", \"index\": null}, \"strides\": [",
+     "top_keys": [
+      "config"
+     ],
+     "entries": [
+      {
+       "fqn": "fc1.weight",
+       "path_name": "weight_0",
+       "use_pickle": false
+      },
+      {
+       "fqn": "fc1.bias",
+       "path_name": "weight_1",
+       "use_pickle": false
+      },
+      {
+       "fqn": "bn.weight",
+       "path_name": "weight_2",
+       "use_pickle": false
+      },
+      {
+       "fqn": "bn.bias",
+       "path_name": "weight_3",
+       "use_pickle": false
+      },
+      {
+       "fqn": "fc2.weight",
+       "path_name": "weight_4",
+       "use_pickle": false
+      },
+      {
+       "fqn": "fc2.bias",
+       "path_name": "weight_5",
+       "use_pickle": false
+      },
+      {
+       "fqn": "bn.running_mean",
+       "path_name": "weight_6",
+       "use_pickle": false
+      },
+      {
+       "fqn": "bn.running_var",
+       "path_name": "weight_7",
+       "use_pickle": false
+      },
+      {
+       "fqn": "bn.num_batches_tracked",
+       "path_name": "weight_8",
+       "use_pickle": false
+      }
+     ]
+    },
+    "model_b/data/constants/model_constants_config.json": {
+     "text_head": "{\"config\": {}}",
+     "top_keys": [
+      "config"
+     ],
+     "entries": []
+    }
+   },
+   "F7": {
+    "model_c/data/weights/model_weights_config.json": {
+     "text_head": "{\"config\": {\"fc.weight\": {\"path_name\": \"weight_0\", \"is_param\": true, \"use_pickle\": false, \"tensor_meta\": {\"dtype\": 7, \"sizes\": [{\"as_int\": 4}, {\"as_int\": 8}], \"requires_grad\": true, \"device\": {\"type\": \"cpu\", \"index\": null}, \"strides\": [{\"as_int\": 8}, {\"as_int\": 1}], \"storage_offset\": {\"as_int\": 0}, \"layout\": 7}}, \"fc.bias\": {\"path_name\": \"weight_1\", \"is_param\": true, \"use_pickle\": false, \"tensor_meta\": {\"dtype\": 7, \"sizes\": [{\"as_int\": 4}], \"requires_grad\": true, \"device\": {\"type\": \"cpu\", \"index\": null}, \"strides\": [{\"as_int\": 1}], \"storage_offset\": {\"as_int\": 0}, \"layout\": 7}}}}",
+     "top_keys": [
+      "config"
+     ],
+     "entries": [
+      {
+       "fqn": "fc.weight",
+       "path_name": "weight_0",
+       "use_pickle": false
+      },
+      {
+       "fqn": "fc.bias",
+       "path_name": "weight_1",
+       "use_pickle": false
+      }
+     ]
+    },
+    "model_c/data/constants/model_constants_config.json": {
+     "text_head": "{\"config\": {\"scale\": {\"path_name\": \"tensor_0\", \"is_param\": false, \"use_pickle\": false, \"tensor_meta\": {\"dtype\": 7, \"sizes\": [{\"as_int\": 4}], \"requires_grad\": false, \"device\": {\"type\": \"cpu\", \"index\": null}, \"strides\": [{\"as_int\": 1}], \"storage_offset\": {\"as_int\": 0}, \"layout\": 7}}}}",
+     "top_keys": [
+      "config"
+     ],
+     "entries": [
+      {
+       "fqn": "scale",
+       "path_name": "tensor_0",
+       "use_pickle": false
+      }
+     ]
+    }
+   }
+  },
+  "loaders": {
+   "jit_load_F1": {
+    "ok": true,
+    "type": "RecursiveScriptModule",
+    "warnings": [
+     "`torch.jit.load` is deprecated. Please switch to `torch.export`."
+    ]
+   },
+   "export_load_F4": {
+    "ok": true,
+    "type": "ExportedProgram",
+    "warnings": []
+   },
+   "export_load_F6": {
+    "ok": true,
+    "type": "ExportedProgram",
+    "warnings": []
+   },
+   "export_load_F7": {
+    "ok": true,
+    "type": "ExportedProgram",
+    "warnings": []
+   }
+  },
+  "tests": {
+   "patched": {
+    "ran": 1468,
+    "failures": [],
+    "errors": [],
+    "skipped": 3,
+    "ok": true,
+    "error": null
+   },
+   "base": {
+    "ran": 1452,
+    "failures": [],
+    "errors": [],
+    "skipped": 3,
+    "ok": true,
+    "error": null
+   }
+  }
+ }
+}

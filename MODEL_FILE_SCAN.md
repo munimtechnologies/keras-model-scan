@@ -1,7 +1,7 @@
 # model-file-scan
 
 <!-- routes-0.11.1 -->
-## Formats routed in 0.14.0 (releases v0.58.0 and v0.59.0)
+## Formats routed in 0.14.0 (releases v0.58.0 to v0.60.0)
 
 This page grew one scanner at a time; this table is the current routing.
 Everything is static: nothing is loaded, imported, unpickled or executed.
@@ -24,7 +24,7 @@ Everything is static: nothing is loaded, imported, unpickled or executed.
 | `.ubj`; `.json` whose top level has an XGBoost `learner` object; `.model` / `.bst` starting with `{` | `xgboost_model_scan` | [8 of 8](REALFILE_CHECK_XGB_2026-10.md) |
 | `.txt` / `.lgb` / `.lightgbm` / `.model` / `.bst` whose first line is `tree` | `lightgbm_model_scan` | [10 of 10](REALFILE_CHECK_LGB_2026-10.md) |
 | `.skops` (scikit-learn via skops) | `skops_scan` and `pickle_model_scan` | [10 of 10](REALFILE_CHECK_SKOPS_2026-11.md) |
-| everything else (`.pkl` `.pickle` `.joblib` `.pt` `.pth` `.bin` `.npy` `.npz` `.ckpt`, TorchScript `.torchscript`, PyTorch mobile `.ptl`, `torch.export` `.pt2`, and a `.model` that is neither of the above; directory walks also pick up `*.pth.tar`, `*.pt.tar`, `*.ckpt.tar`, `.pdparams`, `.pdopt`, and `*.pkl` / `*.pickle` / `*.joblib` ending in `.z`, `.gz`, `.bz2`, `.xz`, `.lzma` or `.lz4`) | `pickle_model_scan` | [folder-walk names, 15 of 15](REALFILE_CHECK_WALK_NAMES_V2_2026-11.md); [legacy-format torch files, 19 of 19](REALFILE_CHECK_LEGACY_TORCH_2026-11.md); [tensor storages in torch zips, 11 of 11 release rows](REALFILE_CHECK_ZIP_DATA_2026-11.md); [TorchScript, 9 of 9](REALFILE_CHECK_TS_FIX_2026-11.md); [zips inside archives, 11 of 11 release rows](REALFILE_CHECK_PT2_NEST_2026-11.md) |
+| everything else (`.pkl` `.pickle` `.joblib` `.pt` `.pth` `.bin` `.npy` `.npz` `.ckpt`, TorchScript `.torchscript`, PyTorch mobile `.ptl`, `torch.export` `.pt2`, and a `.model` that is neither of the above; directory walks also pick up `*.pth.tar`, `*.pt.tar`, `*.ckpt.tar`, `.pdparams`, `.pdopt`, and `*.pkl` / `*.pickle` / `*.joblib` ending in `.z`, `.gz`, `.bz2`, `.xz`, `.lzma` or `.lz4`) | `pickle_model_scan` | [folder-walk names, 15 of 15](REALFILE_CHECK_WALK_NAMES_V2_2026-11.md); [legacy-format torch files, 19 of 19](REALFILE_CHECK_LEGACY_TORCH_2026-11.md); [tensor storages in torch zips, 11 of 11 release rows](REALFILE_CHECK_ZIP_DATA_2026-11.md); [TorchScript, 9 of 9](REALFILE_CHECK_TS_FIX_2026-11.md); [zips inside archives, 11 of 11 release rows](REALFILE_CHECK_PT2_NEST_2026-11.md); [raw weights in `.pt2` files, 12 of 12 release rows](REALFILE_CHECK_PT2_WEIGHTS_2026-11.md) |
 
 The routing itself was checked on files written by XGBoost 3.4.1 and
 LightGBM 4.7.0: [7 of 7 predictions held](REALFILE_CHECK_MFS_ROUTING_2026-11.md).
@@ -45,8 +45,11 @@ MEDIUM "TorchScript archive: treat as executable code"** instead of one PKL003
 per `__torch__` class. Since 0.8.0 (release v0.59.0) a zip stored inside an
 archive, such as the `torch.save` file a `.pt2` keeps as
 `data/sample_inputs/model.pt`, is opened and scanned as a zip (up to two
-levels deep) instead of getting a false "could not be fully parsed" note; see
-[PICKLE_SCAN.md](PICKLE_SCAN.md).
+levels deep) instead of getting a false "could not be fully parsed" note.
+Since 0.9.0 (release v0.60.0) the raw weights and lifted constants of a
+`torch.export` `.pt2` are read as data when the archive's own weights or
+constants config declares them with `use_pickle` false, as
+`torch.export.load` reads them; see [PICKLE_SCAN.md](PICKLE_SCAN.md).
 
 How common these torch archive formats are on the Hugging Face Hub (measured
 11 November 2026): [RESULTS_PT2_CENSUS_2026-11.md](RESULTS_PT2_CENSUS_2026-11.md).
@@ -205,7 +208,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-      - uses: munimtechnologies/keras-model-scan@f9b3f70e46c15e6728086199cd6f875f26fc0020  # v0.58.0
+      - uses: munimtechnologies/keras-model-scan@31a426901eb16d032c9cb62e5dc2726ed5aef28b  # v0.59.0
         with:
           paths: "."
           fail-on: "high"
@@ -257,8 +260,9 @@ truncated structures, plus a clean control) in `test_gguf_scan.py`.
 - An honest TorchScript file gets one PKL040 MEDIUM (since 0.7.0), which fails
   the default `--fail-on medium` gate by design: PyTorch says to trust such a
   file like code. Inside a zip, compressed members are not opened, and a zip
-  nested more than two levels deep is not opened. A `torch.export` `.pt2` whose
-  raw weights start with byte 0x80 still gets one `PKL000` LOW note per such
-  weight; a fix that follows the archive's own weights config is pre-registered
-  in [research/PREREG_PT2_WEIGHTS.md](research/PREREG_PT2_WEIGHTS.md).
+  nested more than two levels deep is not opened. In a `torch.export` `.pt2`,
+  payloads declared `use_pickle` true (tensor subclasses), payloads no config
+  names, and every payload of an archive with AOTInductor files are still read
+  as pickles, so a raw one among them that starts with byte 0x80 can still get a
+  `PKL000` LOW note.
 - This tool and this document were made with AI.

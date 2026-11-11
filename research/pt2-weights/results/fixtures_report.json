@@ -1,0 +1,425 @@
+{
+ "fixtures": {
+  "F1": {
+   "path": "/work/fx/model.pt",
+   "bytes": 12841
+  },
+  "F3": {
+   "path": "/work/fx/model.ptl",
+   "bytes": 14761
+  },
+  "F4": {
+   "path": "/work/fx/model.pt2",
+   "bytes": 17732
+  },
+  "F5": {
+   "path": "/work/fx/weights.pth",
+   "bytes": 4425
+  },
+  "F6": {
+   "path": "/work/fx/model_b.pt2",
+   "bytes": 17768
+  },
+  "F7": {
+   "path": "/work/fx/model_c.pt2",
+   "bytes": 9256
+  }
+ },
+ "loaders": {
+  "jit_load_F1": {
+   "ok": true,
+   "type": "RecursiveScriptModule",
+   "warnings": [
+    "`torch.jit.load` is deprecated. Please switch to `torch.export`."
+   ]
+  },
+  "export_load_F4": {
+   "ok": true,
+   "type": "ExportedProgram",
+   "warnings": []
+  },
+  "export_load_F6": {
+   "ok": true,
+   "type": "ExportedProgram",
+   "warnings": []
+  },
+  "export_load_F7": {
+   "ok": true,
+   "type": "ExportedProgram",
+   "warnings": []
+  }
+ },
+ "errors": {},
+ "torch": "2.15.0+cpu",
+ "value": 1.0000152587890625,
+ "f6_first_values": {
+  "fc1.weight": 1.0000152587890625,
+  "fc1.bias": 1.0000152587890625,
+  "bn.weight": 1.0000152587890625,
+  "bn.bias": 1.0000152587890625,
+  "fc2.weight": 1.0000152587890625,
+  "fc2.bias": 1.0000152587890625,
+  "bn.running_mean": 1.0000152587890625,
+  "bn.running_var": 1.0000152587890625,
+  "bn.num_batches_tracked": 128.0
+ },
+ "members": {
+  "F4": {
+   "model/data/weights/weight_0": {
+    "bytes": 512,
+    "head": "22792dbb"
+   },
+   "model/data/weights/weight_1": {
+    "bytes": 64,
+    "head": "714efdbd"
+   },
+   "model/data/weights/weight_2": {
+    "bytes": 64,
+    "head": "0000803f"
+   },
+   "model/data/weights/weight_3": {
+    "bytes": 64,
+    "head": "00000000"
+   },
+   "model/data/weights/weight_4": {
+    "bytes": 256,
+    "head": "66f865be"
+   },
+   "model/data/weights/weight_5": {
+    "bytes": 16,
+    "head": "a024b93d"
+   },
+   "model/data/weights/weight_6": {
+    "bytes": 64,
+    "head": "00000000"
+   },
+   "model/data/weights/weight_7": {
+    "bytes": 64,
+    "head": "0000803f"
+   },
+   "model/data/weights/weight_8": {
+    "bytes": 8,
+    "head": "00000000"
+   },
+   "model/data/weights/model_weights_config.json": {
+    "bytes": 2539,
+    "head": "7b22636f"
+   },
+   "model/data/constants/model_constants_config.json": {
+    "bytes": 14,
+    "head": "7b22636f"
+   },
+   "model/models/model.json": {
+    "bytes": 8793,
+    "head": "7b226772"
+   },
+   "model/data/sample_inputs/model.pt": {
+    "bytes": 1641,
+    "head": "504b0304"
+   },
+   "model/archive_format": {
+    "bytes": 3,
+    "head": "707432"
+   },
+   "model/archive_version": {
+    "bytes": 1,
+    "head": "30"
+   },
+   "model/.data/version": {
+    "bytes": 2,
+    "head": "360a"
+   },
+   "model/byteorder": {
+    "bytes": 6,
+    "head": "6c697474"
+   },
+   "model/.data/serialization_id": {
+    "bytes": 40,
+    "head": "30353937"
+   }
+  },
+  "F6": {
+   "model_b/data/weights/weight_0": {
+    "bytes": 512,
+    "head": "8000803f"
+   },
+   "model_b/data/weights/weight_1": {
+    "bytes": 64,
+    "head": "8000803f"
+   },
+   "model_b/data/weights/weight_2": {
+    "bytes": 64,
+    "head": "8000803f"
+   },
+   "model_b/data/weights/weight_3": {
+    "bytes": 64,
+    "head": "8000803f"
+   },
+   "model_b/data/weights/weight_4": {
+    "bytes": 256,
+    "head": "8000803f"
+   },
+   "model_b/data/weights/weight_5": {
+    "bytes": 16,
+    "head": "8000803f"
+   },
+   "model_b/data/weights/weight_6": {
+    "bytes": 64,
+    "head": "8000803f"
+   },
+   "model_b/data/weights/weight_7": {
+    "bytes": 64,
+    "head": "8000803f"
+   },
+   "model_b/data/weights/weight_8": {
+    "bytes": 8,
+    "head": "80000000"
+   },
+   "model_b/data/weights/model_weights_config.json": {
+    "bytes": 2539,
+    "head": "7b22636f"
+   },
+   "model_b/data/constants/model_constants_config.json": {
+    "bytes": 14,
+    "head": "7b22636f"
+   },
+   "model_b/models/model.json": {
+    "bytes": 8793,
+    "head": "7b226772"
+   },
+   "model_b/data/sample_inputs/model.pt": {
+    "bytes": 1641,
+    "head": "504b0304"
+   },
+   "model_b/archive_format": {
+    "bytes": 3,
+    "head": "707432"
+   },
+   "model_b/archive_version": {
+    "bytes": 1,
+    "head": "30"
+   },
+   "model_b/.data/version": {
+    "bytes": 2,
+    "head": "360a"
+   },
+   "model_b/byteorder": {
+    "bytes": 6,
+    "head": "6c697474"
+   },
+   "model_b/.data/serialization_id": {
+    "bytes": 40,
+    "head": "30353937"
+   }
+  },
+  "F7": {
+   "model_c/data/weights/weight_0": {
+    "bytes": 128,
+    "head": "8000803f"
+   },
+   "model_c/data/weights/weight_1": {
+    "bytes": 16,
+    "head": "c82e503e"
+   },
+   "model_c/data/weights/model_weights_config.json": {
+    "bytes": 586,
+    "head": "7b22636f"
+   },
+   "model_c/data/constants/tensor_0": {
+    "bytes": 16,
+    "head": "8000803f"
+   },
+   "model_c/data/constants/model_constants_config.json": {
+    "bytes": 283,
+    "head": "7b22636f"
+   },
+   "model_c/models/model.json": {
+    "bytes": 4143,
+    "head": "7b226772"
+   },
+   "model_c/data/sample_inputs/model.pt": {
+    "bytes": 1641,
+    "head": "504b0304"
+   },
+   "model_c/archive_format": {
+    "bytes": 3,
+    "head": "707432"
+   },
+   "model_c/archive_version": {
+    "bytes": 1,
+    "head": "30"
+   },
+   "model_c/.data/version": {
+    "bytes": 2,
+    "head": "360a"
+   },
+   "model_c/byteorder": {
+    "bytes": 6,
+    "head": "6c697474"
+   },
+   "model_c/.data/serialization_id": {
+    "bytes": 40,
+    "head": "31373730"
+   }
+  }
+ },
+ "configs": {
+  "F4": {
+   "model/data/weights/model_weights_config.json": {
+    "text_head": "{\"config\": {\"fc1.weight\": {\"path_name\": \"weight_0\", \"is_param\": true, \"use_pickle\": false, \"tensor_meta\": {\"dtype\": 7, \"sizes\": [{\"as_int\": 16}, {\"as_int\": 8}], \"requires_grad\": true, \"device\": {\"type\": \"cpu\", \"index\": null}, \"strides\": [{\"as_int\": 8}, {\"as_int\": 1}], \"storage_offset\": {\"as_int\": 0}, \"layout\": 7}}, \"fc1.bias\": {\"path_name\": \"weight_1\", \"is_param\": true, \"use_pickle\": false, \"tensor_meta\": {\"dtype\": 7, \"sizes\": [{\"as_int\": 16}], \"requires_grad\": true, \"device\": {\"type\": \"cpu\", \"index\": null}, \"strides\": [{\"as_int\": 1}], \"storage_offset\": {\"as_int\": 0}, \"layout\": 7}}, \"bn.weight\": {\"path_name\": \"weight_2\", \"is_param\": true, \"use_pickle\": false, \"tensor_meta\": {\"dtype\": 7, \"sizes\": [{\"as_int\": 16}], \"requires_grad\": true, \"device\": {\"type\": \"cpu\", \"index\": null}, \"strides\": [",
+    "top_keys": [
+     "config"
+    ],
+    "entries": [
+     {
+      "fqn": "fc1.weight",
+      "path_name": "weight_0",
+      "use_pickle": false
+     },
+     {
+      "fqn": "fc1.bias",
+      "path_name": "weight_1",
+      "use_pickle": false
+     },
+     {
+      "fqn": "bn.weight",
+      "path_name": "weight_2",
+      "use_pickle": false
+     },
+     {
+      "fqn": "bn.bias",
+      "path_name": "weight_3",
+      "use_pickle": false
+     },
+     {
+      "fqn": "fc2.weight",
+      "path_name": "weight_4",
+      "use_pickle": false
+     },
+     {
+      "fqn": "fc2.bias",
+      "path_name": "weight_5",
+      "use_pickle": false
+     },
+     {
+      "fqn": "bn.running_mean",
+      "path_name": "weight_6",
+      "use_pickle": false
+     },
+     {
+      "fqn": "bn.running_var",
+      "path_name": "weight_7",
+      "use_pickle": false
+     },
+     {
+      "fqn": "bn.num_batches_tracked",
+      "path_name": "weight_8",
+      "use_pickle": false
+     }
+    ]
+   },
+   "model/data/constants/model_constants_config.json": {
+    "text_head": "{\"config\": {}}",
+    "top_keys": [
+     "config"
+    ],
+    "entries": []
+   }
+  },
+  "F6": {
+   "model_b/data/weights/model_weights_config.json": {
+    "text_head": "{\"config\": {\"fc1.weight\": {\"path_name\": \"weight_0\", \"is_param\": true, \"use_pickle\": false, \"tensor_meta\": {\"dtype\": 7, \"sizes\": [{\"as_int\": 16}, {\"as_int\": 8}], \"requires_grad\": true, \"device\": {\"type\": \"cpu\", \"index\": null}, \"strides\": [{\"as_int\": 8}, {\"as_int\": 1}], \"storage_offset\": {\"as_int\": 0}, \"layout\": 7}}, \"fc1.bias\": {\"path_name\": \"weight_1\", \"is_param\": true, \"use_pickle\": false, \"tensor_meta\": {\"dtype\": 7, \"sizes\": [{\"as_int\": 16}], \"requires_grad\": true, \"device\": {\"type\": \"cpu\", \"index\": null}, \"strides\": [{\"as_int\": 1}], \"storage_offset\": {\"as_int\": 0}, \"layout\": 7}}, \"bn.weight\": {\"path_name\": \"weight_2\", \"is_param\": true, \"use_pickle\": false, \"tensor_meta\": {\"dtype\": 7, \"sizes\": [{\"as_int\": 16}], \"requires_grad\": true, \"device\": {\"type\": \"cpu\", \"index\": null}, \"strides\": [",
+    "top_keys": [
+     "config"
+    ],
+    "entries": [
+     {
+      "fqn": "fc1.weight",
+      "path_name": "weight_0",
+      "use_pickle": false
+     },
+     {
+      "fqn": "fc1.bias",
+      "path_name": "weight_1",
+      "use_pickle": false
+     },
+     {
+      "fqn": "bn.weight",
+      "path_name": "weight_2",
+      "use_pickle": false
+     },
+     {
+      "fqn": "bn.bias",
+      "path_name": "weight_3",
+      "use_pickle": false
+     },
+     {
+      "fqn": "fc2.weight",
+      "path_name": "weight_4",
+      "use_pickle": false
+     },
+     {
+      "fqn": "fc2.bias",
+      "path_name": "weight_5",
+      "use_pickle": false
+     },
+     {
+      "fqn": "bn.running_mean",
+      "path_name": "weight_6",
+      "use_pickle": false
+     },
+     {
+      "fqn": "bn.running_var",
+      "path_name": "weight_7",
+      "use_pickle": false
+     },
+     {
+      "fqn": "bn.num_batches_tracked",
+      "path_name": "weight_8",
+      "use_pickle": false
+     }
+    ]
+   },
+   "model_b/data/constants/model_constants_config.json": {
+    "text_head": "{\"config\": {}}",
+    "top_keys": [
+     "config"
+    ],
+    "entries": []
+   }
+  },
+  "F7": {
+   "model_c/data/weights/model_weights_config.json": {
+    "text_head": "{\"config\": {\"fc.weight\": {\"path_name\": \"weight_0\", \"is_param\": true, \"use_pickle\": false, \"tensor_meta\": {\"dtype\": 7, \"sizes\": [{\"as_int\": 4}, {\"as_int\": 8}], \"requires_grad\": true, \"device\": {\"type\": \"cpu\", \"index\": null}, \"strides\": [{\"as_int\": 8}, {\"as_int\": 1}], \"storage_offset\": {\"as_int\": 0}, \"layout\": 7}}, \"fc.bias\": {\"path_name\": \"weight_1\", \"is_param\": true, \"use_pickle\": false, \"tensor_meta\": {\"dtype\": 7, \"sizes\": [{\"as_int\": 4}], \"requires_grad\": true, \"device\": {\"type\": \"cpu\", \"index\": null}, \"strides\": [{\"as_int\": 1}], \"storage_offset\": {\"as_int\": 0}, \"layout\": 7}}}}",
+    "top_keys": [
+     "config"
+    ],
+    "entries": [
+     {
+      "fqn": "fc.weight",
+      "path_name": "weight_0",
+      "use_pickle": false
+     },
+     {
+      "fqn": "fc.bias",
+      "path_name": "weight_1",
+      "use_pickle": false
+     }
+    ]
+   },
+   "model_c/data/constants/model_constants_config.json": {
+    "text_head": "{\"config\": {\"scale\": {\"path_name\": \"tensor_0\", \"is_param\": false, \"use_pickle\": false, \"tensor_meta\": {\"dtype\": 7, \"sizes\": [{\"as_int\": 4}], \"requires_grad\": false, \"device\": {\"type\": \"cpu\", \"index\": null}, \"strides\": [{\"as_int\": 1}], \"storage_offset\": {\"as_int\": 0}, \"layout\": 7}}}}",
+    "top_keys": [
+     "config"
+    ],
+    "entries": [
+     {
+      "fqn": "scale",
+      "path_name": "tensor_0",
+      "use_pickle": false
+     }
+    ]
+   }
+  }
+ }
+}
