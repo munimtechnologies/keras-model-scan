@@ -208,7 +208,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-      - uses: munimtechnologies/keras-model-scan@31a426901eb16d032c9cb62e5dc2726ed5aef28b  # v0.59.0
+      - uses: munimtechnologies/keras-model-scan@32b12c2593d095726f0b6c849b8788fda2055ea7  # v0.60.0
         with:
           paths: "."
           fail-on: "high"
