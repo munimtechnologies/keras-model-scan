@@ -48,6 +48,14 @@ archive; they are not Python imports. PyTorch's SECURITY.md says to treat
 TorchScript models like locally executable code from an unknown source, so
 the severity stays MEDIUM. Any other import keeps its usual rule.
 
+Since 0.8.0, a zip member that is itself a zip archive (for example the
+torch.save archive that torch.export.save stores as
+<prefix>/data/sample_inputs/model.pt inside a .pt2 file) is scanned as a
+zip, up to two levels deep, instead of being read as one pickle stream.
+Up to 0.7.0 such a member got a PKL000 LOW "could not be fully parsed"
+note and the pickles inside it were never read. Raw tensor storages are
+never opened this way.
+
 A flag means a pattern worth human review, not proof of malice. A clean result is
 not a guarantee of safety: this is a static heuristic, not a sandbox.
 
@@ -74,7 +82,7 @@ import zipfile
 import zlib
 from dataclasses import dataclass
 
-__version__ = "0.7.0"
+__version__ = "0.8.0"
 
 # Modules whose presence in a pickle is a direct code-execution concern.
 DANGEROUS_MODULES = frozenset({
@@ -933,7 +941,27 @@ def _collapse_torchscript(findings, prefixes, source):
     return out + kept
 
 
-def scan_zip(data, source):
+_ZIP_MAGIC = b"PK\x03\x04"
+_ZIP_NEST_MAX = 2
+
+
+def _opens_as_zip(data):
+    """True when zipfile can open DATA as an archive.
+
+    Used for a zip member that is itself a zip, such as the torch.save
+    archive torch.export.save stores at <prefix>/data/sample_inputs/model.pt
+    inside a .pt2 file. Such a member is scanned as a zip (up to
+    _ZIP_NEST_MAX levels below the outer file) instead of being read as one
+    pickle stream."""
+    try:
+        with zipfile.ZipFile(io.BytesIO(data)) as zf:
+            zf.namelist()
+        return True
+    except Exception:
+        return False
+
+
+def scan_zip(data, source, _depth=0):
     findings = []
     try:
         zf = zipfile.ZipFile(io.BytesIO(data))
@@ -956,6 +984,9 @@ def scan_zip(data, source):
             continue
         if ext == ".npy":
             findings += scan_npy(member, member_src)
+        elif (member[:4] == _ZIP_MAGIC and name not in raw_storage
+              and _depth < _ZIP_NEST_MAX and _opens_as_zip(member)):
+            findings += scan_zip(member, member_src, _depth + 1)
         elif (ext in PICKLE_EXTS or base == "data.pkl"
               or (member[:1] == b"\x80" and name not in raw_storage)):
             findings += scan_pickle_bytes(member, member_src)

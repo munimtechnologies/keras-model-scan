@@ -1,0 +1,465 @@
+{
+ "rows": {
+  "P1": {
+   "result": "held",
+   "why": "patch ok=True error=None base={'model_file_scan': '0.14.0', 'pickle_model_scan': '0.7.0'} patched={'model_file_scan': '0.14.0', 'pickle_model_scan': '0.8.0'}"
+  },
+  "S1": {
+   "result": "held",
+   "why": "patched ran=1452 ok=True failures=[] errors=[]; base ran=1444 ok=True"
+  },
+  "M1": {
+   "result": "held",
+   "why": "[{\"rule\": \"PKL000\", \"severity\": \"LOW\", \"title\": \"Pickle stream could not be fully parsed\", \"detail\": \"pickletools stopped reading at an opcode: 'utf-8' codec can't decode byte 0x80 in position 63: invalid start byte. Part of the stream was not analysed; treat the file with caution.\", \"location\": \"FX/model.pt2!model/data/sample_inputs/model.pt\"}]"
+  },
+  "M2": {
+   "result": "held",
+   "why": "{\"bytes\": 1641, \"head\": \"504b0304\", \"inner_names\": [\"archive/data.pkl\", \"archive/.format_version\", \"archive/.storage_alignment\", \"archive/byteorder\", \"archive/data/0\", \"archive/version\", \"archive/.data/serialization_id\"], \"opens_as_zip\": true, \"torch_load_weights_only\": {\"ok\": true, \"type\": \"tuple\"}}"
+  },
+  "N1": {
+   "result": "held",
+   "why": "[]"
+  },
+  "N2": {
+   "result": "held",
+   "why": "top=-1 rows=0"
+  },
+  "N3": {
+   "result": "held",
+   "why": "base=['F4!model/data/sample_inputs/model.pt'] patched=['F4!model/data/sample_inputs/model.pt!archive/data.pkl']"
+  },
+  "T3": {
+   "result": "held",
+   "why": "{\"F1\": true, \"F2\": true, \"F3\": true, \"F5\": true}"
+  },
+  "T4": {
+   "result": "held",
+   "why": "{\"F1\": [2, 2], \"F2\": [2, 2], \"F3\": [2, 2], \"F5\": [-1, -1]}"
+  },
+  "C2": {
+   "result": "held",
+   "why": "base={'F1': 1, 'F4': 0, 'F5': 0, 'dir': 1} patched={'F1': 1, 'F4': 0, 'F5': 0, 'dir': 1}"
+  },
+  "L0": {
+   "result": "held",
+   "why": "{\"jit_load_F1\": true, \"export_load_F4\": true, \"export_load_F6\": true}"
+  },
+  "D1": {
+   "result": "failed",
+   "why": "[]"
+  }
+ },
+ "held": [
+  "C2",
+  "L0",
+  "M1",
+  "M2",
+  "N1",
+  "N2",
+  "N3",
+  "P1",
+  "S1",
+  "T3",
+  "T4"
+ ],
+ "failed": [
+  "D1"
+ ],
+ "not_run": [],
+ "release_rows_all_held": true,
+ "recorded": {
+  "torch": "2.15.0+cpu",
+  "F6_base": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\x14' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_0"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\n' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_1"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\x00' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_2"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\x00' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_3"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'8' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_4"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: no newline found when trying to read stringnl. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_5"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\x00' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_6"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\x00' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_7"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x00' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_8"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: 'utf-8' codec can't decode byte 0x80 in position 63: invalid start byte. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/sample_inputs/model.pt"
+   }
+  ],
+  "F6_patched": [
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\x14' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_0"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\n' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_1"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\x00' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_2"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\x00' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_3"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'8' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_4"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: no newline found when trying to read stringnl. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_5"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\x00' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_6"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 4, opcode b'\\x00' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_7"
+   },
+   {
+    "rule": "PKL000",
+    "severity": "LOW",
+    "title": "Pickle stream could not be fully parsed",
+    "detail": "pickletools stopped reading at an opcode: at position 2, opcode b'\\x00' unknown. Part of the stream was not analysed; treat the file with caution.",
+    "location": "FX/model_b.pt2!model_b/data/weights/weight_8"
+   }
+  ],
+  "F4_patched": [],
+  "walked_base": {
+   "F4": [
+    "F4!model/data/sample_inputs/model.pt"
+   ],
+   "F6": [
+    "F6!model_b/data/weights/weight_0",
+    "F6!model_b/data/weights/weight_1",
+    "F6!model_b/data/weights/weight_2",
+    "F6!model_b/data/weights/weight_3",
+    "F6!model_b/data/weights/weight_4",
+    "F6!model_b/data/weights/weight_5",
+    "F6!model_b/data/weights/weight_6",
+    "F6!model_b/data/weights/weight_7",
+    "F6!model_b/data/weights/weight_8",
+    "F6!model_b/data/sample_inputs/model.pt"
+   ]
+  },
+  "walked_patched": {
+   "F4": [
+    "F4!model/data/sample_inputs/model.pt!archive/data.pkl"
+   ],
+   "F6": [
+    "F6!model_b/data/weights/weight_0",
+    "F6!model_b/data/weights/weight_1",
+    "F6!model_b/data/weights/weight_2",
+    "F6!model_b/data/weights/weight_3",
+    "F6!model_b/data/weights/weight_4",
+    "F6!model_b/data/weights/weight_5",
+    "F6!model_b/data/weights/weight_6",
+    "F6!model_b/data/weights/weight_7",
+    "F6!model_b/data/weights/weight_8",
+    "F6!model_b/data/sample_inputs/model.pt!archive/data.pkl"
+   ]
+  },
+  "members": {
+   "F4": {
+    "model/data/weights/weight_0": {
+     "bytes": 512,
+     "head": "22792dbb"
+    },
+    "model/data/weights/weight_1": {
+     "bytes": 64,
+     "head": "714efdbd"
+    },
+    "model/data/weights/weight_2": {
+     "bytes": 64,
+     "head": "0000803f"
+    },
+    "model/data/weights/weight_3": {
+     "bytes": 64,
+     "head": "00000000"
+    },
+    "model/data/weights/weight_4": {
+     "bytes": 256,
+     "head": "66f865be"
+    },
+    "model/data/weights/weight_5": {
+     "bytes": 16,
+     "head": "a024b93d"
+    },
+    "model/data/weights/weight_6": {
+     "bytes": 64,
+     "head": "00000000"
+    },
+    "model/data/weights/weight_7": {
+     "bytes": 64,
+     "head": "0000803f"
+    },
+    "model/data/weights/weight_8": {
+     "bytes": 8,
+     "head": "00000000"
+    },
+    "model/data/weights/model_weights_config.json": {
+     "bytes": 2539,
+     "head": "7b22636f"
+    },
+    "model/data/constants/model_constants_config.json": {
+     "bytes": 14,
+     "head": "7b22636f"
+    },
+    "model/models/model.json": {
+     "bytes": 8793,
+     "head": "7b226772"
+    },
+    "model/data/sample_inputs/model.pt": {
+     "bytes": 1641,
+     "head": "504b0304",
+     "inner_names": [
+      "archive/data.pkl",
+      "archive/.format_version",
+      "archive/.storage_alignment",
+      "archive/byteorder",
+      "archive/data/0",
+      "archive/version",
+      "archive/.data/serialization_id"
+     ],
+     "opens_as_zip": true,
+     "torch_load_weights_only": {
+      "ok": true,
+      "type": "tuple"
+     }
+    },
+    "model/archive_format": {
+     "bytes": 3,
+     "head": "707432"
+    },
+    "model/archive_version": {
+     "bytes": 1,
+     "head": "30"
+    },
+    "model/.data/version": {
+     "bytes": 2,
+     "head": "360a"
+    },
+    "model/byteorder": {
+     "bytes": 6,
+     "head": "6c697474"
+    },
+    "model/.data/serialization_id": {
+     "bytes": 40,
+     "head": "30353937"
+    }
+   },
+   "F6": {
+    "model_b/data/weights/weight_0": {
+     "bytes": 512,
+     "head": "8000803f"
+    },
+    "model_b/data/weights/weight_1": {
+     "bytes": 64,
+     "head": "8000803f"
+    },
+    "model_b/data/weights/weight_2": {
+     "bytes": 64,
+     "head": "8000803f"
+    },
+    "model_b/data/weights/weight_3": {
+     "bytes": 64,
+     "head": "8000803f"
+    },
+    "model_b/data/weights/weight_4": {
+     "bytes": 256,
+     "head": "8000803f"
+    },
+    "model_b/data/weights/weight_5": {
+     "bytes": 16,
+     "head": "8000803f"
+    },
+    "model_b/data/weights/weight_6": {
+     "bytes": 64,
+     "head": "8000803f"
+    },
+    "model_b/data/weights/weight_7": {
+     "bytes": 64,
+     "head": "8000803f"
+    },
+    "model_b/data/weights/weight_8": {
+     "bytes": 8,
+     "head": "80000000"
+    },
+    "model_b/data/weights/model_weights_config.json": {
+     "bytes": 2539,
+     "head": "7b22636f"
+    },
+    "model_b/data/constants/model_constants_config.json": {
+     "bytes": 14,
+     "head": "7b22636f"
+    },
+    "model_b/models/model.json": {
+     "bytes": 8793,
+     "head": "7b226772"
+    },
+    "model_b/data/sample_inputs/model.pt": {
+     "bytes": 1641,
+     "head": "504b0304",
+     "inner_names": [
+      "archive/data.pkl",
+      "archive/.format_version",
+      "archive/.storage_alignment",
+      "archive/byteorder",
+      "archive/data/0",
+      "archive/version",
+      "archive/.data/serialization_id"
+     ],
+     "opens_as_zip": true,
+     "torch_load_weights_only": {
+      "ok": true,
+      "type": "tuple"
+     }
+    },
+    "model_b/archive_format": {
+     "bytes": 3,
+     "head": "707432"
+    },
+    "model_b/archive_version": {
+     "bytes": 1,
+     "head": "30"
+    },
+    "model_b/.data/version": {
+     "bytes": 2,
+     "head": "360a"
+    },
+    "model_b/byteorder": {
+     "bytes": 6,
+     "head": "6c697474"
+    },
+    "model_b/.data/serialization_id": {
+     "bytes": 40,
+     "head": "30353937"
+    }
+   }
+  },
+  "loaders": {
+   "jit_load_F1": {
+    "ok": true,
+    "type": "RecursiveScriptModule",
+    "warnings": [
+     "`torch.jit.load` is deprecated. Please switch to `torch.export`."
+    ]
+   },
+   "export_load_F4": {
+    "ok": true,
+    "type": "ExportedProgram",
+    "warnings": []
+   },
+   "export_load_F6": {
+    "ok": true,
+    "type": "ExportedProgram",
+    "warnings": []
+   },
+   "torch_load_F5_weights_only_true": {
+    "ok": true,
+    "type": "OrderedDict",
+    "warnings": []
+   }
+  },
+  "tests": {
+   "patched": {
+    "ran": 1452,
+    "failures": [],
+    "errors": [],
+    "skipped": 3,
+    "ok": true,
+    "error": null
+   },
+   "base": {
+    "ran": 1444,
+    "failures": [],
+    "errors": [],
+    "skipped": 3,
+    "ok": true,
+    "error": null
+   }
+  }
+ }
+}

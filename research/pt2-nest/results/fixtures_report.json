@@ -1,0 +1,233 @@
+{
+ "fixtures": {
+  "F1": {
+   "path": "/work/fx/model.pt",
+   "bytes": 12841
+  },
+  "F2": {
+   "path": "/work/fx/model.torchscript",
+   "bytes": 9697
+  },
+  "F3": {
+   "path": "/work/fx/model.ptl",
+   "bytes": 14761
+  },
+  "F4": {
+   "path": "/work/fx/model.pt2",
+   "bytes": 17732
+  },
+  "F5": {
+   "path": "/work/fx/weights.pth",
+   "bytes": 4425
+  },
+  "F6": {
+   "path": "/work/fx/model_b.pt2",
+   "bytes": 17768
+  }
+ },
+ "loaders": {
+  "jit_load_F1": {
+   "ok": true,
+   "type": "RecursiveScriptModule",
+   "warnings": [
+    "`torch.jit.load` is deprecated. Please switch to `torch.export`."
+   ]
+  },
+  "export_load_F4": {
+   "ok": true,
+   "type": "ExportedProgram",
+   "warnings": []
+  },
+  "export_load_F6": {
+   "ok": true,
+   "type": "ExportedProgram",
+   "warnings": []
+  },
+  "torch_load_F5_weights_only_true": {
+   "ok": true,
+   "type": "OrderedDict",
+   "warnings": []
+  }
+ },
+ "errors": {},
+ "torch": "2.15.0+cpu",
+ "f6_value": 1.0000152587890625,
+ "members": {
+  "F4": {
+   "model/data/weights/weight_0": {
+    "bytes": 512,
+    "head": "22792dbb"
+   },
+   "model/data/weights/weight_1": {
+    "bytes": 64,
+    "head": "714efdbd"
+   },
+   "model/data/weights/weight_2": {
+    "bytes": 64,
+    "head": "0000803f"
+   },
+   "model/data/weights/weight_3": {
+    "bytes": 64,
+    "head": "00000000"
+   },
+   "model/data/weights/weight_4": {
+    "bytes": 256,
+    "head": "66f865be"
+   },
+   "model/data/weights/weight_5": {
+    "bytes": 16,
+    "head": "a024b93d"
+   },
+   "model/data/weights/weight_6": {
+    "bytes": 64,
+    "head": "00000000"
+   },
+   "model/data/weights/weight_7": {
+    "bytes": 64,
+    "head": "0000803f"
+   },
+   "model/data/weights/weight_8": {
+    "bytes": 8,
+    "head": "00000000"
+   },
+   "model/data/weights/model_weights_config.json": {
+    "bytes": 2539,
+    "head": "7b22636f"
+   },
+   "model/data/constants/model_constants_config.json": {
+    "bytes": 14,
+    "head": "7b22636f"
+   },
+   "model/models/model.json": {
+    "bytes": 8793,
+    "head": "7b226772"
+   },
+   "model/data/sample_inputs/model.pt": {
+    "bytes": 1641,
+    "head": "504b0304",
+    "inner_names": [
+     "archive/data.pkl",
+     "archive/.format_version",
+     "archive/.storage_alignment",
+     "archive/byteorder",
+     "archive/data/0",
+     "archive/version",
+     "archive/.data/serialization_id"
+    ],
+    "opens_as_zip": true,
+    "torch_load_weights_only": {
+     "ok": true,
+     "type": "tuple"
+    }
+   },
+   "model/archive_format": {
+    "bytes": 3,
+    "head": "707432"
+   },
+   "model/archive_version": {
+    "bytes": 1,
+    "head": "30"
+   },
+   "model/.data/version": {
+    "bytes": 2,
+    "head": "360a"
+   },
+   "model/byteorder": {
+    "bytes": 6,
+    "head": "6c697474"
+   },
+   "model/.data/serialization_id": {
+    "bytes": 40,
+    "head": "30353937"
+   }
+  },
+  "F6": {
+   "model_b/data/weights/weight_0": {
+    "bytes": 512,
+    "head": "8000803f"
+   },
+   "model_b/data/weights/weight_1": {
+    "bytes": 64,
+    "head": "8000803f"
+   },
+   "model_b/data/weights/weight_2": {
+    "bytes": 64,
+    "head": "8000803f"
+   },
+   "model_b/data/weights/weight_3": {
+    "bytes": 64,
+    "head": "8000803f"
+   },
+   "model_b/data/weights/weight_4": {
+    "bytes": 256,
+    "head": "8000803f"
+   },
+   "model_b/data/weights/weight_5": {
+    "bytes": 16,
+    "head": "8000803f"
+   },
+   "model_b/data/weights/weight_6": {
+    "bytes": 64,
+    "head": "8000803f"
+   },
+   "model_b/data/weights/weight_7": {
+    "bytes": 64,
+    "head": "8000803f"
+   },
+   "model_b/data/weights/weight_8": {
+    "bytes": 8,
+    "head": "80000000"
+   },
+   "model_b/data/weights/model_weights_config.json": {
+    "bytes": 2539,
+    "head": "7b22636f"
+   },
+   "model_b/data/constants/model_constants_config.json": {
+    "bytes": 14,
+    "head": "7b22636f"
+   },
+   "model_b/models/model.json": {
+    "bytes": 8793,
+    "head": "7b226772"
+   },
+   "model_b/data/sample_inputs/model.pt": {
+    "bytes": 1641,
+    "head": "504b0304",
+    "inner_names": [
+     "archive/data.pkl",
+     "archive/.format_version",
+     "archive/.storage_alignment",
+     "archive/byteorder",
+     "archive/data/0",
+     "archive/version",
+     "archive/.data/serialization_id"
+    ],
+    "opens_as_zip": true,
+    "torch_load_weights_only": {
+     "ok": true,
+     "type": "tuple"
+    }
+   },
+   "model_b/archive_format": {
+    "bytes": 3,
+    "head": "707432"
+   },
+   "model_b/archive_version": {
+    "bytes": 1,
+    "head": "30"
+   },
+   "model_b/.data/version": {
+    "bytes": 2,
+    "head": "360a"
+   },
+   "model_b/byteorder": {
+    "bytes": 6,
+    "head": "6c697474"
+   },
+   "model_b/.data/serialization_id": {
+    "bytes": 40,
+    "head": "30353937"
+   }
+  }
+ }
+}

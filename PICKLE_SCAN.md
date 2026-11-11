@@ -28,7 +28,9 @@ without running them, and flags the opcodes behind those attacks.
 - PyTorch archives: `.pt`, `.pth`, `.bin` (the pickle inside the ZIP, e.g. `data.pkl`)
 - TorchScript, PyTorch mobile and `torch.export` archives (`.torchscript`, `.ptl`,
   `.pt2`, or a `.pt` written by `torch.jit.save`); since 0.7.0 a TorchScript
-  archive gets one PKL040 finding (see below)
+  archive gets one PKL040 finding, and since 0.8.0 a zip stored inside an
+  archive (such as the `torch.save` file a `.pt2` keeps as
+  `data/sample_inputs/model.pt`) is opened and scanned as a zip (see below)
 - NumPy: `.npy` / `.npz` — flags **object-dtype** arrays whose data is a pickle
 - Recognises and reports the **safe** formats — `safetensors` and `GGUF` have no
   code-execution surface — so you can confirm a file is the safe kind. For a full
@@ -86,6 +88,13 @@ Exit codes: `0` clean (below threshold), `1` findings at/above `--fail-on`
   decompress them first.
 - PKL040 says a file is a TorchScript program to be trusted like code. It does
   not read or judge the TorchScript source stored in the archive.
+- A zip nested more than two levels below the outer file is not opened; it is
+  read the way 0.7.0 read every member.
+- A `torch.export` `.pt2` stores most weights as raw tensor bytes under
+  `data/weights/`. A raw weight whose first byte is 0x80 is still read as a
+  pickle and gets a PKL000 LOW note (one per such weight). A fix that follows
+  the archive's own weights config is pre-registered in
+  [research/PREREG_PT2_WEIGHTS.md](research/PREREG_PT2_WEIGHTS.md).
 
 <!-- pkl-torchscript -->
 ## TorchScript archives (0.7.0, November 2026)
@@ -112,6 +121,30 @@ Pre-registered in [research/PREREG_TS_FIX.md](research/PREREG_TS_FIX.md) and
 **graded 9 of 9** in
 [REALFILE_CHECK_TS_FIX_2026-11.md](REALFILE_CHECK_TS_FIX_2026-11.md) on files
 written by torch 2.15's own writers and loaded by its own loaders.
+
+<!-- pkl-nested-zip -->
+## Zip members that are zips (0.8.0, November 2026)
+
+`torch.export.save` writes a `.pt2` file: a zip with `models/*.json`, raw
+weights under `data/weights/`, and the model's sample inputs stored as a
+complete `torch.save` file at `<prefix>/data/sample_inputs/model.pt`. That
+member is a zip inside the zip. Up to 0.7.0 its `.pt` name sent its bytes to
+the pickle walker, which stopped at once (the bytes start with `PK\x03\x04`,
+not a pickle opcode). Every honest `.pt2` got a PKL000 LOW "could not be fully
+parsed" note, and the pickle inside that member was never read.
+
+Since 0.8.0, a member that starts with the zip magic, is not a raw tensor
+storage, and opens as a zip is scanned with the zip scanner itself, up to two
+levels below the outer file. Its findings carry the full path, for example
+`model.pt2!model/data/sample_inputs/model.pt!archive/data.pkl`. A member that
+has the magic but does not open as a zip is read exactly as before.
+
+Pre-registered in [research/PREREG_PT2_NEST.md](research/PREREG_PT2_NEST.md)
+and **graded 11 of 11 release rows** in
+[REALFILE_CHECK_PT2_NEST_2026-11.md](REALFILE_CHECK_PT2_NEST_2026-11.md), on
+files written by torch 2.15's own writers and loaded by its own loaders: the
+false note is gone from an honest `.pt2`, the inner `data.pkl` is now walked,
+and the findings on TorchScript, mobile and `torch.save` files are unchanged.
 
 <!-- pkl-memo -->
 ## STACK_GLOBAL operands from the memo (0.4.0, November 2026)
