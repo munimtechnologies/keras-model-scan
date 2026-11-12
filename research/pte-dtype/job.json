@@ -1,0 +1,26 @@
+{
+  "name": "pte-dtype-v1",
+  "kind": "poc",
+  "workdir": "E:/MV2-Pursuit/work/20261112T150838Z-security/compete/pte-dtype",
+  "image": "python:3.12",
+  "setup": [
+    "python -m unittest -v test_pte_lib",
+    "python fetch_tree.py",
+    "python fetch_vendor.py",
+    "python fetch_hub_pte.py"
+  ],
+  "run": [
+    "python -m unittest -v test_pte_lib",
+    "python patch_pte.py tree patched /out",
+    "python run_tests.py tree /out tests_base.json",
+    "python run_tests.py patched /out tests_patched.json",
+    "python vendor_check.py patched tree /out",
+    "python dtype_census.py --out /out"
+  ],
+  "network": true,
+  "data_urls": [],
+  "data_key": "mpk-arc-realfile",
+  "cpu": 1,
+  "memory_gb": 1,
+  "timeout_minutes": 120
+}

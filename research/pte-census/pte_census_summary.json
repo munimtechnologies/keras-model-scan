@@ -1,0 +1,890 @@
+{
+ "rows": {
+  "G1": {
+   "result": "held",
+   "why": "450 files from 171 models"
+  },
+  "E1": {
+   "result": "held",
+   "why": "40 of 40 whole files scan the same"
+  },
+  "R1": {
+   "result": "failed",
+   "why": "15 of 450 files have PTE001/PTE002/PTE004"
+  },
+  "R2": {
+   "result": "held",
+   "why": "8 of 450 files have PTE005"
+  },
+  "R3": {
+   "result": "held",
+   "why": "433 of 450 files have PTE003"
+  },
+  "R4": {
+   "result": "held",
+   "why": "delegates by files: [('XnnpackBackend', 188), ('CoreMLBackend', 75), ('VulkanBackend', 58), ('MLXBackend', 45), ('NeuropilotBackend', 36), ('QnnBackend', 24), ('CudaBackend', 10), ('EthosUBackend', 3)]"
+  },
+  "R5": {
+   "result": "held",
+   "why": "438 of 450 files fail the default gate"
+  },
+  "R6": {
+   "result": "held",
+   "why": "450 of 450 probed files are ET12"
+  }
+ },
+ "held": [
+  "E1",
+  "G1",
+  "R2",
+  "R3",
+  "R4",
+  "R5",
+  "R6"
+ ],
+ "failed": [
+  "R1"
+ ],
+ "untestable": [],
+ "recorded": {
+  "scanner": {
+   "executorch_pte_scan": "0.1.0"
+  },
+  "list": {
+   "pages": 1,
+   "models": 914,
+   "open": 861,
+   "ext_models": {
+    ".pte": 850,
+    ".json": 537,
+    ".bin": 88,
+    ".ptd": 18,
+    ".safetensors": 34,
+    "pte+ptd": 17,
+    ".onnx": 38,
+    ".gguf": 8,
+    ".tflite": 16
+   },
+   "pte_files": 3259,
+   "error": null
+  },
+  "candidates": 1537,
+  "probed": 450,
+  "scanned": 450,
+  "models_scanned": 171,
+  "bytes_fetched": 466376960,
+  "skipped": {},
+  "identifiers": {
+   "ET12": 450
+  },
+  "has_header": 442,
+  "file_size": {
+   "n": 450,
+   "min": 1104,
+   "p25": 18483008,
+   "median": 90391296,
+   "p75": 441258880,
+   "p90": 1493279744,
+   "max": 21055028608
+  },
+  "program_size": {
+   "n": 442,
+   "min": 1136,
+   "p25": 9168,
+   "median": 38680,
+   "p75": 113576,
+   "p90": 323296,
+   "max": 2569408
+  },
+  "files_per_rule": {
+   "PTE003": 433,
+   "PTE004": 15,
+   "PTE005": 8
+  },
+  "delegates_by_files": {
+   "XnnpackBackend": 188,
+   "CoreMLBackend": 75,
+   "VulkanBackend": 58,
+   "MLXBackend": 45,
+   "NeuropilotBackend": 36,
+   "QnnBackend": 24,
+   "CudaBackend": 10,
+   "EthosUBackend": 3,
+   "MetalBackend": 1
+  },
+  "clean_files": 12,
+  "per_model_first_file": {
+   "models": 171,
+   "PTE003": 165,
+   "integrity": 4,
+   "PTE005": 3,
+   "gate_fails": 167
+  },
+  "flagged": [
+   {
+    "model": "software-mansion/fsmn-vad-ExecuTorch",
+    "rfilename": "xnnpack/fsmn_vad_xnnpack_fp32.pte",
+    "findings": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 1",
+      "evidence": "plan 0 value 32: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ]
+   },
+   {
+    "model": "software-mansion/gemma-4-E2B-it-ExecuTorch",
+    "rfilename": "e2b/mlx/gemma_4_e2b_mlx_int4.pte",
+    "findings": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 1",
+      "evidence": "plan 0 value 873: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ]
+   },
+   {
+    "model": "software-mansion/gemma-4-E2B-it-ExecuTorch",
+    "rfilename": "e2b/vulkan/gemma_4_e2b_vulkan_8da4w.pte",
+    "findings": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 1",
+      "evidence": "plan 0 value 826: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ]
+   },
+   {
+    "model": "software-mansion/gemma-4-E2B-it-ExecuTorch",
+    "rfilename": "e2b/xnnpack/gemma_4_e2b_xnnpack_8da4w.pte",
+    "findings": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 1",
+      "evidence": "plan 0 value 826: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ]
+   },
+   {
+    "model": "larryliu0820/parakeet-tdt-0.6b-v3-executorch",
+    "rfilename": "cuda/bf16/model_linux_SM120.pte",
+    "findings": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 2",
+      "evidence": "plan 3 value 87: scalar_type 9 is not an ExecuTorch dtype; plan 3 value 92: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ]
+   },
+   {
+    "model": "larryliu0820/parakeet-tdt-0.6b-v3-executorch",
+    "rfilename": "cuda/bf16/model_windows_SM120.pte",
+    "findings": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 2",
+      "evidence": "plan 3 value 87: scalar_type 9 is not an ExecuTorch dtype; plan 3 value 92: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ]
+   },
+   {
+    "model": "larryliu0820/parakeet-tdt-0.6b-v3-executorch",
+    "rfilename": "cuda/int4/model_linux_SM120.pte",
+    "findings": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 2",
+      "evidence": "plan 3 value 87: scalar_type 9 is not an ExecuTorch dtype; plan 3 value 92: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ]
+   },
+   {
+    "model": "Arm/depth-anything-v3-small-mix-precision",
+    "rfilename": "da3_prepare_image.pte",
+    "findings": [
+     {
+      "rule": "PTE005",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-693",
+      "message": "the program lists data segments but no extended header gives a segment base offset",
+      "evidence": "1 segments"
+     }
+    ]
+   },
+   {
+    "model": "Arm/depth-anything-v3-small-mix-precision",
+    "rfilename": "da3_restore_depth.pte",
+    "findings": [
+     {
+      "rule": "PTE005",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-693",
+      "message": "the program lists data segments but no extended header gives a segment base offset",
+      "evidence": "1 segments"
+     }
+    ]
+   },
+   {
+    "model": "Arm/zipdepth-fp16-executorch",
+    "rfilename": "zipdepth_prepare_image.pte",
+    "findings": [
+     {
+      "rule": "PTE005",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-693",
+      "message": "the program lists data segments but no extended header gives a segment base offset",
+      "evidence": "1 segments"
+     }
+    ]
+   },
+   {
+    "model": "Arm/zipdepth-fp16-executorch",
+    "rfilename": "zipdepth_restore_depth.pte",
+    "findings": [
+     {
+      "rule": "PTE005",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-693",
+      "message": "the program lists data segments but no extended header gives a segment base offset",
+      "evidence": "1 segments"
+     }
+    ]
+   },
+   {
+    "model": "Arm/whisper-small-int8-xnnpack-executorch",
+    "rfilename": "pte_original/whisper_preprocessor.pte",
+    "findings": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 3",
+      "evidence": "plan 0 value 100: scalar_type 9 is not an ExecuTorch dtype; plan 0 value 105: scalar_type 9 is not an ExecuTorch dtype; plan 0 value 110: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ]
+   },
+   {
+    "model": "Arm/whisper-small-int8-xnnpack-executorch",
+    "rfilename": "whisper_preprocessor.pte",
+    "findings": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 3",
+      "evidence": "plan 0 value 100: scalar_type 9 is not an ExecuTorch dtype; plan 0 value 105: scalar_type 9 is not an ExecuTorch dtype; plan 0 value 110: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ]
+   },
+   {
+    "model": "anira-project/simple-gain",
+    "rfilename": "executorch/simple_gain_network_16ch.pte",
+    "findings": [
+     {
+      "rule": "PTE005",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-693",
+      "message": "the program lists data segments but no extended header gives a segment base offset",
+      "evidence": "1 segments"
+     }
+    ]
+   },
+   {
+    "model": "abhijitbetigeri/dcops-e8",
+    "rfilename": "deployed/kws_dscnn_m_agc/kws_ethos-u85-256.pte",
+    "findings": [
+     {
+      "rule": "PTE005",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-693",
+      "message": "the program lists data segments but no extended header gives a segment base offset",
+      "evidence": "1 segments"
+     }
+    ]
+   },
+   {
+    "model": "abhijitbetigeri/dcops-e8",
+    "rfilename": "deployed/vision_v3_board_ft/student_ethos-u85-256.pte",
+    "findings": [
+     {
+      "rule": "PTE005",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-693",
+      "message": "the program lists data segments but no extended header gives a segment base offset",
+      "evidence": "1 segments"
+     }
+    ]
+   },
+   {
+    "model": "abhijitbetigeri/dcops-e8",
+    "rfilename": "deployed/vision_v4_demo_ft/student_ethos-u85-256.pte",
+    "findings": [
+     {
+      "rule": "PTE005",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-693",
+      "message": "the program lists data segments but no extended header gives a segment base offset",
+      "evidence": "1 segments"
+     }
+    ]
+   },
+   {
+    "model": "mistral-experimental/Voxtral-Mini-4B-Realtime-2602-ExecuTorch",
+    "rfilename": "preprocessor.pte",
+    "findings": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 3",
+      "evidence": "plan 0 value 85: scalar_type 9 is not an ExecuTorch dtype; plan 0 value 90: scalar_type 9 is not an ExecuTorch dtype; plan 0 value 95: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ]
+   },
+   {
+    "model": "Arm/whisper-tiny-int8-xnnpack-executorch",
+    "rfilename": "pte_original/whisper_preprocessor.pte",
+    "findings": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 3",
+      "evidence": "plan 0 value 100: scalar_type 9 is not an ExecuTorch dtype; plan 0 value 105: scalar_type 9 is not an ExecuTorch dtype; plan 0 value 110: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ]
+   },
+   {
+    "model": "Arm/whisper-tiny-int8-xnnpack-executorch",
+    "rfilename": "whisper_preprocessor.pte",
+    "findings": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 3",
+      "evidence": "plan 0 value 100: scalar_type 9 is not an ExecuTorch dtype; plan 0 value 105: scalar_type 9 is not an ExecuTorch dtype; plan 0 value 110: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ]
+   },
+   {
+    "model": "larryliu0820/whisper-large-v3-turbo-INT8-INT4-ExecuTorch-XNNPACK",
+    "rfilename": "whisper_preprocessor.pte",
+    "findings": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 3",
+      "evidence": "plan 0 value 100: scalar_type 9 is not an ExecuTorch dtype; plan 0 value 105: scalar_type 9 is not an ExecuTorch dtype; plan 0 value 110: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ]
+   },
+   {
+    "model": "wasi-master/parakeet-ultra-executorch",
+    "rfilename": "vulkan/int4/model.pte",
+    "findings": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 2",
+      "evidence": "plan 3 value 87: scalar_type 9 is not an ExecuTorch dtype; plan 3 value 92: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ]
+   },
+   {
+    "model": "wasi-master/parakeet-ultra-executorch",
+    "rfilename": "xnnpack/int4/model.pte",
+    "findings": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 2",
+      "evidence": "plan 3 value 87: scalar_type 9 is not an ExecuTorch dtype; plan 3 value 92: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ]
+   }
+  ],
+  "equivalence": [
+   {
+    "n": 14,
+    "model": "software-mansion/all-MiniLM-L6-v2-ExecuTorch",
+    "rfilename": "coreml/all_minilm_l6_v2_coreml_int8.pte",
+    "same": true,
+    "plan": [
+     2344,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 16,
+    "model": "software-mansion/fsmn-vad-ExecuTorch",
+    "rfilename": "xnnpack/fsmn_vad_xnnpack_fp32.pte",
+    "same": true,
+    "plan": [
+     11680,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 17,
+    "model": "software-mansion/EasyOCR-CRNN-ExecuTorch",
+    "rfilename": "cyrillic/xnnpack/crnn_cyrillic_xnnpack_fp32.pte",
+    "same": true,
+    "plan": [
+     1158464,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 18,
+    "model": "software-mansion/EasyOCR-CRNN-ExecuTorch",
+    "rfilename": "english/xnnpack/crnn_english_xnnpack_fp32.pte",
+    "same": true,
+    "plan": [
+     1158464,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 19,
+    "model": "software-mansion/EasyOCR-CRNN-ExecuTorch",
+    "rfilename": "japanese/xnnpack/crnn_japanese_xnnpack_fp32.pte",
+    "same": true,
+    "plan": [
+     1158496,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 21,
+    "model": "software-mansion/CRAFT-ExecuTorch",
+    "rfilename": "xnnpack/craft_xnnpack_int8.pte",
+    "same": true,
+    "plan": [
+     15424,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 28,
+    "model": "software-mansion/supertonic-ExecuTorch",
+    "rfilename": "mlx/duration_predictor_mlx_fp32.pte",
+    "same": true,
+    "plan": [
+     16728,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 43,
+    "model": "lucylq/qwen3_06B_lora_math",
+    "rfilename": "qwen3_06B_lora_q.pte",
+    "same": true,
+    "plan": [
+     281120,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 44,
+    "model": "lucylq/qwen3_06B_lora_math",
+    "rfilename": "qwen3_06B_q.pte",
+    "same": true,
+    "plan": [
+     246056,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 45,
+    "model": "software-mansion/PP-OCRv6-ExecuTorch",
+    "rfilename": "coreml/pp_ocrv6_coreml_int8.pte",
+    "same": true,
+    "plan": [
+     7712,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 48,
+    "model": "futo-org/futo-swipe",
+    "rfilename": "chosen_planarian/context_lm.pte",
+    "same": true,
+    "plan": [
+     15200,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 49,
+    "model": "futo-org/futo-swipe",
+    "rfilename": "honorable_sturgeon/model_fp32.pte",
+    "same": true,
+    "plan": [
+     41976,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 50,
+    "model": "futo-org/futo-swipe",
+    "rfilename": "hungry_jellyfish/context_lm.pte",
+    "same": true,
+    "plan": [
+     15176,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 65,
+    "model": "saga64/StamperMaker-TurboModel-Android",
+    "rfilename": "dino-attention-128.pte",
+    "same": true,
+    "plan": [
+     1256,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 66,
+    "model": "saga64/StamperMaker-TurboModel-Android",
+    "rfilename": "dino-attention-tail.pte",
+    "same": true,
+    "plan": [
+     1256,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 67,
+    "model": "saga64/StamperMaker-TurboModel-Android",
+    "rfilename": "dino-embeddings.pte",
+    "same": true,
+    "plan": [
+     1456,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 77,
+    "model": "nklockiewicz/ocr",
+    "rfilename": "cyrillic/xnnpack_crnn_cyrillic_128.pte",
+    "same": true,
+    "plan": [
+     195744,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 78,
+    "model": "nklockiewicz/ocr",
+    "rfilename": "cyrillic/xnnpack_crnn_cyrillic_256.pte",
+    "same": true,
+    "plan": [
+     386208,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 79,
+    "model": "nklockiewicz/ocr",
+    "rfilename": "cyrillic/xnnpack_crnn_cyrillic_512.pte",
+    "same": true,
+    "plan": [
+     767136,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 93,
+    "model": "Arm/mobilegaze-mobilenet-v2-int8-xnnpack-executorch",
+    "rfilename": "l2cs_mobilegaze_mobilenetv2-a8w8-2-xnnpack.pte",
+    "same": true,
+    "plan": [
+     85600,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 94,
+    "model": "Arm/nitec-resnet-18-int8-xnnpack-executorch",
+    "rfilename": "cam_contact_nitec_rs18-a8w8-xnnpack.pte",
+    "same": true,
+    "plan": [
+     34544,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 96,
+    "model": "software-mansion/multi-qa-MiniLM-L6-cos-v1-ExecuTorch",
+    "rfilename": "coreml/multi_qa_minilm_l6_cos_v1_coreml_int8.pte",
+    "same": true,
+    "plan": [
+     2344,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 114,
+    "model": "software-mansion/SSDlite320-MobileNetV3-Large-ExecuTorch",
+    "rfilename": "coreml/ssdlite320_mobilenet_v3_large_coreml_fp16.pte",
+    "same": true,
+    "plan": [
+     4608,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 115,
+    "model": "software-mansion/SSDlite320-MobileNetV3-Large-ExecuTorch",
+    "rfilename": "qnn/ssdlite320_mobilenet_v3_large_qnn_fp16_v69.pte",
+    "same": true,
+    "plan": [
+     4336,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 116,
+    "model": "software-mansion/SSDlite320-MobileNetV3-Large-ExecuTorch",
+    "rfilename": "qnn/ssdlite320_mobilenet_v3_large_qnn_fp16_v73.pte",
+    "same": true,
+    "plan": [
+     4336,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 127,
+    "model": "software-mansion/DeepLabV3-ExecuTorch",
+    "rfilename": "coreml/deeplab_v3_mobilenet_v3_large_coreml_fp16.pte",
+    "same": true,
+    "plan": [
+     3728,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 136,
+    "model": "software-mansion/FastSAM-ExecuTorch",
+    "rfilename": "s/coreml/fast_sam_s_coreml_fp16.pte",
+    "same": true,
+    "plan": [
+     4584,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 137,
+    "model": "software-mansion/FastSAM-ExecuTorch",
+    "rfilename": "s/vulkan/fast_sam_s_vulkan_fp16.pte",
+    "same": true,
+    "plan": [
+     23312,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 170,
+    "model": "software-mansion/MediaPipe-Selfie-Segmentation-ExecuTorch",
+    "rfilename": "coreml/selfie_segmentation_coreml_fp16.pte",
+    "same": true,
+    "plan": [
+     1176,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 171,
+    "model": "software-mansion/MediaPipe-Selfie-Segmentation-ExecuTorch",
+    "rfilename": "coreml/selfie_segmentation_landscape_coreml_fp16.pte",
+    "same": true,
+    "plan": [
+     1176,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 172,
+    "model": "software-mansion/MediaPipe-Selfie-Segmentation-ExecuTorch",
+    "rfilename": "vulkan/selfie_segmentation_landscape_vulkan_fp16.pte",
+    "same": true,
+    "plan": [
+     13800,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 176,
+    "model": "Arm/inception-v3-int8-xnnpack-executorch-graviton-g4",
+    "rfilename": "inception_v3_executorch_optimized.pte",
+    "same": true,
+    "plan": [
+     61888,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 180,
+    "model": "larryliu0820/parakeet-tdt-0.6b-v3-executorch",
+    "rfilename": "cuda/bf16/model_linux_SM120.pte",
+    "same": true,
+    "plan": [
+     21568,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 181,
+    "model": "larryliu0820/parakeet-tdt-0.6b-v3-executorch",
+    "rfilename": "cuda/bf16/model_windows_SM120.pte",
+    "same": true,
+    "plan": [
+     21704,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 182,
+    "model": "larryliu0820/parakeet-tdt-0.6b-v3-executorch",
+    "rfilename": "cuda/int4/model_linux_SM120.pte",
+    "same": true,
+    "plan": [
+     21568,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 194,
+    "model": "software-mansion/YOLO26-pose-ExecuTorch",
+    "rfilename": "384/vulkan/yolo26n_pose_384_vulkan_fp16.pte",
+    "same": true,
+    "plan": [
+     38680,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 195,
+    "model": "software-mansion/YOLO26-pose-ExecuTorch",
+    "rfilename": "512/vulkan/yolo26n_pose_512_vulkan_fp16.pte",
+    "same": true,
+    "plan": [
+     38680,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 196,
+    "model": "software-mansion/YOLO26-pose-ExecuTorch",
+    "rfilename": "640/vulkan/yolo26n_pose_640_vulkan_fp16.pte",
+    "same": true,
+    "plan": [
+     38680,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 200,
+    "model": "Arm/resnet-18-int8-xnnpack-executorch",
+    "rfilename": "resnet-18_raspberry_executorch_optimized.pte",
+    "same": true,
+    "plan": [
+     13728,
+     "program"
+    ],
+    "whole_findings": null
+   },
+   {
+    "n": 219,
+    "model": "Arm/depth-anything-v3-small-mix-precision",
+    "rfilename": "da3_prepare_image.pte",
+    "same": true,
+    "plan": [
+     1104,
+     "whole (no header)"
+    ],
+    "whole_findings": null
+   }
+  ]
+ }
+}
