@@ -38,6 +38,28 @@ dtype (e.g. ``[('a', '<f8'), ('b', '|O')]``) are detected too.
 code-execution opcodes (``GLOBAL``/``STACK_GLOBAL``/``REDUCE``/``BUILD``/...).
 The imported globals are reported, derived from opcode disassembly only; the
 pickle is never executed.
+
+Scope and false positives on honest files (0.1.1)
+-------------------------------------------------
+* ``model-file-scan`` does **not** call this module. It routes ``.npy`` and
+  ``.npz`` files to ``pickle_model_scan``, which raises PKL010 for an object
+  array and runs its usual pickle checks on the data section (NumPy's own
+  globals are expected there). Run this module directly when you want the two
+  NPY rules.
+* NumPy writes every object array with ``pickle.dump(array, fp, protocol=4)``
+  (``write_array`` in ``numpy/lib/_format_impl.py``), and pickling an ndarray
+  goes through NumPy's own reconstruct function. So the data section of an
+  honest object array is expected to contain ``STACK_GLOBAL``, ``REDUCE`` and
+  ``BUILD``. NPY002 then fires on honest files as well. Read NPY002 as "this
+  pickle uses code-execution opcodes" and check the globals it lists: globals
+  under ``numpy`` are what NumPy itself writes, and anything else deserves a
+  closer look. (This follows from NumPy's writer source; it has not yet been
+  measured on a sample of published files.)
+* NumPy 2 saves arrays of non-legacy (user-defined) dtypes, such as
+  ``StringDType``, the same way: ``dtype_to_descr`` writes ``'|O'`` in the
+  header and the data section is a pickle. NPY001 fires on these files too.
+  The finding is right that ``numpy.load`` needs ``allow_pickle=True`` for
+  them, even though the array is not literally of object dtype.
 """
 
 from __future__ import annotations
@@ -48,7 +70,7 @@ import zipfile
 import ast
 import io
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 # Magic prefix of every NumPy array file (numpy.lib.format).
 _NPY_MAGIC = b"\x93NUMPY"
