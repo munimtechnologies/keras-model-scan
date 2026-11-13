@@ -1,0 +1,49 @@
+[
+ {
+  "model": "chandar-lab/NeoBERT",
+  "samples": {
+   "A": 290
+  },
+  "downloads": 30353,
+  "ctr": [
+   [
+    "CTR001",
+    "CRITICAL"
+   ],
+   [
+    "CTR001",
+    "CRITICAL"
+   ]
+  ],
+  "hci": [],
+  "keras_high": [],
+  "trc_values": [
+   "true",
+   "true"
+  ],
+  "model_types": [
+   "neobert"
+  ]
+ },
+ {
+  "model": "optimum-intel-internal-testing/tiny-random-codegen2",
+  "samples": {
+   "A": 675
+  },
+  "downloads": 7173,
+  "ctr": [
+   [
+    "CTR001",
+    "CRITICAL"
+   ]
+  ],
+  "hci": [],
+  "keras_high": [],
+  "trc_values": [
+   "true"
+  ],
+  "model_types": [
+   "codegen"
+  ]
+ }
+]

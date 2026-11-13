@@ -1,0 +1,73 @@
+{
+ "finished": "2026-11-13T05:13:54Z",
+ "listed": {
+  "A": 1000,
+  "B": 1000
+ },
+ "fetched_ok": 1781,
+ "fetch_status": {
+  "ok": 1781,
+  "oversize": 6,
+  "http 401": 62,
+  "http 404": 75
+ },
+ "parsed": 1781,
+ "with_auto_map_A": 939,
+ "with_auto_map_B": 71,
+ "rows": {
+  "G1": {
+   "pred": "distinct parsed >= 1200, A >= 500, B >= 500",
+   "n": 1781,
+   "A": 949,
+   "B": 905,
+   "held": true
+  },
+  "E1": {
+   "pred": "CTR001+CTR002 count == trust_remote_code keys at any depth; no CTR000 on parseable files",
+   "mismatch": [],
+   "held": true
+  },
+  "E2": {
+   "pred": "HCI001+HCI002 == injection keys; HCI003 == auto_map/custom_pipeline/auto_pipeline keys; no HCI000",
+   "mismatch": [],
+   "held": true
+  },
+  "R1": {
+   "pred": "mfs 0.14.0 routes every config.json to keras only and never imports the CTR or HCI module (gap confirmed)",
+   "exceptions": [],
+   "held": true
+  },
+  "K1": {
+   "pred": "keras_model_scan HIGH/CRITICAL on <= 1% of HF config.json files",
+   "n": 0,
+   "share": 0.0,
+   "rules": [],
+   "held": true
+  },
+  "P1": {
+   "pred": "trust_remote_code key in <= 1% of A configs",
+   "n": 2,
+   "share": 0.002107,
+   "held": true
+  },
+  "P2": {
+   "pred": "trust_remote_code key in <= 0.5% of B configs",
+   "n": 0,
+   "share": 0.0,
+   "held": true
+  },
+  "P3": {
+   "pred": ">= 90% of configs given CTR001 (CRITICAL, CVE-2026-5241) have no lightglue model_type anywhere",
+   "n_ctr001": 2,
+   "n_not_lightglue": 2,
+   "held": true
+  },
+  "P4": {
+   "pred": "HCI001/HCI002 on 0 B configs and <= 0.5% of A",
+   "B": 0,
+   "A": 0,
+   "held": true
+  }
+ },
+ "release_rule": "see PREREG_HFCFG_CENSUS.md decision rule"
+}
