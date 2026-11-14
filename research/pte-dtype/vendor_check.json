@@ -1,0 +1,243 @@
+{
+ "V1": {
+  "result": "failed",
+  "why": "ComplexFloat: comment 9 at position 8; ComplexDouble: comment 10 at position 9; Bool: comment 11 at position 10; QInt8: comment 12 at position 11; QUInt8: comment 13 at position 12; QInt32: comment 14 at position 13; BFloat16: comment 15 at position 14; QUInt4x2: comment 16 at position 15; QUInt2x4: comment 17 at position 16; Bits1x8: comment 18 at position 17; Bits2x4: comment 19 at position 18; Bits4x2: comment 20 at position 19; Bits8: comment 21 at position 20; Bits16: comment 22 at position 21; UInt16: comment 27 at position 22; UInt32: comment 28 at position 23; UInt64: comment 29 at position 24; keys differ: table only [25, 26, 27, 28, 29], runtime only []; dtype 8: table 4, runtime 8; dtype 9: table 8, runtime 16; dtype 10: table 16, runtime 1; dtype 13: table 1, runtime 4; dtype 14: table 4, runtime 2; dtype 15: table 2, runtime 1; dtype 21: table 1, runtime 2; dtype 23: table 1, runtime 4; dtype 24: table 1, runtime 8"
+ },
+ "V2": {
+  "result": "held",
+  "why": "{\"parser_calls_isValid\": true, \"isValid_found\": true, \"nonnegative\": true, \"NumOptions\": true, \"Undefined\": true}"
+ },
+ "fetch": {
+  "commit": "3e85cae1e744454713413db4deb31090a505adf4",
+  "files": {
+   "scalar_type.h": {
+    "path": "runtime/core/portable_type/scalar_type.h",
+    "bytes": 6499,
+    "sha256": "7c9fda3e0a6b465bfd3d98b14c729d295d03c6fe56e0ccc00cbaa4ae59144b38"
+   },
+   "scalar_type_util.h": {
+    "path": "runtime/core/exec_aten/util/scalar_type_util.h",
+    "bytes": 66024,
+    "sha256": "b785986ae3a240c13405fbc21a7b4bbb9e2e6d80662ff4ad2a68d65d98dad9c3"
+   },
+   "tensor_parser_portable.cpp": {
+    "path": "runtime/executor/tensor_parser_portable.cpp",
+    "bytes": 7208,
+    "sha256": "1474773fecbf0bcbe88eeb3e8f7b9e71db27ac70c2b9c4228e2b87900ec86d56"
+   },
+   "scalar_type.fbs": {
+    "path": "schema/scalar_type.fbs",
+    "bytes": 794,
+    "sha256": "a4c83c25ee7da8eedf61f04fe3df979e5866035763f0ee8d3ed68463e3baad8f"
+   }
+  }
+ },
+ "entries": [
+  {
+   "index": 0,
+   "name": "Byte",
+   "ctype": "uint8_t",
+   "comment": 0,
+   "size": 1
+  },
+  {
+   "index": 1,
+   "name": "Char",
+   "ctype": "int8_t",
+   "comment": 1,
+   "size": 1
+  },
+  {
+   "index": 2,
+   "name": "Short",
+   "ctype": "int16_t",
+   "comment": 2,
+   "size": 2
+  },
+  {
+   "index": 3,
+   "name": "Int",
+   "ctype": "int32_t",
+   "comment": 3,
+   "size": 4
+  },
+  {
+   "index": 4,
+   "name": "Long",
+   "ctype": "int64_t",
+   "comment": 4,
+   "size": 8
+  },
+  {
+   "index": 5,
+   "name": "Half",
+   "ctype": "::executorch::runtime::etensor::Half",
+   "comment": 5,
+   "size": 2
+  },
+  {
+   "index": 6,
+   "name": "Float",
+   "ctype": "float",
+   "comment": 6,
+   "size": 4
+  },
+  {
+   "index": 7,
+   "name": "Double",
+   "ctype": "double",
+   "comment": 7,
+   "size": 8
+  },
+  {
+   "index": 8,
+   "name": "ComplexFloat",
+   "ctype": "::executorch::runtime::etensor::complex<float>",
+   "comment": 9,
+   "size": 8
+  },
+  {
+   "index": 9,
+   "name": "ComplexDouble",
+   "ctype": "::executorch::runtime::etensor::complex<double>",
+   "comment": 10,
+   "size": 16
+  },
+  {
+   "index": 10,
+   "name": "Bool",
+   "ctype": "bool",
+   "comment": 11,
+   "size": 1
+  },
+  {
+   "index": 11,
+   "name": "QInt8",
+   "ctype": "::executorch::runtime::etensor::qint8",
+   "comment": 12,
+   "size": 1
+  },
+  {
+   "index": 12,
+   "name": "QUInt8",
+   "ctype": "::executorch::runtime::etensor::quint8",
+   "comment": 13,
+   "size": 1
+  },
+  {
+   "index": 13,
+   "name": "QInt32",
+   "ctype": "::executorch::runtime::etensor::qint32",
+   "comment": 14,
+   "size": 4
+  },
+  {
+   "index": 14,
+   "name": "BFloat16",
+   "ctype": "::executorch::runtime::etensor::BFloat16",
+   "comment": 15,
+   "size": 2
+  },
+  {
+   "index": 15,
+   "name": "QUInt4x2",
+   "ctype": "::executorch::runtime::etensor::quint4x2",
+   "comment": 16,
+   "size": 1
+  },
+  {
+   "index": 16,
+   "name": "QUInt2x4",
+   "ctype": "::executorch::runtime::etensor::quint2x4",
+   "comment": 17,
+   "size": 1
+  },
+  {
+   "index": 17,
+   "name": "Bits1x8",
+   "ctype": "::executorch::runtime::etensor::bits1x8",
+   "comment": 18,
+   "size": 1
+  },
+  {
+   "index": 18,
+   "name": "Bits2x4",
+   "ctype": "::executorch::runtime::etensor::bits2x4",
+   "comment": 19,
+   "size": 1
+  },
+  {
+   "index": 19,
+   "name": "Bits4x2",
+   "ctype": "::executorch::runtime::etensor::bits4x2",
+   "comment": 20,
+   "size": 1
+  },
+  {
+   "index": 20,
+   "name": "Bits8",
+   "ctype": "::executorch::runtime::etensor::bits8",
+   "comment": 21,
+   "size": 1
+  },
+  {
+   "index": 21,
+   "name": "Bits16",
+   "ctype": "::executorch::runtime::etensor::bits16",
+   "comment": 22,
+   "size": 2
+  },
+  {
+   "index": 22,
+   "name": "UInt16",
+   "ctype": "uint16_t",
+   "comment": 27,
+   "size": 2
+  },
+  {
+   "index": 23,
+   "name": "UInt32",
+   "ctype": "uint32_t",
+   "comment": 28,
+   "size": 4
+  },
+  {
+   "index": 24,
+   "name": "UInt64",
+   "ctype": "uint64_t",
+   "comment": 29,
+   "size": 8
+  }
+ ],
+ "unpatched_missing": [
+  {
+   "index": 8,
+   "name": "ComplexFloat"
+  },
+  {
+   "index": 9,
+   "name": "ComplexDouble"
+  },
+  {
+   "index": 10,
+   "name": "Bool"
+  },
+  {
+   "index": 18,
+   "name": "Bits2x4"
+  },
+  {
+   "index": 19,
+   "name": "Bits4x2"
+  },
+  {
+   "index": 20,
+   "name": "Bits8"
+  },
+  {
+   "index": 21,
+   "name": "Bits16"
+  }
+ ],
+ "isValid_body": "return static_cast<int8_t>(type) >= 0 && type < ::executorch::aten::ScalarType::NumOptions && type != ::executorch::aten::ScalarType::Undefined;"
+}

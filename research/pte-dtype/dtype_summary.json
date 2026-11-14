@@ -1,0 +1,359 @@
+{
+ "rows": {
+  "P1": {
+   "result": "held",
+   "why": "patch ok=True; edits [1, 1, 1, 1, 1]; import ok"
+  },
+  "T1": {
+   "result": "held",
+   "why": "patched: ran 41, failures [], errors []; base: ran 35 ok True"
+  },
+  "V1": {
+   "result": "failed",
+   "why": "ComplexFloat: comment 9 at position 8; ComplexDouble: comment 10 at position 9; Bool: comment 11 at position 10; QInt8: comment 12 at position 11; QUInt8: comment 13 at position 12; QInt32: comment 14 at position 13; BFloat16: comment 15 at position 14; QUInt4x2: comment 16 at position 15; QUInt2x4: comment 17 at position 16; Bits1x8: comment 18 at position 17; Bits2x4: comment 19 at position 18; Bits4x2: comment 20 at position 19; Bits8: comment 21 at position 20; Bits16: comment 22 at position 21; UInt16: comment 27 at position 22; UInt32: comment 28 at position 23; UInt64: comment 29 at position 24; keys differ: table only [25, 26, 27, 28, 29], runtime only []; dtype 8: table 4, runtime 8; dtype 9: table 8, runtime 16; dtype 10: table 16, runtime 1; dtype 13: table 1, runtime 4; dtype 14: table 4, runtime 2; dtype 15: table 2, runtime 1; dtype 21: table 1, runtime 2; dtype 23: table 1, runtime 4; dtype 24: table 1, runtime 8"
+  },
+  "V2": {
+   "result": "held",
+   "why": "{\"parser_calls_isValid\": true, \"isValid_found\": true, \"nonnegative\": true, \"NumOptions\": true, \"Undefined\": true}"
+  },
+  "G1": {
+   "result": "held",
+   "why": "448 files from 173 models"
+  },
+  "E1": {
+   "result": "held",
+   "why": "40 of 40 whole files scan the same with 0.1.1"
+  },
+  "D1": {
+   "result": "held",
+   "why": "0 of 448 files have a dtype PTE004 note under 0.1.1"
+  },
+  "D2": {
+   "result": "held",
+   "why": "0 of 448 files have PTE001/PTE002/PTE004 under 0.1.1"
+  },
+  "D3": {
+   "result": "held",
+   "why": "0 of 15 files flagged by 0.1.0 only for dtypes have an integrity finding under 0.1.1"
+  },
+  "D4": {
+   "result": "held",
+   "why": "0 of 448 files differ beyond dropped dtype-only PTE004 entries"
+  }
+ },
+ "release_rule_met": false,
+ "held": [
+  "D1",
+  "D2",
+  "D3",
+  "D4",
+  "E1",
+  "G1",
+  "P1",
+  "T1",
+  "V2"
+ ],
+ "failed": [
+  "V1"
+ ],
+ "untestable": [],
+ "recorded": {
+  "scanners": {
+   "old": "0.1.0",
+   "new": "0.1.1"
+  },
+  "list": {
+   "pages": 1,
+   "models": 917,
+   "open": 864,
+   "ext_models": {
+    ".pte": 853,
+    ".json": 540,
+    ".bin": 88,
+    ".ptd": 18,
+    ".safetensors": 34,
+    "pte+ptd": 17,
+    ".onnx": 38,
+    ".gguf": 8,
+    ".tflite": 17
+   },
+   "pte_files": 3263,
+   "error": null
+  },
+  "candidates": 1540,
+  "probed": 450,
+  "scanned": 448,
+  "models": 173,
+  "bytes_fetched": 473650910,
+  "old_integrity_files": 15,
+  "old_dtype_files": 15,
+  "old_dtype_only_files": 15,
+  "old_mixed_files": 0,
+  "new_integrity_files": 0,
+  "new_pte005_files": 8,
+  "new_pte003_files": 433,
+  "new_gate_fails": 438,
+  "new_clean_files": 10,
+  "dtype_files": [
+   {
+    "model": "software-mansion/fsmn-vad-ExecuTorch",
+    "rfilename": "xnnpack/fsmn_vad_xnnpack_fp32.pte",
+    "old": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 1",
+      "evidence": "plan 0 value 32: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ],
+    "new": []
+   },
+   {
+    "model": "software-mansion/gemma-4-E2B-it-ExecuTorch",
+    "rfilename": "e2b/mlx/gemma_4_e2b_mlx_int4.pte",
+    "old": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 1",
+      "evidence": "plan 0 value 873: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ],
+    "new": []
+   },
+   {
+    "model": "software-mansion/gemma-4-E2B-it-ExecuTorch",
+    "rfilename": "e2b/vulkan/gemma_4_e2b_vulkan_8da4w.pte",
+    "old": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 1",
+      "evidence": "plan 0 value 826: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ],
+    "new": []
+   },
+   {
+    "model": "software-mansion/gemma-4-E2B-it-ExecuTorch",
+    "rfilename": "e2b/xnnpack/gemma_4_e2b_xnnpack_8da4w.pte",
+    "old": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 1",
+      "evidence": "plan 0 value 826: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ],
+    "new": []
+   },
+   {
+    "model": "larryliu0820/parakeet-tdt-0.6b-v3-executorch",
+    "rfilename": "cuda/bf16/model_linux_SM120.pte",
+    "old": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 2",
+      "evidence": "plan 3 value 87: scalar_type 9 is not an ExecuTorch dtype; plan 3 value 92: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ],
+    "new": []
+   },
+   {
+    "model": "larryliu0820/parakeet-tdt-0.6b-v3-executorch",
+    "rfilename": "cuda/bf16/model_windows_SM120.pte",
+    "old": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 2",
+      "evidence": "plan 3 value 87: scalar_type 9 is not an ExecuTorch dtype; plan 3 value 92: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ],
+    "new": []
+   },
+   {
+    "model": "larryliu0820/parakeet-tdt-0.6b-v3-executorch",
+    "rfilename": "cuda/int4/model_linux_SM120.pte",
+    "old": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 2",
+      "evidence": "plan 3 value 87: scalar_type 9 is not an ExecuTorch dtype; plan 3 value 92: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ],
+    "new": []
+   },
+   {
+    "model": "Arm/whisper-small-int8-xnnpack-executorch",
+    "rfilename": "pte_original/whisper_preprocessor.pte",
+    "old": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 3",
+      "evidence": "plan 0 value 100: scalar_type 9 is not an ExecuTorch dtype; plan 0 value 105: scalar_type 9 is not an ExecuTorch dtype; plan 0 value 110: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ],
+    "new": []
+   },
+   {
+    "model": "Arm/whisper-small-int8-xnnpack-executorch",
+    "rfilename": "whisper_preprocessor.pte",
+    "old": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 3",
+      "evidence": "plan 0 value 100: scalar_type 9 is not an ExecuTorch dtype; plan 0 value 105: scalar_type 9 is not an ExecuTorch dtype; plan 0 value 110: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ],
+    "new": []
+   },
+   {
+    "model": "Arm/whisper-tiny-int8-xnnpack-executorch",
+    "rfilename": "pte_original/whisper_preprocessor.pte",
+    "old": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 3",
+      "evidence": "plan 0 value 100: scalar_type 9 is not an ExecuTorch dtype; plan 0 value 105: scalar_type 9 is not an ExecuTorch dtype; plan 0 value 110: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ],
+    "new": []
+   },
+   {
+    "model": "Arm/whisper-tiny-int8-xnnpack-executorch",
+    "rfilename": "whisper_preprocessor.pte",
+    "old": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 3",
+      "evidence": "plan 0 value 100: scalar_type 9 is not an ExecuTorch dtype; plan 0 value 105: scalar_type 9 is not an ExecuTorch dtype; plan 0 value 110: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ],
+    "new": []
+   },
+   {
+    "model": "mistral-experimental/Voxtral-Mini-4B-Realtime-2602-ExecuTorch",
+    "rfilename": "preprocessor.pte",
+    "old": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 3",
+      "evidence": "plan 0 value 85: scalar_type 9 is not an ExecuTorch dtype; plan 0 value 90: scalar_type 9 is not an ExecuTorch dtype; plan 0 value 95: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ],
+    "new": []
+   },
+   {
+    "model": "wasi-master/parakeet-ultra-executorch",
+    "rfilename": "vulkan/int4/model.pte",
+    "old": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 2",
+      "evidence": "plan 3 value 87: scalar_type 9 is not an ExecuTorch dtype; plan 3 value 92: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ],
+    "new": []
+   },
+   {
+    "model": "wasi-master/parakeet-ultra-executorch",
+    "rfilename": "xnnpack/int4/model.pte",
+    "old": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 2",
+      "evidence": "plan 3 value 87: scalar_type 9 is not an ExecuTorch dtype; plan 3 value 92: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ],
+    "new": []
+   },
+   {
+    "model": "larryliu0820/whisper-large-v3-turbo-INT8-INT4-ExecuTorch-XNNPACK",
+    "rfilename": "whisper_preprocessor.pte",
+    "old": [
+     {
+      "rule": "PTE004",
+      "severity": "medium",
+      "cve": "",
+      "cwe": "CWE-129",
+      "message": "indexes that are out of range: 3",
+      "evidence": "plan 0 value 100: scalar_type 9 is not an ExecuTorch dtype; plan 0 value 105: scalar_type 9 is not an ExecuTorch dtype; plan 0 value 110: scalar_type 9 is not an ExecuTorch dtype"
+     }
+    ],
+    "new": []
+   }
+  ],
+  "new_integrity": [],
+  "d4_differences": [],
+  "equivalence_failures": [],
+  "vendor_unpatched_missing": [
+   {
+    "index": 8,
+    "name": "ComplexFloat"
+   },
+   {
+    "index": 9,
+    "name": "ComplexDouble"
+   },
+   {
+    "index": 10,
+    "name": "Bool"
+   },
+   {
+    "index": 18,
+    "name": "Bits2x4"
+   },
+   {
+    "index": 19,
+    "name": "Bits4x2"
+   },
+   {
+    "index": 20,
+    "name": "Bits8"
+   },
+   {
+    "index": 21,
+    "name": "Bits16"
+   }
+  ],
+  "vendor_commit": "3e85cae1e744454713413db4deb31090a505adf4"
+ }
+}

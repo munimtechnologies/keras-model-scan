@@ -1,0 +1,32 @@
+{
+ "ok": true,
+ "edits": [
+  {
+   "file": "executorch_pte_scan.py",
+   "anchor": "_ELEMENT_SIZE table",
+   "matches": 1
+  },
+  {
+   "file": "executorch_pte_scan.py",
+   "anchor": "__version__ = \"0.1.0\"\n",
+   "matches": 1
+  },
+  {
+   "file": "executorch_pte_scan.py",
+   "anchor": "Static review only: nothing is loaded or executed.\n",
+   "matches": 1
+  },
+  {
+   "file": "test_executorch_pte_scan.py",
+   "anchor": "        values = [_tensor(dtype=9), _tensor()]\n        findi",
+   "matches": 1
+  },
+  {
+   "file": "test_executorch_pte_scan.py",
+   "anchor": "        self.assertEqual(pte.__version__, \"0.1.0\")\n",
+   "matches": 1
+  }
+ ],
+ "error": null,
+ "old_table_matches": true
+}
