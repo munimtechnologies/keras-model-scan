@@ -11,23 +11,24 @@ It was compiled from each write-up's own headline counts. If this page and a lin
 write-up disagree, the write-up is authoritative. Made with AI agents working in MV2's
 name. Text: CC BY 4.0; code in this repository: Apache-2.0.
 
-## Totals (36 graded checks, 30 Oct - 14 Nov 2026)
+## Totals (37 graded checks, 30 Oct - 15 Nov 2026)
 
 | | count |
 |---|---|
-| Graded checks (jobs) | 36 |
-| Checks where every graded row held | 26 |
+| Graded checks (jobs) | 37 |
+| Checks where every graded row held | 27 |
 | Checks with at least one miss | 10 |
-| Graded prediction rows | 409 |
-| Rows that held | 396 (96.8%) |
+| Graded prediction rows | 416 |
+| Rows that held | 403 (96.9%) |
 | Rows that failed | 13 |
-| Releases gated by a check that held | 11 (v0.52.0 to v0.60.0) |
-| Releases blocked by a failed row | 4 (three later shipped after a re-run; one re-run is queued) |
+| Releases gated by a check that held | 12 (v0.52.0 to v0.61.0) |
+| Releases blocked by a failed row | 4 (all four later shipped after a re-run) |
 
 How rows are counted: rows that were "not run" or "untestable" are left out (3 in
 pt2-census-v1, 1 in nemo-legacy-v1), as each write-up says. When a job was re-run
 under the same pre-registration (paddle v2 -> v3, ovi-realfile v2 -> v3), only the
-final graded run is counted. Runs that crashed before writing results were never
+final graded run is counted. A re-run under a new pre-registration (pte-dtype-v2) is
+counted as its own check. Runs that crashed before writing results were never
 graded and are not counted (coreml v1, gguf-types v1, ovi-realfile v1, oed-functions v1).
 
 A high hold rate is **not** evidence that the scanner catches attacks. Most rows
@@ -48,16 +49,17 @@ independent audit.
 | zip-storage-v1 | S1, H1 | S1: freshly initialised weights start with byte 0x80 far more often (98 of 3,200) than the 1-in-256 we assumed; H1: only 6 published files fitted the size cap (80 predicted) | measurement only |
 | zip-data-v1 | H1, H4 (not gating) | H1: 21 Hub files read vs 30 predicted (download budget); H4: 25 of 3,658 (0.68%) | all 11 release rows held; shipped v0.57.0 |
 | pt2-nest-v1 | D1 (diagnostic) | a path mistake in our own grader; the recorded findings confirm the gap D1 predicted | all 11 release rows held; shipped v0.59.0 |
-| pte-census-v1 | R1 | scanner false alarm: ComplexFloat (type 9) flagged in 15 of 450 files | measurement; fix pre-registered as pte-dtype |
-| pte-dtype-v1 | V1 | our grader's regex skipped five line-wrapped entries in ExecuTorch's header | release blocked; pte-dtype-v2 pre-registered and queued |
+| pte-census-v1 | R1 | scanner false alarm: ComplexFloat (type 9) flagged in 15 of 450 files | measurement; fixed in executorch_pte_scan 0.1.1 (v0.61.0) |
+| pte-dtype-v1 | V1 | our grader's regex skipped five line-wrapped entries in ExecuTorch's header | release blocked; pte-dtype-v2 (all 7 rows held) shipped v0.61.0 |
 
 By cause, as each write-up states it:
 - **Scanner false alarm on honest files: 4 rows** (walk-names F3/H3, pkl-memo H3,
-  pte-census R1). Three are fixed in released versions (v0.54.0, v0.55.0); the
-  ExecuTorch one (R1) has a fix waiting on its re-check (pte-dtype-v2).
+  pte-census R1). All four are now fixed in released versions (v0.54.0, v0.55.0,
+  v0.61.0).
 - **Our own grader or test suite: 3 rows** (ovi-u3u6 S1, pt2-nest D1, pte-dtype V1).
   Lesson applied: graders that parse vendor C/C++ source now join `\` line continuations
-  and check that every entry was parsed.
+  and check that every entry was parsed (row V3 of pte-dtype-v2 tests exactly this,
+  and it held: 30 entry starts, 30 parsed).
 - **Our prediction about the outside world: 6 rows** (sti W2, nemo-legacy H1,
   zip-data H1/H4, zip-storage S1/H1). Three of these six are Hub sample sizes that came
   out smaller than predicted (nemo-legacy H1, zip-data H1, zip-storage H1: a download
@@ -104,6 +106,7 @@ By cause, as each write-up states it:
 | 34 | pte-census-v1 | 2026-11-12 | 7/8 | 450 Hub .pte | measurement | [PTE_CENSUS](../RESULTS_PTE_CENSUS_2026-11.md) |
 | 35 | hfcfg-census-v1 | 2026-11-13 | 9/9 | 1,781 Hub config.json | measurement | [HFCFG](RESULTS_HFCFG_CENSUS_2026-11.md) |
 | 36 | pte-dtype-v1 | 2026-11-14 | 9/10 | 448 Hub .pte | blocked | [PTE_DTYPE](../REALFILE_CHECK_PTE_DTYPE_2026-11.md) |
+| 37 | pte-dtype-v2 | 2026-11-15 | 7/7 | ExecuTorch source at 3e85cae1 (real-file rows from #36 carried) | **v0.61.0** | [PTE_DTYPE_V2](RESULTS_PTE_DTYPE_V2_2026-11.md) |
 
 "Hub" = public files on Hugging Face, read as bytes and never loaded. A finding on a
 published file is not a claim that the model is unsafe.
@@ -111,12 +114,11 @@ published file is not a claim that the model is unsafe.
 ## Pre-registered, not yet graded
 
 These pre-registrations are public and their jobs are waiting for compute (or, for
-PTE005, waiting for the dtype fix to ship first). Each will be added here when graded,
-whatever the outcome.
+PTE005, waiting to be filed now that the dtype fix has shipped). Each will be added
+here when graded, whatever the outcome.
 
 | Pre-registration | Job |
 |---|---|
-| [PREREG_PTE_DTYPE_FIX_V2](PREREG_PTE_DTYPE_FIX_V2.md) | pte-dtype-v2 |
 | [PREREG_PTD_SCAN](PREREG_PTD_SCAN.md) | ptd-scan-v1 |
 | [PREREG_TFSM_ROUTE](PREREG_TFSM_ROUTE.md) | tfsm-route-v1 |
 | [PREREG_GCT_ROUTE](PREREG_GCT_ROUTE.md) | gct-route-v1 |
