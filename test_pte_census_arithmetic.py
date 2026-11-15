@@ -41,6 +41,20 @@ def _rec(model, name, findings):
     return {"model": model, "rfilename": name, "findings": findings}
 
 
+_S9 = "plan 0 value 1: scalar_type 9 is not an ExecuTorch dtype"
+
+
+def _small():
+    return [
+        _rec("m1", "a.pte", [_p3("A")]),
+        _rec("m1", "b.pte", [_p3("A"), _p3("B")]),
+        _rec("m2", "c.pte", [_p3("B"), _p4(_S9)]),
+        _rec("m2", "d.pte", [_p5()]),
+        _rec("m3", "e.pte", []),
+        _rec("m3", "f.pte", [_p4("plan 0 value 1: index 7 out of range")]),
+    ]
+
+
 class HandBuilt(unittest.TestCase):
     def test_backend_names(self):
         self.assertEqual(ga.backend_of(_p3("XnnpackBackend")), "XnnpackBackend")
@@ -59,11 +73,19 @@ class HandBuilt(unittest.TestCase):
         self.assertFalse(ga.is_scalar9_only("plan 0 value 1: index 7 out of range"))
 
     def test_targeted(self):
-        self.assertTrue(ga.targeted(_p4("plan 0 value 1: scalar_type 9 is not an ExecuTorch dtype")))
+        self.assertTrue(ga.targeted(_p4(_S9)))
         self.assertFalse(ga.targeted(_p4("plan 0 value 1: index 7 out of range")))
         self.assertTrue(ga.targeted(_p5("1 segments")))
         self.assertFalse(ga.targeted(_p5("2 segments")))
         self.assertFalse(ga.targeted(_p3("A")))
+
+    def test_targeted_by(self):
+        self.assertEqual(ga.targeted_by(_p4(_S9)), "dtype")
+        self.assertEqual(ga.targeted_by(_p5("1 segments")), "pte005")
+        self.assertIsNone(ga.targeted_by(_p5("2 segments")))
+        self.assertIsNone(ga.targeted_by(_p4("plan 0 value 1: index 7 out of range")))
+        self.assertIsNone(ga.targeted_by(_p3("A")))
+        self.assertEqual(ga.FIXES, ("dtype", "pte005"))
 
     def test_gate(self):
         self.assertFalse(ga.fails([]))
@@ -75,15 +97,7 @@ class HandBuilt(unittest.TestCase):
         self.assertTrue(ga.fails([_p3("A", "HIGH")]))
 
     def test_summarize_small(self):
-        s9 = "plan 0 value 1: scalar_type 9 is not an ExecuTorch dtype"
-        recs = [
-            _rec("m1", "a.pte", [_p3("A")]),
-            _rec("m1", "b.pte", [_p3("A"), _p3("B")]),
-            _rec("m2", "c.pte", [_p3("B"), _p4(s9)]),
-            _rec("m2", "d.pte", [_p5()]),
-            _rec("m3", "e.pte", []),
-            _rec("m3", "f.pte", [_p4("plan 0 value 1: index 7 out of range")]),
-        ]
+        recs = _small()
         s = ga.summarize(recs)
         self.assertEqual(s["files"], 6)
         self.assertEqual(s["models"], 3)
@@ -99,6 +113,15 @@ class HandBuilt(unittest.TestCase):
         self.assertEqual([x["gate_fail"] for x in s["what_if_low"]], [4, 3, 1])
         s2 = ga.summarize(recs, ["B"])
         self.assertEqual([x["gate_fail"] for x in s2["what_if_low"]], [4, 3])
+
+    def test_per_fix_small(self):
+        # c.pte: the dtype finding sits beside a PTE003 notice, so removing it
+        # changes no gate outcome; d.pte: the PTE005 finding is its only one.
+        p = ga.summarize(_small())["per_fix"]
+        self.assertEqual(p["dtype"], {"findings": 1, "files": 1, "files_also_pte003": 1,
+                                      "gate_fail_without": 5})
+        self.assertEqual(p["pte005"], {"findings": 1, "files": 1, "files_also_pte003": 0,
+                                       "gate_fail_without": 4})
 
 
 class PublishedCensus(unittest.TestCase):
@@ -131,6 +154,15 @@ class PublishedCensus(unittest.TestCase):
         self.assertEqual(s["untargeted_non_pte003"], 0)
         self.assertEqual((s["gate_fail_now"], s["gate_fail_now_pct"]), (438, 97.3))
         self.assertEqual((s["gate_fail_without_targeted"], s["gate_fail_without_targeted_pct"]), (433, 96.2))
+
+    def test_per_fix(self):
+        # Update 2026-11-15: the dtype fix shipped (v0.61.0) and moves no gate
+        # outcome here; all 5 files the two fixes would pass are PTE005 files.
+        p = self.s["per_fix"]
+        self.assertEqual(p["dtype"], {"findings": 15, "files": 15, "files_also_pte003": 15,
+                                      "gate_fail_without": 438})
+        self.assertEqual(p["pte005"], {"findings": 8, "files": 8, "files_also_pte003": 3,
+                                       "gate_fail_without": 433})
 
     def test_what_if_ladder(self):
         steps = self.s["what_if_low"]

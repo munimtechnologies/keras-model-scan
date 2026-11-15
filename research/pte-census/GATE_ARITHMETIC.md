@@ -1,4 +1,4 @@
-# Gate arithmetic on the ExecuTorch .pte census (2026-11-14)
+# Gate arithmetic on the ExecuTorch .pte census (2026-11-14, updated 2026-11-15)
 
 Made with AI agents working in the name of MV2 of Munim, Inc. Text: CC BY 4.0;
 code: Apache-2.0.
@@ -14,14 +14,36 @@ root.
 which ExecuTorch backends load native code. A finding is not a claim that a
 model is unsafe.
 
+## Update 2026-11-15: the shipped dtype fix changes no gate outcome here
+Fix 1 below (the data-type table) has shipped: executorch_pte_scan 0.1.1 in
+release v0.61.0, after its pre-registered re-check (job pte-dtype-v2) held 7 of
+7 rows. Its real-file check measured the 15 PTE004 false alarms disappearing.
+Counting the census by fix (new `per_fix` output of `gate_arithmetic.py`):
+
+| Fix alone | Findings | Files | Files that also carry PTE003 | Still fail the default gate |
+|---|---|---|---|---|
+| none (0.1.0 findings) | - | - | - | 438 (97.3%) |
+| dtype table (shipped, 0.1.1) | 15 | 15 | 15 | **438 (97.3%)** |
+| single-segment PTE005 (queued, pte005-cal-v1) | 8 | 8 | 3 | 433 (96.2%) |
+| both | 23 | 23 | 18 | 433 (96.2%) |
+
+Every file with a dtype false alarm also names a backend delegate (PTE003,
+medium), so removing those 15 findings fixed what the report says but moved no
+file across the default gate. The whole five-file gain depends on the PTE005
+fix: 5 of its 8 files have no other finding. The other 3 are the census's three
+Ethos-U files (one model), which also carry PTE003. This is arithmetic on
+recorded 0.1.0 findings. The PTE005 fix is still waiting for its own
+pre-registered check, and nothing here predicts how that check will come out.
+
 ## Why count this
 model-file-scan's default gate (`--fail-on medium`) fails **438 of 450 (97.3%)**
 of these honest files (RESULTS_PTE_CENSUS_2026-11.md, row R5). A gate that fails
-almost everything teaches people to switch it off. Three changes are staged, each
-with its own pre-registered check on real files before anything is released:
+almost everything teaches people to switch it off. Three changes were staged,
+each with its own pre-registered check on real files before anything is released:
 
-1. a data-type table fix (job pte-dtype-v1): every one of the 15 PTE004 findings
-   here has only "scalar_type 9" evidence;
+1. a data-type table fix (jobs pte-dtype-v1 and pte-dtype-v2; **shipped in
+   v0.61.0**): every one of the 15 PTE004 findings here has only "scalar_type 9"
+   evidence;
 2. a PTE005 fix for ExecuTorch's own no-constants layout (job pte005-cal-v1,
    PREREG_PTE005_EMPTY_SEGMENT.md): all 8 PTE005 findings are on single-segment
    programs;
@@ -77,12 +99,17 @@ and nothing here says any backend will qualify.
   fail the default gate. That will be documented rather than hidden. Note that
   `--fail-on high` is not a substitute: it also stops gating on the medium
   integrity rules (PTE004, PTE005), not only on PTE003.
+- Lesson recorded on 2026-11-15: a fix that removes real false alarms can
+  still change no gate outcome when another rule fires on the same files.
+  Future pre-registrations count gate outcomes per fix, not only findings.
 
 ## Limits
 - The PTE005 what-if treats "1 segments" as the no-constants layout. The census
   did not record segment sizes; pte005-cal-v1 measures this on pinned files.
-- The PTE004 what-if assumes the dtype fix clears every "scalar_type 9" note,
-  as pre-registered; pte-dtype-v1 measures it.
+- The dtype rows count the census's 0.1.0 findings with the 15 "scalar_type 9"
+  notes removed. pte-dtype-v1 measured on 448 published .pte files that the 15
+  findings disappear under 0.1.1 (REALFILE_CHECK_PTE_DTYPE_2026-11.md). The
+  census was not re-scanned with 0.1.1.
 - One snapshot (pte-census-v1, November 2026) of the most-downloaded public
   `.pte` files; 3 files per model at most.
 

@@ -13,9 +13,9 @@ nothing is scanned or downloaded:
   files name more than one;
 * how many files fail model-file-scan's default gate today (any finding rated
   medium or higher);
-* how many would still fail if the findings that two staged, pre-registered
-  integrity fixes target were gone (PTE004 whose only evidence is
-  "scalar_type 9", and PTE005 on a single-segment program);
+* how many would still fail if the findings that two pre-registered integrity
+  fixes target were gone (PTE004 whose only evidence is "scalar_type 9", and
+  PTE005 on a single-segment program), together and one fix at a time;
 * for an ordered list of backends whose PTE003 is imagined as "low", how many
   files would still fail, adding one backend at a time.
 
@@ -40,6 +40,7 @@ from collections import Counter
 GATE = frozenset({"medium", "high", "critical"})
 _BACKEND = re.compile(r"^backend delegate (\S+?):")
 _SCALAR9 = re.compile(r"^plan \d+ value \d+: scalar_type 9 is not an ExecuTorch dtype$")
+FIXES = ("dtype", "pte005")
 
 
 def backend_of(finding):
@@ -60,14 +61,21 @@ def is_scalar9_only(evidence):
     return bool(parts) and all(_SCALAR9.match(p) for p in parts)
 
 
-def targeted(finding):
-    """True for findings the two staged integrity fixes are meant to clear."""
+def targeted_by(finding):
+    """Which integrity fix a finding is meant to be cleared by: "dtype" (the
+    data-type table fix, shipped in executorch_pte_scan 0.1.1), "pte005" (the
+    single-segment PTE005 fix, job pte005-cal-v1), or None."""
     rule = finding.get("rule")
-    if rule == "PTE004":
-        return is_scalar9_only(finding.get("evidence", ""))
-    if rule == "PTE005":
-        return str(finding.get("evidence", "")).strip() == "1 segments"
-    return False
+    if rule == "PTE004" and is_scalar9_only(finding.get("evidence", "")):
+        return "dtype"
+    if rule == "PTE005" and str(finding.get("evidence", "")).strip() == "1 segments":
+        return "pte005"
+    return None
+
+
+def targeted(finding):
+    """True for findings either integrity fix is meant to clear."""
+    return targeted_by(finding) is not None
 
 
 def fails(findings, low=frozenset()):
@@ -79,6 +87,22 @@ def fails(findings, low=frozenset()):
         if str(f.get("severity", "")).lower() in GATE:
             return True
     return False
+
+
+def per_fix(findings):
+    """For each fix alone: files it touches, how many of those also carry a
+    PTE003 notice, and how many files still fail the gate with only that fix's
+    targeted findings removed."""
+    out = {}
+    for kind in FIXES:
+        touched = [fs for fs in findings if any(targeted_by(f) == kind for f in fs)]
+        out[kind] = {
+            "findings": sum(1 for fs in findings for f in fs if targeted_by(f) == kind),
+            "files": len(touched),
+            "files_also_pte003": sum(1 for fs in touched if any(f.get("rule") == "PTE003" for f in fs)),
+            "gate_fail_without": sum(fails([f for f in fs if targeted_by(f) != kind]) for fs in findings),
+        }
+    return out
 
 
 def summarize(records, order=None):
@@ -118,6 +142,7 @@ def summarize(records, order=None):
         "gate_fail_now_pct": pct(fail_now),
         "gate_fail_without_targeted": fail_after,
         "gate_fail_without_targeted_pct": pct(fail_after),
+        "per_fix": per_fix(findings),
         "what_if_low": steps,
     }
 
