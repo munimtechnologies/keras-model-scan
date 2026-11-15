@@ -1,0 +1,250 @@
+{
+ "rows": {
+  "P1": {
+   "result": "held",
+   "why": "patch ok=True; edits [1, 1, 1, 1, 1]; import ok"
+  },
+  "T1": {
+   "result": "held",
+   "why": "patched: ran 41, failures [], errors []; base: ran 35 ok True"
+  },
+  "U1": {
+   "result": "held",
+   "why": "ran 14, failures [], errors []"
+  },
+  "F1": {
+   "result": "held",
+   "why": "commit 3e85cae1e744454713413db4deb31090a505adf4; same SHA-256 as v1: {'scalar_type.h': True, 'scalar_type_util.h': True, 'tensor_parser_portable.cpp': True, 'scalar_type.fbs': True}"
+  },
+  "V1": {
+   "result": "held",
+   "why": "30 runtime dtypes, table equal"
+  },
+  "V2": {
+   "result": "held",
+   "why": "{\"parser_calls_isValid\": true, \"isValid_found\": true, \"nonnegative\": true, \"NumOptions\": true, \"Undefined\": true}"
+  },
+  "V3": {
+   "result": "held",
+   "why": "30 entry starts, 30 parsed, 30 comments, 0..29"
+  }
+ },
+ "release_rule_met": true,
+ "held": [
+  "F1",
+  "P1",
+  "T1",
+  "U1",
+  "V1",
+  "V2",
+  "V3"
+ ],
+ "failed": [],
+ "untestable": [],
+ "recorded": {
+  "scanner_new": "0.1.1",
+  "vendor_commit": "3e85cae1e744454713413db4deb31090a505adf4",
+  "counts": {
+   "starts": 30,
+   "parsed": 30,
+   "comments": 30
+  },
+  "entries": [
+   [
+    0,
+    "Byte",
+    1
+   ],
+   [
+    1,
+    "Char",
+    1
+   ],
+   [
+    2,
+    "Short",
+    2
+   ],
+   [
+    3,
+    "Int",
+    4
+   ],
+   [
+    4,
+    "Long",
+    8
+   ],
+   [
+    5,
+    "Half",
+    2
+   ],
+   [
+    6,
+    "Float",
+    4
+   ],
+   [
+    7,
+    "Double",
+    8
+   ],
+   [
+    8,
+    "ComplexHalf",
+    4
+   ],
+   [
+    9,
+    "ComplexFloat",
+    8
+   ],
+   [
+    10,
+    "ComplexDouble",
+    16
+   ],
+   [
+    11,
+    "Bool",
+    1
+   ],
+   [
+    12,
+    "QInt8",
+    1
+   ],
+   [
+    13,
+    "QUInt8",
+    1
+   ],
+   [
+    14,
+    "QInt32",
+    4
+   ],
+   [
+    15,
+    "BFloat16",
+    2
+   ],
+   [
+    16,
+    "QUInt4x2",
+    1
+   ],
+   [
+    17,
+    "QUInt2x4",
+    1
+   ],
+   [
+    18,
+    "Bits1x8",
+    1
+   ],
+   [
+    19,
+    "Bits2x4",
+    1
+   ],
+   [
+    20,
+    "Bits4x2",
+    1
+   ],
+   [
+    21,
+    "Bits8",
+    1
+   ],
+   [
+    22,
+    "Bits16",
+    2
+   ],
+   [
+    23,
+    "Float8_e5m2",
+    1
+   ],
+   [
+    24,
+    "Float8_e4m3fn",
+    1
+   ],
+   [
+    25,
+    "Float8_e5m2fnuz",
+    1
+   ],
+   [
+    26,
+    "Float8_e4m3fnuz",
+    1
+   ],
+   [
+    27,
+    "UInt16",
+    2
+   ],
+   [
+    28,
+    "UInt32",
+    4
+   ],
+   [
+    29,
+    "UInt64",
+    8
+   ]
+  ],
+  "unpatched_missing": [
+   {
+    "index": 8,
+    "name": "ComplexHalf"
+   },
+   {
+    "index": 9,
+    "name": "ComplexFloat"
+   },
+   {
+    "index": 10,
+    "name": "ComplexDouble"
+   },
+   {
+    "index": 18,
+    "name": "Bits1x8"
+   },
+   {
+    "index": 19,
+    "name": "Bits2x4"
+   },
+   {
+    "index": 20,
+    "name": "Bits4x2"
+   },
+   {
+    "index": 21,
+    "name": "Bits8"
+   }
+  ],
+  "prereg_check": {
+   "url": "https://raw.githubusercontent.com/munimtechnologies/keras-model-scan/main/research/PREREG_PTE_DTYPE_FIX_V2.md",
+   "attempt": 1,
+   "bytes": 4643,
+   "sha256": "f218103422c219520e8b9709019523ca647df7db38e93531d6e9d4669500a5bd",
+   "at": "2026-11-15T00:34:45Z"
+  },
+  "v1_rows_carried": [
+   "G1",
+   "E1",
+   "D1",
+   "D2",
+   "D3",
+   "D4"
+  ]
+ }
+}
