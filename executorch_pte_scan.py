@@ -37,6 +37,10 @@ runtime does, and checks each reference against the region it points into:
                          than its extended header says, segments without a
                          segment base offset, or findings capped.
 
+Dtypes follow the runtime's ScalarType list (0-29), which includes the
+complex and bits types that schema/scalar_type.fbs lists only as
+comments; a value outside it is PTE004.
+
 Static review only: nothing is loaded or executed.
 """
 
@@ -44,7 +48,7 @@ import mmap
 import struct
 import sys
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 FILE_IDENTIFIER = b"ET12"
 HEADER_MAGIC = b"eh00"
@@ -69,9 +73,16 @@ _TALLY = {
     "PTE004": "indexes that are out of range: %d",
 }
 
-# Element sizes by ScalarType (schema/scalar_type.fbs).
-_ELEMENT_SIZE = {0: 1, 1: 1, 2: 2, 3: 4, 4: 8, 5: 2, 6: 4, 7: 8, 11: 1, 12: 1,
-                 13: 1, 14: 4, 15: 2, 16: 1, 17: 1, 22: 2, 23: 1, 24: 1, 25: 1,
+# Element sizes by ScalarType, as the runtime computes them. elementSize()
+# (runtime/core/exec_aten/util/scalar_type_util.h) is sizeof() over
+# ET_FORALL_SCALAR_TYPES (runtime/core/portable_type/scalar_type.h), and the
+# tensor parser accepts every value isValid() accepts: 0 to 29. The schema
+# (schema/scalar_type.fbs) lists ComplexHalf, ComplexFloat, ComplexDouble
+# (8-10) and Bits1x8..Bits8 (18-21) only as comments, but published programs
+# use them (ComplexFloat in audio preprocessors), so they are listed here.
+_ELEMENT_SIZE = {0: 1, 1: 1, 2: 2, 3: 4, 4: 8, 5: 2, 6: 4, 7: 8, 8: 4, 9: 8,
+                 10: 16, 11: 1, 12: 1, 13: 1, 14: 4, 15: 2, 16: 1, 17: 1,
+                 18: 1, 19: 1, 20: 1, 21: 1, 22: 2, 23: 1, 24: 1, 25: 1,
                  26: 1, 27: 2, 28: 4, 29: 8}
 
 # Union type tags; FlatBuffers numbers union members from 1 (0 is NONE).

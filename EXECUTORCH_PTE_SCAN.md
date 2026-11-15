@@ -107,3 +107,24 @@ finding dicts with keys `rule, severity, cve, cwe, message, evidence`.
   `tensor_parser_exec_aten.cpp`, main, 2026-10-30). Tests use programs built
   by hand from that schema. A check against files written by `exir` itself is
   pre-registered and queued.
+
+## Changes in 0.1.1
+
+- Dtypes now follow the runtime's `ScalarType` list (values 0-29,
+  `ET_FORALL_SCALAR_TYPES` in `runtime/core/portable_type/scalar_type.h`),
+  which is what the runtime's tensor parser accepts (`isValid`). 0.1.0
+  followed `schema/scalar_type.fbs`, which lists `ComplexHalf`,
+  `ComplexFloat`, `ComplexDouble` (8-10) and `Bits1x8`..`Bits8` (18-21) only
+  as comments, so it raised PTE004 on honest programs: 15 of 450 published
+  `.pte` files in the November 2026 Hub census, all for `ComplexFloat` (9),
+  mostly audio preprocessors
+  ([RESULTS_PTE_CENSUS_2026-11.md](RESULTS_PTE_CENSUS_2026-11.md)). The
+  statement above that a genuine export never contains an integrity finding
+  was wrong for those dtypes. Such tensors now get the same size checks as
+  any other; a value outside 0-29 is still PTE004. Checked on published files
+  before release
+  ([research/PREREG_PTE_DTYPE_FIX.md](research/PREREG_PTE_DTYPE_FIX.md),
+  [REALFILE_CHECK_PTE_DTYPE_2026-11.md](REALFILE_CHECK_PTE_DTYPE_2026-11.md));
+  the table was re-checked against ExecuTorch's source with a corrected
+  grader
+  ([research/PREREG_PTE_DTYPE_FIX_V2.md](research/PREREG_PTE_DTYPE_FIX_V2.md)).

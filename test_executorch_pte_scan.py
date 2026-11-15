@@ -364,10 +364,11 @@ class ExecuTorchPteScanTests(unittest.TestCase):
         self.assertEqual(pte.scan_bytes(_pte(plan=_plan(values=values))), [])
 
     def test_unknown_dtype(self):
-        values = [_tensor(dtype=9), _tensor()]
+        # 30 is Undefined in the runtime enum; 0-29 are valid dtypes.
+        values = [_tensor(dtype=30), _tensor()]
         findings = pte.scan_bytes(_pte(plan=_plan(values=values)))
         self.assertEqual(_rules(findings), ["PTE004"])
-        self.assertIn("scalar_type 9", findings[0]["evidence"])
+        self.assertIn("scalar_type 30", findings[0]["evidence"])
 
     def test_legacy_constant_buffer(self):
         values = [_tensor(index=1), _planned(0)]
@@ -465,7 +466,7 @@ class ExecuTorchPteScanTests(unittest.TestCase):
             shutil.rmtree(tmp, ignore_errors=True)
 
     def test_version(self):
-        self.assertEqual(pte.__version__, "0.1.0")
+        self.assertEqual(pte.__version__, "0.1.1")
 
 
 if __name__ == "__main__":
